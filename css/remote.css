@@ -1,0 +1,49 @@
+#remote {
+  position: fixed;
+  width: 25vw;
+  height: 50px;
+  background-color: white;
+  border: 3px solid #5352ed;
+  top: 30px;
+  left: 12.5vw;
+  display: flex;
+}
+
+#remote > div {
+  flex: 1;
+  color: #5352ed;
+  font-weight: bold;
+  font-size: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#remote > div > span {
+  cursor: pointer;
+}
+
+#remote > div:nth-child(even) {
+  border-left: 1px solid #cfcffc;
+  border-right: 1px solid #cfcffc;
+}
+
+#remoteheader {
+  position: absolute;
+  top: -7px;
+  right: -13px;
+  font-size: 10px;
+  color: white;
+  background-color: #5352ed;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+#remoteheader > i {
+  color: white;
+  z-index: 3;
+}

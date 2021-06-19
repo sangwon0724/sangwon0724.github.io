@@ -5,47 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello World!!!</title>
-    <style>
-        body {
-            background-color: #eeeeee;
-        }
-
-        section {
-            width: 70vw;
-            background-color: white;
-            margin: 0 auto 30px auto;
-        }
-
-        section>header {
-            font-weight: bold;
-        }
-
-        section>main {
-            padding-left: 10px;
-        }
-
-        span.big {
-            display: block;
-            margin-top: 10px;
-        }
-
-        ul {
-            margin-top: 0px;
-        }
-
-        li {
-            list-style: none;
-        }
-    </style>
+    <link rel="stylesheet" href="css/index.css" />
+    <script
+      src="https://kit.fontawesome.com/34a8d510cf.js"
+      crossorigin="anonymous"
+    ></script>
 </head>
+
+<nav id="remote">
+    <div><span onclick="move_section('my_info')">Intro</span></div>
+    <div><span onclick="move_section('portfolio')">Portfolio</span></div>
+    <div><span onclick="move_section('study')">Study</span></div>
+    <div id="remoteheader">
+        <i class="fas fa-arrows-alt"></i>
+    </div>
+</nav>
 
 <body>
     <header id="my_info">
-        이름 : 이상원<br>
-        이메일 :
-        ● 네이버 : leews0724@naver.com<br>
-        ● 구글 : leews724@gmail.com<br>
-        깃허브
+        <div class="left">
+            <div class="intro">
+
+            </div>
+            <div class="info">
+                <span class="li_span_big">● 이메일 :</span><br>
+                <span class="li_span_small">○ 네이버 : leews0724@naver.com</span><br>
+                <span class="li_span_small">○ 구글 : leews724@gmail.com</span><br>
+                <br>
+                <span class="li_span_big">● 깃허브 : https://github.com/sangwon0724</span>
+                <br>
+                <span class="li_span_big">● 블로그 : https://sangwon0724.github.io/</span>
+            </div>
+        </div>
+        <div class="right">
+            <div id="aboutMe">
+                <header><span>About Me</span></header>
+                <main></main>
+            </div>
+            <div id="skills">
+                <header><span>Skills</span></header>
+                <main></main>
+            </div>
+        </div>
     </header>
 
     <section id="portfolio">
@@ -180,5 +181,5 @@
         </main>
     </section>
 </body>
-
+<script src="remote.js"></script>
 </html>

@@ -1,0 +1,48 @@
+@import "reset.css";
+@import "main.css";
+@import "remote.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #efefef;
+}
+
+section {
+  width: 70vw;
+  background-color: white;
+  margin: 0 auto 30px auto;
+}
+
+section > header {
+  font-weight: bold;
+}
+
+section > main {
+  padding-left: 10px;
+}
+
+span.big {
+  display: block;
+  margin-top: 10px;
+}
+
+span.li_span_big {
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+span.li_span_small {
+  margin-left: 50px;
+}
+
+ul {
+  margin-top: 0px;
+}
+
+li {
+  list-style: none;
+}

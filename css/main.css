@@ -1,0 +1,68 @@
+/* 개인 정보 */
+#my_info {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+#my_info > .left,
+#my_info > .right {
+  width: 50%;
+}
+
+#my_info > .left {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #afafaf;
+}
+#my_info > .left > .intro {
+  width: 100%;
+  height: 75%;
+  background-color: #efefef;
+}
+
+#my_info > .left > .info {
+  width: 100%;
+  height: 25%;
+  background-color: #343434;
+  color: #efefef;
+  padding-left: 50px;
+  padding-top: 10px;
+}
+#my_info > .left > .info > span {
+  display: inline-block;
+}
+
+#my_info > .right {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #afafaf;
+}
+
+#my_info > .right > #aboutMe {
+  width: 100%;
+  height: 30%;
+  border-bottom: 1px solid #afafaf;
+}
+
+#my_info > .right > #skills {
+  width: 100%;
+  height: auto;
+  min-height: 30%;
+  border-top: 1px solid #afafaf;
+}
+
+#my_info > .right > div > header {
+  width: 100%;
+  height: 10%;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+#my_info > .right > div > main {
+  width: 100%;
+  height: 90%;
+}
