@@ -1,0 +1,19 @@
+.study_line {
+  width: 60vw;
+  height: 300px;
+  border: 2px solid #afafaf;
+  margin: 10px auto;
+  display: flex;
+}
+
+.study_line > header {
+  width: 65%;
+  height: 100%;
+}
+
+.study_line > main {
+  width: 35%;
+  height: 100%;
+  background-color: white;
+  position: relative;
+}

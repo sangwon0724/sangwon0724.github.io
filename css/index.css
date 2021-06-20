@@ -1,6 +1,4 @@
 @import "reset.css";
-@import "main.css";
-@import "remote.css";
 
 * {
   box-sizing: border-box;
@@ -12,9 +10,8 @@ body {
 }
 
 section {
-  width: 70vw;
-  background-color: white;
-  margin: 0 auto 30px auto;
+  border-bottom: 2px solid #afafaf;
+  position: relative;
 }
 
 section > header {
@@ -45,4 +42,8 @@ ul {
 
 li {
   list-style: none;
+}
+
+.portfolio_line > main > .mySwiper > .swiper-wrapper > .swiper-slide > img {
+  cursor: pointer;
 }

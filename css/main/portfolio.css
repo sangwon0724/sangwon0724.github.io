@@ -1,0 +1,19 @@
+.portfolio_line {
+  width: 60vw;
+  height: 300px;
+  border: 2px solid #afafaf;
+  margin: 10px auto;
+  display: flex;
+}
+
+.portfolio_line > header {
+  width: 65%;
+  height: 100%;
+}
+
+.portfolio_line > main {
+  width: 35%;
+  height: 100%;
+  background-color: white;
+  position: relative;
+}
