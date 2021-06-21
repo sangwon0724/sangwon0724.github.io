@@ -18,3 +18,43 @@
   align-items: center;
   background-color: white;
 }
+
+/* === 이동하기 버튼 === */
+.button_right_arrow {
+  border-radius: 4px;
+  background-color: black;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 18px;
+  width: 130px;
+  height: 40px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.button_right_arrow span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button_right_arrow span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button_right_arrow:hover span {
+  padding-right: 25px;
+}
+
+.button_right_arrow:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+/* === 이동하기 버튼 === */

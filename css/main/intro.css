@@ -19,6 +19,30 @@
   width: 100%;
   height: 75%;
   background-color: #efefef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+#my_info > .left > .intro > .my_name {
+  width: 100%;
+  height: 70px;
+  font-weight: bold;
+  font-size: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#my_info > .left > .intro > .my_job {
+  width: 100%;
+  height: 20px;
+  color: #7f7f7f;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 }
 
 #my_info > .left > .info {

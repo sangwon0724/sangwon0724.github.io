@@ -4,16 +4,27 @@
   border: 2px solid #afafaf;
   margin: 10px auto;
   display: flex;
+  background-color: white;
 }
 
 .study_line > header {
   width: 65%;
   height: 100%;
+  border-right: 1px solid #afafaf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .study_line > main {
   width: 35%;
   height: 100%;
-  background-color: white;
   position: relative;
+  border-left: 1px solid #afafaf;
+}
+
+.study_line .line_span_title {
+  font-weight: bold;
+  font-size: 20px;
+  margin: auto 0;
 }

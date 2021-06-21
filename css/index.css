@@ -43,7 +43,3 @@ ul {
 li {
   list-style: none;
 }
-
-.portfolio_line > main > .mySwiper > .swiper-wrapper > .swiper-slide > img {
-  cursor: pointer;
-}

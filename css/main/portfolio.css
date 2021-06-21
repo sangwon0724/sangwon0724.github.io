@@ -4,16 +4,35 @@
   border: 2px solid #afafaf;
   margin: 10px auto;
   display: flex;
+  background-color: white;
 }
 
 .portfolio_line > header {
   width: 65%;
   height: 100%;
+  border-right: 1px solid #afafaf;
 }
 
 .portfolio_line > main {
   width: 35%;
   height: 100%;
-  background-color: white;
   position: relative;
+  border-left: 1px solid #afafaf;
+}
+
+.portfolio_line > main > .mySwiper > .swiper-wrapper > .swiper-slide > img {
+  cursor: pointer;
+}
+
+.portfolio_line > header > .line_span_title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 50px;
+  margin-left: 20px;
+}
+.portfolio_line > header > .line_span_content {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 20px;
+  margin-left: 70px;
 }
