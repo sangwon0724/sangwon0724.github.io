@@ -5,93 +5,136 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-정규 표현식 : 문자열에서 특정한 문자를 찾아내는 도구
-정규 표현식을 사용하기 위한 편의성을 제공해주는 사이트 목록 :
-                    1. https://regexper.com/ : 정규 표현식을 시각화해서 보여주는 사이트
-                    2. http://gskinner.com/RegExr/ : 정규 표현식을 실시간으로 테스트해볼 수 있는 사이트
-                    3. >http://www.regexr.com/ : 정규 표현식에 대한 도움말과 테스트 도구들을 제공하는 사이트 
-                
-정규 표현식 생성 방법의 종류 :
-                    1. 컴파일 : 검출하고자 하는 패턴을 만드는 단계, 정규 표현식 객체를 만들어야 한다.
-                    2. 실행 : 컴파일 단계에서 만든 정규 표현식 객체를 통해서 특정 문자열을 검출하는 단계
-                
-정규 표현식 - 컴파일 단계 :
-                    방법은 두 가지가 있으며, 두 가지 모두 같은 결과를 만들지만 각자가 가진 장단점이 다르다.
+### 정규 표현식이란?
+※ 정규 표현식 : 문자열에서 특정한 문자를 찾아내는 도구
 
-                    ▶ 정규 표현식 리터럴
-                        var pattern = /찾을 문자/;
-                    ▶ 정규 표현식 객체 생성자
-                        var pattern = new RegExp('찾을 문자');
-                    ▶ 정규 표현식의 특수 기호
-                        . : 문자 한 자리를 의미한다.
+### 관련 사이트 :
+1. https://regexper.com/ : 정규 표현식을 시각화해서 보여주는 사이트
+2. http://gskinner.com/RegExr/ : 정규 표현식을 실시간으로 테스트해볼 수 있는 사이트
+3. http://www.regexr.com/ : 정규 표현식에 대한 도움말과 테스트 도구들을 제공하는 사이트 
                 
-정규 표현식 - 실행 단계 :
-                    기본 조건 : var pattern = /a/;
+### 정규 표현식 생성 방법의 종류
+1. 컴파일 : 검출하고자 하는 패턴을 만드는 단계, 정규 표현식 객체를 만들어야 한다.
+2. 실행 : 컴파일 단계에서 만든 정규 표현식 객체를 통해서 특정 문자열을 검출하는 단계
+                
+### 정규 표현식 - 컴파일 단계
+방법은 두 가지가 있으며, 두 가지 모두 같은 결과를 만들지만 각자가 가진 장단점이 다르다.
 
-                    ▶ RegExp.exec(문자열)
-                        console.log(pattern.exec('abcdef'));   //출력 : ["a"], 이유 : 정규 표현식에서 표현한 a가 존재하기 때문에, 배열을 반환한다.
-                        console.log(pattern.exec('bcdef'));    //출력 : null, 이유 : 정규 표현식에서 표현한 a가 존재하지 않기 때문에
-                    ▶ RegExp.test(문자열)
-                        console.log(pattern.test('abcdef'));   //출력 : true, 이유 : 정규 표현식에서 표현한 a가 존재하기 때문에
-                        console.log(pattern.test('bcdef'));    //출력 : null, 이유 : 정규 표현식에서 표현한 a가 존재하지 않기 때문에
+- 정규 표현식 리터럴  
+    - var pattern = /찾을 문자/;
+-  정규 표현식 객체 생성자  
+    - var pattern = new RegExp('찾을 문자');  
+-  정규 표현식의 특수 기호  
+    - . : 문자 한 자리를 의미한다.  
+                
+### 정규 표현식 - 실행 단계
+기본 조건 : var pattern = /a/;
+
+-  RegExp.exec(문자열)
+    - console.log(pattern.exec('abcdef'));
+        - 출력 : "a"
+        - 이유 : 정규 표현식에서 표현한 a가 존재하기 때문에, 배열을 반환한다.
+    - console.log(pattern.exec('bcdef'));
+        - 출력 : null
+        - 이유 : 정규 표현식에서 표현한 a가 존재하지 않기 때문에
+-  RegExp.test(문자열)
+    - console.log(pattern.test('abcdef'));
+        - 출력 : true
+        - 이유 : 정규 표현식에서 표현한 a가 존재하기 때문에
+    - console.log(pattern.test('bcdef'));
+        - 출력 : null
+        - 이유 : 정규 표현식에서 표현한 a가 존재하지 않기 때문에
                     
-정규 표현식 - 문자열 메소드 :
-                    기본 조건 : var pattern = /a/;
+### 정규 표현식 - 문자열 메소드
+기본 조건 : var pattern = /a/;
 
-                    ▶ String.match(객체명)
-                        RegExp.exec(문자열)와 비슷하다.
-
-                        console.log('abcdef'.match(pattern));   //출력 : ["a"], 이유 : 정규 표현식에서 표현한 a가 존재하기 때문에, 배열을 반환한다.
-                        console.log('bcdef'.match(pattern));    //출력 : null, 이유 : 정규 표현식에서 표현한 a가 존재하지 않기 때문에
-                    ▶ String.replace(객체명, 교체 문자열)
-                        console.log('abcdef'.replace(pattern, 'A'));   //출력 : Abcdef
-                        console.log('abcdefa'.replace(pattern, 'A'));   //출력 : Abcdefa, 맨 앞 글자만 바뀐다.
+-  String.match(객체명)
+    - RegExp.exec(문자열)와 비슷하다.
+    - console.log('abcdef'.match(pattern));
+        - 출력 : "a"
+        - 이유 : 정규 표현식에서 표현한 a가 존재하기 때문에, 배열을 반환한다.
+    - console.log('bcdef'.match(pattern));
+        - 출력 : null
+        - 이유 : 정규 표현식에서 표현한 a가 존재하지 않기 때문에
+-  String.replace(객체명, 교체 문자열)
+    - console.log('abcdef'.replace(pattern, 'A'));
+        - 출력 : Abcdef
+    - console.log('abcdefa'.replace(pattern, 'A'));
+        - 출력 : Abcdefa (맨 앞 글자만 바뀐다.)
                 
-정규 표현식 - 옵션 :
-        기본 조건 : var pattern = /a/;
+### 정규 표현식 - 옵션
+기본 조건 : var pattern = /a/;
 
-        ▶ i 옵션 : 대소문자를 구분 하지 않는다.
-            var p = /a/;
-            var pI = /a/i;
+-  i 옵션 : 대소문자를 구분 하지 않는다.
+    {% highlight javascript %}
+    var p = /a/;
+    var pI = /a/i;
 
-            console.log('Abcdef'.match(p));   //출력 : null, 이유 : 대소문자를 구분하기 때문에 A는 안되고 a만 가능하다.
-            console.log('Abcdef'.match(pI));  //출력 : ["a"], 이유 : 대소문자를 구분하지 않기 때문에 i 옵션으로 인해 a도 A도 가능하다.
-        ▶ g 옵션 (Global): 검색된 모든 결과를 리턴한다.
-            var p = /a/;
-            var pG = /a/g;
+    //출력 : null
+    //이유 : 대소문자를 구분하기 때문에 A는 안되고 a만 가능하다.
+    console.log('Abcdef'.match(p));
 
-            console.log('abcdef'.match(p));   //출력 : ["a"], 이유 : 정규 표현식에 맞는 첫 번째 결과만 출력한다.
-            console.log('abcdefa'.match(pG));  //출력 : ["a","a"], 이유 : 정규 표현식에 맞는 모든 결과를 출력한다.
-        ▶ 옵션은 동시에 사용 가능하다
-            var pIG = /a/ig;
+    //출력 : "a"
+    //이유 : 대소문자를 구분하지 않기 때문에 i 옵션으로 인해 a도 A도 가능하다.
+    console.log('Abcdef'.match(pI));  
+    {% endhighlight %}
+-  g 옵션 (Global): 검색된 모든 결과를 리턴한다.
+    {% highlight javascript %}
+    var p = /a/;
+    var pG = /a/g;
 
-            console.log('abcdefA'.match(pIG));   //출력 : ["a","A"]
+    //출력 : "a"
+    //이유 : 정규 표현식에 맞는 첫 번째 결과만 출력한다.
+    console.log('abcdef'.match(p));
+
+    //출력 : ["a","a"]
+    //이유 : 정규 표현식에 맞는 모든 결과를 출력한다.
+    console.log('abcdefa'.match(pG));
+    {% endhighlight %}
+-  옵션은 동시에 사용 가능하다
+    {% highlight javascript %}
+    var pIG = /a/ig;
+
+    //출력 : ["a","A"]
+    console.log('abcdefA'.match(pIG));
+    {% endhighlight %}
     
-정규 표현식 - 캡쳐 :
-        ▶ 괄호 안의 패턴은 마치 변수처럼 재사용 할 수 있다. ($ 기호 사용)
-            var pattern = /(\w+)\s(\w)/;
-            var str = "Hello World";
-            var result = str.replace(pattern, "$2 ~ $1");
-            console.log(result);    //출력 : World ~ Hello
-            //이유 : $는 정규 표현식에서 그룹을 나타낸다. (배열처럼 0부터가 아니라 1부터 사용)
-            그래서 $2와 $1을 위치를 바꾸는 표현식을 나타냈기 때문에 저렇게 바뀌는 것이다.
+### 정규 표현식 - 캡쳐
+※ 괄호 안의 패턴은 마치 변수처럼 재사용 할 수 있다. ($ 기호 사용)
+{% highlight javascript %}
+var pattern = /(\w+)\s(\w)/;
+var str = "Hello World";
+var result = str.replace(pattern, "$2 ~ $1");
+console.log(result);    //출력 : World ~ Hello
+/*
+    이유 : $는 정규 표현식에서 그룹을 나타낸다. (배열처럼 0부터가 아니라 1부터 사용)
+    그래서 $2와 $1을 위치를 바꾸는 표현식을 나타냈기 때문에 저렇게 바뀌는 것이다.
+*/
+{% endhighlight %}
     
-정규 표현식 - 치환 :
-        var urlPattern = /\b(?:https?):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*/gim;
-        var content = '네이버의 홈페이지 주소는 http://naver.com 입니다.';
-        var result = content.replace(urlPattern, function(url){
-            return ''+url+'';
-        });
-        console.log(result);
-        //출력 : "네이버의 홈페이지 주소는 http://naver.com 입니다."
-        //이유 : replace의 첫번째 인자는 정규 표현식 객체명이다. 그리고 평소대로라면 두 번째 인자는 교체할 문자열이다.
-        //       그런데 만약 replace의 두 번째 인자를 인자를 받는 함수로 선언하면,
-        //       패턴에 맞는 문자열이 있을 때 해당 문자열이 자동으로 함수의 인자로 들어가도록 약속되어있기 떄문이다.
+### 정규 표현식 - 치환
+{% highlight javascript %}
+    var urlPattern = /\b(?:https?):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*/gim;
+    var content = '네이버의 홈페이지 주소는 http://naver.com 입니다.';
+    var result = content.replace(urlPattern, function(url){
+        return ''+url+'';
+    });
+    console.log(result);
+    /*
+    출력 : "네이버의 홈페이지 주소는 http://naver.com 입니다."
+    이유 :
+        replace의 첫번째 인자는 정규 표현식 객체명이다.
+        그리고 평소대로라면 두 번째 인자는 교체할 문자열이다.
+        그런데 만약 replace의 두 번째 인자를 인자를 받는 함수로 선언하면,
+        패턴에 맞는 문자열이 존재할 때
+        해당 문자열이 자동으로 함수의 인자로 들어가도록 약속되어있기 떄문이다.
+    */
+{% endhighlight %}
     
-정규 표현식 - 패턴 (역슬래시 + 문자):
-        1. \w : A ~ Z, a ~ z, 0 ~9 모두 포함
-        2. \s : 공백 (White Space)
+### 정규 표현식 - 패턴 (문자)
+1. \w : A ~ Z, a ~ z, 0 ~9 모두 포함
+2. \s : 공백 (White Space)
     
-정규 표현식 - 패턴 (기호):
-        1. () : 그룹화
-        2. + : 앞의 것이 하나 이상인 경우, 패턴이 만약 \w+라면 문자열이 '#'이면 실패, 'abc'면 성공이다.
+### 정규 표현식 - 패턴 (기호)
+1. () : 그룹화
+2. + : 앞의 것이 하나 이상인 경우, 패턴이 만약 \w+라면 문자열이 '#'이면 실패, 'abc'면 성공이다.

@@ -31,8 +31,8 @@ function sum(){
     return result;
 }
 
-alert(sum.apply(arr1)) //출력 : 6
-alert(sum.apply(arr2)) //출력 : 185
+console.log(sum.apply(arr1)) //출력 : 6
+console.log(sum.apply(arr2)) //출력 : 185
 
 //해설
 /*

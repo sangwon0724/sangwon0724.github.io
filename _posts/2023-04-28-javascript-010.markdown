@@ -5,14 +5,14 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-객체 :
-index 번호로 요소를 꺼내오던 배열과 다르게
-key 값이라는 문자열을 통하여 값을 꺼내오는 형태의
+### 객체 :
+>index 번호로 요소를 꺼내오던 배열과 다르게  
+key 값이라는 문자열을 통하여 값을 꺼내오는 형태의  
 연관된 데이터들을 한꺼번에 관리하기 위해 사용하는 데이터형
 
-객체의 특징
-● const 객체명={ name:"lee",age:25,gender:"male"};
-    ▶ 객체명에 const가 붙어있지만 object 안의 내용 값을 바꿀수있다.
+### 객체의 특징
+객체명에 const가 붙어있지만 object 안의 내용 값을 바꿀수있다.
+- (예시) const 객체명={ name:"lee",age:25,gender:"male"};
 
 ### 객체 생성 방법
 {% highlight javascript %}
@@ -87,7 +87,8 @@ for(keyName in forEachTest) {
 }
 {% endhighlight %}
 
-### 객체 지향 프로그래밍 (객체에는 배열이나 함수도 선언할 수 있다.)
+### 객체 지향 프로그래밍
+※ 객체에는 배열이나 함수도 선언할 수 있다.
 {% highlight javascript %}
 var studentInfo={
     'grade' : {'bule' : 1, 'yellow' : 2, 'red' : 3},

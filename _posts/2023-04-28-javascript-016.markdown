@@ -5,7 +5,8 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-## arguments : 함수에서 사용된 인자들이 저장되는 유사 배열
+### arguments란?
+※ arguments : 함수에서 사용된 인자들이 저장되는 유사 배열
 
 {% highlight javascript %}
 function sumTest(){
@@ -19,11 +20,10 @@ function sumTest(){
 console.log('result : ' + sumTest(1,2,3,4));    //출력 : 10
 {% endhighlight %}
 
-### functionName.length & arguments.length
+### 매개 변수의 개수
+- functionName.length : 함수명.length는 함수에서 선언되 있는 매개 변수의 개수
+- arguments.length : 함수를 실행할 때 실제로 들어온 매개 변수의 개수
 {% highlight javascript %}
-//함수명.length는 함수에서 선언되 있는 매개 변수의 개수를 의미한다.
-//arguments.length는 함수를 실행할 때 실제로 들어온 매개 변수의 개수를 의미한다.
-
 function twoArg(arg1, arg2){
     console.log(
         'twoArg.length', twoArg.length,

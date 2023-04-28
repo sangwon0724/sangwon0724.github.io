@@ -5,21 +5,29 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-변수의 유효 범위
-    ▶ 전역 변수 : 에플리케이션 전역에서 접근이 가능한 변수
-    ▶ 지역 변수 : 함수 내부에서 사용하는 제한적인 변수
+### 변수의 유효 범위
+- 전역 변수 : 에플리케이션 전역에서 접근이 가능한 변수
+- 지역 변수 : 함수 내부에서 사용하는 제한적인 변수
 
-### 선언에 따른 변수의 유효 범위 변화
+### 변수의 유효 범위 변화
 {% highlight javascript %}
 var varScope = 'global';
-function scopeTest(){
-varScope = 'local';
-alert(varScope);//출력 : local, 이유 : varScope의 값이 local로 초기화 되었기 때문에
+    function scopeTest(){
+    varScope = 'local';
+
+    //출력 : local
+    //이유 : varScope의 값이 local로 초기화 되었기 때문에
+    console.log(varScope);
 }
+
 scopeTest();
-alert(varScope);//출력 : local, scopeTest 함수 안에서 varScope 앞에 var가 붙지 않았기 때문에 전역변수 취급받기 때문이다.
+
+//출력 : local
+//이유 : scopeTest 함수 안에서 varScope 앞에 var가 붙지 않았기 때문에 전역변수 취급받기 때문이다.
+console.log(varScope);
 {% endhighlight %}
-※ 즉, 변수를 초기화할 때에는 (특히, 함수 내부에서 초기화할 때) var같은 자료형을 붙이는 것을 습관화 해야 한다.
+※ 즉, 변수를 초기화할 때에는  
+var같은 자료형을 붙이는 것을 습관화 해야 한다. (특히, 함수 내부에서 초기화할 때)
 
 ### 유효 범위를 신경써야 되는 이유
 {% highlight javascript %}
@@ -42,16 +50,21 @@ console.log("결과 A : " + resultA);     //출력 : 0, 애초에 무한 반복�
 console.log("결과 B : " + resultB);     //출력 : 10
 {% endhighlight %}
 
-※ 기본 전제 : for문을 돌렸을 때 i가 var를 통해 선언된다. 즉, for문의 조건에 있는 i가 전역변수
-※ resultA가 0이 나오는 이유 :
-    var를 붙이지 않고 변수를 선언하면 전역변수가 된다.
-    for문의 조건식에서 돌아가는 i를 for문 내부의 a()에서 전역변수 상태로 계속 0으로 초기화시키기 때문에
-    계속 무한 루프를 시킨다.
-    ※ resultB가 10이 나오는 이유 :
-    for문 내부의 b()에서 초기화 되는 i는 var를 붙였기 때문에 b() 내부에서만 사용되는 아예 다른 i다.
-    그렇기 때문에 for문이 정상적으로 작동해서 결과값이 10이 된 것이다.
+※ 기본 전제 : for문을 돌렸을 때 i가 var를 통해 선언된다. (즉, for문의 조건에 있는 i가 전역변수)
 
-### 전역 변수 사용법 : 하나의 객체를 전역 변수로 만들고 객체의 속성으로 변수를 관리한다.
+※ resultA가 0이 나오는 이유 :
+>var를 붙이지 않고 변수를 선언하면 전역변수가 된다.  
+for문의 조건식에서 돌아가는 i를 for문 내부의 a()에서  
+전역변수 상태로 계속 0으로 초기화시키기 때문에  
+계속 무한 루프를 시킨다.
+
+※ resultB가 10이 나오는 이유 :  
+>for문 내부의 b()에서 초기화 되는 i는 var를 붙였기 때문에  
+b() 내부에서만 사용되는 아예 다른 i다.  
+그렇기 때문에 for문이 정상적으로 작동해서 결과값이 10이 된 것이다.
+
+### 전역 변수 사용법
+※ 하나의 객체를 전역 변수로 만들고 객체의 속성으로 변수를 관리한다.
 {% highlight javascript %}
 studentInfo = {};
 studentInfo.score = {
@@ -74,15 +87,20 @@ studentInfo.score.math = 90;
 for(var i = 0; i < 5; i++){
     var name="test name";
 }
-alert(name);    //출력 : test name
+
+//출력 : test name
+console.log(name);    
 
 testFunction=function(){var name="test name?";};
 testFunction();
-alert(name);    //출력 : test name
+
+//출력 : test name
 //이유 : var에 의한 전역변수/지역변수 구분은 함수의 내외에서만 구분된다. 그 외에는 항상 전역변수
+console.log(name);
 {% endhighlight %}
 
-### 정적 유효 범위 : 자바스크립트의 함수가 선언된 시점에서의 유효 범위 ( = 정적 유효 범위, 렉시컬)
+### 정적 유효 범위
+※ 자바스크립트의 함수가 선언된 시점에서의 유효 범위 ( = 정적 유효 범위, 렉시컬)
 {% highlight javascript %}
 var i = 5;
 function a(){
@@ -95,15 +113,19 @@ function b(){
 a();
 {% endhighlight %}
 
-이렇게 코드가 있을 때 결과는 어떻게 되는가?
-5가 출력 된다.
-왜냐하면 언뜻보면 a()가 실행되고 그 안에서 b()가 실행되어서 i가 10이 될 것 같지만
-b()는 자신의 내부의 코드에서 사용하는 i가 자신의 인자에 있는지 먼저 살펴본 다음에,
-존재하지 않을 경우에는 자신이 호출됬을 때가 아닌 자신이 정의 됬을 때의 i의 값인 5를 가져오게 된다.
-이렇게 자신이 호출됬을 때가 아닌 자신이 정의 됬을 때의 값을 가져오게 되는 것을 정적 유효 범위라고 한다.
+결과  
+> 5가 출력 된다.
 
-▶ 실험 1 : a() 내부의 b()가 b(i)고, b()는 그대로 b()인 경우
+
+이유
+>왜냐하면 언뜻보면 a()가 실행되고 그 안에서 b()가 실행되어서 i가 10이 될 것 같지만  
+b()는 자신의 내부의 코드에서 사용하는 i가 자신의 인자에 있는지 먼저 살펴본 다음에,  
+존재하지 않을 경우에는 자신이 호출됬을 때가 아닌 자신이 정의 됬을 때의 i의 값인 5를 가져오게 된다.  
+이렇게 자신이 호출됬을 때가 아닌 자신이 정의 됬을 때의 값을 가져오게 되는 것을  
+정적 유효 범위라고 한다.
+
+▶ 실험 1 : a() 내부의 b()가 b(i)고, b()는 그대로 b()인 경우  
 ▶ 결과 1 : 5 출력
 
-▶ 실험 1 : a() 내부의 b()가 b(i)고, b()도 b(i)인 경우 => 보통의 프로그래밍
-▶ 결과 1 : 10 출력
+▶ 실험 2 : a() 내부의 b()가 b(i)고, b()도 b(i)인 경우 => 보통의 프로그래밍  
+▶ 결과 2 : 10 출력
