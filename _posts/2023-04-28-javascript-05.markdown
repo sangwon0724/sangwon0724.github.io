@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "연산자"
+date:   2023-04-28 10:07:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+---
+
+#== 연산자 사용 (값만 같으면 됨)
+{% highlight javascript %}
+alert(1 == 2)             //출력 : false
+alert(1 == 1)             //출력 : true
+alert("one" == "two")     //출력 : false
+alert("one" == "one")     //출력 : true
+{% endhighlight %}
+
+#=== 연산자 사용 (조건을 엄격하게 하여 비교 => 값과 자료형이 모두 같아야 됨) 
+{% highlight javascript %}
+ alert(1 == '1');          //출력 : true
+alert(1 === '1');         //출력 : false
+alert(null == undefined); //출력 : true
+alert(null === undefined);//출력 : false
+alert(true == 1);         //출력 : true
+alert(true === 1);        //출력 : false
+alert(true == '1');       //출력 : true
+alert(true === '1');      //출력 : false
+alert(0 === -0);          //출력 : true
+alert(NaN === NaN);       //출력 : false
+{% endhighlight %}
+
+#!=와 !==
+{% highlight javascript %}
+alert(1 != '1');          //출력 : false
+alert(1 !== '1');         //출력 : true
+{% endhighlight %}
+
+#And를 의미하는 &&와 Or을 의미하는 ||
+{% highlight javascript %}
+alert(3>0 && 2>3);          //출력 : false
+alert(3>0 || 2>3);         //출력 : true
+{% endhighlight %}

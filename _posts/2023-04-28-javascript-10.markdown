@@ -1,0 +1,301 @@
+---
+layout: post
+title:  "객체"
+date:   2023-04-28 10:07:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+---
+
+객체 :
+index 번호로 요소를 꺼내오던 배열과 다르게
+key 값이라는 문자열을 통하여 값을 꺼내오는 형태의
+연관된 데이터들을 한꺼번에 관리하기 위해 사용하는 데이터형
+
+객체의 특징
+● const 객체명={ name:"lee",age:25,gender:"male"};
+    ▶ 객체명에 const가 붙어있지만 object 안의 내용 값을 바꿀수있다.
+
+#객체 생성 방법
+{% highlight javascript %}
+//선언 후 초기화
+var grade = {};     //중괄호를 사용한다.
+grade['a']=1; grade['b']=2; grade['c']=3; //대괄호 안에 키 값을 표현한 후 값을 대입한다.
+
+//선언과 동시에 초기화
+var grade = {'a' : 1, 'b' : 2, 'c' : 3};
+{% endhighlight %}
+
+#객체의 속성 추가하기
+{% highlight javascript %}
+const member = {};
+
+member.name = 'lee';
+
+console.log(member.name); //출력 : lee
+{% endhighlight %}
+
+#객체의 속성 정의하기
+{% highlight javascript %}
+const member = {};
+
+//해당 객체의 속성과 그 값과 옵션을 지정하기
+Object.defineProperty(member, 'name', {
+value: 'lee',
+writable: false
+});
+
+member.name = 'kim';
+//writable 속성을 false로 했기 때문에 덮어 씌워지지 않는다.
+
+console.log(member.name); //출력 : lee
+
+Object.isExtensible(member); //출력 : true, 해당 객체가 현재 데이터가 변경 가능한 상태인지 알 수 있다.
+
+//옵션
+//(1) configurable : 속성의 값을 변경할 수 있고, 객체에서 삭제할 수도 있으면 true (기본 값 : false)
+//(2) enumerable : 속성이 객체의 속성 열거 시 노출되면 true (기본 값 : false)
+//(3) value : 속성의 값, 유효한 Javascript 값 모두 가능 (기본 값 : undefined)
+//(4) writable : 할당 연산자로 값을 변경할수 있으면 true (기본 값 : undefined)
+//(5) get() : 속성의 접근자로 사용할 함수 (기본 값 : undefined)
+//(6) set(값) : 속성의 설정자로 사용할 함수 (기본 값 : undefined)
+
+//get() + set(값) 예시
+var picture = {};
+var width = 100;
+
+//picture.width와 width가 항상 같은 것임을 정의한다.
+Object.defineProperty(picture, 'width', {
+get() { return width; },
+set(value) { width = value; }
+});
+
+console.log(picture.width); //출력 : 100
+picture.width=150;
+console.log(width); //출력 : 150
+width=200;
+console.log(picture.width); //출력 : 200
+{% endhighlight %}
+
+#객체 사용 방법
+{% highlight javascript %}
+alert(grade['a']);  //출력 : 1
+
+//※ keyName은 객체의 key 값을 처음부터 마지막까지 차례대로 읽어온다 (keyName은 직접 지정한 별칭, 자유지정 가능).
+//※ forEachTest에는 내가 for문으로 읽어들일 객체의 실제 이름을 명시하면 된다.
+var forEachTest = {'a' : 1, 'b' : 2, 'c' : 3};
+for(keyName in forEachTest) {
+    console.log("keyName : "+keyName+" value : "+forEachTest[keyName]+"<br />");
+}
+{% endhighlight %}
+
+# 객체 지향 프로그래밍 (객체에는 배열이나 함수도 선언할 수 있다.)
+{% highlight javascript %}
+var studentInfo={
+    'grade' : {'bule' : 1, 'yellow' : 2, 'red' : 3},
+    'class' : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'functionTest' : function(){
+        for(var name in this.grade){
+            console.log('name : ' + name + ', value : ' + this.grade[name] + "\n")
+        }
+    }
+};
+
+/*
+※ 접근 방식 1 => 만약 grade의 bule에 접근하고 싶으면 studentInfo['grade']['blue']를 하면 된다.
+※ 접근 방식 2 => 만약 class의 3번 인덱스에 접근하고 싶으면 studentInfo['class'][3]을 하면 된다.
+※ 접근 방식 3 => 만약 객체의 내부에서 특정 키 값에 접근하고 싶다면 this.KEY이름을 하면 된다.
+※ 접근 방식 4 =>만약 객체의 내부에 선언한 함수를 사용하고 싶다면 위의 경우에는
+                studentInfo.functionTest();를 하거나,
+                studentInfo['functionTest']();를 하면 된다.
+*/
+{% endhighlight %}
+
+#객체의 독립성
+{% highlight javascript %}
+//객체는 원시 데이터 변수와 다르게 같은 데이터를 가졌어도 다르게 취급한다.
+var a1 = {test : 1};
+var a2 = {test : 1};
+console.log(a1===a2);   //출력 : false
+
+//하지만 객체 내의 데이터를 비교하면 정상적으로 비교가 가능하다.
+var a1 = {test : 1};
+var a2 = {test : 1};
+console.log(a1.test===a2.test);   //출력 : true
+
+//객체는 원시 데이터처럼 복사가 불가능하다.
+var a1 = {test : 1};
+var a2 = a1; //객체는 복사가 아니라 참조를 한다.
+a2.test=2;  //a2의 test를 변경
+console.log(a1.test);   //출력 : 2, a2의 test를 변경했지만 a1의 test도 변경된다.
+
+//객체의 복사를 위해서는 Object.assign() 메소드를 사용하면 된다.
+var a1 = {test : 1};
+var a2 = Object.assign({},a1);
+//Object.assign() 메소드는 {} 안의 데이터들과 뒤에 따라오는 이름들에
+//해당되는 객체들의 데이터들을 합쳐서하나의 객체로 만들어준다.
+a2.test=2;  //a2의 test를 변경
+console.log(a1.test);   //출력 : 1
+console.log(a2.test);   //출력 : 2
+
+/*
+    ※ 문제점)
+        Object.assign()은 property를 복사하는 것이기 때문에 만약 복사되는 값이 array나 object라면
+        복사가 되는 것이 아니라 그 객체들에 한해서 참조가 된다.
+*/
+
+//객체 복사시 내부의 객체에 대한 문제점 해결 방법
+var a1 = {test1 : 1, test2 : [1,2]};
+var a2 = Object.assign({},a1);
+a2.test2.push(3);
+console.log(a1.test2);   //출력 : [1,2,3], 이유 : 객체를 복사할 때 객체 안의 객체는 복사가 아니라 참조가 된다.
+a2.test2 = a2.test2.concat(); //기존에 갖고 있던 내용을 복사해서 메모리 안의 새로운 위치를 가리키게 한다.
+a2.test2.push(4);
+console.log(a1.test2); //출력 : [1,2,3]
+console.log(a2.test2); //출력 : [1,2,3,4]
+{% endhighlight %}
+
+#객체의 데이터 가져오기
+{% highlight javascript %}
+var test = {"first":1,"second":2,"third":3};
+
+//방법1 (IE X)
+Object.entries(test).forEach(ele=>console.log(ele));
+
+//출력1
+/*
+first / 1
+second / 2
+third / 3
+*/
+
+//방법2 (IE X)
+for(const [key, value] of Object.entries(test)){
+    console.log(`${key} / ${value}`);
+}
+
+//출력2
+/*
+first / 1
+second / 2
+third / 3
+*/
+
+//방법3 (IE O)
+Object.keys(test);
+Object.values(test);
+
+//출력3
+/*
+["first", "second", "third"]
+[1, 2, 3]
+*/
+
+//방법4 (IE O)
+for(key in test){
+    console.log("key 값 : "+key+" / value : "+test[key]);
+}
+
+//출력 4
+/*
+key 값 : first / value : 1
+key 값 : second / value : 2
+key 값 : third / value : 3
+*/
+{% endhighlight %}
+
+#객체에 불변성 추가하기
+{% highlight javascript %}
+//1. 새로운 속성 추가 (불가능)
+//2. configurable 속성 변경 (불가능)
+//3. enumerable 속성 변경 (불가능)
+//4. 속성 변경 (불가능) ★
+
+const member = {};
+
+member.name = 'lee';
+
+console.log(member.name); //출력 : lee
+
+Object.freeze(member); //객체에 불변성 추가
+
+member.name = 'kim';
+
+console.log(member.name); //출력 : lee, 값이 변경되지 않음을 알 수 있다.
+
+Object.isFrozen(member); //출력 : true, 해당 객체에 불변성이 추가되었나를 알 수 있다.
+{% endhighlight %}
+
+#객체의 확장성 배제하기
+{% highlight javascript %}
+const member = {};
+
+Object.preventExtensions(member);
+
+member.name = 'lee';
+
+console.log(member.name); //출력 : undefined
+
+Object.isExtensible(member); //출력 : false, 확장 불가능한 상태
+
+//※ 객체의 새로운 속성이 추가되는 것을 막는것이지 이미 있는 속성은 변경할 수 있다.
+{% endhighlight %}
+
+#객체 봉인하기
+{% highlight javascript %}
+//1. 새로운 속성 추가 (불가능)
+//2. configurable 속성 변경 (불가능)
+//3. enumerable 속성 변경 (불가능)
+//4. 속성 변경 (가능) ★
+
+const member = {};
+
+Object.seal(member);
+
+member.name = 'lee';
+
+console.log(member.name); //출력 : lee
+
+Object.isSealed(member); //출력 : true, 현재 객체가 봉인된 상태
+
+//※ Object.freeze(객체명)와 달리 속성의 값을 변경할 수 있다.
+{% endhighlight %}
+
+#객체 ←→ 배열
+{% highlight javascript %}
+var test = {"first":1,"second":2,"third":3};
+
+//객체 → 배열
+var targetA = Object.entries(test); //[['first', 1], ['second', 2], ['third', 3]]
+
+//객체 ← 배열
+var targetB = Object.fromEntries(targetA); //{first: 1, second: 2, third: 3}
+{% endhighlight %}
+
+#속성 보유 체크
+{% highlight javascript %}
+const member = {};
+
+member.name = 'lee';
+
+member.hasOwnProperty('name'); //출력 : true
+
+member.hasOwnProperty('age'); //출력 : false
+{% endhighlight %}
+
+#동일 여부 체크
+{% highlight javascript %}
+Object.is('hi', 'hi'); //출력 : true
+Object.is('hi', 'hello'); //출력 : false
+
+Object.is(window, window); //출력 : true
+Object.is([], []); //출력 : false
+
+Object.is(null, null); //출력 : true
+
+const member = { name : 'lee'};
+Object.is(member, member); //출력 : true
+
+//특이 케이스
+Object.is(0, -0); //출력 : false
+Object.is(-0, -0); //출력 : true
+Object.is(NaN, 0/0); //출력 : true
+{% endhighlight %}

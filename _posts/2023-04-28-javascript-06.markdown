@@ -1,0 +1,63 @@
+---
+layout: post
+title:  "조건문"
+date:   2023-04-28 10:07:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+---
+
+#단순 조건문
+{% highlight javascript %}
+if(true){
+    alert('result : true');
+}
+
+if(false){
+    alert('result : false');
+}
+
+if(조건1){
+    alert('if 결과');
+}
+else if(조건2){
+    alert('else if 결과');
+}
+else {
+    alert('else 결과');
+}
+{% endhighlight %}
+
+#상태 조건문
+{% highlight javascript %}
+switch ( condition ) {
+    case value1:
+    statement1;
+    break;
+    case value2:
+    statement2;
+    break;
+    ...
+    default:
+    statement3;
+}
+
+//예시
+var test="test";
+switch ( test ) {
+    case "test":
+    console.log("test입니다.");
+    break;
+    case "notTest":
+    console.log("notTest입니다.");
+    break;
+    case "whyTest":
+    console.log("whyTest입니다.");
+    break;
+    default:
+    console.log("default입니다.");
+    break;
+}
+//출력 : test입니다.
+{% endhighlight %}
+
+#※ true나 false 대신에 1과 0을 쓸 수는 있지만 ==와 ===같은 것을 보면 실전에서는 그냥 true나 false를 쓰는 것이 낫다.
+#※ 조건에 변수명을 넣으면 만약 해당 변수가 비어있지 않다면 true를 비어있다면 false를 반환한다.

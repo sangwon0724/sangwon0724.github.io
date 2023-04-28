@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "숫자 및 문자열"
+date:   2023-04-28 10:07:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+---
+
+#수의 연산
+{% highlight javascript %}
+//제곱
+Math.pow(3,2);       //출력 : 9,   3의 2승
+
+//반올림
+Math.round(10.6);    //출력 : 11,  10.6을 반올림
+
+//올림
+Math.ceil(10.2);     //출력 : 11,  10.2를 올림
+
+//내림
+Math.floor(10.6);    //출력 : 10,  10.6을 내림
+
+//제곱근
+Math.sqrt(9);        //출력 : 3,   3의 제곱근
+
+//랜덤
+Math.random();       //출력 : 0부터 1.0 사이의 랜덤한 숫자 (소수점 포함)
+Math.round(100*Math.random()+1);       //출력 : 1부터 100 사이의 랜덤한 숫자 (정수)
+{% endhighlight %}
+
+#문자열
+{% highlight javascript %}
+//문자열 길이
+"Hello World".length//출력 : 11
+
+//문자 위치 구하기
+"code".indexof("c"); //출력 : 0
+{% endhighlight %}

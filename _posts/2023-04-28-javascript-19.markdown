@@ -1,0 +1,50 @@
+---
+layout: post
+title:  "객체 지향 - 생성자와 new 연산자"
+date:   2023-04-28 10:07:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+---
+
+#객체 생성 기본 방법
+{% highlight javascript %}
+//객체 생성 기본 방법 1
+var student = {};
+student.grade = 3;
+student.classNo = 11;
+student.info = function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);};
+
+//객체 생성 기본 방법 2
+var student = {
+    'grade' : 3,
+    'classNo' : 11,
+    'info' :  function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);}//key-value 형식으로 할 때에는 세미 콜론(;)을 붙이지 않아도 된다.
+};
+
+//this를 명시하면 해당 객체 내부의 변수를 가리킨다. ( )= 객체 자기 자신이 가지고 있는 것을 가리키는 것)
+{% endhighlight %}
+
+#생성자 (constructor) : 객체를 만드는 역할을 하는 함수
+{% highlight javascript %}
+//알림 출력
+function Student(){}
+
+var s = new Student();//객체 생성
+s.grade = 3;
+s.classNo = 11;
+s.info = function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);
+{% endhighlight %}
+
+함수 호출 시 new를 붙이면 새로운 객체를 만든 후에 이를 리턴한다.
+
+하지만 위의 방법대로 하면 객체를 만들때마다 각 요소들을 새로 선언해야 되기 떄문에
+같은 기능들을 사용하는 객체를 만들때에는 효율적이지 않다.
+그렇기 때문에 this를 사용해서 좀 더 효율적으로 바꾼다.
+
+#this와 함께 사용
+{% highlight javascript %}
+function Student(grade, classNo){
+    this.name = name;
+    this.classNo = classNo;
+    this.info = function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);
+}
+{% endhighlight %}
