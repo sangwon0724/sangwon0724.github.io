@@ -1,0 +1,109 @@
+---
+layout: post
+title:  "BOM (Browser Object Model)"
+date:   2023-04-28 10:07:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+---
+
+BOM : 웹 브라우저를 제어하기 위해서 브라우저가 제공하는 객체들
+- Document 객체 : 현재문서에 대한 정보
+- History 객체 : 현재의 브라우저가 접근했던 URL history
+- Location 객체 : 현재 URL에 대한 정보, 브라우저에서 사용자가 요청하는 URL
+- Navigator 객체 : 브라우저명과 버전정보를 속성으로 가짐
+- Screen 객체 : 브라우저의 외부환경에 대한 정보를 제공
+- Window 객체 : 최상위 객체(= 전역 객체)로, 각 프레임별로 하나씩 존재
+
+사용자와의 커뮤니케이션  
+alert("문자열" 또는 변수명);  => 알림을 띄우는 기능  
+confirm("문자열"); => 확인/취소를 띄우는 선택창을 띄우는 기능, 값은 true/false 반환  
+prompt("문자열"); => 입력을 받아서 그 값을 저장해주는 형태  
+
+{% highlight javascript %}
+if(confirm("confirm 테스트")){
+    alert("확인 버튼  클릭")
+}
+else {
+    alert("취소 버튼 클릭");
+}
+
+if(prompt("\"BB 바른 한 래퍼가 내게 말을 건다 ~\"\n\n이것은 누구의 노래인가요?")==="조광일"){
+        alert("정답입니다.")
+    }
+    else {
+        alert("오답입니다.");
+    }
+{% endhighlight %}
+
+#Location 객체 : 문서의 주소와 관련된 정보를 갖는 객체
+{% highlight javascript %}
+//현재 윈도우의 문서가 위치하는 URL 알아보기
+document.write("location.toString() => ", location.toString(), "<br/>");
+document.write("location.href => ", location.href, "<br/>");
+document.write("<button onclick='javascript:location.reload();'>새로고침</button>");
+
+//URL Parsing : URL에 있는 요소의 정보를 나타낸다.
+document.write("location.protocol => ", location.protocol, "<br/>");
+document.write("location.host => ", location.host, "<br/>");
+document.write("location.port => ", location.port, "<br/>");
+document.write("location.pathname => ", location.pathname, "<br/>");
+document.write("location.search => ", location.search, "<br/>");
+document.write("location.hash => ", location.hash, "<br/>");
+document.write("<button onclick='javascript:location.reload();'>새로고침</button>");
+
+//location.href : 주소 이동하기
+location.href = "https://www.naver.com/";
+
+//새로고침
+location.reload();
+{% endhighlight %}
+
+#Navigator 객체 : 브라우저의 정보를 알려주는 객체
+{% highlight javascript %}
+/*
+    ● appName : 웹 브라우저의 이름. (IE => Microsoft Internet Explorer / 파이어폭스, 크롬 등 => Nescape)
+    ● appVersion : 브라우저의 버전
+    ● userAgent : 브라우저가 서버측으로 전송하는 USER-AGENT HTTP 헤더의 내용 () appVersion과 비슷함)
+    ● platform : 브라우저가 동작하고 있는 운영체제에 대한 정보
+*/
+document.write("navigator.appName => ", navigator.appName, "<br/>");
+document.write("navigator.appVersion => ", navigator.appVersion, "<br/>");
+document.write("navigator.userAgent => ", navigator.userAgent, "<br/>");
+document.write("navigator.platform => ", navigator.platform, "<br/>");
+document.write("<button onclick='javascript:location.reload();'>새로고침</button>");
+{% endhighlight %}
+
+#창 제어
+- window.open(URL, Window_Name, option)
+    - URL : 새 창에 로드할 문서의 URL이다. 인자를 생략하면 이름이 붙지 않은 새 창이 만들어진다.
+    - Window_Name : 새 창의 이름
+        - '_self' : 스크립트가 실행되는 탭
+        -  '_blank' : 새 탭
+        -  '이름' : 이름 정의, open을 재실행시 동일한 이름의 탭이나 창이 있다면 그 곳으로 로드
+    - option : 옵션을 지정해서 부여, 옵션이 여러개일 때는 쉼표로 연결, 옵션을 지정하면 새 탭이 아니라 새 창이 띄워진다.
+        -  width=n : 팝업 창의 가로 길이
+        -  height=n : 팝업 창의 세로 길이
+        -  toolbar=yes/no : 단축 도구창 (=툴바) 표시 여부
+        -  menubar=yes/no : 메뉴창 (=메뉴바) 표시 여부
+        -  location=yes/no : 주소창 표시 여부
+        -  scrollbars=yes/no : 스크롤바의 표시 여부
+        -  status=yes/no : 아래 상태바 창의 표시 여부
+        -  resizable=yes/no : 창의 크기 변형 가능 여부
+        -  fullscreen=yes/no : 전체화면 여부
+        -  channelmode=yes/no : 채널 모드 여부 (F11 키의 기능과 동일)
+        -  left=n : (0, ???)에서 (n,???)에 창을 고정
+        -  top=n : (???, 0)에서 (???, n)에 창을 고정
+- 상호 작용
+{% highlight javascript %}
+    //새 창 열기
+    win = window.open('./JavaScript/popup.html', 'name_is_popup', 'width=300px, height=500px');
+    
+    //새 창에서 열린 html 파일의 내용 변경
+    win.document.getElementById('message').innerText=parent.document.getElementById('message').value;
+    
+    //새 창 닫기
+    win.close();
+{% endhighlight %}
+- 보안성
+    - 크롬에서는 로컬파일로 실행시키면 Same-origin policy 때문에 브라우저자체에서 iframe이나 window.open(...)과 통신을 막아 동작하지 않습니다.
+    - 만약 기존의 창과 새로 띄운 창의 도메인이 다른 경우에는 기존의 창에서 새로 띄운 창의 내용을 바꿀 수 있는 작업을 할 수 없다.
+    - 웹 브라우저 제작 회사 측에서 버튼을 클릭한 것이 아니라 스크립트 상에서 window.open(...);으로 바로 띄우는 창같은 경우에는 그것은 사용자의 의지가 아니라고 판단하여 기본적으로 팝업 차단을 해두었다. 만약, 해당 페이지에 대한 팝업 허용을 하면 사용가능하다.
