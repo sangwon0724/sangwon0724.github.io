@@ -14,7 +14,7 @@ key 값이라는 문자열을 통하여 값을 꺼내오는 형태의
 ● const 객체명={ name:"lee",age:25,gender:"male"};
     ▶ 객체명에 const가 붙어있지만 object 안의 내용 값을 바꿀수있다.
 
-#객체 생성 방법
+### 객체 생성 방법
 {% highlight javascript %}
 //선언 후 초기화
 var grade = {};     //중괄호를 사용한다.
@@ -24,7 +24,7 @@ grade['a']=1; grade['b']=2; grade['c']=3; //대괄호 안에 키 값을 표현�
 var grade = {'a' : 1, 'b' : 2, 'c' : 3};
 {% endhighlight %}
 
-#객체의 속성 추가하기
+### 객체의 속성 추가하기
 {% highlight javascript %}
 const member = {};
 
@@ -33,7 +33,7 @@ member.name = 'lee';
 console.log(member.name); //출력 : lee
 {% endhighlight %}
 
-#객체의 속성 정의하기
+### 객체의 속성 정의하기
 {% highlight javascript %}
 const member = {};
 
@@ -75,7 +75,7 @@ width=200;
 console.log(picture.width); //출력 : 200
 {% endhighlight %}
 
-#객체 사용 방법
+### 객체 사용 방법
 {% highlight javascript %}
 alert(grade['a']);  //출력 : 1
 
@@ -87,7 +87,7 @@ for(keyName in forEachTest) {
 }
 {% endhighlight %}
 
-# 객체 지향 프로그래밍 (객체에는 배열이나 함수도 선언할 수 있다.)
+### 객체 지향 프로그래밍 (객체에는 배열이나 함수도 선언할 수 있다.)
 {% highlight javascript %}
 var studentInfo={
     'grade' : {'bule' : 1, 'yellow' : 2, 'red' : 3},
@@ -109,7 +109,7 @@ var studentInfo={
 */
 {% endhighlight %}
 
-#객체의 독립성
+### 객체의 독립성
 {% highlight javascript %}
 //객체는 원시 데이터 변수와 다르게 같은 데이터를 가졌어도 다르게 취급한다.
 var a1 = {test : 1};
@@ -153,7 +153,7 @@ console.log(a1.test2); //출력 : [1,2,3]
 console.log(a2.test2); //출력 : [1,2,3,4]
 {% endhighlight %}
 
-#객체의 데이터 가져오기
+### 객체의 데이터 가져오기
 {% highlight javascript %}
 var test = {"first":1,"second":2,"third":3};
 
@@ -239,7 +239,7 @@ Object.isExtensible(member); //출력 : false, 확장 불가능한 상태
 //※ 객체의 새로운 속성이 추가되는 것을 막는것이지 이미 있는 속성은 변경할 수 있다.
 {% endhighlight %}
 
-#객체 봉인하기
+### 객체 봉인하기
 {% highlight javascript %}
 //1. 새로운 속성 추가 (불가능)
 //2. configurable 속성 변경 (불가능)
@@ -259,7 +259,7 @@ Object.isSealed(member); //출력 : true, 현재 객체가 봉인된 상태
 //※ Object.freeze(객체명)와 달리 속성의 값을 변경할 수 있다.
 {% endhighlight %}
 
-#객체 ←→ 배열
+### 객체 ←→ 배열
 {% highlight javascript %}
 var test = {"first":1,"second":2,"third":3};
 
@@ -281,7 +281,7 @@ member.hasOwnProperty('name'); //출력 : true
 member.hasOwnProperty('age'); //출력 : false
 {% endhighlight %}
 
-#동일 여부 체크
+### 동일 여부 체크
 {% highlight javascript %}
 Object.is('hi', 'hi'); //출력 : true
 Object.is('hi', 'hello'); //출력 : false

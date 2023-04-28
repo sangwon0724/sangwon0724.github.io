@@ -9,7 +9,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     ▶ 전역 변수 : 에플리케이션 전역에서 접근이 가능한 변수
     ▶ 지역 변수 : 함수 내부에서 사용하는 제한적인 변수
 
-#선언에 따른 변수의 유효 범위 변화
+### 선언에 따른 변수의 유효 범위 변화
 {% highlight javascript %}
 var varScope = 'global';
 function scopeTest(){
@@ -21,7 +21,7 @@ alert(varScope);//출력 : local, scopeTest 함수 안에서 varScope 앞에 var
 {% endhighlight %}
 ※ 즉, 변수를 초기화할 때에는 (특히, 함수 내부에서 초기화할 때) var같은 자료형을 붙이는 것을 습관화 해야 한다.
 
-#유효 범위를 신경써야 되는 이유
+### 유효 범위를 신경써야 되는 이유
 {% highlight javascript %}
 var resultA=0, resultB=0;
 function a (){
@@ -51,7 +51,7 @@ console.log("결과 B : " + resultB);     //출력 : 10
     for문 내부의 b()에서 초기화 되는 i는 var를 붙였기 때문에 b() 내부에서만 사용되는 아예 다른 i다.
     그렇기 때문에 for문이 정상적으로 작동해서 결과값이 10이 된 것이다.
 
-#전역 변수 사용법 : 하나의 객체를 전역 변수로 만들고 객체의 속성으로 변수를 관리한다.
+### 전역 변수 사용법 : 하나의 객체를 전역 변수로 만들고 객체의 속성으로 변수를 관리한다.
 {% highlight javascript %}
 studentInfo = {};
 studentInfo.score = {
@@ -69,7 +69,7 @@ studentInfo.personal = {
 studentInfo.score.math = 90;
 {% endhighlight %}
 
-#유효 범위의 대상
+### 유효 범위의 대상
 {% highlight javascript %}
 for(var i = 0; i < 5; i++){
     var name="test name";
@@ -82,7 +82,7 @@ alert(name);    //출력 : test name
 //이유 : var에 의한 전역변수/지역변수 구분은 함수의 내외에서만 구분된다. 그 외에는 항상 전역변수
 {% endhighlight %}
 
-#정적 유효 범위 : 자바스크립트의 함수가 선언된 시점에서의 유효 범위 ( = 정적 유효 범위, 렉시컬)
+### 정적 유효 범위 : 자바스크립트의 함수가 선언된 시점에서의 유효 범위 ( = 정적 유효 범위, 렉시컬)
 {% highlight javascript %}
 var i = 5;
 function a(){

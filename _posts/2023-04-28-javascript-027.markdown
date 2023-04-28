@@ -34,7 +34,7 @@ if(prompt("\"BB 바른 한 래퍼가 내게 말을 건다 ~\"\n\n이것은 누�
     }
 {% endhighlight %}
 
-#Location 객체 : 문서의 주소와 관련된 정보를 갖는 객체
+### Location 객체 : 문서의 주소와 관련된 정보를 갖는 객체
 {% highlight javascript %}
 //현재 윈도우의 문서가 위치하는 URL 알아보기
 document.write("location.toString() => ", location.toString(), "<br/>");
@@ -57,7 +57,7 @@ location.href = "https://www.naver.com/";
 location.reload();
 {% endhighlight %}
 
-#Navigator 객체 : 브라우저의 정보를 알려주는 객체
+### Navigator 객체 : 브라우저의 정보를 알려주는 객체
 {% highlight javascript %}
 /*
     ● appName : 웹 브라우저의 이름. (IE => Microsoft Internet Explorer / 파이어폭스, 크롬 등 => Nescape)
@@ -72,7 +72,7 @@ document.write("navigator.platform => ", navigator.platform, "<br/>");
 document.write("<button onclick='javascript:location.reload();'>새로고침</button>");
 {% endhighlight %}
 
-#창 제어
+### 창 제어
 - window.open(URL, Window_Name, option)
     - URL : 새 창에 로드할 문서의 URL이다. 인자를 생략하면 이름이 붙지 않은 새 창이 만들어진다.
     - Window_Name : 새 창의 이름

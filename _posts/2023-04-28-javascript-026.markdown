@@ -5,7 +5,7 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#복제 (copy)
+### 복제 (copy)
 {% highlight javascript %}
 var a = 1;
 var b = a;
@@ -17,7 +17,7 @@ console.log(a); //출력 : 2
 //b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
 {% endhighlight %}
 
-#참조 (reference)
+### 참조 (reference)
 {% highlight javascript %}
 var a = {'id' : 1};
 var b = a;

@@ -28,7 +28,7 @@ Object API
             예시 1) console.log(arr.toString());    //출력 : a,b,c
             예시 2) console.log(o.toString());      //출력 : [object Object]
 
-#Object 객체의 확장
+### Object 객체의 확장
 {% highlight javascript %}
 Object.prototype.searchElement = function(searchObject) {
     for(var index in this){
@@ -44,7 +44,7 @@ var number = [1,2,3];
 console.log(number.searchElement(1));         //출력 : true
 {% endhighlight %}
 
-Object 객체의 확장의 위험성
+### Object 객체의 확장의 위험성
     만약 위에서럼 Object 객체에 대해서 search라는 함수를 정의했을 때,
     for-in문으로 student와 number를 console.log()로 출력해보면 다음과 같이 나온다. (/는 다음 줄을 의미한다.)
     for(var item in variableName){console.log(item);}

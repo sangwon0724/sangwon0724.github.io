@@ -5,7 +5,7 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#변수 선언
+### 변수 선언
 {% highlight javascript %}
  //선언 후 초기화
 var temp;
@@ -15,13 +15,13 @@ temp="아무 값";
 var temp="아무 값";
 {% endhighlight %}
 
-#변수에 값 입력받기
+### 변수에 값 입력받기
 {% highlight javascript %}
 var name=prompt('당신의 이름은 무엇인가요?');//test 입력
 alert(name);    //출력 : test
 {% endhighlight %}
 
-#자료형 확인
+### 자료형 확인
 {% highlight javascript %}
 console.log(typeof [변수명 또는 숫자 또는 문자열]); //출력 예시 : string 또는 number
 {% endhighlight %}

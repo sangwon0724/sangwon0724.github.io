@@ -5,7 +5,7 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#수의 연산
+### 수의 연산
 {% highlight javascript %}
 //제곱
 Math.pow(3,2);       //출력 : 9,   3의 2승
@@ -27,7 +27,7 @@ Math.random();       //출력 : 0부터 1.0 사이의 랜덤한 숫자 (소수�
 Math.round(100*Math.random()+1);       //출력 : 1부터 100 사이의 랜덤한 숫자 (정수)
 {% endhighlight %}
 
-#문자열
+### 문자열
 {% highlight javascript %}
 //문자열 길이
 "Hello World".length//출력 : 11

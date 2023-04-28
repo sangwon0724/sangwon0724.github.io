@@ -5,7 +5,7 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#객체 생성 기본 방법
+### 객체 생성 기본 방법
 {% highlight javascript %}
 //객체 생성 기본 방법 1
 var student = {};
@@ -23,7 +23,7 @@ var student = {
 //this를 명시하면 해당 객체 내부의 변수를 가리킨다. ( )= 객체 자기 자신이 가지고 있는 것을 가리키는 것)
 {% endhighlight %}
 
-#생성자 (constructor) : 객체를 만드는 역할을 하는 함수
+### 생성자 (constructor) : 객체를 만드는 역할을 하는 함수
 {% highlight javascript %}
 //알림 출력
 function Student(){}
@@ -40,7 +40,7 @@ s.info = function(){console.log('grade : ' + this.grade + 'class : ' + this.clas
 같은 기능들을 사용하는 객체를 만들때에는 효율적이지 않다.
 그렇기 때문에 this를 사용해서 좀 더 효율적으로 바꾼다.
 
-#this와 함께 사용
+### this와 함께 사용
 {% highlight javascript %}
 function Student(grade, classNo){
     this.name = name;

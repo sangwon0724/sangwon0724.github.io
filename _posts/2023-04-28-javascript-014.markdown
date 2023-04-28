@@ -9,7 +9,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 - JavaScript에서는 함수도 객체이기 때문에 일종의 값이 될 수 있음을 의미한다.
 - function test(){}는 var test = function(){};와 같다.
 
-#메소드 : 객체의 속성 값으로 담겨진 함수
+### 메소드 : 객체의 속성 값으로 담겨진 함수
 {% highlight javascript %}
 var testA = function(){};
 
@@ -20,7 +20,7 @@ var testB = {
 };
 {% endhighlight %}
 
-#함수의 값으로서의 전달 방법
+### 함수의 값으로서의 전달 방법
 {% highlight javascript %}
 //문자열을 만드는 함수
 function printTest(func, num){
@@ -42,7 +42,7 @@ console.log(printTest(squaredTest,3));   //출력 : 3의 제곱은 9입니다.
 */
 {% endhighlight %}
 
-#리턴 값으로서의 함수 사용
+### 리턴 값으로서의 함수 사용
 {% highlight javascript %}
 function cal(mode){
     var funcs = {

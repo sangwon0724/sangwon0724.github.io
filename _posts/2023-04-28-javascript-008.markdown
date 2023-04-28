@@ -11,7 +11,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     (2) 유지보수가 용이하다.
     (3) 가독성이 올라간다.
 
-#함수 선언 방법
+### 함수 선언 방법
 {% highlight javascript %}
 //선언 방법 1
 function 함수명(인자1, 인자2, ...){
