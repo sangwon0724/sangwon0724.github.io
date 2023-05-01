@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Document 객체 : 문서 전체를 대표하는 객체"
-date:   2023-04-28 10:07:33 +0900
-categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+title:  "토스트 알림"
+date:   2023-05-02 00:45:33 +0900
+categories: Group&nbsp;:&nbsp;JavaScript Others
 ---
 
 #복제 (copy)

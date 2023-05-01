@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "객체 지향 - 참조"
+title:  "Text 객체 : 텍스트 노드에 대한 DOM 객체"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
