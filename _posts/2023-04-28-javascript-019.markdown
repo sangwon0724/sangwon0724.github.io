@@ -13,14 +13,14 @@ student.grade = 3;
 student.classNo = 11;
 student.info = function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);};
 
-//객체 생성 기본 방법 2
+//객체 생성 기본 방법 2 (key-value 형식으로 할 때에는 세미 콜론(;)을 붙이지 않아도 된다.)
 var student = {
     'grade' : 3,
     'classNo' : 11,
-    'info' :  function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);}//key-value 형식으로 할 때에는 세미 콜론(;)을 붙이지 않아도 된다.
+    'info' :  function(){console.log('grade : ' + this.grade + 'class : ' + this.classNo);}
 };
 
-//this를 명시하면 해당 객체 내부의 변수를 가리킨다. ( )= 객체 자기 자신이 가지고 있는 것을 가리키는 것)
+//this를 명시하면 해당 객체 내부의 변수를 가리킨다. (= 객체 자기 자신이 가지고 있는 것을 가리키는 것)
 {% endhighlight %}
 
 ### 생성자 (constructor) : 객체를 만드는 역할을 하는 함수

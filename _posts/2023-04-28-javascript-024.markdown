@@ -5,28 +5,34 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-Object 객체
-    ● 객체의 가장 기본적인 형태를 가지고 있다. ( = 아무것도 상속 받지 않은 순수한 객체 )
-    ● JavaScript에서 값을 저장하는 기본적인 단위
-    ● JavaScript의 모든 객체는 Object 객체를 상속받는다. ( = 모든 객체는 Object 객체의 프로퍼티를 가지고 있다.)
-    ● Object 객체를 확장하면 모든 객체가 접근할 수 있는 API를 만들 수 있다.
+### Object 객체의 특징
+- 객체의 가장 기본적인 형태를 가지고 있다. ( = 아무것도 상속 받지 않은 순수한 객체 )
+- JavaScript에서 값을 저장하는 기본적인 단위
+- JavaScript의 모든 객체는 Object 객체를 상속받는다. ( = 모든 객체는 Object 객체의 프로퍼티를 가지고 있다.)
+- Object 객체를 확장하면 모든 객체가 접근할 수 있는 API를 만들 수 있다.
 
-Object API
-    ▶ JavaScript API 홈페이지 가는 법
-        1. https://developer.mozilla.org/en-US/docs/Web로 이동한다.
-        2. Web technology references이나 Temporary에서 JavaScript 항목을 찾아서 클릭한다.
-        3. References의 Built-in objects에서 Object 항목을 찾아서 클릭한다.
+### Object API
+- JavaScript API 홈페이지 가는 법
+    1. https://developer.mozilla.org/en-US/docs/Web로 이동한다.
+    2. Web technology references이나 Temporary에서 JavaScript 항목을 찾아서 클릭한다.
+    3. References의 Built-in objects에서 Object 항목을 찾아서 클릭한다.
     
-    ▶ Object API 사용법
-        사용할 값 1 => var arr = ["a", "b", "c"];
-        사용할 값 2 => var o = {name : 'Tom', 'hobby':'Listen Music'};
+- Object API 사용법
+    - 사용할 값 1 => var arr = ["a", "b", "c"];
+    - 사용할 값 2 => var o = {name : 'Tom', 'hobby':'Listen Music'};
 
-        ● Object.xxx(!!!) 사용법 : Object를 선언한 뒤에 함수명을 명시해서 사용한다.
-            예시 1) console.log(Object.keys(arr));  //출력 : ["0", "1", "2"], 이유 : 배열이기 때문에 키 값으로 index 번호를 리턴한다.
-            예시 2) console.log(Object.keys(o));    //출력 : ["name", "hobby"], 이유 : 객체이기 떄문에 키 값을 리턴한다.
-        ● Object.prototype.yyy(???) 사용법 : 변수명 뒤에 함수명을 명시해서 사용한다.
-            예시 1) console.log(arr.toString());    //출력 : a,b,c
-            예시 2) console.log(o.toString());      //출력 : [object Object]
+- Object.xxx(!!!) 사용법 : Object를 선언한 뒤에 함수명을 명시해서 사용한다.
+    - 예시 1) console.log(Object.keys(arr));
+        - 출력 : ["0", "1", "2"]
+        - 이유 : 배열이기 때문에 키 값으로 index 번호를 리턴한다.
+    - 예시 2) console.log(Object.keys(o));
+        - 출력 : ["name", "hobby"]
+        - 이유 : 객체이기 떄문에 키 값을 리턴한다.
+- Object.prototype.yyy(???) 사용법 : 변수명 뒤에 함수명을 명시해서 사용한다.
+    - 예시 1) console.log(arr.toString());
+        - 출력 : a,b,c
+    - 예시 2) console.log(o.toString());
+        - 출력 : [object Object]
 
 ### Object 객체의 확장
 {% highlight javascript %}
@@ -38,33 +44,19 @@ Object.prototype.searchElement = function(searchObject) {
     }
     return false;
 }
-var student = {name : 'Tom', 'hobby':'Listen Music'};
+var student = {name : 'Tom', hobby:'Listen Music'};
 console.log(student.searchElement('age'));    //출력 : false
 var number = [1,2,3];
 console.log(number.searchElement(1));         //출력 : true
 {% endhighlight %}
 
 ### Object 객체의 확장의 위험성
-    만약 위에서럼 Object 객체에 대해서 search라는 함수를 정의했을 때,
-    for-in문으로 student와 number를 console.log()로 출력해보면 다음과 같이 나온다. (/는 다음 줄을 의미한다.)
-    for(var item in variableName){console.log(item);}
-
-    ● student의 경우 => Tom/Listen Music/searchElement
-    ● number 경우 => 1/2/3/searchElement
-
-    심지어 for(var item in variableName){console.log(variableName);}을 하면 searchElement 함수의 코드까지 모두 보여지게 된다.
-
-    이러한 점은 Object 객체에 적용시키면 모든 객체에 적용이 되서 매우 위험하기 때문에 사용하려면 그러한 점을 감안해야 한다.
-
-    물론, 이러한 점을 보완하는 방법은 존재한다.
-    원래의 코드인 for(var item in variableName){console.log(item);}에서 약간의 코드를 추가하면 된다.
-    for(var item in variableName){
-        if(item.hasOwnProperty(item)){
-            console.log(item);
-        }
+만약 위에서럼 Object 객체에 대해서 prototype으로 재정의한 함수는  
+잘못하면 코드가 유출될수 있으니 객체의 내용물을 출력할때는 다음과 같이 작성하는 것이 좋다.
+{% highlight javascript %}
+for(var item in 객체명){
+    if(item.hasOwnProperty(item)){
+        console.log(item);
     }
-
-    이렇게 하게 되면 student를 예를 들게 되면
-    실제 값으로는 Tom/Listen Music만 있지만 Tom/Listen Music/searchElement 출력이 됬었다.
-    하지만 hasOwnProperty()는 인자로 들어간 값이 실제로 존재하는 경우에만 true를 반환하기 때문에
-    hasOwnProperty()를 사용하게 되면 for-in문을 돌렸을 때 Tom/Listen Music만 나오게 바꿀 수 있다.
+}
+{% endhighlight %}

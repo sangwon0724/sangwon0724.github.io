@@ -5,14 +5,14 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-전역 객체 (Global Object)
-    ● 전역 객체는 특수한 객체다.
-    ● 모든 객체는 전역 객체의 프로퍼티다.
-    ● 모든 전역 변수와 전역 함수는 window의 프로퍼티다.
+### 전역 객체 (Global Object)
+- 전역 객체는 특수한 객체다.
+- 모든 객체는 전역 객체의 프로퍼티다.
+- 모든 전역 변수와 전역 함수는 window의 프로퍼티다.
 
-    예시)
-        function test(){console.log('execute function test()')};가 있을 때,
-        보통은 test();로 실행시키지만
-        window.test();로도 실행시킬수 있다.
-        왜냐하면 전역 함수는 window의 프로퍼티이기 때문이다.
-        평소에 window를 쓰지 않아도 호출이 가능한 것은 window를 명시하지 않아도 전역 변수와 전역 함수는 암시적으로 window의 프로퍼티로 인식되기 때문이다.
+(예시)  
+function test(){console.log('execute function test()')};가 있을 때,  
+보통은 test();로 실행시키지만  
+window.test();로도 실행시킬수 있다.  
+왜냐하면 전역 함수는 window의 프로퍼티이기 때문이다.  
+평소에 window를 쓰지 않아도 호출이 가능한 것은 window를 명시하지 않아도 전역 변수와 전역 함수는 암시적으로 window의 프로퍼티로 인식되기 때문이다.  

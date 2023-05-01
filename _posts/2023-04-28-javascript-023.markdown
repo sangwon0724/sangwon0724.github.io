@@ -5,27 +5,29 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-표준 내장 객체 (Standard Built-in Object) : JavaScript가 기본적으로 가지고 있는 객체들
-    ● 내장 객체가 중요한 이유 : 프로그래밍을 하는데 기본적으로 필요한 도구들이기 때문에
-    ● 내장 객체에 대한 이해가 필요한 이유 : 프로그래밍이라는 것은 언어와 호스트 환경에 따라서
-                                        제공하는 기능들을 통해서 새로운 소프트웨어르 만들어내는 것이기 때문에
+### 표준 내장 객체란?
+※ 표준 내장 객체 (Standard Built-in Object) : JavaScript가 기본적으로 가지고 있는 객체들
+- 내장 객체가 중요한 이유
+    - 프로그래밍을 하는데 기본적으로 필요한 도구들이기 때문에
+- 내장 객체에 대한 이해가 필요한 이유
+    - 프로그래밍이라는 것은 언어와 호스트 환경에 따라서 제공하는 기능들을 통해서 새로운 소프트웨어를 만들어내는 것이기 때문에
 
-표준 내장 객체의 종류
-    ● Object : 객체
-    ● Function : 함수
-    ● Array : 배열
-    ● String : 문자
-    ● Boolean : 참/거짓
-    ● Number : 숫자
-    ● Math : 수학
-    ● Date : 날짜
-    ● RegExp : 정규 표현식
+### 표준 내장 객체의 종류
+- Object : 객체
+- Function : 함수
+- Array : 배열
+- String : 문자
+- Boolean : 참/거짓
+- Number : 숫자
+- Math : 수학
+- Date : 날짜
+- RegExp : 정규 표현식
 
 #배열의 확장
 {% highlight javascript %}
 var arr = new Array('a','b','c','d', 'e');
 function getRandomData(arr){
-    var index = Math.floor(arr.length * Math.random()); //0부터 4까지의 값을 소수점 뒷자리를 제거해서 저장
+    var index = Math.floor(arr.length * Math.random());
     return arr[index];
 }
 console.log(getRandomData(arr));
