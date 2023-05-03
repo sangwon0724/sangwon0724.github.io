@@ -5,26 +5,60 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-### 복제 (copy)
-{% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
+### DOM이란?
+※ DOM (Document Object Model) : 웹페이지를 자바스크립트로 제어하기 위한 객체 모델
+- window 객체의 document 프로퍼티를 통해서 사용
+- Document 객체는 윈도우에 로드된 문서를 의미
 
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
+### 제어 대상을 찾는 방법
+{% highlight javascript %}
+//getElementsByTagName('태그명')
+//인자로 전달한 태그명에 해당되는 객체들을 찾아서 그 리스트를 NodeList라는 유사 배열에 담아서 반환한다.
+var divList = document.getElementsByTagName('div');
+
+//getElementsByClassName('클래스명')
+//클래스 속성의 값을 기준으로 객체를 찾아서 그 리스트를 유사 배열에 담아 반환한다.
+var inputTextList = document.getElementsByClassName('inputText');
+
+//getElementById('아이디명')
+//아이디 속성의 값을 기준으로 한 개의 객체를 찾아서 해당 객체를 반환한다.
+var email = document.getElementById('email');
+
+//querySelector('선택자') or querySelectorAll('선택자')
+//css의 선택자 문법을 이용해서 객체 한 개나 리스트를 반환한다.
+var divOne = document.querySelector('div'); //1개만 반환
+var divList = document.querySelectorAll('div');     //리스트에 담아서 반환
+var test = document.querySelector('.test'); //클래스 선택자를 통해서 객체 탐색, 아이디는 # 이용
 {% endhighlight %}
 
-### 참조 (reference)
-{% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
+※ getElementById는 querySelector 대비 약 169.86배 빠르고, querySelector는 jQuery대비 약 12.16배 빠르다
 
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
-{% endhighlight %}
+### HTML Element & HTML Collection
+- getElementBy[xxx] 메소드나 querySelector/querySelectorAll을 통해서 객체를 조회했다면
+이 객체들을 대상으로 구체적인 작업을 처리해야 한다.
+- 객체들에 대한 작업을 하기 위해서는 휙득한 객체가 무엇인지 정확히 알고 있어야지
+적절한 메소드나 프로퍼티를 사용할 수 있다.
+- 휙득한 객체에 대한 정보는 console.log(객체.constructor.name);를 하면 알 수 있다.
+- 제어 대상 탐색 메소드를 통해서 리턴받는 개수
+    - 단수 => HTML Element
+    - 복수 => HTML Collection
+
+### HTML Element
+- HTML Element는 각각의 태그에 따라 종류가 매우 많다. (HTMLLIElement, HTMLAnchroElement 등등)
+- HTML Element의 자세한 구조는 이 홈페이지에서 찾아보자. <a href="https://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/html.html#ID-58190037" target="_blank">HTML Element</a>
+- HTML Element의 메소드는 이 홈페이지에서 찾아보자. <a href="https://developer.mozilla.org/ko/docs/Web/API/HTMLElement" target="_blank">HTMLElement - Web API | MDN - Mozilla</a>
+
+### HTML Collection
+- HTML Collection의 자세한 구조는 이 홈페이지에서 찾아보자. <a href="https://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/html.html#ID-75708506" target="_blank">HTML Collection</a>
+- HTML Collection의 메소드는 이 홈페이지에서 찾아보자. <a href="https://developer.mozilla.org/ko/docs/Web/API/HTMLCollection" target="_blank">HTMLCollection - Web API | MDN - Mozilla</a>
+
+### DOM Tree (돔 트리)
+>
+1. 모든 엘리먼트는 HTMLElement의 자식이다.
+2. 따라서 HTMLElement의 프로퍼티를 똑같이 가지고 있다.
+3. 동시에 엘리먼트의 성격에 따라서 자신만의 프로퍼티를 가지고 있는데 이것은 엘리먼트의 성격에 따라서 달라진다.
+4. HTMLElement은 Element의 자식이다.
+5. 따라서 Element의 프로퍼티를 똑같이 가지고 있다.
+6. Element은 Element의 Node의 자식이다.
+7. 이렇게 자신의 부모가 되는 객체의 프로퍼티나 메소드를 차례대로 자식 객체들이 물려받는 구조를 DOM Tree라고 한다.  
+예시) Node → Element → HTMLElement → HTMLLIElement, HTMLAnchroElement 등등
