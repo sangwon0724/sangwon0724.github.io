@@ -5,26 +5,71 @@ date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#복제 (copy)
 {% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
-
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
 {% endhighlight %}
 
-#참조 (reference)
+### let & const
+- let
+    - 기존의 var같은 자료형
+    - 변수 재선언 불가
+    - 변수 재할당 가능
 {% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
-
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
+//예시 - var의 경우)
+var str = "test";
+var str = "example";//에러 없음
+//예시 - let의 경우)
+let str = "test";
+let str = "example";//에러 발생
 {% endhighlight %}
+- const
+    - 변수 재선언 불가
+    - 변수 재할당 특정 상황에 한해서 가능
+{% highlight javascript %}
+//예시 - 기본적인 변수의 경우)
+const str = "test";
+const str = "example";//에러 없음
+str = "example";//에러 없음
+//예시 - 객체의 경우)
+const str = {
+text : "test"
+};
+str.name = "example";//에러 없음
+{% endhighlight %}
+
+※ 기본적인 변수는 왠만하면 const를 쓰고, 재할당할 변수만 let을 하는게 좋다.
+
+### Dead Zone
+- 호이스팅 (Hoisting)
+    - 자바스크립트가 프로그램을 실행하기 전에  
+var 선언문이나 function 선언문 등을 해당 스코프의 선두로 옮긴 것처럼 동작하는 특성
+    - 
+{% highlight javascript %}
+/*** var 때문에 생겨나는 호이스팅의 문제점 ***/
+
+//아래와 같은 코드가 있다고 가정
+console.log(str);
+var str = "test";
+
+//자바스크립트는 내부에서 다음과 같이 변환
+var str;
+console.log(str);//출력 : undefined
+str = "test";
+
+//위의 코드에서는 원래 undefined가 나오면 안된다.
+//원래는 에러가 발생해야 되지만 호이스팅에 의해서 undefined가 발생한다.
+{% endhighlight %}
+
+### Block Scope
+- let과 const의 경우에는 블록 내부에서만 사용이 가능하다.
+{% highlight javascript %}
+if(true){ let test = "test";}
+console.log(test);  //에러 발생
+{% endhighlight %}
+- var의 경우에는 블록 내부/외부 상관없이 간섭이 가능하다.
+{% highlight javascript %}
+if(true){ var test = "test";}
+console.log(test);  //출력 : test;
+{% endhighlight %}
+
+※ 함수의 경우에는 var도 내부/외부 구분이 가능은 하지만  
+코딩의 실수로 간섭이 발생할수 있기 때문에 왠만하면 let과 const를 사용하는 것이 낫다.

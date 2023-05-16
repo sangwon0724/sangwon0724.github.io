@@ -1,30 +1,40 @@
 ---
 layout: post
-title:  "Text 객체 : 텍스트 노드에 대한 DOM 객체"
+title:  "Text 객체"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#복제 (copy)
-{% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
+### Text 객체란?
+※ Text 객체 : 텍스트 노드에 대한 DOM 객체
 
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
-{% endhighlight %}
+### 특징
+- CharcterData 객체를 상속받는다.
+- 공백이나 문자열도 객체로 취급한다.
 
-#참조 (reference)
-{% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
+### 주요 기능
+- 값
+- 조작
+- 생성
 
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
-{% endhighlight %}
+### 값
+- data
+    - 텍스트 노드의 값을 가져오거나 변경
+- nodeValue
+    - 텍스트 노드의 값을 가져오거나 변경
+
+### 조작
+- Node.appendData('내용')
+    -  Node의 기존 내용 뒤에 내용 추가
+- Node.deleteData(n, count)
+    - Node의 기존 내용의 n번 인덱스부터 count 개수만큼 삭제
+- Node.insertData(n, '내용')
+    - Node의 기존 내용의 n번 인덱스에 내용 추가
+- Node.replaceData(n, count, '내용')
+    - Node의 기존 내용의 n번 인덱스부터 count 개수만큼 삭제한 뒤에 내용을 그 자리에 추가
+- Node.subStringData(n. count)
+    - Node의 기존 내용의 n번 인덱스부터 count 개수만큼 잘라서 반환
+
+### 생성
+- document.createTextNode('문자열')
+    - 지정한 문자열로 노드 만들기

@@ -1,30 +1,117 @@
 ---
 layout: post
-title:  "Node 객체 : DOM의 시조같은 역할"
+title:  "Node 객체"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#복제 (copy)
-{% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
+### Node 객체란?
+※ Node 객체 : DOM의 시조 역할을 하는 객체
 
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
+### 주요 기능
+-  관계
+    -   각각의 Node가 다른 Node와 연결된 정보를 보여주는 API를 통해서  
+문서를 프로그래밍적으로 탐색
+-  식별자
+    - 모든 구성 요소의 대표격 객체로써 각 구성요소의 소속을 알려주는 식별자 제공
+-  값
+    - Node 객체의 값을 제공하는 API
+-  자식 관리
+    - Node 객체의 자식을 추가하는 방법에 대한 API
+
+### 관계
+-  Node.childNodes
+    -   자식 노드들을 유사 배열에 담아서 반환한다.
+-  Node.firstChild
+    -   첫번째 자식 노드를 반환한다.
+-  Node.lastChild
+    -   마지막 자식 노드를 반환한다.
+-  Node.nextSibling
+    -   다음 형제 노드를 반환한다.
+-  Node.previousSibling
+    -   이전 형제 노드를 반환한다.
+-  Node.contains('객체명')
+    -   주어진 인자가 Node의 자손인지에 대한 true/false 값을 반환한다.
+-  Node.hasChildNodes()
+    -   Node가 자손을 갖고 있는 지에 대한 true/false 값을 반환한다.
+    
+※ 주의점
+- Node.firstChild를 사용할 때 줄바꿈 문자가 첫번째 자식으로 들어갈 수도 있으니 조심해야 한다.
+
+### 노드의 종류
+-  Node.nodeType
+    -   Node의 타입을 반환한다.
+-  Node.nodeName
+    -   Node의 이름을 반환한다. ( = 태그명 )
+{% highlight javascript %}
+for(var name in Node){
+    console.log(name, Node[name]);
+}
 {% endhighlight %}
 
-#참조 (reference)
-{% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
+### 노드의 값
+-  Node.nodeValue
+    - Node의 종류마다 각각 다른 값을 반환한다.
+    - 요소 노드(element node) : undefined
+    - 속성 노드(attribute node) : 해당 속성의 속성값
+    - 텍스트 노드(text node) : 해당 텍스트 문자열
+-  Node.textContent
+    - Node가 가지고 있는 문자열을 반환한다.
 
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
+### 노드의 자식 관리
+-  Node.appendChild(child)
+    - 노드의 마지막 자식으로 주어진 엘리먼트 추가
+{% highlight javascript %}
+var ul = document.getElementsByTagName('ul');
+var li = document.createElement('li'); //Documnet 객체의 기능
+ul.appendChild(li); //ul에 li 추가
 {% endhighlight %}
+
+-  insertBefore(newElement, referenceElement)
+    - appendChild와 사용법은 동일하나 newElement 노드를 referenceElement 앞에 추가한다.
+-  Node.replaceChild(newChild, oldChild) : 노드 변경
+{% highlight javascript %}
+var parent = document.getElementById('#parent');    //parent 노드 설정
+var oldChild = document.createElement('div');  //oldChild 노드 생성
+
+parent.appendChild(oldChild); //parent 노드에 oldChild 노드를 자식 노드로 추가
+
+var newChild = document.createElement('span');  //newChild 노드 생성
+
+//parent 노드의 자식 노드인 oldChild 노드를 제거하고,
+//그 자리에 newChild 노드를 새로 자식 노드로 연결한다.
+parent.replaceChild(newChild, oldChild);
+{% endhighlight %}
+
+-  Node.removeChild()
+    - 노드의 마지막 자식으로 있는 엘리먼트 삭제
+{% highlight javascript %}
+var li = document.getElementsByTagName('li');
+li.parentNode.removeChild(li);
+{% endhighlight %}
+
+
+### 문자열로 노드 제어
+>조건 1 : (1)<div id="target">(2)content<(3)/div>(4)  
+조건 2 : var target = document.getElementById('target');
+
+-  Node.innerHTML
+    -  값을 가져올 때에는 Node 내부에 있는 코드의 HTML 태그들까지 모두 가져온다.
+    -  값을 설정할 때에는 Node 내부의 내용을 아예 변경해버린다. HTML 태그는 Parsing 된다.
+-  Node.outerHTML
+    -  값을 가져올 때에는 Node를 포함한 코드의 HTML 태그들까지 모두 가져온다.
+    -  값을 설정할 때에는 Node의 내용을 아예 변경해버린다. HTML 태그는 Parsing 된다.
+-  Node.innerText, Node.outerText, Node.textContent
+    -  모두 동일한 결과가 나온다.
+    -  속도 : textContent (가장 빠름)→ innerText (중간)→ outerText (가장 느림)
+    -  값을 가져올 때에는 지정한 Node 내부에 있는 코드의 문자열만을 가져온다.
+    -  값을 설정할 때에는 Node 내부의 내용을 아예 변경해버린다. HTML 태그는 Parsing 되지 않고 그대로 문자열로 나온다.
+-  Node.insertAdjacentHTML('위치', '내용') : 문자열을 이용한 좀 더 정교한 노드 변경시 사용
+    -  target.insertAdjacentHTML('beforebegin', '<h1>insertAdjacentHTML test</h1>')
+        - (1)의 위치에 h1 태그 추가
+    -  target.insertAdjacentHTML('afterbegin', '<span>insertAdjacentHTML test</span>')
+        - (2)의 위치에 span 태그 추가
+    -  target.insertAdjacentHTML('beforeend', '<span>insertAdjacentHTML test</span>')
+        -  (3)의 위치에 span 태그 추가
+    -  target.insertAdjacentHTML('afterend', '<h1>insertAdjacentHTML test</h1>')
+        - (4)의 위치에 h1 태그 추가
