@@ -7,24 +7,58 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 #복제 (copy)
 {% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
-
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
 {% endhighlight %}
 
-#참조 (reference)
+### Generator
+- 정의
+    - 0개 또는 1개의 값을 반환하는 일반적인 함수와 다르게  
+    여러 개의 값을 필요에 따라 반환할수 있는 함수 선언 방식
+- 사용법
 {% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
+    function* testGenerator(){  //function 예약어 뒤에 *(아스타리스크)를 붙인다.
+        yield "test1";  //yield를 통해 반환한다. 일반적인 함수의 return과 동일
+        yield "test2";
+        yield "test3";
+    }
 
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
+    const resultTest = testGenerator();
+    resultTest.next();  //출력 : {value: "test1", done: false}
+    resultTest.next();  //출력 : {value: "test2", done: false}
+    resultTest.next();  //출력 : {value: "test3", done: false}
+    resultTest.next();  //출력 : {value: undefined, done: true} //반환받은 모든 리턴 값들을 모두 소모함
 {% endhighlight %}
+    
+
+### 프록시 (Proxy)
+- 정의
+    - 사용하는 필터 객체에 따라 대상 객체에서 값을 설정하거나 가져오는 함수를 실행하게하는 객체
+- 사용법
+{% highlight javascript %}
+    const testUser = {
+        name : "who",
+        age : 25 
+    };
+
+    const userFilter = {
+        get : (target, property, receiver) => {
+            console.log("execute get filter");  //객체의 값을 가져올시 실행
+            console.log("target :", target);    //대상이 되는 객체 자체를 나타냄
+            console.log("property :", property);  //불러지는 항목의 이름을 반환
+            console.log("receiver :", receiver);  //receiver 객체 반환
+            console.log("불러온 값 :", target[property]);  //실제 값 반환
+        },
+        set : () => {
+            console.log("execute set filter");  //객체의 값을 설정시 실행
+        }
+    };
+
+    const filterTestUser = new Proxy(testUser, userFilter); //new Proxy(대상 객체, 필터 객체);
+
+    console.log(filterTestUser.name); //출력 : execute get filter
+
+    filterTestUser.address = "where"; //출력 : execute set filter
+
+    console.log(filterTestUser);  //출력 : Proxy {name: "who", age: 25}
+{% endhighlight %}
+- 특징
+    - Proxy를 사용하면 객체에 대한 값을 가져오거나 설정하는 것같은 행동들에 제약을 줄 수 있다.

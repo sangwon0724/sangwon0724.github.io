@@ -5,26 +5,193 @@ date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#복제 (copy)
-{% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
+### 비구조화란?
+※ 비구조화 (destructuring) :  
+객체나 배열 등의 요소 안에 있는 변수들을  
+바깥으로 끄집어 내서 사용할 수 있도록 하는 것
 
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
+### 객체의 비구조화
+- 객체의 내부 요소에 접근하는 기본적인 방식
+
+{% highlight javascript %}
+    //다음과 같이 학생에 대한 정보가 있다고 했을 때
+    const student = {
+        name : "who",
+        classInfo : {
+            gradeNo : 3,
+            classNo : 10
+        },
+        score : {
+            math : 97,
+            sience : 87,
+            english : 65
+        }
+    };
+
+    //해당 학생의 수학 점수를 보기 위한 방법
+    console.log("score :", student.score.math);
+    //보통은 이렇게 하지만 만약 math라는 항목이 없다면 undefined가 출력된다.
 {% endhighlight %}
 
-#참조 (reference)
-{% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
 
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
+### 객체의 내부 요소에 접근하는 방식
+{% highlight javascript %}
+    //위의 코드에 있는 student 객체에서 이름, 학년, 반, 수학 점수를 찾을 때 밑의 코드처럼 선언한다.
+    const {
+        name,
+        classInfo : {gradeNo, classNo},
+        score : {math}
+    } = student;
+
+    //방금 작성된 코드는 다음의 코드와 내용이 같다.
+    //const name = student.name;
+    //const gradeNo = student.classInfo.gradeNo;
+    //const classNo = student.classInfo.classNo;
+    //const math = student.score.math;
+
+    //실제로 math를 찍어보면 결과가 나온다.
+    console.log(math);  //출력 : 97
+    //만약, 수학 시험날에 일이 있어서 시험이 못치는 경우도 있으니 그럴 때는 default value를 주면 된다.
+
+    //혹시나 var나 let으로 선언해서 저 코드에서 math = 100;을 해도 실제 student의 값이 바뀌지는 않는다.
+{% endhighlight %}
+
+
+### 이름 변경 (Renaming)
+{% highlight javascript %}
+    //아까 작성하던 코드 중에서 수학 점수를 찾을 때 math라는 이름으로 사용되었다.
+    //하지만 이렇게 짧은 코드가 아니라 무척 길고 어려운 코드를 짜다보면
+    //math라는게 해당 과목에 대한 점수를 얘기하는 건지 담당 선생님을 얘기하는 건지 헷갈릴 수가 있다.
+    //그래서 객체의 비구조화를 진행할 때 Renaming을 진행한다.
+
+    //아까 쓰던 코드는 다음과 같다.
+    const {
+        name,
+        classInfo : {gradeNo, classNo},
+        score : {math}
+    } = student;
+    
+    //여기서 math를 mathScore로 해주고,
+    //혹시 모르니 점수를 기본 값으로 0을 주려고 한다면 다음과 같이 작성하면 된다.
+    const {
+        name,
+        classInfo : {gradeNo, classNo},
+        score : {math : mathScore = 0}
+    } = student;
+{% endhighlight %}
+
+
+### 배열의 비구조화
+- 가져온 정보를 조작할 일이 없을 때 쓰는 것이 좋다.
+- 배열의 내부 요소에 접근하는 기본적인 방식
+{% highlight javascript %}
+    const test = ["testA", "testB", "testC"];
+
+    console.log(test[0]);//출력 : testA
+{% endhighlight %}
+
+
+- 배열의 내부 요소에 접근하는 새로운 방식
+예시 1)
+{% highlight javascript %}
+    const test = ["testA", "testB", "testC"];
+    const [test0, test1, test2] = test; //각 인덱스에 객체처럼 이름을 준다고 생가하면 된다.
+
+    console.log(test0); //출력 : testA
+{% endhighlight %}
+
+
+예시 2)
+{% highlight javascript %}
+    //객체를 반환하는 함수에도 사용할 수 있다.
+    const test = () => ["testA", "testB", "testC"];
+    const [test0, test1, test2] = test();
+    console.log(test0); //출력 : testA
+{% endhighlight %}
+
+
+### Variable Swapping (값 교환)
+- 일반적인 값 교환
+{% highlight javascript %}
+    var a=1, b=2 ,temp;
+    console.log("a =>",a,", b =>",b); //출력 : a => 1 , b => 2
+    temp=a;
+    a=b;
+    b=temp;
+    console.log("a =>",a,", b =>",b); //출력 : a => 2 , b => 1
+{% endhighlight %}
+- 배열의 비구조화를 통한값 교환
+{% highlight javascript %}
+    var a=1, b=2 ,temp;
+    console.log("a =>",a,", b =>",b); //출력 : a => 1 , b => 2
+    [a, b] = [b, a];
+    console.log("a =>",a,", b =>",b); //출력 : a => 2 , b => 1
+{% endhighlight %}
+
+### Variable Omitting (값 생략)
+{% highlight javascript %}
+    const test = ["testA", "testB", "testC"];
+
+    //위의 test 배열에서 "testC"만 가져오고 싶을 때
+    const [ , , omittingTest] = test;
+    console.log(omittingTest);  //출력 : testC
+{% endhighlight %}
+
+
+### 함수의 비구조화
+- 함수의 내부 요소에 접근하는 기본적인 방식
+{% highlight javascript %}
+    //인자가 너무 많아지면 좋지 않다.
+    function test (a, b, c, d, e){
+        ...;
+    }
+{% endhighlight %}
+- 함수의 내부 요소에 접근하는 새로운 방식
+{% highlight javascript %}
+//인자가 많으면 아예 인자를 객체로 받는다.
+    function test({name, classInfo, score}){
+        console.log(score.math);
+    }
+
+    //함수 호출
+    test({
+        name : "who",
+        classInfo : {
+            gradeNo : 3,
+            classNo : 10
+        },
+        score : {
+            math : 97,
+            sience : 87,
+            english : 65
+        }
+    });
+
+    //출력 : 97
+{% endhighlight %}
+
+### 변수명 단축
+{% highlight javascript %}
+    //만약 다음과 같은 함수가 있다고 가정해보자.
+    const test = () => console.log("execute function, function name : test");
+
+    //그 다음에는 obj라는 객체가 있고 해당 객체에는 whatever과 test라는 항목이 있다고 했을 때
+    //whatever에는 "whatever text"를 test에는 아까 선언한 test라는 함수를 저장하고자 한다면
+    //일반적으로는 다음과 같이 선언한다.
+
+    const obj = {
+        whatever : "whatever text",
+        test : test
+    };
+    obj.test(); //출력 : execute function, function name : test
+
+    //하지만 발전해버린 JavaScript는 똑똑해졌기 때문에
+    //만약 객체에서 해당 항목에 값을 생략해버리면
+    //해당 항목과 같은 이름을 가진 변수를 값으로 저장한다.
+
+    const obj = {
+        whatever : "whatever text",
+        test
+    };
+    obj.test(); //출력 : execute function, function name : test
 {% endhighlight %}

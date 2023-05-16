@@ -5,26 +5,129 @@ date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-#복제 (copy)
 {% highlight javascript %}
-var a = 1;
-var b = a;
-b = 2;
-console.log(a); //출력 : 2
-
-//a가 2인 것은 매우 당연하다.
-//왜냐하면 값을 변경한 것은 a가 아니라 b이기 때문이다.
-//b는 a의 값을 복사받은 것이기 때문에 a에는 영향이 없다.
 {% endhighlight %}
 
-#참조 (reference)
-{% highlight javascript %}
-var a = {'id' : 1};
-var b = a;
-b.id = 2;
-console.log(a.id); //출력 : 2
+### 클래스란?
+- 클래스
+    - 각 객체들에 대해서 기본적인 형태를 같게 해주기 위해 선언한 기본틀
+- 인스턴스
+    - 클래스를 통해 생성한 살아있는 객체
 
-//평소처럼 복제하듯이 b=a를 해준 다음에 나는 분명 b의 id 값을 변경했는데, a의 id 값도 바뀌었다.
-//그 이유는 변수에 저장된 것이 원시 데이터 타입이면 그 안에는 실제 데이터가 들어가있다.
-//하지만 변수에 저장된 것이 객체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
+### 기본 사용법
+{% highlight javascript %}
+    //클래스 생성
+    class User{
+        constructor(name="temp"){
+            this.name = name;
+        }
+        sayHelloWorld(){
+            console.log("Hello World !!!");
+        }
+        test
+    }
+
+    //인스턴스 생성
+    const basicUser = new User();
+    let dynamicUser = new User("what");
+
+    //콘솔에 출력
+    console.log(basicUser.name);  //출력 : temp, 만약 기본값이 없다면 undefined
+    console.log(dynamicUser.name);  //출력 : what
+
+    //항목 변경
+    dynamicUser.test = "test";
+    console.log(dynamicUser.test);  //출력 : test
+
+    //항목 추가
+    dynamicUser.example = "example";
+    console.log(dynamicUser.example);  //출력 : example, 클래스에 없는 항목이 추가된다.
 {% endhighlight %}
+
+### 클래스 특징
+- 클래스를 생성할 때, var나 function를 선언하지 않아도 된다.
+- 클래스를 생성할 때, object를 생성하는 것과 다르게 요소들 사이에 쉼표를 쓰지 않아도 된다.
+- 인스턴스 생성시 기본 값들을 설정해주는 생성자는 constructor 메소드를 통해서 사용한다.
+- 타 언어들과 다르게 생성자는 한 개만 쓸 수 있다.
+
+### 상속이란?
+※ 상속 (extend) : 자식 클래스가 부모 클래스의 요소(변수나 메소드)를 이어 받아서 사용할 수 있도록 하는 것
+- 부모가 되는 클래스 선언
+{% highlight javascript %}
+    class Parent{
+        constructor(name="who"){
+            this.name = name;
+        }
+        parentTest(){
+            console.log("This Function\'s Location is Parent");
+        }
+    }
+{% endhighlight %}
+    
+
+- 자식이 되는 클래스 선언 (부모 클래스인 Parent를 상속)
+{% highlight javascript %}
+    class Child extends Parent{
+        constructor(age=0){
+            //super();  //name 출력시 who가 나온다.
+            super(name="whos");
+            this.age = age;
+        }
+        childTest(){
+            console.log("This Function\'s Location is Child");
+        }
+    }
+{% endhighlight %}
+    
+
+- 상속 여부 확인
+{% highlight javascript %}
+    const whatever = new Child();
+
+    console.log(whatever.name);  //출력 : whos
+    console.log(whatever.age);  //출력 : 25
+    whatever.parentTest();  //출력 : This Function's Location is Parent
+    whatever.childTest();  //출력 : This Function's Location is Child
+{% endhighlight %}
+
+### 상속 특징
+- 자식 클래스의 생성자에서는 super 메소드를 선언해서  
+부모 클래스의 생성자가 죽지 않게 해줘야 한다.
+- 자식 클래스의 생성자에 있는 super를 인자를 주지 않고 사용하면  
+부모 클래스가 기존에 갖고 있던 인자들을 모두 자동으로 사용할수 있게 된다.
+- 자식 클래스의 생성자에 있는 super에 부모 클래스의 생성자에서 사용하는 인자와  
+같은 이름의 인자를 명시하면서 default value를 주면  
+해당 자식 클래스로 인스턴스 생성시 기본 값이 바뀐다.
+
+### 비구조화를 사용하는 클래스
+※ 비구조화를 사용하는 클래스는 object를 인자로 전달한다.
+{% highlight javascript %}
+    class Test{
+        constructor({name ="who", age = 20}){
+            this.name = name;
+            this.age = age;
+        }
+        printInto(){
+            console.log(`name is ${this.name}, age is ${this.age}`);
+        }
+    }
+
+    const t1 = new Test({});    //주의
+    const t2 = new Test({
+        name : "example",
+        age : 25
+    });
+
+    t1.printInto(); //출력 : name is who, age is 20
+    t2.printInto(); //출력 : name is example, age is 25
+{% endhighlight %}
+
+※ 비구조화로 클래스의 생성자를 선언했을 때 기본 값으로 초기화하기 위해  
+인자 값을 주지 않고 인스턴스를 생성하고 싶다면  
+인스턴스를 생성할 때 new 클래스명({})로 작성해서  
+인자를 object로 전달한다는 기본적인 표시를 해줘야된다.  
+ 그렇지 않으면 에러가 발생하게 된다.
+
+※ 이유 :  
+object를 받아서 그 안의 항목을 받아야 되는데 ({})가 아니라 ()로 초기화를 하게 되면  
+생성자에서 사용할 항목들을 찾을 수 없기 때문에 에러가 생긴다. 
