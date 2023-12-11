@@ -1,0 +1,95 @@
+---
+layout: post
+title:  "환경설정"
+date:   2023-12-11 20:01:00 +0900
+categories: Group&nbsp;:&nbsp;Spring JPA
+---
+
+### build.gradle
+
+{% highlight groovy %}
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.hibernate:hibernate-entitymanager'
+        compileOnly 'org.projectlombok:lombok'
+        /*developmentOnly 'org.springframework.boot:spring-boot-devtools'*/
+        runtimeOnly 'com.mysql:mysql-connector-j'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
+    }
+{% endhighlight %}
+
+### application.properties
+
+{% highlight properties %}
+    ###Setting for MySql Database
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    spring.datasource.url=jdbc:mysql://localhost:3307/jpa?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    #spring.datasource.url=jdbc:mysql://localhost:3309/jpa?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    spring.datasource.username='[유저명]'
+    spring.datasource.password='[비밀번호]'
+
+    ###Setting for JPA
+    spring.jpa.database=mysql
+    spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect
+    #spring.jpa.show-sql=true
+    spring.jpa.properties.hibernate.show_sql=true
+    spring.jpa.properties.hibernate.format_sql=true
+    #spring.jpa.properties.hibernate.use_sql_comments=true
+    logging.level.org.hibernate.type.descriptor.sql=TRACE
+    #spring.jpa.generate-ddl=true
+    #spring.jpa.hibernate.ddl-auto=create
+    #create-delete => create
+
+    ###Setting Logging Level
+    #logging.level.root=trace
+{% endhighlight %}
+
+### persistence.xml
+
+{% highlight xml %}
+    <?xml version="1.0" encoding="UTF-8"?>
+    <persistence version="2.2"
+                xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+        <!--  EntityManagerFactory 생성 시 사용되는 persistence name -->
+        <persistence-unit name="hello">
+            <!-- Named 쿼리를 xml로 사용하고 싶을시 활성화 -->
+            <!-- <mapping-file>META-INF/ormMember.xml</mapping-file> -->
+            <properties>
+                <!-- 필수 속성 -->
+                <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="javax.persistence.jdbc.user" value="[유저명]"/>
+                <property name="javax.persistence.jdbc.password" value="[비밀번호]"/>
+                <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/jpa?characterEncoding=UTF-8&amp;serverTimezone=UTC"/>
+
+                <!-- 하이버네이트 사용 시 다른 DB에서 MySQL 문법을 사용 가능하도록 변경.-->
+                <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>
+                
+                <!-- 콘솔에 SQL 출력 여부 -->
+                <property name="hibernate.show_sql" value="true"/>
+                
+                <!-- 가독성 높여주는 formatting 여부 -->
+                <property name="hibernate.format_sql" value="true"/>
+                
+                <!-- Comment 확인 여부 -->
+                <property name="hibernate.use_sql_comments" value="true"/>
+                
+                <!-- 쓰기 지연을 사용할수 있는 쿼리의 개수 (버퍼링같은 개념) -->
+                <!-- <property name="hibernate.jdbc.batch_size" value="10"/> -->
+                
+                <!-- 데이터베이스 스키마 자동 생성 (create / create-drop / update / validate / none) -->
+                <property name="hibernate.hbm2ddl.auto" value="create"/>
+                
+                <!--
+                    (1) 페치 조인 미사용시 해당 어노테이션을 사용하면 지정된 size만큼 IN절로 넘긴다.
+                    (2) 1000이하로 준다.
+                -->
+                <!-- <property name="hibernate.default_batch_fetch_size" value="100"/> -->
+            </properties>
+        </persistence-unit>
+    </persistence>
+{% endhighlight %}
