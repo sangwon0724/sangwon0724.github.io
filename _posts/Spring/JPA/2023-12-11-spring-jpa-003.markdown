@@ -19,7 +19,7 @@ categories: Group&nbsp;:&nbsp;Spring JPA
     }
 {% endhighlight %}
 
-### INSERT
+### 공통 코드
 
 {% highlight java %}
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello"); //애플리케이션 전체 공유 (persistence.xml 참조)
@@ -28,11 +28,7 @@ categories: Group&nbsp;:&nbsp;Spring JPA
     tx.begin();
     
     try {
-        Member member = new Member();
-        member.setId(1L);
-        member.setName("memberA");
-        em.persist(member);
-        tx.commit();
+        //실행 내용
     } catch (Exception e) {
         e.printStackTrace();
         tx.rollback();
@@ -41,96 +37,54 @@ categories: Group&nbsp;:&nbsp;Spring JPA
     }
     
     emf.close();
+{% endhighlight %}
+
+### INSERT
+
+{% highlight java %}
+    Member member = new Member();
+    member.setId(1L);
+    member.setName("memberA");
+    em.persist(member);
+    tx.commit();
 {% endhighlight %}
 
 ### SELECT
 
 {% highlight java %}
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello"); //애플리케이션 전체 공유 (persistence.xml 참조)
-    EntityManager em = emf.createEntityManager(); //한번 쓰고 버려야함, 쓰레드간 공유하지 않음
-    EntityTransaction tx = em.getTransaction(); //조회를 제외한 DML 작업시 필수로 사용
-    tx.begin();
-    
-    try {
-        Member findMember = em.find(Member.class, 333L);
-        System.out.println(findMember.getId());
-        System.out.println(findMember.getName());
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        em.close();
-    }
-    
-    emf.close();
+    Member findMember = em.find(Member.class, 333L);
+    System.out.println(findMember.getId());
+    System.out.println(findMember.getName());
 {% endhighlight %}
 
 ### UPDATE
 
 {% highlight java %}
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello"); //애플리케이션 전체 공유 (persistence.xml 참조)
-    EntityManager em = emf.createEntityManager(); //한번 쓰고 버려야함, 쓰레드간 공유하지 않음
-    EntityTransaction tx = em.getTransaction(); //조회를 제외한 DML 작업시 필수로 사용
-    tx.begin();
-    
-    try {
-        Member findMember = em.find(Member.class, 333L);
-        findMember.setName("memberC"); //★★★ find 필수
-        em.persist(findMember);
-        tx.commit();
-    } catch (Exception e) {
-        e.printStackTrace();
-        tx.rollback();
-    } finally {
-        em.close();
-    }
-    
-    emf.close();
+    Member findMember = em.find(Member.class, 333L); //★★★ find 필수
+    findMember.setName("memberC");
+    em.persist(findMember);
+    tx.commit();
 {% endhighlight %}
 
 ### DELETE
 
 {% highlight java %}
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello"); //애플리케이션 전체 공유 (persistence.xml 참조)
-    EntityManager em = emf.createEntityManager(); //한번 쓰고 버려야함, 쓰레드간 공유하지 않음
-    EntityTransaction tx = em.getTransaction(); //조회를 제외한 DML 작업시 필수로 사용
-    tx.begin();
-    
-    try {
-        Member findMember = em.find(Member.class, 333L); //★★★ find 필수
-        em.remove(findMember);
-        tx.commit();
-    } catch (Exception e) {
-        e.printStackTrace();
-        tx.rollback();
-    } finally {
-        em.close();
-    }
-    
-    emf.close();
+    Member findMember = em.find(Member.class, 333L); //★★★ find 필수
+    em.remove(findMember);
+    tx.commit();
 {% endhighlight %}
 
 ### SELECT - JPQL
 
 {% highlight java %}
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello"); //애플리케이션 전체 공유 (persistence.xml 참조)
-    EntityManager em = emf.createEntityManager(); //한번 쓰고 버려야함, 쓰레드간 공유하지 않음
-    
-    try {
-        //JPA 입장에서는 테이블이 아닌 객체를 대상으로 쿼리를 작성한다.
-        //콘솔에 나오는 쿼리 잘 살펴보기
-        List<Member> member_list =
-                em.createQuery("select m from Member as m", Member.class)
-                .setFirstResult(1) //페이징 (시작점)
-                .setMaxResults(2) //페이징 (블록 단위)
-                .getResultList();
-        for(Member member:member_list) {
-            System.out.println(member.getId() + " / " + member.getName());
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        em.close();
+    //JPA 입장에서는 테이블이 아닌 객체를 대상으로 쿼리를 작성한다.
+    //콘솔에 나오는 쿼리 잘 살펴보기
+    List<Member> member_list =
+            em.createQuery("select m from Member as m", Member.class)
+            .setFirstResult(1) //페이징 (시작점)
+            .setMaxResults(2) //페이징 (블록 단위)
+            .getResultList();
+    for(Member member:member_list) {
+        System.out.println(member.getId() + " / " + member.getName());
     }
-    
-    emf.close();
 {% endhighlight %}
