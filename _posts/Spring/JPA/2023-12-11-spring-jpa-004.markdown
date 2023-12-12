@@ -36,6 +36,8 @@ categories: Group&nbsp;:&nbsp;Spring JPA
     - 삭제된 상태
     - 실제 DB 삭제를 요청하는 상태
 
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/001.png"/>
+
 {% highlight java %}
     Member member = new Member(); //객체를 생성한 상태 (비영속)
     member.setId(3L);
