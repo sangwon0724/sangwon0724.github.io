@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>팁</title>
+    <link rel="stylesheet" href="./css/index.css" />
+  </head>
+  <body>
+    <section id="stopPort">
+      <header class="note_title">이미 작동중인 포트 종료시키기</header>
+      <ul>
+        <li>포트 종료
+          <pre>
+            1. cmd 실행
+            2. netstat -a -n -o -p tcp을 실행하여 해당 포트의 pid를 확인한다.
+            3. taskkill /f /pid [해당 pid]를 입력하여 포트를 종료시킨다.
+          </pre>
+        </li>
+      </ul>
+    </section>
+
+    <section id="github">
+      <header class="note_title">깃허브와 연동하기</header>
+      <ul>
+        <li>repository 생성 및 프로젝트 연동
+          <pre>
+            01. 깃허브 홈페이지 들어가서 로그인
+            02. repository 생성
+            03. code 버튼 클릭 → 해당 repository의 주소 복사
+            04. 이클립스 최상단의 Window → Show View → Other 클릭
+            05. git을 검색 →  Git Repositories 선택
+            06. Clone a Git repository 선택
+            07. 아까 복사한 repository의 url과 자신의 깃허브 ID/PassWord를 입력 → Next 클릭
+            08. 다시 한번 Next 클릭
+            09. Git 저장소를 지정 → Finish 클릭
+            10. 연결하려는 프로젝트 우클릭 → Team → Share Project → 클릭
+            11. 방금 이클립스에 연결했던 repository 선택 → Finish 클릭
+          </pre>
+        </li>
+        <li>토큰 생성하기 (깃허브에서 2021년 8월 13일 기준으로 ID/PassWord 방식에서 ID/Token 방식으로 변경했다.)
+          <pre>
+            1. 깃허브 홈페이지 들어가서 로그인
+            2. 자신의 프로필을 클릭 → Settings 클릭
+            3. Developer settings 클릭
+            4. Personal access tokens 클릭 → Generate new token 클릭
+            5. 토큰명을 입력 → 토큰 유효 기간 설정→ 토큰 허용 범위를 체크 → Generate token 버튼 클릭
+                ※ 주사용 토큰 범위 : repo, admin:org, admin:repo_hook, user, write:discussion, write:enterprise, write:gpg_key
+            6. 출력된 토큰 코드를 이클립스에서 깃허브 로그인시에 비밀번호에 입력한다.
+                => 생성된 토큰 코드는 나중에 다시 볼 수 없기 때문에 반드시 따로 저장해놔야된다.
+
+            + p.s.
+                비밀번호를 토큰으로 변경하고 싶을 때는
+                Git Repositories 메뉴에서 해당하는 Repository의 Remotes의 origin 내부의 메뉴들 중에서
+                아무거나 우클릭은 한 다음에 Change Credentials...를 클릭한 후에 바꿔주면 된다.
+          </pre>
+        </li>
+        <li>커밋하기
+          <pre>
+            1. 해당 프로젝트 우클릭 → Team → commit 클릭
+            2. commit할 파일 선택 및 commit comment 입력
+            3. commit 또는 commit and push 클릭
+          </pre>
+        </li>
+      </ul>
+    </section>
+
+    <section id="svn">
+      <header class="note_title">svn과 연동하기</header>
+      <ul>
+        <li>이클립스에서 svn 연동
+          <pre>
+            01. 최상단 Help 메뉴 → Eclipse Marketplace 선택
+            02. svn 검색
+            03. Subclipes를 선택 → Install 클릭
+            04. Confirm 클릭 → 저작권 동의 선택 → Finish 클릭
+            05. 도중에 나오는 팝업들은 Install anyway 클릭
+            06. 설치 완료시 반영을 위해서 Restart Noew 클릭
+            07. 최상단 Windows 메뉴 → Show View → Other 클릭
+            08. SVN → SVN Repositories → Open
+            09. SVN Repositories View로 이동
+            10. Add SVN Repository 클릭 (SVN Repositories View 상단 탭의 최우측에 존재)
+            11. SVN 서버의 URL 입력 → Finish 클릭
+            12. 디지털 인증서 등장시 Accept Permanently 클릭 (= 영구 동의)
+            13. SVN 서버에서 추가한 유저 정보의 Username과 Password 입력 → OK 클릭
+          </pre>
+        </li>
+        <li>Share Project
+          <pre>
+            1. SVN 저장소에 등록할 프로젝트 우클릭 → Team → Share Project
+            2. SVN 선택 → Next 클릭
+            3. Use existing repository location 선택 → 프로젝트를 올릴 SVN Repository 선택 → Next 클릭
+            4. 폴더명 관련 옵션 선택 (주로 Use project name as folder name 옵션 사용) → Finish 클릭
+            5. 최종 확인 팝업 등장 → Yes 클릭 (설정을 저장하고 싶다면 Remeber my decision을 선택한 후에 Yes를 누를 것)
+          </pre>
+        </li>
+        <li>commit
+          <pre>
+            1. SVN 저장소에 등록할 프로젝트 우클릭 → Commit 클릭
+            2. 저장소에 올릴 파일 선택 → commit 내용에대한 comment 작성 → OK 클릭
+          </pre>
+        </li>
+        <li>checkout (= download project)
+          <pre>
+            1. 최상단 Windows 메뉴 → Show View → Other 클릭
+            2. SVN → SVN Repositories → Open
+            3. SVN Repositories View로 이동
+            4. 불러올 프로젝트가 저장되어있는 SVN Repository 선택 → 불러올 프로젝트 우클릭 → Find/Check Out As 클릭하기
+            5. Check out as a project with the name specified 선택 → 원하는 프로젝트명 작성 → Next 클릭
+            6-A. workspace를 지금과 다른 폴더로 변경하고 싶은 경우 : Browse 클릭 → 폴더 선택 → Finish 클릭
+            6-B. workspace를 지금과 같은 폴더로 하고 싶은 경우 : Finish 클릭
+          </pre>
+        </li>
+      </ul>
+    </section>
+
+    <section id="eclipse">
+      <header class="note_title">이클립스 관련 설정</header>
+      <ul>
+        <li>이클립스의 패키지 목록을 트리 구조로 보기
+          <pre>
+            1. Project Explorer 패널 상단의 ▽ 버튼 클릭하기
+            2. "Package Presentation" 메뉴의 "Hierarchical" 선택하기
+          </pre>
+        </li>
+        <li>Tab 대신에 Space 4칸이 사용되도록 설정하기
+          <pre>
+            1. Eclipse 최상단의 Windows 메뉴의 Preferences 메뉴 선택
+            2. General → Editors → Text Editor 선택
+            3. tab width 를 확인한 후에  Insert spaces for tabs 체크
+            4. OK 클릭
+            5. 적용 여부 확인
+          </pre>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 
+
+    <section id="xxx">
+        <header class="note_title">xxx</header>
+        <ul>
+            <li>xxx
+                <pre>
+                    ● xxx
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    -->
+
+    <br />
+
+    <div id="remote">
+      <section id="remote_setcion">
+        <select id="remote_menu" onchange="move_section()">
+          <option value="stopPort">작동중인 포트 종료시키기</option>
+          <option value="github">깃허브와 연동하기</option>
+          <option value="svn">svn과 연동하기</option>
+          <option value="eclipse">이클립스 관련 설정</option>
+        </select>
+      </section>
+    </div>
+  </body>
+</html>

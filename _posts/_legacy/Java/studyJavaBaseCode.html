@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 기초 코드</title>
+    <!-- code pretty print -->
+    <link rel="stylesheet" href="./css/codePrettyPrint.css">
+</head>
+<body>
+
+<section id="start" tag="">
+    <header class="note_title">기초 (출력 및 입력)</header>
+    <ul>
+        <li>출력
+            <pre>
+                <pre class="prettyprint lang-java">
+                    public class Main {
+                        public static void main(String[] args)
+                        {
+                            System.out.println("출력");
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+        <li>입력 - Scanner
+            <pre>
+                <pre class="prettyprint lang-java">
+                    import java.util.*;
+                    public class Main{
+                        public static void main(String args[]){
+                            //주의사항
+                            //1. int는 여러줄로 받아도 된다.
+                            //2. 문자를 받을 경우 엔터를 누르면 \n이 들어가게 되니 조심해야 한다.
+                            //3. char형은 next()나 nextLine()으로 받을수 없다.
+                            Scanner sc = new Scanner(System.in);
+    
+                            //int를 입력받는 경우
+                            int num;
+                            num = sc.nextInt();
+                            System.out.println("int형 변수 num : " + num);
+    
+                            
+                            //String을 입력받는 경우
+                            String str;
+                            str = sc.nextLine();
+                            System.out.println("String형 변수 str : " + str);
+    
+                            sc.close(); //스캐너 종료
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+        <li>입출력 - BufferedReader & BufferedWriter
+            <pre>
+                <pre class="prettyprint lang-java">
+                    /*import java.io.BufferedReader;
+                    import java.io.BufferedWriter;
+                    import java.io.InputStreamReader;
+                    import java.io.OutputStreamWriter;
+                    import java.io.IOException;*/
+                    import java.io.*;
+                    import java.util.StringTokenizer;
+                    public class Main{
+                        public static void main(String args[]) throws IOException{
+                            // BufferedReader를 사용하기 위해서는 throws IOException을 해 주어야 함.
+                            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+                            StringTokenizer st;
+                            int count=Integer.parseInt(br.readLine());
+                            
+                            for(int i=0;i&lt;;count;i++){
+                                st=new StringTokenizer(br.readLine());
+                                bw.write(Integer.parseInt(st.nextToken())+Integer.parseInt(st.nextToken())+"\n");
+                            }
+                            bw.close();
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="date" tag="">
+    <header class="note_title">날짜</header>
+    <ul>
+        <li>윤년 구하기
+            <pre>
+                <pre class="prettyprint lang-java">
+                    import java.util.*;
+                    public class Main{
+                        public static void main(String args[]){
+                            Scanner sc = new Scanner(System.in);
+                            int year;
+                            year = sc.nextInt();
+                            if(year%4==0 && (year%100!=0 || year%400==0)){
+                                System.out.println("1");
+                            }
+                            else{
+                                System.out.println("0");
+                            }
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="time" tag="">
+    <header class="note_title">시간</header>
+    <ul>
+        <li>알람시계 일찍 맞추기 (45분 기준)
+            <pre>
+                <pre class="prettyprint lang-java">
+                    import java.util.*;
+                    public class Main{
+                        public static void main(String args[]){
+                            Scanner sc = new Scanner(System.in);
+                            int hour,min;
+                            hour = sc.nextInt();
+                            min = sc.nextInt();
+                            min-=45;
+                            if(min&lt;0){
+                                min+=60;
+                                hour--;
+                                if(hour&lt;0){
+                                    hour+=24;
+                                }
+                            }
+                            System.out.println(hour + " " + min);
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+        <li>알람시계 느리게 맞추기 (45분 기준)
+            <pre>
+                <pre class="prettyprint lang-java">
+                    import java.util.*;
+                    public class Main{
+                        public static void main(String args[]){
+                            Scanner sc = new Scanner(System.in);
+                            int hour,min;
+                            hour = sc.nextInt();
+                            min = sc.nextInt();
+                            min+=45;
+                            if(min&gt;60){
+                                min-=60;
+                                hour++;
+                                if(hour&gt;=24){
+                                    hour-=24;
+                                }
+                            }
+                            System.out.println(hour + " " + min);
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="loop" tag="">
+    <header class="note_title">반복문</header>
+    <ul>
+        <li>for문
+            <pre>
+                <pre class="prettyprint lang-java">
+                    import java.util.*;
+                    public class Main{
+                        public static void main(String args[]){
+                            Scanner sc = new Scanner(System.in);
+                            int num;
+                            num = sc.nextInt();
+                            for(int i=1;i&lt;=9;i++){
+                                System.out.println(num + " * " + i + " = " + num*i);
+                            }
+                        }
+                    }
+                </pre>
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<div id="remote">
+    <article id="remote_setcion">
+        <select id="remote_menu" onchange="move_section()">
+            <option value="start">기초 (출력 및 입력)</option>
+            <option value="date">날짜</option>
+            <option value="time">시간</option>
+            <option value="loop">반복문</option>
+        </select>
+    </article>
+</div>
+
+
+    <!--code pretty print -->
+    <script src ="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+    <script>
+        prettyPrint();
+    </script>
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevOn NCD</title>
+
+    <style>
+      li {
+        width: 100%;
+        height: auto;
+        margin-bottom: 30px;
+      }
+
+      li > span {
+        font-weight: bold;
+        margin: 15px 0 0 15px;
+      }
+
+      .chart {
+        width: 64vw;
+        min-height: 45vh;
+      }
+      .chart>div{
+        margin: 0 auto;
+      }
+
+      .colorRed{ 
+        color: red;
+      }
+
+      .colorBlue{ 
+        color: blue;
+      }
+    </style>
+    <!-- code pretty print -->
+    <link rel="stylesheet" href="./css/codePrettyPrint.css" />
+  </head>
+  <body>
+    <!-- <section id="intro">
+        <header class="note_title">DevOn NCD</header>
+        <ul>
+            <li>xxx
+                <pre>
+                    ● xxx
+                </pre>
+            </li>
+            <li>xxx
+                <pre>
+                    ● xxx
+                </pre>
+            </li>
+            <li>xxx
+                <pre>
+                    ● xxx
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br/> -->
+
+    <section id="setting">
+      <header class="note_title">설치 및 실행</header>
+      <main>
+        <ul>
+          <li>
+            <span>DevOn NCD 설치</span>
+            <pre>
+              1. LG NCD 사이트로 이동 <a href="https://lgcns.com/Solution/DevOn-NCD" target="_blank">링크</a>
+              2. DevOn NCD (비즈니스 개발) 클릭
+              3. 필요 정보 입력 및 다운로드 클릭
+              4. 다운로드 받은 exe 파일을 실행해서 설치하기
+            </pre>
+          </li>
+          <li>
+            <span>DevOn NCD 실행</span>
+            <pre>
+              1. startDevOnNCD.cmd 실행하기 (WAS :  Tomcat 8.5.49)
+              2. BizActor Management Studio 실행하기
+              3. 접속 정보 입력하기 (설치시 제공하는 기본 제공 메모장 참고)
+            </pre>
+          </li>
+          <li>
+            <span>DevOn NCD의 DB 접속하기</span>
+            <pre>
+              ※ DevOn NCD 설치시 자동으로 Maria DB도 설치한다.
+              ※ 해당 Maria DB는 설치될때 자동으로 3306 포트에 설치되므로 MySQL같은 다른 프로그램이 사용중인지 확인한다.
+              ※ 만약 다른 프로그램이 3306 포트를 사용중이면 해당 프로그램의 이용 포트를 변경하고 서비스에서 종료한다.
+
+              1. HeidiSQL 실행하기
+              2. 접속 추가하기
+              3. 접속 정보 입력하기 (Server IP : 127.0.0.1 / Port	3306 / ID : root / Password : [공백])
+            </pre>
+          </li>
+        </ul>
+      </main>
+    </section>
+
+    <br />
+    
+    <section id="layer">
+        <header class="note_title">관리계층</header>
+        <ul>
+            <li>구조
+                <pre>
+                    ※ () 안의 숫자는 해당 계층이 몇 번째 단위인지를 나타낸다.
+
+                    (1) Application
+                      (2) Business Service
+                        (3) Group
+                          (4) Component
+                            (5) Service
+                      (2) Business Rule
+                        (3) Group
+                          (4) Component
+                            (5) Service
+                      (2) Data Access
+                        (3) Group
+                          (4) Component
+                            (5) Service
+                      (2) Service Access
+                </pre>
+            </li>
+            <li>역할
+                <pre>
+                  ● 서비스 : 기능을 수행 하는 단위 (소유권 보유자만 수정/삭제 가능)
+                  ● 컴포넌트 : 서비스의 집합체 (소유권 보유자만 수정/삭제 가능)
+                  ● 그룹 : 컴포넌트의 집합체 (소유권 개념 X, 공용)
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br />
+    
+    <section id="service">
+        <header class="note_title">서비스</header>
+        <ul>
+          <li>종류
+              <pre>
+                ● Business Rule Service (= BR Service) : 조건/반복/루프/스위치 등의 제어 Logic을 수행하는 Service
+                ● Data Access Service (= DA Service) : DB와 관련된 기능을 수행하는 Service, SQL을 수행
+                ● Service Access Service (= SA Service) : 외부 시스템과의 연계를 담당하는 Service
+
+                ※ BR Service에서는 DA/SA/BR Service를 호출한다.
+                ※ 복잡한 비즈니스 Logic은 대부분 BR Service로 구현한다.
+                ※ SA Service 사용시 DevOn NCD에서 정의한 형태의 Adapter 작성이 필요하다.
+              </pre>
+          </li>
+          <li>서비스의 상태 - 정의
+              <pre>
+                  ● <span class="colorRed">C*</span>
+                    ○ 서비스가 최초로 생성된 상태
+                    ○ 아무런 제약 없이 수정 가능
+                    ○ 다른 BR Service에서 호출 불가
+                    ○ <div class="colorRed">서비스는 C* 상태에서만 삭제할 수 있다.</div>
+                  ● <span class="colorBlue">A</span>
+                    ○ 서비스를 모듈화 시킨 상태
+                    ○ 다른 BR Service에서 호출 가능
+                    ○ 다른 서비스에서 호출되고 있는 경우 Deactivate 불가
+                  ● <span class="colorBlue">M*</span>
+                    ○ 모듈화된 서비스를 수정 중인 상태
+                    ○ 원본이 아닌 사본을 수정 후 원본에 적용시키는 형태
+                    ○ 원본은 계속 서비스되고 있는 상태를 가진다.
+                  ● <span class="">S</span>
+                    ○ 서비스를 외부에 제공할 수 있는 상태
+                    ○ BR Service에서는 호출 불가
+                    ○ Business Service에서는 호출 가능
+                  ● <span class="">M*</span>
+                    ○ 외부 제공용 서비스를 수정 중인 상태
+                    ○ 원본이 아닌 사본을 수정 후 원본에 적용시키는 형태
+                    ○ 원본은 계속 서비스되고 있는 상태를 가진다.
+              </pre>
+          </li>
+          <li>서비스의 상태 - 변경 방법
+              <pre>
+                ● <span class="colorRed">C*</span> ←→  <span class="colorBlue">A</span>
+                  ○ <span class="colorRed">C*</span> → [Activate] → <span class="colorBlue">A</span>
+                  ○ <span class="colorRed">C*</span> ← [Deactivate] ← <span class="colorBlue">A</span>
+                ● <span class="colorBlue">A</span> ←→ <span class="colorBlue">M*</span>
+                  ○ <span class="colorBlue">A</span> → [Apply] → <span class="colorBlue">M*</span>
+                  ○ <span class="colorBlue">A</span> ← [Reactivate/Cancle] ← <span class="colorBlue">M*</span>
+                ● <span class="colorBlue">A</span> ←→ <span class="">S</span>
+                  ○ <span class="colorBlue">A</span> → [Expose Service] → <span class="">S</span>
+                  ○ <span class="colorBlue">A</span> ← [Hide Service] ← <span class="">S</span>
+                ● <span class="">S</span> ←→ <span class="">M*</span>
+                  ○ <span class="">S</span> → [Apply] → <span class="">M*</span>
+                  ○ <span class="">S</span> ← [Reactivate/Cancle] ← <span class="">M*</span>
+              </pre>
+          </li>
+          <li>서비스의 소유권
+              <pre>
+                  ● 자신이 서비스 및 컴포넌트는 자신만 수정/삭제 가능
+                  ● 다른 사용자의 서비스는 VIew/Text만 가능
+                  ● 다른 사용자의 소유권을 가져올수는 있으나, 소유권을 다른 사용자에게 전달할 수는 없다.
+                  ● 운영자가 소유권 정책을 서비스/컴포넌트 단위로 설정할 수 있다. (설정한 단위별로 소유권 이동 가능)
+                  ● 운영자가 소유권 정책을 컴포넌트 단위로 설정시, 서비스 소유권은 컴포넌트 소유권에 종속된다.
+              </pre>
+          </li>
+          <li>서비스 생성 방법
+              <pre>
+                  1. 그룹 생성 : Business Rule 우클릭 → Add Group → OK
+                  2. 컴포넌트 생성 : 컴포넌트를 생성할 그룹 우클릭 → Add Component → 항목 입력 → Apply
+                  3. 서비스 생성 : 서비스를 생성할 컴포넌트 우클릭 → Add Service → 항목 입력 → Next → Apply
+              </pre>
+          </li>
+          <li>히스토리 관리
+              <pre>
+                  1. 서비스를 선택
+                  2. 하단 영역의 History 탭을 클릭하여 영역 활성화
+                  3. History 영역에서 기록 확인
+                  4-1. 특정 버전의 작성 기록을 확인하고 싶을 때 : 해당 버전을 선택 → 우클릭 → View를 선택하면 된다.
+                  4-2. 특정 버전의 기록을 현재 상태와 비교 하고 싶을 떄 : 해당 버전을 선택 → 우클릭 → Compare를 선택하면 된다.
+                  4-3. 특정 버전의 상태로 서비스를 되돌리고 싶을 때에는 해당 버전을 선택한 후 오른쪽 위의 "Rollback"을 클릭한다.
+                  ※ 서비스 상태나 서비스 관련 값들도 해당 버전으로 롤백됨으로 주의가 필요하다.
+              </pre>
+          </li>
+        </ul>
+    </section>
+
+    <br />
+    
+    <section id="data">
+        <header class="note_title">데이터</header>
+        <ul>
+            <li>DevOn NCD 에서 사용하는 데이터 단위
+                <pre>
+                    ● DataSet : DataTable의 집합체
+                    ● DataTable : DataColumn 및 실제 값들로 이루어진 테이블
+                    ● DataColumn : 각 데이터에 대한 항목
+                </pre>
+            </li>
+            <li>Service Parameter
+                <pre>
+                    ● Input Parameter : 입력받는 데이터
+                      ○ Argument
+                      ○ UI 화면 입력 항목
+                      ○ SELECT 조건 Column
+                      ○ INSERT 대상 Column
+                      ○ UPDATE 대상 및 조건 Column
+                      ○ Delete 조건 Column
+                    ● Output Parameter : 출력되는 데이터
+                      ○ Return
+                      ○ UI 화면 출력 항목
+                      ○ SELECT 대상 Column
+
+                    ※ 모든 Service는 Input Parameter와 Output Parameter를 가진다.
+                    ※ Parameter는 DataSet을 이용해 전달한다.
+                    ※ 진행 방식 : 
+                            업무화면/BR Service → [Input Parameter] → BR/DA/SA Service → [Output Parameter] → 업무화면/BR Service
+                </pre>
+            </li>
+            <li>DataTable 추가하기
+                <pre>
+                   1. DataTable를 추가할 서비스 선택
+                   2. 우측의 DataInfo 패널로 이동
+                   3. DataTable를 추가할 항목 우클릭 (Input/Output/Internal Data) → Add DataTable 패널 활성화 → 해당 DataTable의 Name 입력
+                   4. DataColumn 영역을 우클릭 → Add DataColumn 선택 → 항목 입력 (반복)
+                   5. Add DataTable 패널의 OK 클릭
+
+                   ※ DataTable 생성시 최소 1개의 DataColumn이 필요하다.
+                </pre>
+            </li>
+            <li>DataTable에 클립보드로 Column 추가하기
+                <pre>
+                   1. 메모장에서 Name/Type/Default/Description를 탭으로 구분해서 작성
+                   2. 전체 복사
+                   3. DataColumn을 추가할 DataTable 우클릭 (Input/Output/Internal Data)
+                   4. Paste DataColumn From Clipboard
+
+                   ※ 엑셀도 가능
+                </pre>
+            </li>
+            <li>클립보드로 DataTable 추가하기
+                <pre>
+                   1. 메모장에서 Name/Type/Default/Description를 탭으로 구분해서 작성
+                   2. 전체 복사
+                   3. DataTable를 추가할 항목 우클릭 (Input/Output/Internal Data)
+                   4. Paste DataColumn From Clipboard
+                   5. DataTabl의 Name 입력
+                   6. OK 클릭
+
+                   ※ 엑셀도 가능
+                </pre>
+            </li>
+            <li>Drag & Drop으로 DataTable/DataColumn 추가하기
+                <pre>
+                   1. DataTable을 가져올 다른 BR이나 DA의 Service를 클릭
+                   2. 좌측 하단에 DataTable 정보 확인
+                   3. 필요한 DataTable/DataColumn 선택
+                   4. 필요한 위치에 드래그
+
+                   ※ 좌측 하단의 영역에서 드래그 대신에
+                      복사 대상에 우클릭해서 Copy DataTable한 후에
+                      추가 대상에 우클릭해서 Paste DataTable을 하는 방법도 있다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br />
+
+    <section id="businessRuleLayer">
+        <header class="note_title">Business Rule Layer</header>
+        <ul>
+            <li>정의 및 역할
+                <pre>
+                    ● 복잡한 비즈니스 로직 수행을 담당하는 Layer
+                    ● BR/DA/SA Service를 호출하는 기능
+                    ● 제어 로직을 수행하는 기능
+                    ● Step과 선으로 연결된 다이어그램으로 비즈니스 로직을 구현
+                </pre>
+            </li>
+            <li>Step 종류
+                <pre>
+                    ● Call
+                      ○ 역할 : 호출할 서비스(DA/BR/SA Service)를 선택하고 Input/Output Parameter를 매핑
+                      ○ 모양 : 파란색 사각형
+                    
+                    ● IF 
+                      ○ 역할 : 조건문의 True/False에 따라 분기 수행
+                      ○ 모양 : 연분홍색 마름모
+                    
+                    ● Switch
+                      ○ 역할 : 변수 조건에 따라 분기 수행
+                      ○ 모양 : 하늘색 마름모
+                    
+                    ● Loop
+                      ○ 역할 : Index 변수의 증감과 조건을 지정하여 True인동안 반복 수행
+                      ○ 모양 : 연두색 마름모
+                  
+                    ● Script
+                      ○ 역할 : 코드를 직접 실행
+                      ○ 모양 : 녹색 사각형
+                
+                    ● Substitution
+                      ○ 역할 : Input/Output/Internal DataTable에 저장된 데이터를 가공
+                      ○ 모양 : 분홍색 사각형
+                
+                    ● Error
+                      ○ 역할 : 사용자 정의 Exception 발생 (Error Dictopnary로 별도 관리)
+                      ○ 모양 : 빨간 테두리의 흰색 사각형
+                
+                    ● Group
+                      ○ 역할 : Step들의 범위를 설정하여 해당 그룹을 표시
+                      ○ 모양 : 45쪽이 약간 잘린 주황색 사각형
+              
+                    ● Point
+                      ○ 역할 : Flow Chart 선 정리용 (Logic 구조적 설계용 또는 주석용)
+                      ○ 모양 : 회색 원
+                </pre>
+            </li>
+            <li>Data Info
+                <pre>
+                    ● Internal Data : BR Service 내에서 사용할 변수 DataTable
+                    ● Index : LOOP Step 에서 사용할 Index 변수 (※ Type : Integer)
+                    ● System
+                      ○ RsltNum : CALL Step으로 DA Service 실행 시 데이터 Fetch 건수
+                      ○ RsltMsg : CALL Step에서 Ignore 선택한 후, 해당 Step 이 Exception 발생하면 Error Message 가 저장되는 변수
+                    ※ 매핑하지 않으면 에러 표시 및 "XXX DataTable is not assigned"이라는 메시지가 출력된다.
+                    ※ 해당 Step을 선택했을 시 하단에 나오는 Step 영역에서
+                       Assigned DataTable에 Data Info에 있는 테이블을 드래그 & 드랍하면
+                       테이블이 매핑되고 오류 메시지가 사라진다.
+                </pre>
+            </li>
+            <li>Step 생성하기
+                <pre>
+                  ● Call
+                    1. 왼쪽 트리에서 호출하고 싶은 BR/DA를 선택하여 Start와 End 사이에 Drag&Drop
+                    2. 호출할 BR/DA 선택시 좌측 하단에 나오는 INPUT/OUTPUT 파라미터 정보를 해당 서비스의 DataInfo 쪽에 Drag&Drop
+                       (매핑하지 않으면 에러 표시 및 "XXX DataTable is not assigned"이라는 메시지가 출력된다.)
+                    3. Apply 클릭
+                    
+                  ● IF 
+                    1. Start와 End 사이의 구간에서 IF 로직이 필요한 곳을 우클릭
+                    2. Add IF Step 클릭
+                    3. Condition에 분기 조건 입력
+                    4. true/false 화살표를  각각의 로직에 알맞는 다른 Step에 연결
+                    5. Apply 클릭
+                  
+                  ● Switch
+                    1. Start와 End 사이의 구간에서 Switch 로직이 필요한 곳을 우클릭
+                    2. Add Switch Step 클릭
+                    3. Variable에 비교할 변수 입력 (DataTable에서 Drag 가능)
+                    4. 분기 추가시 추가할 분기 다음이 되는 값에 우클릭 → Insert 클릭 → 값 입력 → OK (※ 반드시 Default가 항상 맨 밑에 존재)
+                    5. 각 분기의 화살표를 각각의 로직에 알맞는 다른 Step에 연결
+                    6. Apply 클릭
+                  
+                  ● Loop
+                    1. Start와 End 사이의 구간에서 Loop 로직이 필요한 곳을 우클릭
+                    2. Add Loop Step 클릭
+                    3. Data Info의 Index 우클릭 → Add Index 클릭 → 사용할 인덱스명 입력 → OK 클릭
+                    4. Condition에 반복 조건 입력
+                    5. 하단의 Index Definition에서 3단계에서 생성한 인덱스 선택 → 초기값 및 증감값 입력
+                    6. true 화살표의 끝에 반복할 로직 Step 추가 (Call, Script 등등) → 추가한 Step의 화살표를 Loop Step으로 연결
+                    7. false 화살표의 끝을 로직에 알맞는 다른 Step에 연결
+                    8. Apply 클릭
+                
+                  ● Script
+                    1. Start와 End 사이의 구간에서 Script 로직이 필요한 곳을 우클릭
+                    2. Add Script Step 클릭
+                    3. 하단 Step 영역의 우측 중앙에 있는 물음표 아이콘 클릭 → HelpBook.html 오픈
+                    4. HelpBook.html을 참고하여 스크립트 작성하여 하단 Step 영역의 Script란에 추가
+                    5. Apply&Test 클릭
+              
+                  ● Substitution
+                    1. Start와 End 사이의 구간에서 Substitution 로직에 우측 DataInfo에서 알맞는 DataTable을 선택하여 Drag&Drop
+                    2. 하단 Step 영역에서 가공 방식을 설정 (Wizard 방식 / Script 방식)
+              
+                  ● Error
+                    1. 우측 상단의 DataInfo/Dictionary(Error) 탭 영역에서 Dictionary(Error) 탭 선택
+                    2. Dictionary(Error) 영역의 빈 화면으로 마우스 이동 후 우클릭
+                    3. Add 클릭
+                    4. 항목 입력
+                    5. OK 클릭
+                    6. Dictionary(Error) 영역의 Error Step 목록에서 필요한 Error Step을 에러를 발생시킬 위치에 Drag&Drop
+              
+                  ● Group
+                    1. Group으로 관리할 Step을 Ctrl+클릭으로 모두 선택 후 (또는 드래그로 영역 지정 후) 우클릭
+                    2. Group 클릭
+                    ※ Group 클릭시 Group 속에서 진행되는 Flow를 별개의 화면으로 확인 가능
+            
+                  ● Point
+                    1. Start와 End 사이의 구간에서 Point가 필요한 곳을 우클릭
+                    2. Add Point Step 클릭
+                    3. 아래의 Step 영역에서 Comment 입력 후 차트 영역 클릭
+                    ※ 연결하기 애매한 구간에 Point Step을 추가해 보기 편하게 선을 연결할수도 있다.
+                </pre>
+            </li>
+            <li>Call Step의 옵션
+                <pre>
+                    ● 트랜잭션 분리
+                      1. 트랜잭션을 분리하고자 하는 Call Step 클릭
+                      2. 하단 영역에 있는 체크박스 중에서 <div class="colorRed">Txn</div> 체크
+                      3. Commit 또는 Rollback 을 하고 싶은 곳에 Script Step 을 추가
+                      4. 해당 Script Step에 상황에 맞는 메소드 호출 코드 작성
+                        ○ Commit 호출 : BatchCommit();
+                        ○ Rollback 호출 : BatchRollback();
+
+                    ● USE REFERENCE
+                      1. Data Reference로 전달하려는 Step 을 선택
+                      2. 하단 영역에 있는 체크박스 중에서 <div class="colorRed">Ref</div> 체크
+                      ○ 기능 : 호출되는 Call Step 내부로 DataSet 을 Reference 형태로 전달
+                      ○ 주의점
+                        (1) 하나의 테이블 / 동일한 컬럼명을 가진 경우에만 사용 가능
+                        (2) Multi 테이블 Mapping / 다른 컬럼 Mapping / 행 단위 사용 불가
+                        (3) 호출하는 Business Rule 의 컬럼 중 일부가 호출당하는 BR 에서 누락되어 있는 경우는 허용
+
+                    ● 오류 무시
+                      1. 오류가 발생하더라도 해당 오류를 무시하고 Main Flow를 진행시키게 하려는 Call Step 선택
+                      2. 하단 영역에 있는 체크박스 중에서 <div class="colorRed">Ignore</div> 체크
+                      3. 해당 Call Step을 처리한 직후 Data Info의 System의 RsltNUm이 -1인 경우 사용자 오류 처리 로직 수행
+                      4. Data Info의 System의 RsltMsg에 저장된 Exception 내용 확인 (DebugPrint(RsltMsg);)
+
+                    ● 페이징
+                      1. 페이징 기능을 사용하고자 하는 Call Step 클릭
+                      2. 하단 영역에 있는 체크박스 중에서 <div class="colorRed">Page</div> 체크
+
+                    ● ASSIGN ONLY THE FIRST ROW
+                      1. ASSIGN ONLY THE FIRST ROW 기능을 사용하고자 하는 Call Step 클릭
+                      2. 하단 영역에 있는 체크박스 중에서 <div class="colorRed">First</div> 체크
+                      ○ 기능 : Call Step 에서 Input Data 를 맵핑할 때, DataTable 의 첫번째 Row 데이터만 Assign 시키기
+
+                    ● QUERY TIMEOUT
+                      1. Query Timeout 을 설정하고자 하는 Call Step 클릭
+                      2. 하단 영역에 있는 Query Timeout 시간을 초 단위로 설정 (0으로 입력시  Query Timeout 미사용)
+                      ○ 주의점 : Call Step 에서 DataAccess Service 를 호출하는 경우 설정 가능
+                </pre>
+            </li>
+            <li>Point Step을 통하여 로직 구조 설계하기
+                <pre>
+                    1. Point Step으로 로직 구조를 설계
+                    2. 해당 Point Step을 우클릭
+                    3. Replace with XXX Step을 클릭하여 실제 사용할 Step으로 대체
+                </pre>
+            </li>
+            <li>Step에 대한 추가 사용법
+                <pre>
+                    ● Call Step을 우클릭하고 "Copy With Data"를 선택하면 매핑되있는 Data Table까지 복사할 수 있다.
+                    ● Call Step을 활성/비활성 처리 하고 싶을 때는 해당 Step을 우클릭하고 "Enable/Disable"을 선택하면 된다.
+                    ● 각 Step은 우클릭 후 "Replace With XXX Step" 메뉴를 통해서 다른 Step으로 교체할 수 있다.
+                    ● 각 Step을 연결하는 연결선을 우클릭하고 "Fix/Unfix Start/End Point" 메뉴를 통해서
+                      각각의 Step의 연결되있는 시작/종료 지점에 대해서 고정하는 기능을 활성화/비활성화 시킬수 있다.
+                      (해당 기능 활성화 시 연결되있는 Step의 위치를 변경해도 Point의 위치는 변경되지 않는다.)
+                </pre>
+            </li>
+            <li>Save & Load
+                <pre>
+                    ● 서비스를 파일로 저장하기
+                      1. Flow 영역 밑의 Others를 클릭
+                      2. "Save Temp"를 클릭
+                      3. 저장 위치와 파일명을 지정한 후 저장 (저장 형식은 xml 고정)
+
+                    ● 파일로 저장된 서비스를 불러오기
+                      1. Flow 영역 밑의 Others를 클릭
+                      2. "Load Temp"를 클릭
+                      3. 작업 영역에 불러올 서비스 파일을 선택
+                      4. 정상적으로 불러와지면 "Apply&Test" 버튼과 "Apply" 버튼이 빨간색으로 바뀐다.
+                      ※ 동일한 서비스만 불러올수 있다.
+                      ※ 서비스 정보가 다를 경우에는 오류가 발생한다.
+                </pre>
+            </li>
+            <li>순서도의 흐름 오류 검사하기
+                <pre>
+                    1. Flow 영역 밑의 Others를 클릭
+                    2. Check를 선택
+                    3. 순서도에 문제 존재시 팝업 발생 (Type ID 또는 Step ID를 알려준다.)
+                </pre>
+            </li>
+            <li>SQL 체크하기
+                <pre>
+                    1. 순서도에 있는 Call Step 중에서 SQL을 확인하고 싶은 <div class="colorRed">DA</div>를 선택
+                    2. 해당 DA를 우클릭
+                    3. View SQL 클릭
+                </pre>
+            </li>
+            <li>xxx
+                <pre>
+                    ● xxx
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br />
+    
+    <section id="dataAccessLayer">
+        <header class="note_title">Data Access Layer</header>
+        <ul>
+            <li>정의
+                <pre>
+                    ● Database 관련 작업 수행을 담당하는 Layer
+                </pre>
+            </li>
+            <li>Data Access Component 종류
+                <pre>
+                    ● One Table/View Component
+                    ● AdHoc/Stored Procedure Component
+                </pre>
+            </li>
+            <li>One Table/View Component
+                <pre>
+                    ● 역할
+                      ○ 하나의 Table/View에 관련된 SQL 을 수행하는 Service 관리 Table/View의 스키마 정보를 가지고 있는 컴포넌트
+
+                    ● 서비스 생성 방법
+                      (1) Wizard 방식
+                        ○ SQL문의 형식(Select/Insert/Update/Delete)을 선택하면 SQL문을 자동으로 생성
+                        ○ Input/Output Parameter가 자동으로 생성되며 편집 불가
+                        ○ Join이 없는 단순 Select 문장과 Insert/Update/Delete 문장에 주로 사용
+                      (2) Script 방식
+                        ○ Wizard 방식으로 작성된 SQL 문장을 일부 수정할 필요가 있을 때 사용
+                        ○ 함수 호출 등이 필요한 경우 사용
+                        ○ 자동으로 생성된 Input / Output Parameter 편집 가능
+                </pre>
+            </li>
+            <li>One Table/View Service 생성
+                <pre>
+                    ● 공통
+                      [1] One Table/View Component 생성
+                        1. Data Access의 Group 선택 및 우클릭
+                        2. Add Component 클릭
+                        3. 항목 입력
+                        4. <span class="colorRed">One Table/View Management(CRUD)</span> 항목을 <span class="colorBlue">체크 필요</span>
+                        5. From Database 클릭
+                        6. 해당 Table 선택 및 OK 클릭
+                        7. Apply 클릭
+                      [2] 서비스 생성
+                        1. 해당 컴포넌트 우클릭
+                        2. Add Service 클릭
+                        3. 항목 입력 및 SQL 유형 선택
+                        4. Next 클릭
+
+                    ● Wizard 방식
+                      1. 하단의 탭에서 Wizar 탭 영역 활성화
+                      2. 조회할 Column 체크
+                      3. Condition 선택 (Value 옵션 선택시 상수값 입력 가능)
+                      4. Apply & Test를 클릭하여 조회된 값 확인
+
+                    ● Script 방식
+                      1. 하단의 탭에서 Script 탭 영역 활성화
+                      2. 우측 Data Info 영역에서 Input Data의 RQSTDT에서 우클릭
+                      3. Add DataColumn 클릭 및 필요한 파라미터 추가
+                      4. SQL 직접 작성
+                      5. Input Data의 RQSTDT에 선언한 파라미터를 WHERE 절에서 사용 ("@변수명"으로 사용 가능)
+                      6. 하단 Test 탭의 Input(& Test Case)탭에 파라미터 값 입력
+                      7. Apply&Test 클릭하여 조회된 값 확인
+                </pre>
+            </li>
+            <li>AdHoc/Stored Procedure Component
+                <pre>
+                    ● 역할
+                      ○ 여러 개의 Table/View에 관련된 복잡한 SQL 문을 수행하는 Service 관리
+                      ○ Stored Procedure 호출하는 Service 관리
+                      ○ Table/View 정보를 관리하지 않음
+
+                    ● 서비스 생성 방법
+                      (1) AdHoc 방식
+                        ○ SQL 문을 사용자가 직접 작성
+                        ○ Input / Output Parameter 를 사용자가 직접 생성
+                      (2) Stored Procedure 방식
+                        ○ 호출하고자 하는 Stored Procedure 이름을 입력
+                        ○ Stored Procedure는 DevOn NCD에서 정의한 형식으로 작성되어야 한다.
+                        ○ Input / Output Parameter 수동으로 설정
+                </pre>
+            </li>
+            <li>AdHoc/Stored Procedure Service 생성
+                <pre>
+                  ● 공통
+                    [1] AdHoc/Stored Procedure Component 생성
+                      1. Data Access의 Group 선택 및 우클릭
+                      2. Add Component 클릭
+                      3. 항목 입력
+                      4. <span class="colorRed">One Table/View Management(CRUD)</span> 항목을 <span class="colorBlue">체크 해제</span>
+                      5. From Database 클릭
+                      6. 해당 Table 선택 및 OK 클릭
+                      7. Apply 클릭
+                    [2] 서비스 생성
+                      1. 해당 컴포넌트 우클릭
+                      2. Add Service 클릭
+                      3. 항목 입력 및 서비스 유형 선택
+                      4. Next 클릭
+
+                  ● AdHoc 방식
+                    1. 우측 Data Info 영역에서 Input/Output Data의 RQSTDT에 파라미터 추가
+                    2. Script 빈 칸을 더블 클릭
+                    3. From절까지 SQL 직접 작성
+                    4. OK 클릭
+                    5. Optional Condition Query (선택적 조회 조건) 작성하기
+                      (1) Script 아래의 빈 영역 우클릭
+                      (2) Add 클릭 및 Script Editor 영역 활성화
+                      (3) 상단의 All DataColumns 영역에서 필요한 것을 선택해서 Optional Condition DataColumns에 추가
+                          (Input Data의 RQSTD에 추가한 파라미터의 목록이 출력된다.)
+                      (4) Script 영역에서 해당 파라미터에 대한 조건절 입력 및 OK 클릭 (예시 : NAME LIKE CONCAT('%',@NAME,'%'))
+                    6. 필수적 조회 조건 작성하기
+                      (1) Script 아래의 빈 영역 우클릭
+                      (2) Add 클릭 및 Script Editor 영역 활성화
+                      (3) Optional Condition DataColumns을 입력하지 않고 Script 영역에서 SQL 작성 및 OK 클릭
+
+                    7. Test 탭에 파라미터 값을 입력하고 Apply&Test 클릭
+
+                  ● Stored Procedure 방식
+                    1. 호출하고자 하는 Stored Procedure 이름을 입력한다.
+                    2. 우측의 DataInfo의 Input/Output Parameter를 설정한다.
+                    3. Apply&Test 클릭하여 조회된 값 확인
+
+                  ※ AdHoc 방식에서 Optional Condition Query는
+                      조건절에 사용된 Input Parameter 값이 Null일 경우 해당 조건을 무시하고 수행한다.
+                      예시) 파라미터 [A, B, C] => 입력한 항목 [A, C] => 검색되는 조건 [A, C]
+
+                  ※ AdHoc 방식에서 Optional Condition Query를 사용할 때
+                      무조건 NAME LIKE CONCAT('%',@NAME,'%')처럼 단문으로 쓰는게 아니라
+                      NAME LIKE CONCAT('%',@NAME,'%') AND MEMBER_TYPE IN (1, 2, 3)처럼 복합적으로 사용해도 된다.
+
+                  ※ AdHoc 방식에서 Optional Condition Query를 사용할 때
+                      ${칼럼명} LIKE CONCAT('%',@칼럼값,'%')처럼 사용해서 쿼리를 좀 더 동적으로 사용할 수도 있다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br />
+    
+    <section id="serviceAccessLayer">
+        <header class="note_title">Service Access Layer</header>
+        <ul>
+            <li>정의 및 역할
+                <pre>
+                    ● 외부 시스템과의 연계를 담당하는 Layer
+                    ● 연계를 위한 Adapter를 작성하고 DevOn NCD에 등록하여 외부 시스템과의 연계를 수행한다.
+                    ● Adapter는 DevOn NCD에서 정의한 형식대로 작성되어야 한다.
+                </pre>
+            </li>
+            <li>컴포넌트 생성
+                <pre>
+                    1. Service Access에 그룹 생성
+                    2. 그룹 우클릭 후 Add Component 클릭
+                    3. General 영역에서 항목 입력
+                    4. Legacy 영역에서 항목 선택
+
+                    ※ Legacy System에 등록된 DevOn NCD Server의 Service를 원격호출 하는 기능을 한다.
+                    ※ 등록된 DevOn NCD Server는 외부 시스템이나 자기 자신도 가능하다.
+                </pre>
+            </li>
+            <li>서비스 생성
+                <pre>
+                    1. 서비스를 생성할 컴포넌트 우클릭
+                    2. Service ID 입력 (※ 입력 방식 : "EXT." + 호출할 Service ID)
+                    3. 호출할 Service의 Input / Output Data 를 동일하게 설정
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <!-- 
+        <section id="xxx">
+            <header class="note_title">xxx</header>
+            <ul>
+                <li>xxx
+                    <pre>
+                        ● xxx
+                    </pre>
+                </li>
+            </ul>
+        </section>
+    -->
+
+    <div id="remote">
+      <section id="remote_setcion">
+        <select id="remote_menu" onchange="move_section()">
+          <!-- <option value="intro">DevOn NCD</option> -->
+          <option value="setting">설치 및 실행</option>
+          <option value="layer">관리계층</option>
+          <option value="service">서비스</option>
+          <option value="data">데이터</option>
+          <option value="businessRuleLayer">Business Rule Layer</option>
+          <option value="dataAccessLayer">Data Access Layer</option>
+          <option value="serviceAccessLayer">Service Access Layer</option>
+        </select>
+      </section>
+    </div>
+
+    <!-- 모달 영역 시작 -->
+    <div id="xxx" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <span class="modal_title">xxx</span>
+        <div class="modal_content">
+          <p style="margin-left: 30px">xxx</p>
+        </div>
+      </div>
+    </div>
+    <!-- 모달 영역 종료 -->
+  </body>
+
+  <!--code pretty print -->
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+  <script>
+    prettyPrint();
+  </script>
+</html>

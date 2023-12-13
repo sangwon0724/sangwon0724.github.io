@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Hooks 공부</title>
+    <!-- code pretty print -->
+    <link rel="stylesheet" href="./css/codePrettyPrint.css">
+</head>
+
+<body>
+
+    <section id="start" tag="기초정보 기초 시작">
+        <header class="note_title">기본</header>
+        <ul>
+            <li>리액트 훅이란 무엇인가?
+                <pre>
+                    ● 함수형 컴포넌트에서도 state를 가질수 있게 하여 클래스형 컴포넌트의 기능을 사용할 수 있게 하는 기능
+                    ● React의 State Machine에 연결하는 기본적인 방법
+                </pre>
+            </li>
+            <li>리액트 훅의 특징
+                <pre>
+                    ● 훅을 통해서 함수형 컴포넌트에서도 컴포넌트 상태값을 관리할 수 있다.
+                    ● 훅을 통해서 컴포넌트 생명 주기 함수 또한 이용할 수 있게 된다.
+                </pre>
+            </li>
+            <li>리액트 훅의 장점
+                <pre>
+                    ● 훅을 사용하게 되면 재사용 가능한 로직을 쉽게 만들 수 있다.
+                    ● 훅을 사용하게 되면 같은 로직은 한 곳으로 모아 가독성이 좋다. (경우에 따라 아닌 경우도 있다.)
+                </pre>
+            </li>
+            <li>Visual Studio Code 대신 코드를 테스트 할 수 있는 사이트
+                <pre>
+                    ● https://codesandbox.io/
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <section id="stateHooks" tag="">
+        <header class="note_title">useState Hooks</header>
+        <ul>
+            <li>useState : 초기값 설정 + setter 추가
+                <pre>
+                    (1) 기존의 import React from "react";에서 import React, {useState} from "react";로 변경한다.
+                    (2) const [val, setVal] = useState("원하는 값");을 선언한다.
+                    (3) 만약 함수를 선언해서 그 안에서 값을 변경한다면 setVal(val + "XXX");처럼 하면 된다.
+
+                    ※ useState는 배열을 반환한다.
+                    ※ val와 setVal은 그 어떤 이름을 써도 상관이 없긴 하지만
+                       본인의 편의나 팀간의 협력을 위해서라도 val와 setVal과 같이 쓰는 것이 좋다.
+                    ※ 만약 setVal은 사용하지 않고 val만 사용하고 싶다면 const [val] = useState("원하는 값")[0];처럼 사용하면 된다.
+                    ※ useState를 사용하게 된다면 this를 사용하지 않아도 된다.
+
+                    ● 리액트의 useState를 통한 setXXX를 사용할 때 값이 아닌 함수로 전달할 수 있는데,
+                            이 때 사용되는 변수는 이전에 setXXX를 통해서 설정된 현재의 XXX의 값을 가져올 수 있다.
+                      ○ 코드를 단축시키지 않은 경우
+                        <pre class="prettyprint lang-js">
+                            let temp=[];
+                            const getNweets = async () => {
+                                const dbNweets = await dbService.collection("jack").get();
+                                dbNweets.forEach((document) => {
+                                    const nweetObject = {
+                                        ...document.data(),
+                                        id: document.id,
+                                    };
+                                    temp.push(nweetObject);
+                                });
+                                setNweets(temp);
+                            };
+                        </pre>
+
+                      ○ 코드를 단축시킨 경우
+                        <pre class="prettyprint lang-js">
+                            const getNweets = async () => {
+                                const dbNweets = await dbService.collection("jack").get();
+                                dbNweets.forEach((document) => {
+                                    const nweetObject = {
+                                        ...document.data(),
+                                        id: document.id,
+                                    };
+                                    setNweets((prev) => [nweetObject, ...prev]);
+                                });
+                            };
+                        </pre>
+                </pre>
+            </li>
+            <li>useInput : 값 변경 + 유효성 검사
+                <pre>
+                    (1) import React, {useState} from "react";를 진행한다.
+                    (2) useInput을 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useInput = (initialValue, validator) => {
+                                    const [value , setValue] = useState(initialValue);
+                                    const onChange = event => {
+                                        const { 
+                                            target : {value}
+                                        } = event;
+                                    };
+                                    let willUpdate = true;
+                                    if(typeof validator === "function"){
+                                        willUpdate = validator(value);
+                                    }
+                                    if(willUpdate){
+                                        setValue(value);
+                                    }
+                                    return {value, onChange};
+                                };
+                        </pre>
+                    (3) const name = useInput("원하는 값");을 선언한다.
+                    (4) input에서 값을 사용할 때 {name.value}로 사용하면 된다.
+
+                    ※ {name.value}가 사용가능한 이유는 useInput이 value라는 이름의 값을 return하기 때문이다.
+                        아니면 name안의 내용물을 모두 풀어주는 {...name}을 사용하면 된다.
+                </pre>
+            </li>
+            <li>useTabs : 값의 전환을 쉽게 사용하기 위한 기능
+                <pre>
+                    (1) import React, {useState} from "react";를 진행한다.
+                    (2) useTabs를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useTabs = (initialTab, allTabs) -> {
+                                    if(!allTabs || Array.isArray(allTabs)){
+                                        return; 
+                                    }
+                                    const [currentIndex, setCurrentIndex] = useState(initialTab);
+                                    return {
+                                        currentItem : allTabs[currentIndex],
+                                        changeItem : setCurrentIndex
+                                    };
+                                };
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <section id="effectHooks" tag="">
+        <header class="note_title">Effect Hooks</header>
+        <ul>
+            <li>useEffect : Element에 효과 부여하기
+                <pre>
+                    (1) 기존의 import React from "react";에서 import React, {useEffect} from "react";로 변경한다.
+                    (2) useEffect(func, [deps]);로 사용하면 된다.
+
+                    ※ useEffect는 componentDidmount의 역할을 한다.
+                    ※ useEffect는 두 개의 인자가 사용된다.
+                        1) useEffect가 실행될 때 실행되는 함수
+                        2) 해당하는 값일 있을 때만 값이 변하도록 활성화하는 배열
+                    ※ useEffect 내에서 사용되는 return은 해당 effect가 더 이상 실행할 필요가 없을 때 청소하는 용도를 한다.
+                    ※ useEffect가 더 이상 실행할 필요가 없는 경우
+                        1) dependancy가 바뀌어서 effect가 달라져야할 때 (이전 effect 제거)
+                        2) 해당 component가 unmount 될 때
+                    ※ 해당하는 unmount 될 때만 사용하려면 dependancy가 항상 같도록 useEffect의 두번째 인자에 []를 넘기면 된다.
+                </pre>
+            </li>
+            <li>useBeforeLeave : 마우스가 문서를 떠나려고 하는 시점에 실행되는 기능
+                <pre>
+                    (1) import React, {useEffect} from "react";를 진행한다.
+                    (2) useBeforeLeave를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useBeforeLeave = (onBefore) => {
+                                    if(typeof onBefore !== "function"){
+                                        return;
+                                    }
+                                    const handle = event => {
+                                        const {clientY} = event;
+                                        if(clientY &lt;= 0)
+                                        {
+                                            onBefore();
+                                        }
+                                    };
+                                    useEffect(
+                                        () => {
+                                            document.addEventListener("mouseleave", handle);
+                                            return () => document.removeEventListener("mouseleave", handle);
+                                        }
+                                    ,[]);
+                                };
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <section id="useRef" tag="">
+        <header class="note_title">useRef</header>
+        <ul>
+            <li>useRef : 리액트의 컴포넌트가 특정 요소를 참조하게 하는 기능
+                <pre>
+                    (1) useRef를 import한다.
+                    (2) const refTest = useRef();를 선언한다. (refTest는 임의 변수명이다.)
+                    (3) 사용할 컴포넌트에 ref 속성을 명시하고 값을 {refTest}로 작성한다.
+                    (4) 만약 임의의 input 태그를 만들어서 refTest를 참조하게 했다면,
+                        refTest.current를 통해서 해당 요소에 접근할 수 있다.
+                        예시) setTimeouy(() => refTest.current.focus(), 3000);
+                    
+                    ※ 리액트의 컴포넌트는 기본적으로 ref를 가지고 있다.
+                </pre>
+            </li>
+            <li>userFullscreen : 어떤 Element든 풀스크린으로 만들거나 일반 화면으로 돌아가게 한다.
+                <pre>
+                    (1) import React, {useRef} from "react";를 진행한다.
+                    (2) userFullscreen를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const userFullscreen = callback => {
+                                    const element = useRef();
+                                    const runCb = isFull => {
+                                        if(callback && typeof callback === "function"){
+                                            callback(isFull);
+                                        }
+                                    };
+                                    const triggerFull = () => {
+                                        if(element.current){
+                                            if(element.current.requestFullscreen)
+                                            {
+                                                element.current.requestFullscreen();
+                                            }
+                                            else if element.current.mozRequestFullscreen)
+                                            {
+                                                element.current.mozRequestFullscreen();
+                                            }
+                                            else if element.current.webkitRequestFullscreen)
+                                            {
+                                                element.current.webkitRequestFullscreen();
+                                            }
+                                            else if element.current.msRequestFullscreen)
+                                            {
+                                                element.current.msRequestFullscreen();
+                                            }
+                                            runCb(true);
+                                        }
+                                    };
+                                    const exitFull = () => {
+                                        document.exitFullscreen();
+                                        if(document.exitFullscreen)
+                                        {
+                                            document.exitFullscreen();
+                                        }
+                                        else if (document.mozCancleFullscreen)
+                                        {
+                                            document.mozCancleFullscreen();
+                                        }
+                                        else if (document.webkitExitFullscreen)
+                                        {
+                                            document.webkitExitFullscreen();
+                                        }
+                                        else if (document.msExitFullscreen)
+                                        {
+                                            document.msExitFullscreen();
+                                        }
+                                        runCb(true);
+                                    }
+                                        if(callback && typeof callback === "function"){
+                                            runCb(false);runCb(false);
+                                        }
+                                    };
+                                    return {element, triggerFull, exitFull};
+                                };
+                        </pre>
+                    (3) App()에서 const {element, triggerFull, exitFull} = userFullscreen();를 작성한다.
+                    (4) 크기를 키우고 싶은 곳의 ref 속성에 {element}를 작성한다.
+                    (5) 크기를 변경하는 기능을 넣을 버튼의 onclick 속성으로 {triggerFull} 또는 {exitFull}를 작성한다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <section id="compositiveHooks" tag="">
+        <header class="note_title">Compositive Hooks (복합적인 훅)</header>
+        <ul>
+            <li>useTitle : Document의 title을 변경하는 기능
+                <pre>
+                    (1) import React, {useState, useEffect} from "react";를 진행한다.
+                    (2) useTitles를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useTitles = initailTitle => {
+                                const [title, setTitle] = useState(initailTitle);
+                                const updateTitle = () => {
+                                    const htmlTitle = docuement.querySelecor("title");
+                                    htmlTitle.innerText = title;
+                                };
+                                useEffect(updateTitle, [title]);
+                                return setTitle;
+                            };
+                        </pre>
+                </pre>
+            </li>
+            <li>useClick : 클릭한 시점에 일어나는 이벤트
+                <pre>
+                    (1) import React, {useEffect, useRef} from "react";를 진행한다.
+                    (2) useClick를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useClick = onClick => {
+                                if(typeof onClick !== "function"){return;}
+                                const element = useRef();
+                                useEffect(
+                                    () => {
+                                        if(element.current){
+                                            element.current.addEventListener("click",onClick);
+                                        }
+                                        return () => {
+                                            if(element.current){
+                                                element.current.removeEventListener("click",onClick);
+                                            }
+                                    }
+                                ,[]);
+                                return element;
+                            };
+                        </pre>
+                    (3) App()에서 const title = useClick(사용할 함수명);을 선언한다.
+                    (4) App()의 return에서 적용할 컴포넌트의 ref 속성에 {title}이라고 작성한다.
+
+                    ※ useEffect에서 빈 배열을 넣는 이유는 그렇게 해야지 componentDidmount떄 단 한 번만 실행되라는 의미가 되기 떄문이다.
+                       만약 그렇지 않다면 매번 업데이트 될 때마다 eventListener가 추가된다.
+                    ※ useEffect 안에서 return을 시켜서 removeEventListener를 시키는 이유는 componentWillUnMoount때 호출되게 하기 위해서다.
+                </pre>
+            </li>
+            <li>useFadeIn : 어떤 Element든 상관없이 애니메이션을 Element 안으로 서서히 사라지게 하는 이벤트
+                <pre>
+                    (1) import React, {useEffect, useRef} from "react";를 진행한다.
+                    (2) useFadeIn를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useFadeIn = (duration = 1, delay = 0) => {
+                                if(typeof duration !== "number" || typeof delay !== "number"){
+                                    return;
+                                }
+                                const element = useRef();
+                                useEffect(
+                                    () => {
+                                        if(element.current){
+                                            const {current} = element;
+                                            current.style.transition = `opacity ${duration}s ease-in-out ${delay}s`;
+                                            current.style.opacity = 1;
+                                        }
+                                    }
+                                ,[]);
+                                return {ref : element, style : {opacity : 0}};
+                            };
+                        </pre>
+                    (3) App()에서 const fadeIn = useFadeIn(동작시간, 딜레이시간);를 작성한다.
+                    (4) 사용할 컴포넌트에서 {...fadeIn}을 작성한다.
+                </pre>
+            </li>
+            <li>useNetwork : 온라인/오프라인 여부 확인
+                <pre>
+                    (1) import React, {useState , useEffect} from "react";를 진행한다.
+                    (2) useNetwork를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useNetwork = onChange => {
+                                const [status, setStatus] = useState(navigator.onLine);
+                                const handleChange = () => {
+                                    if(typeof onChange === "function"){
+                                        onChange(navigator.onLine);
+                                    }
+                                    setStatus(navigator.onLine);
+                                };
+                                useEffect(
+                                    () => {
+                                        window.addEventListener("online",handleChange);
+                                        window.addEventListener("offline",handleChange);
+                                        return () => {
+                                            window.removeEventListener("online",handleChange);
+                                            window.removeEventListener("offline",handleChange); 
+                                        };
+                                    }
+                                ,[]);
+                                return status;
+                            };
+                        </pre>
+                    (3) App()에서 const online = useNetwork();를 작성한다.
+                    (4) {onLine ? "온라인" : "오프라인"}처럼 사용하여 네트워크의 상태를 확인한다.
+                </pre>
+            </li>
+            <li>useScroll : 스크롤 사용시 발생하는 이벤트
+                <pre>
+                    (1) import React, {useState , useEffect} from "react";를 진행한다.
+                    (2) useScroll를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const useScroll = () => {
+                                const [state, setState] = useState({x : 0, y : 0});
+                                const onScroll = () => {
+                                    setState({x : window.scrollX, y : window.scrollY});
+                                };
+                                useEffect(
+                                    () => {
+                                        window.addEventListener("scroll", onScroll);
+                                        return () => window.removeEventListener("scroll", onScroll);
+                                    }
+                                );
+                                return state;
+                            };
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <section id="noneImportHooks" tag="">
+        <header class="note_title">None Import Hooks</header>
+        <ul>
+            <li>useConfirm : 사용자가 행동을 하기전에 미리 확인하는 기능
+                <pre>
+                    <pre class="prettyprint lang-js">const useConfirm = (message, onConfirm, onCancle) => {
+                        //반드시 필요한 함수
+                        if(!onConfirm || typeof onConfirm !== "function"){
+                            return;
+                        }
+                        //반드시 필요한 건 아닌 함수
+                        if(onCancle && typeof onCancle !== "function"){
+                            return;
+                        }
+                        const confirmAction = () => {
+                            //confirm : 예 or 아니오를 묻는 JS의 기본 기능
+                            if(confirm(message)){
+                                onConfirm();
+                            }
+                            else{
+                                onCancle(); //confirm 실행시 아니오를 눌렀을 때 진행될 함수
+                            }
+                        }
+                        return confirmAction;
+                    };
+                    </pre>
+                </pre>
+            </li>
+            <li>usePreventLeave : 유저가 페이지를 벗어나려는 시점에 실행되는 함수
+                <pre>
+                    (1) usePreventLeave를 선언한다.
+                        <pre class="prettyprint lang-js">
+                            const usePreventLeave = () => {
+                                const listener = (event) => {
+                                    event.preventDefault();
+                                    event.reurnValue = "";
+                                };
+                                const enablePrevent = () => window.addEventListener("beforeunload", listener);
+                                const disablePrevent = () => window.removeEventListener("beforeunload", listener);
+                                return {enablePrevent, disablePrevent};
+                            };
+                        </pre>
+                    (2) App()에서 const {enablePrevent, disablePrevent} = usePageLeave();를 작성한다.
+                    (3) 사용할 컴포넌트에서 enablePrevent 또는 disablePrevent를 사용한다.
+                </pre>
+            </li>
+            <li>useNotification : Notification API를 사용할 때 유저에게 알림을 보낸다.
+                <pre>
+                      <pre class="prettyprint lang-js">
+                        const useNotification = (title, options) => {
+                            if (!("Notification" in window)) {
+                              return;
+                            }
+                            const fireNotif = () => {
+                              if (Notification.permission !== "granted") {
+                                Notification.requestPermission().then(permission => {
+                                  if (permission === "granted") {
+                                    new Notification(title, options);
+                                  } else {
+                                    return;
+                                  }
+                                });
+                              } else {
+                                new Notification(title, options);
+                              }
+                            };
+                            return fireNotif;
+                          };
+                      </pre>
+
+                    ※ 참고 : <a href="https://developer.mozilla.org/ko/docs/Web/API/notification">이동</a>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <section id="publishingToNPM" tag="">
+        <header class="note_title">Publishing to NPM</header>
+        <ul>
+            <li>NPM에 제작한 리액트 훅 등록하기
+                <pre>
+                    (1) 등록할 JS 파일에 가서 터미널 패널을 연 다음에 npm init을 입력한다.
+                    (2) 필요한 정보를 다 입력한다.
+                    (3) react가 필요한 훅이기 때문에 터미널에서 npm i react react-dom을 입력한다.
+                    (4) package.json의 dependencies 속성의 이름을 peerDependencies로 변경한다.
+                            → 이미 설치되어 있다면 설치하지 않고, 설치되어 있지 않다면 설치한다.
+                    (5) 터미널에서 npm login을 입력한다.
+                    (6) 터미널에서 npm publish -access public을 입력한다.
+
+                    ※ npm 계정이 없는 경우 npm 계정을 만든다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <div id="remote">
+        <article id="remote_setcion">
+            <select id="remote_menu" onchange="move_section()">
+                <option value="start">시작</option>
+                <option value="stateHooks">State Hooks</option>
+                <option value="effectHooks">Effect Hooks</option>
+                <option value="useRef">useRef</option>
+                <option value="compositiveHooks">Compositive Hooks</option>
+                <option value="noneImportHooks">None Import Hooks</option>
+                <option value="publishingToNPM">Publishing to NPM</option>
+            </select>
+        </article>
+    </div>
+    
+</body>
+
+<!--code pretty print -->
+<script src ="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+<script>
+    prettyPrint();
+</script>
+
+</html>

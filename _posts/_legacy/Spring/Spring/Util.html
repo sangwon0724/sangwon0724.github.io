@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자주 사용하는 기능</title>
+    <!-- code pretty print -->
+    <link rel="stylesheet" href="./css/codePrettyPrint.css">
+</head>
+<body>
+    <section id="file">
+        <header class="note_title">파일 전송</header>
+        <ul>
+            <li>파일 전송 (한글 파일명 깨짐 방지)
+                <pre>
+                    <pre class="prettyprint lang-java">
+                        public String fileUpload(MultipartHttpServletRequest request, String uploadRoot, String fileName) throws Exception {
+                            MultipartFile mf = request.getFile(fileName); //ajax에서 이름을 주었던 대로 MultipartFile 객체에 저장
+                            
+                            String originalFileName = new String(mf.getOriginalFilename().getBytes("8859_1"),"utf-8"); //원본 파일명, 한글깨짐방지
+                            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
+                            String savedFileName = UUID.randomUUID() + extension;   //저장될 파일 명
+                            
+                            try {
+                                mf.transferTo(new File(uploadRoot + savedFileName)); //InputStream를 사용하지 않고 쉽게 저장하는 방법
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            
+                            return savedFileName;
+                        }
+                    </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="thumbnail">
+        <header class="note_title">썸네일 생성</header>
+        <ul>
+            <li>데이터 속에서 추출하는 방식
+                <pre>
+                    <pre class="prettyprint lang-java">
+                        //System.out.println(matcher.group(0)); //이미지 태그 자체를 출력
+                        //System.out.println(matcher.group(1)); //이미지 태그의 src만 출력
+    
+                        public List&lt;HashMap&lt;String, Object>> setThumbnail (List&lt;HashMap&lt;String, Object>> mapList){
+                            for (HashMap&lt;String, Object> map : mapList) {
+                                String text = map.get("content").toString(); //게시글의 내용 가져오기
+                                Pattern pattern = Pattern.compile("&lt;img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>"); //img 태그 src 추출 정규표현식
+                                Matcher matcher = pattern.matcher(text);
+    
+                                String thumbnail_text =  "";
+    
+                                //썸네일을 한 장만 만들기
+                                if(matcher.find()){
+                                    thumbnail_text = matcher.group(1);
+                                }
+                                /*
+                                    &lt;&lt;&lt; 썸네일 여러 장 만들기 >>>
+                                
+                                    String[] thumbnail_array;
+    
+                                    //split을 위한 연결 문자 추가
+                                    while(matcher.find()){
+                                        thumbnail_text = thumbnail_text + matcher.group(1) + "_";
+                                    }
+                                    
+                                    //배열 만들기
+                                    thumbnail_array = thumbnail_text.split("_");
+                                    
+                                    map.put("thumbnail", thumbnail_array); //map에 썸네일 배열 추가 (멀티 썸네일용)
+                                */
+                                
+                                map.put("thumbnail", thumbnail_text); //map에 썸네일 추가 (싱글 썸네일용)
+                            }
+                            
+                            return mapList;
+                        } //단일용 종료
+                    </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="folder">
+        <header class="note_title">폴더 관리</header>
+        <ul>
+            <li>폴더 존재 여부 확인 및 생성
+                <pre>
+                    <pre class="prettyprint lang-java">
+                        public void checkFolder(String root) {
+                            //폴더 존재 여부 확인
+                            File Folder = new File(root); //필요한 경로에 폴더가 존재 하는 지 확인용 (확인 이유 : MultipartFile.transferTo 메소드는 해당 경로에 폴더가 없으면 오류가 발생한다.)
+                            
+                            // 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
+                            if (!Folder.exists()) {
+                                try{
+                                    Folder.mkdirs(); //폴더 생성합니다.
+                                    System.out.println("폴더가 생성되었습니다.");
+                                } 
+                                catch(Exception e){
+                                    e.getStackTrace();
+                                }        
+                            }
+                            else {
+                                System.out.println("이미 폴더가 생성되어 있습니다.");
+                            }
+                        }
+                    </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+    
+    <div id="remote">
+        <section id="remote_setcion">
+            <select id="remote_menu" onchange="move_section()">
+                <option value="file">파일 전송</option>
+                <option value="thumbnail">썸네일 생성</option>
+                <option value="thumbnail">폴더 관리</option>
+            </select>
+        </section>
+    </div>
+
+    <!--code pretty print -->
+    <script src ="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  
+    <script>
+        prettyPrint();
+    </script>
+</body>
+</html>

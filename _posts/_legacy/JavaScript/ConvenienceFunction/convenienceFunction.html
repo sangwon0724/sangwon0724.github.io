@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>편의 기능 모음집</title>
+    <!-- code pretty print -->
+    <link rel="stylesheet" href="./css/codePrettyPrint.css">
+    <!-- toast alram -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        #toastrList{
+            width: 80%;
+            height: 35px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 0 auto;
+        }
+        #toastrList>button{
+            width: 24%;
+            height: 30px;
+        }
+        #toastrList>button#toast_succeess{
+            background-color: #74B574;
+        }
+        #toastrList>button#toast_info{
+            background-color: #59ABC3;
+        }
+        #toastrList>button#toast_warning{
+            background-color: #F89406;
+        }
+        #toastrList>button#toast_error{
+            background-color: #BC3932;
+        }
+    </style>
+</head>
+<body>
+    <section id="toast">
+        <header class="note_title">토스트 알람</header>
+        <ul>
+            <li>환경설정
+                <pre>
+                    <pre class="prettyprint lang-html">
+                        &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" 
+                        integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" 
+                        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+                        &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" 
+                        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" 
+                        crossorigin="anonymous" referrerpolicy="no-referrer">&lt;/script>
+                    </pre>
+                </pre>
+            </li>
+            <li>사용하기
+                <pre>
+                    <pre class="prettyprint lang-js">
+                        //기본 형식 : toastr.메소드명(제목, 내용, 옵션);
+                        //제목 생략 후 내용만 입력할 수도 있다.
+
+                        function toast_succeess(){
+                            toastr.success('toast_succeess');
+                        }
+                        function toast_info(){
+                            toastr.info('toast_info');
+                        }
+                        function toast_warning(){
+                            toastr.warning('toast_warning');
+                        }
+                        function toast_error(){
+                            toastr.error('toast_error');
+                        }
+                    </pre>
+
+                    <div id="toastrList">
+                        <button id="toast_succeess" onclick="toast_succeess()">succeess</button>
+                        <button id="toast_info" onclick="toast_info()">info</button>
+                        <button id="toast_warning" onclick="toast_warning()">warning</button>
+                        <button id="toast_error" onclick="toast_error()">error</button>
+                    </div>
+                </pre>
+            </li>
+            <li>옵션 설정하기
+                <pre>
+                    <pre class="prettyprint lang-js">
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": true,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "100",
+                            "hideDuration": "1000",
+                            "timeOut": "1500",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+                    </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <!--
+    <section id="xxx">
+        <header class="note_title">xxx</header>
+        <ul>
+            <li>
+                <pre>
+                    ● xxx
+                </pre>
+            </li>
+        </ul>
+    </section>
+    -->
+
+    <div id="remote" onchange="move_section()">
+        <article id="remote_setcion">
+            <select id="remote_menu">
+                <option value="toast">토스트 알람</option>
+            </select>
+        </article>
+    </div>
+
+<!--code pretty print -->
+<script src ="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    
+<script>
+    prettyPrint();
+
+    function toast_succeess(){
+        toastr.success('toast_succeess');
+    }
+    function toast_info(){
+        toastr.info('toast_info');
+    }
+    function toast_warning(){
+        toastr.warning('toast_warning');
+    }
+    function toast_error(){
+        toastr.error('toast_error');
+    }
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "100",
+        "hideDuration": "1000",
+        "timeOut": "1500",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+</body>
+</html>

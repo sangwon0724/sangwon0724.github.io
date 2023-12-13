@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Framework 공부</title>
+    <!-- code pretty print -->
+    <link rel="stylesheet" href="./css/codePrettyPrint.css">
+</head>
+<body>
+    <section id="intro">
+        <header class="note_title">스프링 프레임워크</header>
+        <ul>
+            <li>기본 소개
+                <pre>
+                    ● 핵심 기술 : 스프링 DI 컨테이너, AOP, 이벤트, 기타
+                    ● 웹 기술 : 스프링 MVC, 스프링 WebFlux
+                    ● 데이터 접근 기술 : 트랜잭션, JDBC, ORM 지원, XML 지원
+                    ● 기술 통합 : 캐시, 이메일, 원격접근, 스케쥴링
+                    ● 테스트 : 스프링 기반 테스트 지원
+                    ● 언어 : 코틀린, 그루비
+                </pre>
+            </li>
+            <li>스프링의 핵심
+                <pre>
+                    ● 스프링은 자바 언어 기반의 프레임워크
+                    ● 자바 언어의 가장 큰 특징 - 객체 지향 언어
+                    ● 스프링은 객체 지향 언어가 가진 강력한 특징을 살려내는 프레임워크
+                    ● 스프링은 좋은 객체 지향 애플리케이션을 개발할 수 있게 도와주는 프레임워크
+                </pre>
+            </li>
+            <li>스프링 프로젝트 폴더 구조
+                <pre>
+                    1. src/main/java
+                        ○ 자바 파일이 모여있는 곳
+                        ○ 스프링에서 이미 MVC 패턴의 서블릿 구조를 잡아주기 때문에
+                          따로 서블릿을 만들 필요 없이 스프링 구조에 맞춰 클래스 파일들을 작성하면 된다.
+                    2. src/main/resources
+                        ○ 자바 클래스에서 사용하는 리소스를 보관하는 폴더 (예시 : myBatis 관련 xml 파일)
+                    3. src/test/java & src/test/resources
+                        ○ 테스트를 위한 자바 코드와 리소스를 보관하는 폴더
+                    4. Maven Dependencies
+                        ○ maven에서 자동으로 관리해주는 라이브러리 폴더
+                        ○ pom.xml에 작성된 라이브러리들을 자동으로 다운받아서 관리한다.
+                    5. src
+                        ○ Web에 관련된 자원이 담겨있는 루트 폴더
+                        ○ 하위 폴더에 웹과 관련된 모든 자원들이 분류되어 있다.
+                    5-1. src/main/webapp/resources
+                        ○ 웹에 필요한 다양한 자원들을 보관하는 폴더
+                        ○ 사용자가 직접 접근할 수 있는 공간
+                        ○ js, css, img 파일 등이 보관된다.
+                        ○ 컨트롤러가 요청을 가로채지 않고 바로 접근할 수 있도록 따로 설정해서 사용하는 폴더
+                    5-2. src/main/webapp/WEB-INF
+                        ○ 웹에 필요한 코드 파일, 컴파일된 파일, 환경설정 파일이 보관되는 폴더
+                        ○ 보안이 중요한 파일들이기 때문에 외부 사용자가 직접 접근할 수 없는 폴더
+                        ○ 컨트롤러를 통해 내부적으로만 접근할 수 있는 폴더
+                            ※ 정확히 말하면 핸들러를 통해 접근한다.
+                    5-2-1. src/main/webapp/WEB-INF/classes
+                        ○ 컴파일 된 파일이 보관되는 폴더
+                    5-2-2. src/main/webapp/WEB-INF/spring
+                        ○ 스프링 환경설정 파일이 보관되는 폴더 (root-context.xml, servelt-context.xml)
+                    5-2-3. src/main/webapp/WEB-INF/views
+                        ○ jsp 및 html 파일이 보관되는 폴더
+                        ○ 루트(/)의 기준점
+                </pre>
+            </li>
+            <li>스프링 설치하기
+                <pre>
+                    1. 이클립스 최상단의 Help 메뉴에서 Eclipse Marketplace 선택하기
+                    2. STS (Spring Tool Suite)를 검색한 후에 해당 확장 모듈 설치하기
+                </pre>
+            </li>
+            <li>스프링 프로젝트 생성하기
+                <pre>
+                    1. 이클립스 최상단의 File 메뉴의 New 메뉴에서 Spring Legacy Project 선택하기
+                    2. Spring MVC Project 선택한 후에 프로젝트명을 입력하고 Next 누르기
+                    3. 해당 프로젝트의 최상단 패키지명 작성한 후 Finish 누르기
+                        예시)
+                            서비스 예정 URL : metro.guide.com
+                            패키지명 : com.guide.metro
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="maven">
+        <header class="note_title">maven (메이븐)</header>
+        <ul>
+            <li>maven의 정의
+                <pre>
+                    ● 프로젝트를 빌드하고 라이브러리를 관리해주는 도구
+                    ● 자바 프로젝트의 빌드를 자동화 해주는 빌드 툴
+                    ● 자바 소스를 compile하고 package해서 deploy하는 일을 자동화 해주는 도구
+                </pre>
+            </li>
+            <li>maven의 사용 이유
+                <pre>
+                    ● 개발자들이 편하게 서로 같이 협력하면서 일을 할 수 있도록 하기 위해서
+                    ● 필요한 라이브러리의 하위 라이브러리까지 버전에 맞게 알아서 받아주기 떄문에
+                </pre>
+            </li>
+            <li>maven의 라이프사이클
+                <pre>
+                    ● maven 라이프사이클 : maven이 프로젝트를 빌드함에 있어서 동작하는 작업들에 대한 구조
+                    ● phase : maven 라이프사이클 안에서 동작하는 각각의 작업
+                    ● goal : 각각의 phase 안에 존재하는 플러그인에서 수행가능한 명령
+
+                    ※ maven의 라이프사이클은 내부의 phase가 차례대로 진행되기 때문에 나중 단계의 명령을 호출하면 이전 단계의 작업들은 먼저 진행되고 해당 명령을 진행한다.
+                        예시 ) maven install을 실행한다고 가정했을 때, compile → test → package 순으로 작업이 진행된 다음에 install이 진행된다.
+                </pre>
+            </li>
+            <li>maven의 라이프사이클 종류
+                <pre>
+                    ● Default (기본) 라이프사이클
+                        1. compile
+                            ○ 소스코드를 컴파일해주는 단계
+                            ○ 작업이 성공적으로 진행되면 target/classes 폴더가 만들어지고 컴파일된 class파일이 생성된다.
+                        2. test
+                            ○ 테스트 코드를 실행해주는 단계
+                            ○ 실패하면 빌드가 멈춘다.
+                            ○ 작업이 성공적으로 진행되면 target/test-classes 폴더와 안에 컴파일된 class파일이 생성되고
+                              target/surefire-reports 폴더에 테스트 결과가 기록된다.
+                        3. package
+                            ○ 해당 프로젝트를 지정한 확장자로 묶어주는 단계
+                            ○ pom.xml에 packaging 태그에 명시되있는 확장자로 파일이 만들어진다.
+                            ○ "artifactId-version.packaging"형태의 파일을 target 폴더안에 생성한다.
+                        4. install
+                            ○ Maven이 설치되어 있는 PC인 로컬 리포지토리에 배포한다.
+                        5. deploy
+                            ○ 원격 리포지토리가 등록되어 있다면 해당 원격 리포지토리에 배포한다.
+                    ● Clean 라이프사이클
+                        1. clean
+                            ○ 생성된 target 폴더를 삭제한다.
+                    ● Site 라이프사이클 : 문서 사이트를 생성할 수 있도록 지원한다.
+                        1. site
+                        2. site-deploy
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="bean">
+        <header class="note_title">스프링 빈</header>
+        <ul>
+            <li>스프링 컨테이너
+                <pre>
+                    ● 스프링 컨테이너 : 주입을 이용해서 객체를 관리하는 컨테이너
+                    ● 스프링 컨테이너의 역할 : 빈의 생성과 관계, 사용, 생명 주기등을 관리
+                    ● 스프링 컨테이너 사용 이유 : 종속객체 주입을 이용하여 애플리케이션을 구성하는 컴포넌트들을 관리한다.
+                    ● 스프링 컨테이너 종류
+                        (1) 빈 팩토리 : DI의 기본사항을 제공하는 가장 단순한 컨테이너 팩토리 디자인 패턴을 구현한 것
+                            ○ 빈을 생성하고 분배하는 책임을 지는 클래스
+                            ○ 빈의 정의는 반드시 로딩한다.
+                            ○ 빈 자체가 필요하게 되기 전까지는 인스턴스화를 하지 않는다. (lazy loading, 게으른 호출)
+                        (2) 어플리케이션 컨텍스트 : 빈 팩토리와 유사한 하지만 좀 더 많은 기능을 제공하는 컨테이너
+                            ○ 국제화가 지원되는 텍스트 메시지를 관리해준다.
+                            ○ 이미지같은 파일 자원을 로드할 수 있는 포괄적인 방법을 제공해준다.
+                            ○ 리너스로 등록된 빈에게 이벤트 발생을 알려준다.
+                            ○ 대부분의 어플리케이션에서는 빈 팩토리보다 어플리케이션 컨텍스트를 사용하는 것이 좋다.
+                </pre>
+            </li>
+            <li>빈 팩토리 사용법
+                <pre>
+                    ● getBean()이 호출되면, 팩토리는 의존성 주입을 이용해 빈을 인스턴스화 하고 빈의 특성을 설정하기 시작한다.
+
+                    <pre class="prettyprint lang-java">
+                        BeanFactory bf = new XmlBeanFactory(new FileInputStream("beanFactoryTest.xml"));
+
+                        testBean testbean = (testBean) bf.getBean("testbean");
+                    </pre>
+                </pre>
+            </li>
+            <li>어플리케이션 컨텍스트 사용법
+                <pre>
+                    ● 어플리케이션 컨텍스트의 구현체 종류
+                        (1) ClassPathXmlApplicationContext : 클래스패스에 위치한 xml 파일에서 컨텐스트 정의 내용을 읽어들인다.
+                        (2) FileSystemxmlApplicationContext : 파일 경로로 지정된 xml 파일에서 컨텐스트 정의 내용을 읽어들인다.
+                        (3) XmlWebApplicationContext : 웹 어플리케이션에 포함된 xml 파일에서 컨텐스트 정의 내용을 읽어들인다.
+
+                        <pre class="prettyprint lang-java">
+                            ApplicationContext AC = new ClassPathXmlApplicationContext("context/contextBean.xml");
+
+                            testBean testbean = AC.getBean("testbean");
+                        </pre>
+                </pre>
+            </li>
+            <li>빈 팩토리와 어플리케이션 컨텍스트의 차이점
+                <pre>
+                    ● 빈 팩토리 : 처음으로 getBean()이 호출된 시점에서야 해당 빈을 생성
+                    ● 애플리케이션 컨텍스트 : 컨텍스트 초기화 시점에 모든 싱글톤 빈을 미리 빈을 생성해 놓아 빈이 필요할 때 즉시 사용할 수 있도록 보장
+                </pre>
+            </li>
+            <li>xml 파일을 통한 빈 등록하기
+                <pre>
+                    ● bean 태그
+                        ○ id : 등록하는 빈의 고유 명칭
+                        ○ class : 등록하는 빈의 실제 형식
+                    ● property 태그 (Setter를 통한 의존 관계가 있는 Bean 주입시 사용)
+                        ○ name : 지정할 속성의 이름
+                        ○ value : 지정할 속성의 값
+                        ○ ref : 지정할 속성이 참조하는 빈의 id
+                    ● constructor-arg 태그 (생성자를 통한 의존 관계가 있는 Bean 주입시 사용)
+                        ○ ref : 지정할 속성이 참조하는 빈의 id
+                    ● qualifier 태그
+                        ○ value : @Qualifier("명칭")에서 사용할 이름
+
+                    <pre class="prettyprint lang-xml">
+                        &lt;bean id="beanTest" class="com.example.practice.beanTest">
+                            &lt;property name="ref" ref="refTest"/>
+                            &lt;property name="whatever" value="whatever"/>
+                        &lt;/bean>
+
+                        &lt;bean id="refTest" class="com.example.practice.refTest"/>
+
+                        &lt;bean id="qualifierTest1" class="com.example.practice.qualifierTest">
+                            &lt;qualifier value="target"/> 
+                        &lt;/bean>
+                        &lt;bean id="qualifierTest2" class="com.example.practice.qualifierTest"/>
+                    </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="beanLifeCycle">
+        <header class="note_title">빈 생명주기</header>
+        <ul>
+            <li>빈 생명주기
+                <pre>
+                    ● 기본적인 생명주기 :
+                        생성 → 빈 설정 (초기화) → 사용 → 소멸
+
+                    ● 기초적인 사용방법 :
+                        <pre class="prettyprint lang-java">
+                            AnnotationConfigApplicationContext test = new AnnotationConfigApplicationContext(AnnotationBeanTest.class);
+                            //ApplicationContext test = new ClassPathXmlApplicationContext("applicationContextTest.xml");
+    
+                            //빈 생성하기
+                            test.register();
+                            
+                            //빈 설정하기
+                            test.refresh();
+    
+                            //빈 사용하기
+                            whatever what = (whatever)test.getBean("what");
+                            
+                            //빈을 직접 소멸시키기
+                            test.close();
+    
+                            //JVM 소멸시 자동으로 소멸시키는 방법
+                            test.registerShutdownHook();
+                        </pre>
+                </pre>
+            </li>
+            <li>기본적인 전제조건
+                <pre>
+                    ● 빈에 관련된 메소드를 정의한 클래스에는 @Configuration 어노테이션을 추가해야 한다.
+                </pre>
+            </li>
+            <li>빈 생명주기 사용방법 1 : 인터페이스 활용하기
+                <pre>
+                    ● 빈 초기화 하기
+                        ○ InitializingBean 인터페이스를 활용한다.
+                        ○ afterPropertiesSet()가 초기화를 지원한다.
+                        ○ 빈이 생성되면 afterPropertiesSet()가 자동으로 실행되어 빈이 초기화된다.
+
+                    ● 빈 소멸하기
+                        ○ DisposableBean 인터페이스를 활용한다.
+                        ○ destroy() 메소드가 소멸을 지원한다.
+                        ○ 빈의 사용이 완료되면 destroy() 메소드가 자동으로 실행되어 빈이 소멸된다.
+                    
+                    ● 인터페이스를 활용하는 방법의 장단점
+                        ○ 스프링 전용 인터페이스에 해당 코드가 의존한다.
+                        ○ 초기화, 소멸 메소드의 이름을 변경할 수 없다.
+                        ○ 내가 코드를 고칠수 없는 외부 라이브러리에 적용할 수 없다.
+                        ○ 이 방법은 스프링 초창기에 나온 방법이라서 지금은 거의 사용하지 않는 방법이다.
+                </pre>
+            </li>
+            <li>빈 생명주기 사용방법 2 : 사용자 정의 메소드 활용하기
+                <pre>
+                    ● 빈 초기화 하기 + 소멸하기
+                        ○ 해당 클래스에서 빈을 초기화할 때의 메소드와 소멸할 때의 메소드를 직접 정의한다.
+
+                    ● 사용방법
+                        ○ BeanLifeCycle이라는 이름의 빈 메소드를 정의한 클래스를 생성했다고 가정한다.
+                        ○ 해당 클래스인 BeanLifeCycle을 사용하는 코드의 위쪽에 @Bean 어노테이션을 추가한다.
+                        ○ @Bean 어노테이션의 속성으로 initMethod와 destroyMethod를 추가한다.
+                        ○ 각 속성의 값은 빈 관련 메소드를 작성했던 클래스인 BeanLifeCycle에서 자신이 작성한 각각의 빈 초기화 메소드와 빈 소멸 메소드의 이름을 작성한다.
+                    
+                    ● 사용자 정의 메소드 활용하는 방법의 특징
+                        ○ 메소드의 이름을 자유롭게 줄 수 있다.
+                        ○ 스프링 빈이 스프링 코드에 의존하지 않는다.
+                        ○ 코드가 아니라 설정 정보를 사용하기 때문에
+                        코드를 고칠 수 없는 외부 라이브러리에도 적용시킬 수 있다.
+
+                    ● @Bean 어노테이션의 destroyMethod 속성의 기본 값
+                        ○ @Bean 어노테이션의 destroyMethod 속성은 기본 값이 (inferred)로 등록되어 있다.
+                        ○ (inferred)는 close와 shutdown이라는 메소드를 자동으로 호출해서 빈을 소멸시켜 준다.
+                        ○ 따라서 해당 방법을 이용시에는 빈 소멸메소드를 따로 만들지 않아도 잘 작동한다.
+                </pre>
+            </li>
+            <li>빈 생명주기 사용방법 3 : 어노테이션 활용하기
+                <pre>
+                    ● 빈 초기화 하기
+                        ○ 본인이 작성한 빈 초기화 메소드에 @PostConstruct 어노테이션을 추가한다.
+
+                    ● 빈 소멸 하기
+                        ○ 본인이 작성한 빈 소멸 메소드에 @PreDestroy 어노테이션을 추가한다.
+
+                    ● 사용하기
+                        ○ BeanLifeCycle이라는 이름의 빈 메소드를 정의한 클래스를 생성했다고 가정한다.
+                        ○ 해당 클래스인 BeanLifeCycle을 사용하는 코드의 위쪽에 @Bean 어노테이션을 추가한다.
+                        ○ 해당 방법에서는 @Bean 어노테이션에 속성을 추가하지 않아도 된다.
+                    
+                    ● 어노테이션을 사용하는 방법의 특징
+                        ○ 어노테이션만 붙이면 되니 매우 간편하다.
+                        ○ 스프링에 종속적인 기술이아는 자바 표준 기술이기 떄문에 스프링이 아닌 다른 컨테이너에서도 잘 작동한다.
+                        ○ 컴포넌트 스캔과 잘 어울린다.
+                        ○ 외부 라이브러리에는 적용하지 못한다.
+                        ○ 외부 라이브러이를 초기화나 소멸시키고 싶을 때에는 @Bean의 기능을 사용하면 된다.
+                        ○ 최신 스프링에서 가장 권장하는 방법이다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="beanScope">
+        <header class="note_title">빈 스코프</header>
+        <ul>
+            <li>
+                <pre>
+                    ● 정의 : 빈이 존재할 수 있는 범위
+
+                    ● 빈 스코프의 종류
+                        ○ 싱글톤 :
+                            기본 스코프, 스프링 컨테이너의 시작과 종료까지 유지되는 가장 넓은 범위의 스코프이다
+
+                        ○ 프로토 타입 :
+                            스프링 컨테이너가 프로토타입의 빈의 생성과 의존관계 주입까지만 관여하고
+                            더는 빈에 관련된 작업들에 관여하지 않는 매우 짧은 범위의 스코프
+
+                        ○ 웹 관련 스코프
+                            ▶ request : 웹 요청이 들어오고 나갈때 까지 유지되는 스코프
+                            ▶ session : 웹 세션이 생성되고 종료될 때 까지 유지되는 스코프
+                            ▶ application : 웹의 서블릿 컨텍스트와 같은 범위로 유지되는 스코프
+                            ▶ websocket: 웹 소켓과 동일한 생명주기를 가지는 스코프
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="singleton">
+        <header class="note_title">빈 스코프 - 싱글톤 스코프</header>
+        <ul>
+            <li>싱글톤 스코프의 특징
+                <pre>
+                    ● 스코프를 명시적으로 지정하지 않으면 설정되는 기본 스코프
+                    ● 빈 스코프를 싱글톤으로 사용하면 빈을 각각의 다른 객체로 생성해도 같은 것을 가리키게 된다.
+                    ● 싱글톤 빈은 스프링 컨테이너에서 한 번 생성된다.
+                    ● 스프링 컨테이너가 사라질 떄 빈도 사라진다.
+                    ● ApplicationContext 초기 구동시 인스턴스 생성된다.
+                    ● 생성된 인스턴스는 single beans cache에 저장된다.
+                    ● 해당 빈에 대한 요청과 참조가 있으면 캐시된 객체를 반환한다.
+                </pre>
+            </li>
+            <li>싱글톤 스코프의 사용 방법 (스코프의 기본 값이 싱글톤이기 때문에 생략해도 상관없다.)
+                <pre>
+                    ● xml을 통한 사용방법
+                        &lt;bean id="test" scope="singleton">&lt;/bean>
+
+                    ● 어노테이션을 통한 사용방법
+                        @Scope("singleton")
+                </pre>
+            </li>
+            <li>싱글톤 패턴
+                <pre>
+                    ● 클래스의 인스턴스가 1개만 생성되도록 하는 디자인 패턴
+                    ● private 생성자를 사용해서 외부에서 임의로 new 키워드를 사용하지 못하도록 막아야 한다
+                </pre>
+            </li>
+            <li>싱글톤 패턴의 문제점
+                <pre>
+                    ● 싱글톤 패턴을 구현하는 코드 자체가 많이 들어간다.
+                    ● 의존관계상 클라이언트가 구체 클래스에 의존한다. DIP를 위반한다.
+                    ● 클라이언트가 구체 클래스에 의존해서 OCP 원칙을 위반할 가능성이 높다.
+                    ● 테스트하기 어렵다.
+                    ● 내부 속성을 변경하거나 초기화 하기 어렵다.
+                    ● private 생성자로 자식 클래스를 만들기 어렵다.
+                    ● 결론적으로 유연성이 떨어진다.
+                    ● 안티패턴으로 불리기도 한다.
+                </pre>
+            </li>
+            <li>싱글톤 컨테이너
+                <pre>
+                    ● 스프링 컨테이너는 기본적으로 객체 인스턴스를 싱글톤으로 관리한다.
+                    ● 스프링 컨테이너는 기본적으로 빈 스코프가 싱글톤이기 때문에 객체를 하나만 생성해서 관리한다.
+                    ● 스프링 컨테이너는 싱글턴 패턴의 모든 단점을 해결하면서 객체를 싱글톤으로 유지할 수 있다.
+                    ● 싱글톤 패턴을 위한 코드를 간결해질 수 있게 해준다.
+                    ● DIP, OCP, 테스트, private 생성자로 부터 자유롭게 싱글톤을 사용할 수 있다.
+
+                    ● 싱글톤 레지스트리 : 싱글톤 객체를 생성하고 관리하는 기능
+                </pre>
+            </li>
+            <li>싱글톤 방식의 주의점
+                <pre>
+                    ● 객체 인스턴스를 하나만 생성해서 공유하는 싱글톤 방식은 여러 클라이언트가 하나의 같은 객체 인스턴스를 공유하기 때문에
+                    싱글톤 객체는 상태를 유지하게 설계하면 안된다.
+                    ● 특정 클라이언트에 의존적인 필드가 존재하면 안된다.
+                    ● 특정 클라이언트가 값을 변경할 수 있는 필드가 존재하면 안된다.
+                    ● 가급적 읽기만 가능해야 한다.
+                    ● 필드 대신에 자바에서 공유되지 않는, 지역변수, 파라미터, ThreadLocal 등을 사용해야 한다.
+                    ● 스프링 빈의 필드에 공유 값을 설정하면 정말 큰 장애가 발생할 수 있다.
+                        예시) 개인 정보
+                </pre>
+            </li>
+            <li>싱글톤 방식을 위한 @Configuration 어노테이션
+                <pre>
+                    ● @Bean 어노테이션만 사용해도 스프링 빈으로 등록되지만, 싱글톤을 보장하지 않는다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="prototype">
+        <header class="note_title">빈 스코프 - 프로토타입 스코프</header>
+        <ul>
+            <li>정의
+                <pre>
+                    ● 빈을 조회했을 때 스프링 컨테이너가 빈을 생성하고 필요한 의존관계를 주입한 다음에
+                    생성한 프로토타입 빈을 클라이언트에 반환한 다음에 더 이상 빈을 관리하지 않는 빈 스코프의 종류 중 하나
+                </pre>
+            </li>
+            <li>사용방법
+                <pre>
+                    ● 클래스에 @Scope("prototype") 어노테이션을 추가한다.
+                </pre>
+            </li>
+            <li>프로토타입 빈의 특징
+                <pre>
+                    ● 스프링 컨테이너에 요청할 때 마다 새로 생성된다.
+                    ● 스프링 컨테이너는 프로토타입 빈의 생성과 의존관계 주입 그리고 초기화까지만 관여한다.
+                    ● 종료 메서드가 호출되지 않는다.
+                    ● 프로토타입 빈은 프로토타입 빈을 조회한 클라이언트가 관리해야 한다.
+                    ● 프로토타입 빈은 종료 메서드에 대한 호출을 클라이언트가 직접 해야한다
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="component">
+        <header class="note_title">컴포넌트 스캔</header>
+        <ul>
+            <li>정의
+                <pre>
+                    ● 컴포넌트 스캔 :
+                        스프링에서 제공하는 설정 정보가 없어도 자동으로 스프링 빈을 등록하는 기능
+                </pre>
+            </li>
+            <li>컴포넌트 스캔 사용방법
+                <pre>
+                    ● 기본적인 사용방법
+                        ○ 클래스에 @ComponentScan 어노테이션을 추가한다.
+                        ○ 빈으로 등록할 대상에 @Component 어노테이션을 추가한다.
+
+                    ● 특정 대상을 컴포넌트 스캔 대상에서 제외하는 방법 (특수한 경우에만 사용)
+                        ○ @ComponentScan 어노테이션의 excludeFilters 속성을 추가한다.
+                        ○ excludeFilters의 값으로 @Filter 어노테이션을 추가한다.
+                        ○ @Filter 어노테이션의 속성인 type과 classes에 각각 FileterType.ANNOTATION과 스캔 대상에서 제외할 클래스의 명을 작성한다.
+                            작성 예시)
+                                <pre class="prettyprint lang-java">
+                                    @Configuration
+                                    @ComponentScan(
+                                        excludeFilters = @Filter(type = FilterType.ANNOTATION, classes = Configuration.class)
+                                    )
+                                    public class ComponentSscanTest {
+                                    
+                                    }
+                                </pre>
+
+                    ● 탐색할 패키지의 시작 위치를 지정하는 방법
+                        ○ @ComponentScan 어노테이션에 basePackages 속성을 준다.
+                            예시) @ComponentScan(basePackages = "com.practice")
+
+                        ○ 2개 이상의 패키지를 지정하고 싶을 때는 {}를 사용한다.
+                            예시) @ComponentScan(basePackages = {"com.practiceA", "com.com.practiceB"})
+
+                    ● 컴포넌트 스캔의 특징
+                        ○ basePackages 속성을 지정하지 않으면 @ComponentScan 어노테이션이 붙은 설정 정보 클래스의 패키지가 시작 위치가 된다.
+
+                        
+                    ● 컴포넌트 스캔의 기본 대상
+                        ○ @Component 어노테이션 : 컴포넌트 스캔에서 사용
+                        ○ @Controlller 어노테이션 : 스프링 MVC 컨트롤러에서 사용
+                        ○ @Service 어노테이션 : 스프링 비즈니스 로직에서 사용
+                        ○ @Repository 어노테이션 : 스프링 데이터 접근 계층에서 사용
+                        ○ @Configuration 어노테이션 : 스프링 설정 정보에서 사용
+
+                    
+                    ● 컴포넌트 스캔의 필터 기능
+                        ○ includeFilters 속성 : 컴포넌트 스캔 대상을 추가로 지정한다.
+                        ○ excludeFilters 속성 : 컴포넌트 스캔에서 제외할 대상을 지정한다
+
+                    ● @Filter 어노테이션의 type 속성의 종류
+                        ○ FilterType.ANNOTATION: 기본값, 애노테이션을 인식해서 동작한다.
+                        ○ FilterType.ASSIGNABLE_TYPE: 지정한 타입과 자식 타입을 인식해서 동작한다.
+                        ○ FilterType.ASPECTJ: AspectJ 패턴 사용
+                        ○ FilterType.REGEX: 정규 표현식
+                        ○ CUSTOM: TypeFilter 이라는 인터페이스를 구현해서 처리
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="IOC">
+        <header class="note_title">스프링 3대 요소 - 제어 역전 (IOC)</header>
+        <ul>
+            <li>
+                <pre>
+                    ● 제어 역전 (Inversion of Control)
+                        ○ 객체의 생성에서부터 생명주기의 관리까지 모든 객체에 대한 제어권이 바뀌는 것
+                        ○ 스프링 컨테이너가 필요에 따라 개발자 대신 빈들을 관리해주는 행위 (생명 주기 관리 : 생성 → 의존성 설정 → 초기화 → 소멸)
+                    ● 제어 역전의 등장 배경
+                        ○ 기존의 객체 관리는 개발자가 직접 했어야 했다. (new, 의존성 맺기, 초기화 등등)
+                        ○ 번거로운 객체의 생명주기 관리를 대신 해줄 무언가가 필요했다.
+                    ● 제어 역전 방법
+                        ○ xml 파일을 통해서 빈을 등록
+                        ○ 어노테이션을 통해서 빈을 등록
+                    ● 제어 역전의 장점
+                        ○ 개발자는 객체 관리에 덜 신경쓸 수 있게 되어 다른 부분에 더 집중할 수 있게 됨
+                        ○ 약한 결합을 이용하여 객체 간 의존관계를 쉽게 변경할 수 있음
+                        ○ 코드의 재사용성과 유지보수성을 높인다. 
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="DI">
+        <header class="note_title">스프링 3대 요소 - 의존성 주입 (DI)</header>
+        <ul>
+            <li>기본적인 사용법
+                <pre>
+                    ● 의존성 주입 (Dependency Injection) : 어떤 객체에 스프링 컨테이너가 또 다른 객체와 의존성을 맺어주는 행위
+
+                    <pre class="prettyprint lang-java">
+                        public class TestA{ }
+
+                        @Component
+                        public class TestB{ }
+
+                        public static void main(String[] args) {
+                            TestA testA = new TestA();
+
+                            @Autowired
+                            TestB testB;
+                        }
+                    </pre>
+                </pre>
+            </li>
+            <li>어노테이션의 종류에 따른 다양한 의존성 주입 방법
+                <pre>
+                    ● @Autowired : 해당하는 타입의 객체를 찾아서 자동으로 할당하는 어노테이션
+                        ○ 생성자, 메소드, 멤버변수 위에 모두 사용 가능
+                        ○ 스프링 컨테이너는 @Autowired가 붙어 있는 것을 확인하는 순간 해당 변수의 타입을 체크하고 그 타입의 객체가 메모리 상에 존재하면 해당 변수에 객체를 대입한다.
+                        ○ 만약 @Autowired를 선언한 것에 대한 객체가 존재하지 않는 타입이라면 NoSuchBeanDefinitionException이 발생한다.
+                        ○ 탐색 순서 : 타입 -> 이름 -> @Qualifier -> 실패
+                        ○ 만약 찾는 빈 객체가 없는 경우 발생하는 예외를 피하고 싶다면 @Autowired(required=false)처럼 쓰면 된다.
+                        ○ @Autowired(required=false)를 통해 찾는 객체가 없는 경우에 대한 null 처리 소스도 작성해야 한다.
+
+                    ● @Qualifier : @Autowired와 함께 사용하는 어노테이션
+                        ○ 특정 객체의 이름을 사용하여 의존성 주입할 때 사용
+                        ○ 인터페이스에 대해 @Autowired가 실행됬을 때, 적절한 빈을 컨테이나가 찾지 못하는 경우에 사용한다.
+                        ○ @Qualifier를 사용하여 직접 빈의 이름을 지정하여 컨테이너가 어떤 객체를 주입할지 선택할 수 있게 해준다.
+                        ○ 빈이 등록된 xml 파일에서 미리 qualifier 태그를 통해 지정을 해둬야 한다.
+                        ○ 빈 자체의 id가 아닌 qualifier 태그에 명시한 value를 통해 이름을 지정한다.
+                        ○ @Autowired를 먼저 사용한 후 @Qualifier("명칭")을 사용하면 된다.
+
+                    ● @Inject : 해당하는 타입의 객체를 찾아서 자동으로 할당하는 어노테이션
+                        ○ 생성자, 메소드, 멤버변수 위에 모두 사용 가능
+                        ○ 탐색 순서 : 타입 -> @Named-> 이름 -> 실패
+
+                    ● @Named : @Inject 함께 사용하는 어노테이션
+                        ○ 특정 객체의 id를 사용하여 의존성 주입할 때 사용
+                        ○ @Inject 먼저 사용한 후 @Named("id명")을 사용하면 된다.
+
+                    ● @Resource : 주입하려고 하는 객체의 id가 일치하는 객체를 자동으로 주입한다.
+                        ○ 메소드, 멤버변수 위에 사용 가능
+                        ○ 사실상 @Autowired + @Qualifier
+                        ○ 탐색 순서 : 이름 -> 타입 -> @Qualifier -> 실패
+                        ○ @Resource나 @Resource(name="등록된 빈의 id")로 사용한다.
+                        ○ &lt;context:annotation-config/>를 xml 파일에 추가해야지 사용할수 있다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="AOP">
+        <header class="note_title">스프링 3대 요소 - 관점 지향 프로그래밍 (AOP)</header>
+        <ul>
+            <li>정의
+                <pre>
+                    ● AOP (Aspect Oriented Programming) : 관점지향적 프로그래밍
+                    ● 기능을 비즈니스 로직과 공통 모듈로 구분한 뒤에 개발자의 코드 밖에서 필요한 시점에 비즈니스 로직에 삽입하여 실행되도록 하는 방법
+                    ● OOP를 더욱 보완 확장하여 OOP를 OOP답게 사용할 수 있도록 도와주는 개념
+                    ● DI가 의존성의 주입이라면, AOP는 기능의 주입이다.
+                </pre>
+            </li>
+            <li>AOP가 필요한 상황
+                <pre>
+                    ● 중복을 최대한 줄여서 적은 량의 코드 수정만으로도 프로젝트의 전체적인 부분을 변경할 수 있도록 하기 위해서
+                </pre>
+            </li>
+            <li>AOP의 특징
+                <pre>
+                    ● 중복되는 코드가 줄어든다.
+                    ● 프로젝트의 유지보수를 효율적으로 할 수 있다.
+                    ● 생산성이 높아진다.
+                    ● 재활용성이 극대화된다.
+                    ● 변화에 대한 수용성이 높아진다.
+                </pre>
+            </li>
+            <li>AOP 용어
+                <pre>
+                    ● Joinpoint
+                        ○ Advice를 적용가능한 지점
+                        ○ 특정 작업이 실행되는 시점
+                        ○ 스프링은 프록시를 이용해서 AOP를 구현하기 때문에 필드 값 변경에 대한 Joinpoint는 불가능하다.
+                        ○ 메소드 호출에 대한 Joinpoint 가능
+                    ● Aspect
+                        ○ 여러 객체에 공통으로 적용되는 기능
+                        ○ 일정한 패턴을 가지는 클래스에 Advice를 적용하도록 지원할 수 있는 것
+                        ○ Advice + Pointcut
+                        ○ 예시) 트랜잭션, 로그, 보안, 인증 등등
+                    ● Weaving
+                        ○ AOP에서 Joinpoint들을 Advice로 감싸는 과정
+                        ○ Weaving 하는 작업을 도와주는 것이 AOP Tool의 역할이다.
+                    ● Advice
+                        ○ Joinpoint에서 실행되어야 하는 코드
+                    ● Target
+                        ○ 실질적인 비즈니스 로직을 구현하고 았는 코드
+                        ○ Advice를 받을 대상
+                        ○ 비즈니스 로직을 수행하는 클래스 또는 프록시 객체
+                    ● Pointcut
+                        ○ 실제 Advice가 적용되는 Joinpoint
+                        ○ Joinpoint의 부분 집합
+                        ○ 스프링에서는 정규식이나 AspectJ 문법을 이용해서,
+                        Target 클래스와 Advice가 결합 (Weaving) 될 때
+                        둘 사이의 결합 규칙을 정의할 수 있다.
+                </pre>
+            </li>
+            <li>AOP 관련 어노테이션
+                <pre>
+                    ● Aspect : AOP 적용시 사용하는 어노테이션
+                    ● @Before : AOP 메소드 호출의 이전에 대한 어노테이션
+                    ● @After : AOP 메소드 호출의 이후에 대한 어노테이션
+                    ● @Around : AOP 이전/이후 모두에 대한 어노테이션
+                    ● @AfterReturning : AOP 메소드의 호출이 정상일 때에 대한 어노테이션
+                    ● @AfterThrowing : AOP시 해당 메소드가 예외발생하는 경우에 대한 어노테이션
+                </pre>
+            </li>
+            <li>AOP 적용 방법
+                <pre>
+                    ● xxxxxxx
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="psa">
+        <header class="note_title">PSA (Portable Service Abstraction)</header>
+        <ul>
+            <li>
+                <pre>
+                    ● 정의 : xxx
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="cookie">
+        <header class="note_title">쿠키</header>
+        <ul>
+            <li>쿠키 생성하기
+                <pre>
+                    <pre class="prettyprint lang-java">
+                        //1. 쿠키 객체 생성하기
+                        Cookie cookie = new Cookie("속성명", "값");
+    
+                        //2. HttpServletResponse 객체에 추가하기 (변수명 : response)
+                        response.addCookie(cookie);
+                    </pre>
+                </pre>
+            </li>
+            <li>쿠키 사용하기
+                <pre>
+                    ● 컨트롤러 메소드의 매개변수로 쿠키 사용
+                        <pre class="prettyprint lang-java">
+                            @RequestMapping("/main")
+                            public String mallIndex(@CookieValue(value="가져올쿠키명", required=false) Cookie cookie, HttpServletRequest request) {
+                                if(cookie != null)
+                                    System.out.pringln("쿠키값 : "+cookie);
+
+                                return "/common/main";
+                            }
+                        </pre>
+
+                    ● 주의점
+                        ○ required=false를 입력하지 않으면 만약 쿠키가 없을 때 에러가 발생한다.
+                </pre>
+            </li>
+            <li>쿠키 삭제하기
+                <pre>
+                    <pre class="prettyprint lang-java">
+                        cookie.setMaxAge(0); //존재 시간을 0초로 하기
+                    </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="session">
+        <header class="note_title">세션</header>
+        <ul>
+            <li>세션 얻기
+                <pre>
+                    ● 방법 1 : HttpServletRequest를 통한 세션 얻기
+                        ○ 컨트롤러 클래스의 메소드의 매개변수로 HttpServletRequest 객체 명시하기
+                        ○ 해당 객체의 명이 request라고 했을 때
+                            예시) HttpSession session = request.getSession();
+            
+                    ● 방법 2 : HttpSession을 통한 세션 얻기
+                        ○ 컨트롤러 클래스의 매개변수로 HttpSession 객체 명시하기
+
+                    ● 방법 1과 방법 2의 차이점
+                        ○ HttpServletRequest
+                            (1) 생성 시점 : 클라이언트가 최초로 접속할 때
+                            (2) 삭제 시점 : 클라이언트가 접속을 종료할 때
+                            (3) 유지 기간 : 클라이언트가 접속 중인 동안 존재
+                        ○ HttpSession
+                            (1) 생성 시점 : 클라이언트가 요청 시
+                            (2) 삭제 시점 : 서버가 응답 시
+                            (3) 유지 기간 : Request 중인 동안인만 존재
+                </pre>
+            </li>
+            <li>세션에 값 설정하기
+                <pre>
+                    1. 세션 객체를 얻는다. (변수명 : session)
+                    2. session.setAttribute("속성명","값");
+                </pre>
+            </li>
+            <li>세션에서 값 가져오기
+                <pre>
+                    1. 세션 객체를 얻는다. (변수명 : session)
+                    2. session.getAttribute("속성명","값");
+                </pre>
+            </li>
+            <li>세션 삭제하기
+                <pre>
+                    1. 세션 객체를 얻는다. (변수명 : session)
+                    2. session.invalidate();
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="interseptor">
+        <header class="note_title">인터셉터</header>
+        <ul>
+            <li>인터셉터란?
+                <pre>
+                    ● 정의 : 컨트롤러에 들어오는 요청인 HttpRequest와 컨트롤러가 응답하는 HttpResponse를 가로채는 역할
+                </pre>
+            </li>
+            <li>인터셉터 사용 방법
+                <pre>
+                    ● spirng-servlet.xml에 인터셉터 태그를 통해서 사용 설정하기
+
+                        <pre class="prettyprint lang-xml">
+                            &lt;mvc:interceptors>
+                                &lt;mvc:interceptor>
+                                    &lt;mvc:mapping path="/**" /> 
+                                    &lt;bean class="com.project.util.MyInterceptor" />
+                                &lt;/mvc:interceptor>
+                            &lt;/mvc:interceptors>
+                        </pre>
+
+                    ● 인터셉터 클래스 구현하기
+                        ○ HandlerInterceptorAdapter 상속받기
+                            (1) preHandle() : 컨트롤러로 보내기 전에 처리하는 인터셉터, return 값이 false면 컨트롤러로 요청을 안한다.
+                            (2) postHandle() : 컨트롤러의 handler가 끝나면 처리된다.
+                            (3) afterCompletion() : 뷰까지 처리가 끝난 후에 처리된다.
+                </pre>
+            </li>
+            <li>인터셉터와 필터의 차이
+                <pre>
+                    ● 인터셉터
+                        ○ 호출 시점 : DispatcherServlet이 실행된 후
+                        ○ 설정 위치 : spirng-servlet.xml
+                        ○ 구현 방식 : 설정 + 메소드 구현
+
+                    ● 필터
+                        ○ 호출 시점 : DispatcherServlet이 실행되기 전
+                        ○ 설정 위치 : web.xml
+                        ○ 구현 방식 : 설정
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="controller">
+        <header class="note_title">컨트롤러</header>
+        <ul>
+            <li>컨트롤러 어노테이션 (@Controller)
+                <pre>
+                    ●  해당 클래스를 "Controller"로 등록하기 위해 사용하는 어노테이션
+                    ●  @Controller 어노테이션을 적용하면 해당 클래스가 bean으로 등록되며, 해당 클래스가 Controller로 사용할것임을 프레임워크에 알린다.
+                </pre>
+            </li>
+            <li>컨트롤러의 역할 (컨트롤러 &lt;=> 서비스 &lt;=> DAO)
+                <pre>
+                    ● 컨트롤러는 단순히 요청을 받아 해당 요청에 맞는 서비스에 데이터를 주입하는 역할을 한다.
+                    ● 서비스는 비즈니스 로직이기 때문에 단순한 자바 코드로만 이루어져야 하기 때문에 HttpServletRequest나 HttpServletResponse와 같은 객체를 매개 변수로 받아서 처리하는 역할은 컨트롤러에서 해야 한다.
+                </pre>
+            </li>
+            <li>주소 매핑하기 (@RequestMapping, @GetMapping, @PostMapping)
+                <pre>
+                    ● 해당 어노테이션이 선언된 컨트롤러 클래스의 모든 메소드가 하나의 요청에 대한 처리를 할 경우에 사용한다.
+                    ● @RequestMapping 어노테이션에 대한 모든 매핑 정보는 스프링에서 제공하는 HandlerMapping 클래스가 가지고 있다.
+                    ● @RequestMapping의 value 속성에는 요청될 url을, method 속성에는 요청 방식에 대해 작성한다.
+                        예시)
+                            <pre class="prettyprint lang-java">
+                                @RequestMapping(value = "/blog/main", method = RequestMethod.GET)
+                                public String blogMain(Model model) throws Exception{ ... }
+                            </pre>
+                    ● @RequestMapping을 적용한 메소드 사용 시 뷰 네임을 적용하는 방법
+                        1) String : return에 명시한 문자열을 읽고 그 값에 해당하는 페이지를 찾아서 매칭시킨다.
+                        2) void : return이 따로 없기 때문에 요청한 url 주소에 따라서 뷰를 매칭시킨다.
+                        3) 이외에도 VO나 Map로도 전달할 수도 있다. (이 경우에도 요청 url 주소에 따라서 뷰 매칭)
+                        4) Spring 5에서 지원해주는 reactive streams도 가능하다. (Mono, Flux)
+                    ● forward 방식과 redirect 방식
+                        1. forward 방식
+                            ○ 요청 주소 : /test/A
+                            ○ return : return "/test/B";
+                            ○ URL : http://localhost:8083/test/A
+                            ○ 매칭되는 뷰 : B.jsp
+                        2. redirect 방식
+                            ○ 요청 주소 : /test/C
+                            ○ return : return "redirect:/test/D";
+                            ○ URL : http://localhost:8083/test/D
+                            ○ 매칭되는 뷰 : D.jsp
+                    ● @GetMapping과 @PostMapping
+                        ○ @GetMapping("요청 주소") => @RequestMapping(value = "요청 주소", method = RequestMethod.GET)의 요약
+                        ○ @PostMapping("요청 주소") => @RequestMapping(value = "요청 주소", method = RequestMethod.POST)의 요약
+                </pre>
+            </li>
+            <li>비동기 통신을 위한 어노테이션 (@RequestBody, @ResponseBody)
+                <pre>
+                    ● 주로 ajax같은 비동기 통신을 하여 데이터 처리를 하기 위해서는 http 요청의 본문에 데이터를 담아하기 때문에
+                    @ResponseBody나  @RequestBody같은 어노테이션이 필요하다.
+                    ● 요청 본문 (@RequestBody) : http 요청의 바디내용을 통째로 자바객체로 변환해서 매핑된 메소드 파라미터로 전달해준다.
+                    ● 응답 본문 (@ResponseBody)
+                        ○ @ResponseBody 어노테이션이 붙은 컨트롤러는 요청을 받았을 때 해당 http 요청의 미디어타입과 파라미터의 타입을 먼저 확인한다.
+                        ○ return으로 전달하려는 자바 객체를 http 요청의 타입에 맞게 MessageConverter를 통해 변환하여 클라이언트로 전송한다.
+                    ● 비동기 통신 관련 컨트롤러 예시
+                        <pre class="prettyprint lang-java">
+                            @ResponseBody
+                            @RequestMapping(value = "/blog/main/ajax", method = RequestMethod.POST)
+                            public Map&lt;String, Object> blogMainPostAjax(@RequestBody HashMap&lt;String, Object> map,  Model model) throws Exception {
+    
+                                ...
+    
+                                Map&lt;String, Object> result = new HashMap&lt;String, Object>();
+                                result.put("message", "success");
+    
+                                return result;
+                            }
+                        </pre>
+                    ● @RestController 어노테이션 : @Contrller 어노테이션 + @Response 어노테이션
+                </pre>
+            </li>
+            <li>값 전달하기/전달받기 (@RequestParam, @PathVariable)
+                <pre>
+                    ● name 속성의 따른 값 (@RequestParam 어노테이션) : 명시한 name 속성명에 따라 전달받은 값을 골라서 받는다.
+                        1. @RequestParam을 통해 전달받을 값을 String으로 지정했을 때, 만약 전달받은 값이 String이 아닐 경우 자동으로 형변환한다.
+                        2. required 속성을 명시하면 필수 여부를 선택할수 있다. (기본 값 : true)
+                            예시 ) @RequestParam(value="nickname", required=false) String nickname
+                        3. 필수 값이지만 값이 들어오지 않으면 오류가 발생하기 때문에 이를 위해 기본 값을 설정할수 있다.
+                            예시 ) @RequestParam(value="mode", defaultvalue="view") String mode
+                        4. 기본 예시
+                            <pre class="prettyprint lang-java">
+                                @RequestMapping(value="/find/account", method = RequestMethod.GET)
+                                public String findId(@RequestParam("name") String name, @RequestParam("birthday") String birthday) {
+                                    System.out.pringln("계정 찾기 - 이름 : " + name + " / 생년월일 : " + birthday);
+                                    //요청 url : http://localhost:8083/blog/proflie?name=홍길동&birthday=970229
+                                    //출력 : 계정 찾기 - 이름 : 홍길동 / 생년월일 : 970229
+                                    
+                                    return "/find/account";
+                                }
+                            </pre>
+                    ● 요청 url에 따른 동적 값 (@PathVariable 어노테이션) : @RequestMapping의 URL 값의 중괄호에 명시된 패스 변수를 받는다.
+                        예시)
+                            <pre class="prettyprint lang-java">
+                                @RequestMapping(value="/blog/{id}", method = RequestMethod.GET)
+                                public String personalBlog(@PathVariable("id") String id) {
+                                    System.out.pringln("방문 블로그 : " + id);
+                                    //요청 url : http://localhost:8083/blog/helloworld
+                                    //출력 : 방문 블로그 : helloworld
+
+                                    return "/blog/personal";
+                                }
+                            </pre>
+                </pre>
+            </li>
+            <li>데이터 전달 방식 (RequestMethod - GET/POST)
+                <pre>
+                    ● GET : 클라이언트에서 서버로 어떠한 리소스로 부터 정보를 요청하기 위해 사용되는 메서드
+                        ○ GET 요청은 캐시가 가능하다.
+                        ○ GET 요청은 브라우저 히스토리에 남는다.
+                        ○ GET 요청은 북마크 될 수 있다.
+                        ○ GET 요청은 길이 제한이 있다. (표준은 없지만 브라우저마다 제한이 다르다.)
+                        ○ GET 요청은 url에 파라미터가 모두 노출되기 때문에 중요한 정보를 다루면 안된다.
+                        ○ GET 요청은 데이터를 요청할 때만 사용 된다.
+                        ○ GET 요청은 url 파라미터에 요청하는 데이터를 담아 보내기 때문에 http 메시지에 body가 없다.
+                    ● POST : 클라이언트에서 서버로 리소스를 생성하거나 업데이트하기 위해 데이터를 보낼 때 사용 되는 메서드
+                        ○ POST 요청은 캐시되지 않는다.
+                        ○ POST 요청은 브라우저 히스토리에 남지 않는다.
+                        ○ POST 요청은 북마크 되지 않는다.
+                        ○ POST 요청은 데이터 길이에 제한이 없다.
+                        ○ POST 요청은 body 에 데이터를 담아 보내기 때문에 당연히 http 메시지에 body가 존재한다.
+                </pre>
+            </li>
+            <li>View 페이지에 데이터 전달하기 (Model 객체)
+                <pre>
+                    ● Model 객체란? : Controller에서 생성한 데이터를 담아서 View로 전달할 때 사용하는 HashMap의 형식의 객체
+                    ● Model 객체 사용법
+                        <pre class="prettyprint lang-java">
+                            @RequestMapping(value = "/blog/{userID}", method = RequestMethod.GET)
+                            public String personalBlog(@PathVariable String userID, Model model) throws Exception {
+                                model.addAttribute("mode", "view"); //게시글 보기 모드
+                                return "/blog/personal";
+                            }
+                        </pre>
+                    ● Model 객체를 파라미터로 사용하지 않고 특정 파라미터를 직접 view에 매칭시키는 방법
+                        <pre class="prettyprint lang-java">
+                            @RequestMapping(value = "/blog/{userID}", method = RequestMethod.GET)
+                            public String personalBlog(@PathVariable String userID, @ModelAttribute("mode") String mode, Model model) throws Exception {
+                                //@ModelAttribute 어노테이션은 multipart/form-data 형태의 HTTP Body 내용과 HTTP 파라미터들을 1대1로 객체에 바인딩시킨다.
+                                //@ModelAttribute 어노테이션에 파라미터명을 명시하면 요청 url에 ModelAttribute로 명시된 값이 필요하다.
+                                //ModelAttribute("mode")처럼 정확하게 명시하지 않고 ModelAttribute User user처럼 사용할 수도 있다.
+                                //만약 Setter함수가 없다면 매핑을 시키지 못하고, null을 갖게 된다.
+
+                                return "/blog/personal";
+                            }
+                        </pre>
+                    ● ModelAndView 객체 : Model과 View를 동시에 설정가능한 형식의 객체 (ModelAndView 객체를 리턴한다.)
+                        <pre class="prettyprint lang-java">
+                            @RequestMapping(value = "/blog/{userID}", method = RequestMethod.GET)
+                            public ModelAndView personalBlog(@PathVariable String userID, Model model) throws Exception {
+                                ModelAndView mv = new ModelAndView();
+                                mv.setViewName("/blog/personal"); //뷰명
+                                mv.addObject("mode", "view"); //뷰로 보낼 데이터
+    
+                                return mv;
+                            }
+                        </pre>
+                </pre>
+            </li>
+            <li>Spring 5부터 지원되는 Rendering 인터페이스
+                <pre>
+                    기본 형식)
+                        <pre class="prettyprint lang-java">
+                            @매핑_어노테이션("요청 url")
+                            public Rendering 메소드명() {
+                                return Rendering
+                                    .view("뷰명")
+                                    .modelAttribute("모델명", 데이터)
+                                    .build();
+                            }
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="service">
+        <header class="note_title">서비스</header>
+        <ul>
+            <li>서비스 어노테이션 (@Service)
+                <pre>
+                    ● 빈 객체를 만들어 주는 어노테이션, 가시성을 위해 사용한다. 비즈니스 로직에 대해서 처리하는 경우에 명시한다.
+                </pre>
+            </li>
+            <li>서비스의 역할 (컨트롤러 &lt;=> 서비스 &lt;=> DAO)
+                <pre>
+                    ● 컨트롤러 => 서비스 :
+                        컨트롤러는 단순히 요청을 받아 해당 요청에 맞는 서비스에 데이터를 주입하는 역할을 한다.
+                    ● DAO =>  서비스 :
+                        DAO는 단일 데이터 접근 로직이기 때문에 하나의 일만 처리하지만,
+                        특정한 작업을 진행한다고 했을 때 DB에 한 번만 접근하는 게 아닌 여러번 접근하거나 혹은 병렬적으로 동시에 접근해야 되기에
+                        서비스는 특정한 작업을 위해 여러개의 DAO를 묶은 하나의 트랜잭이 된다.
+                </pre>
+            </li>
+            <li>서비스의 특징
+                <pre>
+                    ● 서비스는 불필요하게 Http 통신을 위한 HttpServlet을 상속 받을 필요도 없는 순수한 자바 객체로 구성된다.
+                        =>  서비스에 request나 response와 같은 객체를 매개변수로 받아선 안된다.
+                            그걸 사용해야하는 작업은 컨트롤러에서 해야한다.
+                    ● 모듈화를 통해 어디서든 재사용이 가능한 비즈니스 로직
+                        => view단이 변경되더라도 Service는 view에 종속적인 코드가 없기때문에 재사용이 가능한 것이다.
+                    ● 서비스는 클래스 파일로 바로 만드는게 아닌 인터페이스로 구현한다.
+                        =>  추가적인 요청사항이 들어오면 기존 소스를 수정하는게 아니라
+                            기존 service 인터페이스를 구현한 다른 클래스를 구현해 그 객체를 사용하게 해야한다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="settingFile_pom">
+        <header class="note_title">설정 파일 - pom.xml</header>
+        <ul>
+            <li>pom.xml의 역할 ( POM : Project Object Model )
+                <pre>
+                    ● 프로젝트의 구조와 내용을 설명하는 파일
+                    ● 프로젝트 관리 및 빌드에 필요한 환경 설정, 의존성 관리 등의 정보들을 기술한다.
+                    ● 프로젝트의 세부 메타데이터 정보를 포함한다.
+                        예시 ) 버전 및 설정 관리, 빌드 환경, 라이브러리 저장소 및 의존성
+                    ● 프로젝트의 구조와 내용을 설명하는 파일
+                </pre>
+            </li>
+            <li>프로젝트 정보 (pom.xml의 project 태그 내부에 작성)
+                <pre>
+                    ● modelVersion : POM 모델의 버전 (예시 : 4.0.0)
+                    ● groupId : 프로젝트의 큰 틀
+                        표현 예시) 어떤 회사에서 프로젝트를 진행한다고 가정했을 때 그 회사 자체를 가리킨다.
+                        작성 예시) com.my (기본 패키지 경로 : com.my.app)
+                        작성 방법)
+                            1. 프로젝트가 운영되는 도메인 주소를 결정한다. (예시 : app.my.com)
+                            2. 해당 도메인 주소를 뒤집는다. (예시 : com.my.app)
+                    ● artifactId : 프로젝트의 각 기능들
+                        표현 예시) 어떤 회사에서 프로젝트를 진행한다고 가정했을 때 그 회사의 각 부서를 가리킨다.
+                        작성 예시) app (기본 패키지 경로 : com.my.app)
+                    ● name : 진행하는 프로젝트명
+                    ● packaging : jar, war, ear, pom등 패키지 유형을 나타낸다. (기본 값 : war)
+                    ● version : 진행하는 프로젝트의 버전 (기본 값 : 1.0.0-BUILD-SNAPSHOT)
+                    ● description : 프로젝트 설명 (필수 값 아님)
+                    ● url : 프로젝트를 찾을 수 있는 URL (필수 값 아님)
+                    ● parent : 해당 프로젝트가 상속받는 상위 pom.xml에 대한 정보 (필수 값 아님)
+                    ● properties : pom.xml에서 중복해서 사용되는 상수 값들을 지정해놓는 부분
+                        예시) java-version에 1.8을 적용하고 다른 파트에서 ${java-version}을 작성하면 "1.8"이라는 값이 적용된다.
+                    ● dependencies : 의존성 라이브러리 정보를 적을 수 있다.
+                    ● build : 빌드와 관련된 정보를 설정할 수 있는 곳
+
+                    ※ 최상위의 project 태그의 xmlns, xmlns:xsi, xsi:schemaLocation같은 속성들은 모두 정해진 값이기 때문에 그냥 복사해다가 쓰면 된다.
+                </pre>
+            </li>
+            <li>의존성 정보 (pom.xml의 project 태그 → dependencies 태그 → dependency 태그 내부에 작성)
+                <pre>
+                    ● groupId : 해당 라이브러리의 그룹명 (예시 : org.springframework)
+                    ● artifactId : 해당 라이브러리의 기능명 (예시 : spring-context)
+                    ● version : 해당 라이브러리의 버전
+                    ● scope : 해당 라이브러리가 언제 필요한지, 언제 제외되는지를 나타내는 것 (사용 값 : compile, runtime, provided, test 등)
+                    ● exclusions : 해당 라이브러리와 관련된 실행에 대한 설정
+                        예시)
+                            <pre class="prettyprint lang-xml">
+                                &lt;exclusions>
+                                    &lt;exclusion>
+                                        &lt;groupId>commons-logging&lt;/groupId>
+                                        &lt;artifactId>commons-logging&lt;/artifactId>
+                                    &lt;/exclusion>
+                                &lt;/exclusions>
+                            </pre>
+                </pre>
+            </li>
+            <li>빌드 정보 (pom.xml의 project 태그 → build 태그 → plugins 태그 → plugin 태그 내부에 작성)
+                <pre>
+                    ● groupId : 해당 플러그인의 그룹명 (예시 : org.apache.maven.plugins)
+                    ● artifactId : 해당 플러그인의 기능명 (예시 : maven-compiler-plugin)
+                    ● version : 해당 플러그인의 버전
+                    ● executions : 플러그인과 관련된 실행에 대한 설정
+                    ● configuration : 플러그인에서 필요한 설정 값 지정
+
+                    ※ maven-compiler-plugin 플러그인을 찾아서 configuration 설정에서 source와 target의 값을 바꾸면 해당 프로젝트의 jdk 버전을 변경할 수 있다.
+                </pre>
+            </li>
+            <li>pom.xml의 상속  (pom.xml의 project 태그 → parent 태그 내부에 작성)
+                <pre>
+                    ● groupId : 상속받는 pom.xml이 해당하는 프로젝트의 groupId
+                    ● artifactId : 상속받는 pom.xml이 해당하는 프로젝트의 artifactId
+                    ● version : 상속받는 pom.xml이 해당하는 프로젝트의 version
+                </pre>
+            </li>
+            <li>자주 쓰는 기능
+                <pre>
+                    ● mybatis 관련
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>org.mybatis&lt;/groupId>
+                                &lt;artifactId>mybatis&lt;/artifactId>
+                                &lt;version>3.2.2&lt;/version>
+                            &lt;/dependency>
+                            &lt;dependency>
+                                &lt;groupId>org.mybatis&lt;/groupId>
+                                &lt;artifactId>mybatis-spring&lt;/artifactId>
+                                &lt;version>1.2.0&lt;/version>
+                            &lt;/dependency>
+                            &lt;dependency>
+                                &lt;groupId>org.springframework&lt;/groupId>
+                                &lt;artifactId>spring-jdbc&lt;/artifactId>
+                                &lt;version>${org.springframework-version}&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+
+                    ● user DataSource 관련
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>commons-dbcp&lt;/groupId>
+                                &lt;artifactId>commons-dbcp&lt;/artifactId>
+                                &lt;version>1.4&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+                        
+                    ● mariaDB 관련
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>org.mariadb.jdbc&lt;/groupId>
+                                &lt;artifactId>mariadb-java-client&lt;/artifactId>
+                                &lt;version>2.6.0&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+                        
+                    ● ajax 관련
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>org.codehaus.jackson&lt;/groupId>
+                                &lt;artifactId>jackson-mapper-asl&lt;/artifactId>
+                                &lt;version>1.9.13&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+                        
+                    ● @ResponseBody 어노테이션 사용
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                            &lt;groupId>com.fasterxml.jackson.core&lt;/groupId>
+                            &lt;artifactId>jackson-databind&lt;/artifactId>
+                            &lt;version>2.10.1&lt;/version>
+                            &lt;/dependency> 
+                        </pre>
+                        
+                    ● Sql Log 출력 기능 사용
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>org.lazyluke&lt;/groupId>
+                                &lt;artifactId>log4jdbc-remix&lt;/artifactId>
+                                &lt;version>0.2.7&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+                        
+                    ● 파일 처리 관련
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>commons-io&lt;/groupId>
+                                &lt;artifactId>commons-io&lt;/artifactId>
+                                &lt;version>2.6&lt;/version>
+                            &lt;/dependency>
+                            &lt;dependency>
+                                &lt;groupId>commons-fileupload&lt;/groupId>
+                                &lt;artifactId>commons-fileupload&lt;/artifactId>
+                                &lt;version>1.3.1&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+
+                    ● json 변환 기능 사용
+                        <pre class="prettyprint lang-xml">
+                            &lt;dependency>
+                                &lt;groupId>com.google.code.gson&lt;/groupId>
+                                &lt;artifactId>gson&lt;/artifactId>
+                                &lt;version>2.8.6&lt;/version>
+                            &lt;/dependency>
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="settingFile_web">
+        <header class="note_title">설정 파일 - web.xml</header>
+        <ul>
+            <li>web.xml의 역할
+                <pre>
+                    ● Web Application의 환경파일
+                </pre>
+            </li>
+            <li>web.xml의 특징
+                <pre>
+                    ● 모든 Web application은 반드시 하나의 web.xml 파일을 가져야 함
+                    ● web.xml 파일의 설정들은 Web Application 시작시 메모리에 로딩된다.
+                    ● web.xml 파일을 수정 할 경우 web application을 재시작 해야 한다.
+                </pre>
+            </li>
+            <li>web.xml의 작성 내용
+                <pre>
+                    ● ServletContext의 초기 파라미터
+                    ● Session의 유효시간 설정
+                    ● Servlet/JSP에 대한 정의
+                    ● Servlet/JSP 매핑
+                    ● Mime Type 매핑
+                    ● Welcome File list
+                    ● Error Pages 처리
+                    ● 리스너/필터 설정
+                    ● 보안
+                </pre>
+            </li>
+            <li>설정 정보 (web.xml의 web-app 태그 내부에 작성)
+                <pre>
+                    ● context-param : 모든 서블릿과 필터에서 사용되는 루트 스프링 컨테이너에 대한 설정
+                        ○ param-name : 설정파일에 대한 별명 (예시 : contextConfigLocation)
+                        ○ param-value : 설정파일 경로 및 이름 (예시 : /WEB-INF/spring/root-context.xml)
+                    ● listener : 웹서버가 동작 할때 특정 상황에 따라 각각의 기능을 작동시키는 리스너 클래스를 명시하는 태그
+                        ○ listener-class : 웹서버 동작 관련 인터페이스를 상속받은 클래스를 명시하는 태그 (예시 : org.springframework.web.context.ContextLoaderListener)
+                            ■ ServletContextListener : 웹 어플리케이션의 시작과 종료시 자동으로 발생되는 이벤트를 수행하기 위한 메소드를 정의한 인터페이스
+                                □ contextInitialized(ServletContextEvent e) : 웹 컨테이너가 처음 구동될 때 실행되는 메소드
+                                □ contextDestoryed(ServletContextEvent e) : 웹 컨테이너가 종료될 때 실행되는 메소드
+                            ■ ServletContextAttributeListener : 컨테이너에 저장된 속성 값들의 변화가 있을 때 수행하기 위한 메소드를 정의한 인터페이스
+                                □ attributeAdded(ServletContextAttributeEvent e) : 새로운 속성 값이 추가될 때 실행되는 메소드
+                                □ attributeRemoved(ServletContextAttributeEvent e) : 속성 값이 제거될 때 실행되는 메소드
+                                □ attributeReplaced(ServletContextAttributeEvent e) : 속성 값이 변경될 때 실행되는 메소드
+                            ■ HttpSessionListener : HTTP 세션이 활성화 되거나 비활성화 되려할 때 혹은 속성 값들이 추가, 삭제, 변경될 경우 수행하기 위한 인터페이스
+                                □ sessionCreated(HttpSession session) : 세션이 생성되었을 경우 실행되는 메소드
+                                □ sessionDestoryed(HttpSession session) : 세션이 무효화 되었을 경우 실행되는 메소드
+                            ■ HttpSessionAttributeListener : HTTP 세션에 대한 속성 값이 변경되었을 경우 수행하기 위한 인터페이스
+                                □ attributeAdded(HttpSessionBindingEvent e) : 세션에 새로운 속성 값이 추가될 때 실행되는 메소드
+                                □ attributeRemoved(HttpSessionBindingEvent e) : 세션의 속성 값이 제거될 실행되는 메소드
+                                □  attributeReplaced(HttpSessionBindingEvent e) :세션의 속성 값이 변경될 때 실행되는 메소드
+                            ■ HttpSessionActivationListener : 세션에 대한 내용이 새로 생성되어 세션이 활성화 되었을 때 발생하는 이벤트를 수행하기 위한 인터페이스
+                                □ sessionDidActivate(HttpSessionEvent e) : 세션이 활성화 될 때 실행되는 메소드
+                                □ sessionWillPassivate(HttpSessionEvent e) : 세션이 비활성화 되려고 할 때 실행되는 메소드
+                            ■ HttpSessionBindingListener : 클라이언트의 세션 정보에 대한 바인딩이 이루어졌을 경우 감지되는 이벤트를 수행하기 위한 인터페이스
+                                □ valueBound(HttpSessionBindingEvent e) : 세션에 연결될 때 발생하는 이벤트를 실행하는 메소드
+                                □ valueUnBound(HttpSessionBindingEvnet e) : 세션으로부터 연결이 해제될 때 발생하는 이벤트를 실행하는 메소드
+                    ● servlet : 서블릿 객체 설정
+                        ○ servlet-name : 객체의 이름 (예시 : appServlet)
+                        ○ servlet-class : 객체를 생성할 클래스 (예시 : org.springframework.web.servlet.DispatcherServlet)
+                        ○ init-param : 서블릿 초기화 매개변수 설정하기 (각각의 변수를 init-param 태그로 설정)
+                            ○ param-name : 서블릿 초기화 파라미터명 (예시 : contextConfigLocation)
+                            ○ param-value : 서블릿 초기화 파라미터 값 (예시 : /WEB-INF/spring/appServlet/servlet-context.xml)
+                        ○ load-on-startup :
+                            (1) 서블릿은 브라우저에서 최초 요청되어 init() 메서드를 실행한 된 후에 메모리에 로드되어 기능을 수행한다.
+                            (2) (1)의 이유로 서블릿에 대한 최초 요청에 대해서 실행 시간이 길어지는 단점을 보완하기 위해 생긴 기능이다.
+                            (3) 톰캣 컨테이너가 실행되면서 미리 서블릿을 실행하는 역할을 한다. (예시 : 1)
+                            (4) 지정한 숫자가 0보다 크면 톰캣 컨테이너가 실행되면서 서블릿이 초기화 된다.
+                            (5) 지정한 숫자를 우선순위를 의미하며, 작은 숫자부터 먼저 초기화 된다.
+                    ● servlet-mapping : servlet 태그를 통해 등록한 서블릿을 연결시키는 방법
+                        ○ servlet-name : 연결될 서블릿의 이름 (예시 : appServlet)
+                        ○ url-pattern : 클라이언트가 요청할 url 패턴 (예시 : /)
+                    ● filter : HTTP 요청/응답을 변경할 수 있는 재사용 가능한 코드
+                        ○ filter-name : 생성할 필터의 별명 (예시 : MultipartFilter)
+                        ○ filter-class : HTTP 요청/응답 변경 변경을 진행할 클래스 (예시 : org.springframework.web.multipart.support.MultipartFilter)
+                    ● filter-mapping : 필터 적용방식 설정
+                        ○ filter-name : 적용할 필터의 별명 (예시 : MultipartFilter)
+                        ○ url-pattern : 적용할 필터의 범위 (예시 : /*)
+                    ● session-config : 세션 설정
+                        ○ session-timeout : 세션 시간 설정 (예시 : 30), 분단위
+                    ● error-page : 에러 페이지 설정
+                        ○ error-code : 발생할 에러 코드 설정 (예시 : 404)
+                        ○ location : 에러 발생시 보여질 에러 페이지 경로 (예시 : /WEB-INF/views/error/error.jsp)
+                    ● welcome-file-list : 시작 페이지 목록 설정 (여러 파일이 지정된 경우 해당 경로에 맞는 파일들 중에서 가장 먼저 작성된 파일을 먼저 보여준다.)
+                        ○ welcome-file : 시작 페이지 설정 (예시 : index.jsp)
+                    ● multipart-config : xxx
+                        ○ location : 업로드한 파일이 임시로 저장될 위치, 절대 경로만 가능 (기본 값 : java가 실행되는 temp 폴더)
+                        ○ max-file-size : 업로드 가능한 파일의 최대 크기, 바이트 단위 (기본 값 : -1 => 제한 없음을 의미)
+                        ○ max-request-size : 전체 Multipart 요청 데이터의 최대 크기 지정, 바이트 단위 (기본 값 : -1 => 제한 없음을 의미)
+                        ○ file-size-threshold : 업로드한 파일의 크기가 해당 태그에서 설정한 값보다 크면 location 태그에서 지정한 디렉터리에 임시로 파일을 복사한다, 바이트 단위 (기본 값 : 0)
+                </pre>
+            </li>
+            <li>자주 쓰는 기능
+                <pre>
+                    ● 한글 깨짐 방지
+                        <pre class="prettyprint lang-xml">
+                            &lt;filter>
+                                &lt;filter-name>encodingFilter&lt;/filter-name>
+                                &lt;filter-class>rg.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class>
+                                &lt;init-param>
+                                    &lt;param-name>encoding&lt;/param-name>
+                                    &lt;param-value>UTF-8&lt;/param-value>
+                                &lt;/init-param>
+                            &lt;/filter>
+                            &lt;filter-mapping>
+                                &lt;filter-name>encodingFilter&lt;/filter-name>
+                                &lt;url-pattern>/*&lt;/url-pattern>
+                            &lt;/filter-mapping>
+                        </pre>
+
+                    ● 파일 전송
+                        <pre class="prettyprint lang-xml">
+                            &lt;filter>
+                                &lt;filter-name>MultipartFilter&lt;/filter-name>
+                                &lt;filter-class>org.springframework.web.multipart.support.MultipartFilter&lt;/filter-class>
+                            &lt;/filter>
+                            &lt;filter-mapping>
+                                &lt;filter-name>MultipartFilter&lt;/filter-name>
+                                &lt;url-pattern>/*&lt;/url-pattern>
+                            &lt;/filter-mapping>
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="settingFile_root_context">
+        <header class="note_title">설정 파일 - root-context.xml</header>
+        <ul>
+            <li>root-context.xml의 역할
+                <pre>
+                    ● 모든 서블릿이 공유할 수 있는 공통 빈을 설정하는 파일
+                    ● 프로젝트의 어플리케이션 영역 설정
+                    ● 스프링 MVC 설정과 관련된 여러 처리를 담당
+                    ● View와 관련없는 빈을 설정 (예시 : 서비스, 레포지토리 등등)
+                    ● View와 밀접하지 않은 정보를 기술하는 xml 파일
+                    ● 외부 jar파일등으로 사용하는 클래스는 bean 태그를 이용해 작성
+                </pre>
+            </li>
+            <li>빈 설정 (기본 구조 : bean => property & constructor-arg, root-context.xml의 beans 태그 안에 작성)
+                <pre>
+                    ● bean : 객체 정의 태그
+                        ○ id : 해당 객체의 고유 id (예시 : dataSourceSpied)
+                        ○ class : 해당 객체 (예시 : org.springframework.jdbc.datasource.DriverManagerDataSource)
+                        ○ destroy-method : 주어진 세션을 자동으로 close하라는 의미 (예시 : close)
+                    ● property : bean 태그 안에 작성하는 해당 객체의 속성을 설정하는 태그
+                        ○ name : 해당 속성의 이름 (예시 : driverClassName)
+                        ○ value : 해당 속성의 값 (예시 : org.mariadb.jdbc.Driver)
+                        ○ ref : 해당 빈이 참고하는 다른 빈의 id (예시 : dataSource)dataSourceSpied
+                    ● constructor-arg :  bean 태그 안에 작성하는 의존하는 객체를 생성자를 통해 주입받는 태그
+                        ○ ref : 해당 빈이 참고하는 다른 빈의 id (예시 : dataSourceSpied)
+
+                    ※ property 태그 안에서도 bean을 설정할 수 있다.
+                </pre>
+            </li>
+            <li>컴포넌트 스캔 설정 (root-context.xml의 beans 태그 안에 작성)
+                <pre>
+                    ● context:component-scan : 명시한 패키지에 있는 클래스들을 빈으로 등록하기 위한 태그
+                        ○ base-package : 빈으로 등록하려고 하는 클래스가 포함된 패키지 경로 (예시 : com.my.mapper)
+                    ● 기본 예시 코드 )
+                        <pre class="prettyprint lang-xml">
+                            &lt;context:component-scan base-package="com.my.mapper" />
+                        </pre>
+                    ● 필터링 기능이 적용된 예시 코드 )
+                        <pre class="prettyprint lang-xml">
+                            &lt;context:component-scan base-package="com.my">
+                                &lt;context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+                            &lt;/context:component-scan>
+                        </pre>
+                </pre>
+            </li>
+            <li>자주 쓰는 기능
+                <pre>
+                    ● JDBC 연결 (mariaDB의 경우)
+                        <pre class="prettyprint lang-xml">
+                            &lt;bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+                                &lt;property name="driverClassName" value="org.mariadb.jdbc.Driver" />
+                                &lt;property name="url" value="jdbc:mariadb://url주소/데이터베이스명" />
+                                &lt;property name="username" value="유저명" />
+                                &lt;property name="password" value="비밀번호" />
+                            &lt;/bean>
+                        </pre>
+
+                    ● myBatis 사용
+                        <pre class="prettyprint lang-xml">
+                            &lt;bean id="SqlSessionFectory" class="org.mybatis.spring.SqlSessionFactoryBean">
+                                &lt;property name="dataSource" ref="dataSource" />
+                                &lt;property name="configLocation" value="classpath:/mybatis-config.xml" />
+                                &lt;property name="mapperLocations" value="classpath:/mappers/*Mapper.xml" />
+                            &lt;/bean>
+                            &lt;bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+                                &lt;constructor-arg name="sqlSessionFactory" ref="SqlSessionFectory" />
+                            &lt;/bean>
+                            &lt;bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+                                &lt;property name="basePackage" value="com.my.mapper" />
+                            &lt;/bean>
+                        </pre>
+
+                    ● SQL log 사용 (DBMS의 유저정보를 정의하는 dataSource가 이미 정의되어있는 경우)
+                        1. DBMS의 유저정보를 정의하는 id가 dataSource인 빈의 id를 dataSourceSpied로 변경한다.
+                        2. 아래의 코드를 작성한다.
+                            <pre class="prettyprint lang-xml">
+                                &lt;bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource"> 
+                                    &lt;constructor-arg ref="dataSourceSpied" /> 
+                                    &lt;property name="logFormatter"> 
+                                        &lt;bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter"> 
+                                            &lt;property name="loggingType" value="MULTI_LINE" /> 
+                                            &lt;property name="sqlPrefix" value="SQL : "/> 
+                                        &lt;/bean> 
+                                    &lt;property> 
+                                &lt;/bean>
+                            </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="settingFile_servlet_context">
+        <header class="note_title">설정 파일 - servelt-context.xml</header>
+        <ul>
+            <li>servelt-context.xml의 역할
+                <pre>
+                    ● 요청과 관련된 객체를 정의하는 설정 파일
+                </pre>
+            </li>
+            <li>어노테이션 설정 (servelt-context.xml의 beans 태그 안에 작성, 단일 태그로 사용)
+                <pre>
+                    ● &lt;annotation-driven /> : 어노테이션을 사용하기 위해서 필수적으로 작성해야 하는 내용
+                </pre>
+            </li>
+            <li>자원 관리 설정 (servelt-context.xml의 beans 태그 안에 작성, 단일 태그로 사용)
+                <pre>
+                    ● &lt;resources mapping="/resources/**" location="/resources/" />
+                        ○ mapping : resource와 관련되어 매핑되는 url 형태를 작성한다.
+                        ○ location : resource 관련 호출시 탐색하는 실제 경로를 작성한다.
+                </pre>
+            </li>
+            <li>빈 설정 (기본 구조 : 최상위 beans => 추가할 기능 beans => beans:property, servelt-context.xml의 beans 태그 안에 작성, 단일 태그로 사용 가능)
+                <pre>
+                    ● beans:bean
+                        ○ id : 빈의 고유명
+                        ○ class : 해당 빈이 참조하는 클래스
+                    ● beans:property
+                        ○ name : 해당 빈의 가진 속성의 이름
+                        ○ value : 해당 빈의 가진 속성의 실제 값
+                </pre>
+            </li>
+            <li>컴포넌트 스캔 설정 (servelt-context.xml의 beans 태그 안에 작성, 단일 태그로 사용)
+                <pre>
+                    ● context:component-scan : 명시한 패키지에 있는 클래스들을 빈으로 등록하기 위한 태그
+                        ○ base-package : 빈으로 등록하려고 하는 클래스가 포함된 패키지 경로 (예시 : com.my.app)
+                    ● 기본 예시 코드 )
+                        &lt;context:component-scan base-package="com.my.app" />
+                    
+                        ※ servelt-context.xml는 요청과 관련된 객체를 정의하는 설정 파일이기 때문에 컴포넌트 스캔도 @Contrller가 포함된 패키지만 작성한다.
+                </pre>
+            </li>
+            <li>interceptors 설정 (기본 구조 : 최상위 beans => interceptors => interceptor 태그 안에 작성)
+                <pre>
+                    ● mapping : 인터셉터를 실행시킬 url들을 매핑시키기 위한 태그
+                        ○ path : 인터셉터를 실행시킬 url을 작성한다.
+                            예시 1 ) &lt;mapping path="/blog/setting/profile"/>
+                            예시 2 ) &lt;mapping path="/blog/{userID}/write"/>
+                    ● beans:ref : 실행될 인터셉터에 대해서 작성한 클래스를 참조한 빈에 대해서 작성하는 태그
+                            예시 - 준비 )
+                                interceptors 태그 밖에
+                                &lt;beans:bean id="authenticationInterceptor" class="com.my.util.UrlInterceptor"/> 작성
+                                (authenticationInterceptor와 com.my.util.UrlInterceptor는 임의값)
+                            예시 - 설정 )
+                                interceptors 태그 내부의 interceptor 태그 내부에
+                                &lt;beans:ref bean="authenticationInterceptor"/> 작성
+                                (authenticationInterceptor는 임의값)
+                </pre>
+            </li>
+            <li>자주 쓰는 기능
+                <pre>
+                    ● 어노테이션 사용
+                        <pre class="prettyprint lang-xml">
+                            &lt;annotation-driven />
+                        </pre>
+
+                    ● 리소스 설정 (기본 설정)
+                        <pre class="prettyprint lang-xml">
+                            &lt;resources mapping="/resources/**" location="/resources/" />
+                        </pre>
+
+                    ● view 페이지 설정 (기본 설정)
+                        <pre class="prettyprint lang-xml">
+                            &lt;beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                                &lt;beans:property name="prefix" value="/WEB-INF/views/" />
+                                &lt;beans:property name="suffix" value=".jsp" />
+                            &lt;/beans:bean>
+                        </pre>
+
+                    ● 컨트롤러 관련 컴포넌트 스캔 (com.my.app은 임의값)
+                        <pre class="prettyprint lang-xml">
+                            &lt;context:component-scan base-package="com.my.app" />
+                        </pre>
+
+                    ● 파일 업로드 관련
+                        <pre class="prettyprint lang-xml">
+                            &lt;beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+                                &lt;beans:property name="maxUploadSize" value="100000000">&lt;/beans:property>
+                            &lt;/beans:bean>
+                        </pre>
+
+                    ● 인터셉터 관련 (authenticationInterceptor와 com.my.util.UrlInterceptor는 임의값)
+                        <pre class="prettyprint lang-xml">
+                            &lt;beans:bean id="authenticationInterceptor" class="com.my.util.UrlInterceptor"/>
+                            &lt;interceptors>
+                                &lt;interceptor>
+                                    &lt;mapping path="/blog/{userID}/write"/>
+                                    &lt;mapping path="/blog/setting/profile"/>
+                                    &lt;beans:ref bean="authenticationInterceptor"/>
+                                &lt;/interceptor>
+                            &lt;/interceptors>
+                    </pre>
+                        </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="settingFile_divide">
+        <header class="note_title">설정 파일 분리하기</header>
+        <ul>
+            <li>설정 값 분리의 필요성 (@Value 어노테이션)
+                <pre>
+                    ● 환경에 따라 유연한 값 설정 가능
+                    ● 초기값을 설정 가능
+                    ● 불필요한 컴파일 축소 가능
+                </pre>
+            </li>
+            <li>전제 조건
+                <pre>
+                    ● classpath의 기본 위치는 프로젝트/src/main/resources다.
+                </pre>
+            </li>
+            <li>PropertyPlaceHolderConfigurer를 통한 수동 변환
+                <pre>
+                    ● 설명 : 빈 설정 메타정보가 모두 준비됐을 때 빈 메타정보 자체를 조작하기 위해 사용하는 방식
+                    ● 전체 조건 : 해당 클래스에 @Configuration 어노테이션과 @PropertySource("classpath:설정파일경로") 어노테이션을 명시해준다.
+                    ● 사용 예시)
+                        &lt;&lt;&lt; xml >>>
+
+                        user.username=HongGilDong
+                        user.birthday=970229
+                        
+                        &lt;&lt;&lt; class >>>
+
+                        <pre class="prettyprint lang-java">
+                            @Value("${user.username}")
+                            private String userName;
+                            
+                            @Value("${user.birthday}")
+                            private String birthday;
+                            
+                            //defaultvalue 설정 가능
+                            @Value("${user.hoddy:게임}")
+                            private String hoddy;
+                        </pre>
+                </pre>
+            </li>
+            <li>SpEL을 통한 능동 변환
+                <pre>
+                    ● 설명 : 다른 빈 오브젝트에 직접 접근할 수 있는 표현식을 이용해 원하는 프로퍼티 값을 능동적으로 가져온다.
+                    ● 전체 조건 : 해당 클래스에 @Component 어노테이션을 명시해준다.
+                    ● 사용 예시)
+                        &lt;&lt;&lt; 빈으로 등록할 클래스 >>>
+
+                        <pre class="prettyprint lang-java">
+                            @Component("userInfo")
+                            public class config{
+                                public static String username="HongGilDong";
+                                public String getBirthday(){
+                                    return "970229";
+                                }
+                            }
+                        </pre>
+
+                        &lt;&lt;&lt; 빈을 사용할 클래스 >>>
+                        
+                        <pre class="prettyprint lang-java">
+                            @Value("#{userInfo.username}")
+                            private String userName;
+                            
+                            @Value("#{userInfo.getBirthday()}")
+                            private String birthday;
+                        </pre>
+
+                    ※ 주의점 : 메소드 및 생성자 인자에 @Value를 사용할 때는 @Autowired나 @Resource같은 어노테이션이 반드시  존재해야 한다.
+                </pre>
+            </li>
+            <li>Environment을 통한 능동 변환
+                <pre>
+                    ● 설명 : 다른 빈 오브젝트에 직접 접근할 수 있는 표현식을 이용해 원하는 프로퍼티 값을 능동적으로 가져온다.
+                    ● 전체 조건 : 해당 클래스에 @Configuration 어노테이션과 @PropertySource("classpath:설정파일경로") 어노테이션을 명시해준다.
+                    ● 사용 예시)
+                        &lt;&lt;&lt; xml >>>
+
+                        user.username=HongGilDong
+                        user.birthday=970229
+
+                        &lt;&lt;&lt; class >>>
+
+                        <pre class="prettyprint lang-java">
+                            @Autowired 
+                            Environment env;
+    
+                            private String userName=env.getProperty("user.username");
+                            private String birthday=env.getProperty("user.birthday");
+                        </pre>
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <br>
+
+    <section id="annotation">
+        <header class="note_title">어노테이션 목록</header>
+        <ul>
+            <li>MVC - 컨트롤러
+                <pre>
+                    ● @Contrller : 해당 클래스를 빈으로 등록하고, 해당 클래스를  컨트롤러로 사용할것임을 프레임워크에 알리는 어노테이션
+
+                    ● @RequestMapping, @GetMapping, @PostMapping : 요청 url을 연결하는 어노테이션
+
+                    ●  @RequestBody, @ResponseBody : 비동기 통신을 위해 움직이는 데이터인 http 요청에 대한 요청본문/응답본문 어노테이션
+
+                    ●  @RequestParam(파라미터명) : url을 통해 해당 메소드를 요청할 때 전달해오는 값을 알기위한 어노테이션
+                    ●  @PathVariable : url에 명시된 동적 값을 알기위한 어노테이션
+
+                    ● @RestController = @Contrller + @ResponseBody
+
+                    ● @ModelAttribute : View에 데이터를 전달하기 위해 설정하는 어노테이션
+                </pre>
+            </li>
+            <li>MVC - 서비스
+                <pre>
+                    ● @Service : 빈 객체를 만들어 주는 어노테이션, 가시성을 위해 사용한다. 비즈니스 로직에 대해서 처리하는 경우에 명시한다.
+                </pre>
+            </li>
+            <li>빈 관련 - 의존성 주입
+                <pre>
+                    ● @Autowired : 해당하는 타입의 객체를 찾아서 자동으로 할당하는 어노테이션
+                        ○ 생성자, 메소드, 멤버변수 위에 모두 사용 가능
+                        ○ 탐색 순서 : 타입 -> 이름 -> @Qualifier -> 실패
+                    ● @Qualifier("qualifier 태그에 명시한 value") : @Autowired 어노테이션과 함께 사용하는 어노테이션
+                    
+                    ● @Inject : 해당하는 타입의 객체를 찾아서 자동으로 할당하는 어노테이션
+                        ○ 생성자, 메소드, 멤버변수 위에 모두 사용 가능
+                        ○ 탐색 순서 : 타입 -> @Named-> 이름 -> 실패
+                    ● @Named("id명") : @Inject 어노테이션과 함께 사용하는 어노테이션
+
+                    ● @Resource(name="등록된 빈의 id") : 주입하려고 하는 객체의 id가 일치하는 객체를 자동으로 주입한다.
+                        ○ 메소드, 멤버변수 위에 사용 가능
+                        ○ 사실상 @Autowired + @Qualifier
+                        ○ 탐색 순서 : 이름 -> 타입 -> @Qualifier -> 실패
+                        ○ @Resource나 @Resource(name="등록된 빈의 id")로 사용한다.
+                        ○ &lt;context:annotation-config/>를 xml 파일에 추가해야지 사용할수 있다.
+                </pre>
+            </li>
+            <li>빈 관련 - 컴포넌트 스캔
+                <pre>
+                    ● @Component("빈 id") : 개발자가 직접 작성한 클래스를 bean 등록하고자 할 경우 사용하는 어노테이션
+                    ● @ComponentScan : 설정된 시작 지점부터 컴포넌트 클래스를 scanning하여 빈으로 등록해주는 역할을 하는 어노테이션
+                        ○ 스캔하는 컴포넌트 클래스 : @Component, @Repository, @Service, @Controller, @Configuration
+                        ○ basePackages 속성 : 스캔을 시작할 패키지 경로를 명시 (예시 : com.my.app)
+                        ○ basePackageClasses 속성 : 스캔을 시작할 패키지 경로에 있는 클래스를 명시 (예시 : BlogController.class)
+                        ○ basePackages 속성으로 명시하나 basePackageClasses 속성으로 명시하나 같은 곳을 가리키게 한다면 결과는 같겠지만,
+                        basePackageClasses 속성으로 명시하는 것이 좀 더 안전하다.
+                    ● @Filter : @ComponentScan 어노테이션의 excludeFilters 속성에서 사용하는 어노테이션, 스캔을 제외할 조건을 명시한다.
+                        예시) excludeFilters = @Filter(type = FilterType.ANNOTATION, classes = {Service.class})
+                    ● @Scope
+                </pre>
+            </li>
+            <li>빈 관련 - 외부 설정 파일
+                <pre>
+                    ● @Configuration : 외부라이브러 또는 내장 클래스를 빈으로 등록하고자 할 경우 사용하는 어노테이션, 1개 이상의 @Bean을 제공하는 클래스의 경우 반드시 @Configuraton을 명시
+                    ● @PropertySource("classpath:설정파일경로") : 해당 설정 파일의 위치를 명시하는 어노테이션
+                    ● @Value("${빈id.속성명:디폴트값}") : 빈으로 등록된 클래스에서 값을 가져와서 주입하는 어노테이션
+                </pre>
+            </li>
+            <li>쿠키
+                <pre>
+                    ● @CookieValue(value="가져올_쿠키명", required=true/false)
+                </pre>
+            </li>
+            <li>기타
+                <pre>
+                    ● @Repository : 빈 객체를 만들어 주는 어노테이션, 가시성을 위해 사용한다. 외부I/O에 대해서 처리하는 경우에 명시한다.
+                </pre>
+            </li>
+        </ul>
+    </section>
+
+    <div id="remote">
+        <section id="remote_setcion">
+            <select id="remote_menu" onchange="move_section()">
+                <option value="intro">스프링 프레임워크</option>
+                <option value="maven">maven (메이븐)</option>
+                <option value="bean">스프링 빈</option>
+                <option value="beanLifeCycle">빈 생명 주기</option>
+                <option value="beanScope">빈 스코프</option>
+                <option value="singleton">싱글톤 스코프</option>
+                <option value="prototype">프로토타입 스코프</option>
+                <option value="component">컴포넌트 스캔</option>
+                <option value="IOC">제어 역전 (IOC)</option>
+                <option value="DI">의존성 주입 (DI)</option>
+                <option value="AOP">관점 지향 프로그래밍 (AOP)</option>
+                <option value="psa">PSA</option>
+                <option value="cookie">쿠키</option>
+                <option value="session">세션</option>
+                <option value="interseptor">인터셉터</option>
+                <option value="controller">컨트롤러</option>
+                <option value="service">서비스</option>
+                <option value="settingFile_pom">설정 파일 - pom.xml</option>
+                <option value="settingFile_web">설정 파일 - web.xml</option>
+                <option value="settingFile_root_context">설정 파일 - root-context.xml</option>
+                <option value="settingFile_servlet_context">설정 파일 - servlet-context.xml</option>
+                <option value="settingFile_divide">설정 파일 분리하기</option>
+                <option value="annotation">어노테이션 목록</option>
+            </select>
+        </section>
+    </div>
+
+    <!--code pretty print -->
+    <script src ="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+    <script>
+        prettyPrint();
+    </script>
+</body>
+</html>

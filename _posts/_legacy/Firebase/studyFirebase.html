@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase 공부</title>
+</head>
+<body>
+
+<section id="start" tag="">
+    <header class="note_title">기본</header>
+    <ul>
+        <li>사이트
+            <pre>
+                ● <a href="https://firebase.google.com/">이동</a>
+            </pre>
+        </li>
+        <li>대표적인 기능
+            <pre>
+                ● 인증
+                ● 데이터베이스
+                ● 스토리지
+                ● 원격 구성
+                ● 푸시 알람
+            </pre>
+        </li>
+        <li>장점
+            <pre>
+                ● 무료
+                ● 개발 속도가 매우 빨라서 프로토타입 제작에 매우 유용하다.
+                ● 인증 시스템을 지원한다.
+                ● NoSQl 기반의 3세대 데이터베이스다.
+                ● RTSP(Real Time Stream Protocol) 방식의 데이터베이스를 지원한다.
+                ● 원격 구성을 지원합니다.
+                    ※ 원격 구성 : 원격으로 앱의 환경 상태를 구성하는 것
+                ●  콘솔을 제공한다.
+                ●  Analytics(통계)를 제공한다.
+                ● 플랫폼 자체를 구글에서 지원하다보니 인프라도 확실하고 시스템 내에서 서비스를 만들어내는데에는 특화되어 있다.
+            </pre>
+        </li>
+        <li>단점
+            <pre>
+                ● 모든 기능이 무료인것은 아니다. (어찌보면 단점이 아닌 당연한 점)
+                ● 서버의 응답속도가 종종 느려진다.
+                ● Firebase의 데이터베이스의 구/신버전 모두 쿼리의 종류가 빈약하다.
+            </pre>
+        </li>
+        <li>대체가능한 플랫폼
+            <pre>
+                ● Back4app
+                ● 백엔드리스
+                ● AWS Amplify
+                ● Parse
+                ● Kinvey 
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="ready" tag="">
+    <header class="note_title">준비하기 - 공통</header>
+    <ul>
+        <li>준비과정
+            <pre>
+                1. https://firebase.google.com/로 이동해서 구글 로그인을 한다.
+                2. "콘솔로 이동"을 클릭해서 콘솔로 이동한다.
+                3. 프로젝트를 생성한다.
+                4. 파이어베이스 콘솔에서 해당하는 프로젝트를 클릭하여 해당 프로젝트 콘솔로 이동한다.
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="linkages" tag="">
+    <header class="note_title">연동하기</header>
+    <ul>
+        <li>연동과정 - 웹
+            <pre>
+                1. 추가하기 버튼 중에서 웹 버튼을 클릭한다. (&lt;/> 모양)
+                2. 웹 앱의 이름을 입력하고 앱 등록하기를 클릭한다.
+                3 - 일반.
+                    파이어베이스 측에서 제공하는 API 코드를 복사하여 프로젝트에 추가한다.
+                3 - (리액트 JS).
+                    (1) 터미널에서 npm install --save firebase를 실행한다.
+                    (2) firebase를 위한 js 파일을 만들어서 앱 등록시 제공하는 API 코드 중에서 최하단의 script 태그 안의 내용을 복붙한다.
+                    (3) import * as firebase from "firebase/app";를 방금 전의 파일에 추가한다.
+                    (4) 필요한 경우에만 firebase.initializeApp(firebaseConfig); 앞에 export default를 추가한다.
+
+                ※ 참고 : <a href="https://firebase.google.com/docs/web/setup">이동</a>
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="console" tag="">
+    <header class="note_title">기능 사용을 위한 콘솔 설정하기</header>
+    <ul>
+        <li>계정기능 사용하기
+            <pre>
+                1. 빌드 메뉴의 Authentication를 클릭하여 계정 관리 메뉴로 이동한다.
+                2. 시작하기를 누른다.
+                3. 원하는 계정 종류에 따라서 해당 메뉴들을 활성화를 시켜준다.
+            </pre>
+        </li>
+        <li>데이터베이스 기능 사용하기
+            <pre>
+                1. 빌드 메뉴의 Firestore Database를 클릭하여 데이터베이스 관리 메뉴로 이동한다.
+                2. 데이터베이스 만들기를 누른다.
+                3. test mode로 생성한다.
+                4. 자신의 집과 가까운 지역으로 설정한다.
+                5. 컬렉션 시작을 누른다.
+                6. 임의의 값을 입력한 뒤에 저장을 누른다.
+            </pre>
+        </li>
+        <li>스토리지 기능 사용하기
+            <pre>
+                1. 빌드 메뉴의 Storage를 클릭하여 저장소 관리 메뉴로 이동한다.
+                2. Firestore와 같은 방법으로 진행한다.
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="useAuthFunctionByReactJS" tag="">
+    <header class="note_title">계정 기능 사용 - 리액트 JS</header>
+    <ul>
+        <li>계정기능 사용하기 - 준비 코드
+            <pre>
+                1. firebase에 대한 KEY 정보를 담고 있는 js 파일로 이동한다.
+                2. 최상단에 import "firebase/auth";를 추가한다.
+                    ※ import할 때 에러가 난다면 "* as"를 지운다. (firebase 8.0.0부터 쓰면 안됨)
+                    ※ 8.0.0 이전 : import * as firebase from 'firebase/app'
+                    ※ 8.0.0 이후 : import firebase from 'firebase/app'
+                3. export const authService = firebase.auth();를 작성한다.
+            </pre>
+        </li>
+        <li>회원가입 및 로그인 (이메일 + 비밀번호)
+            <pre>
+                ※ 전제조건
+                    1. export const authService = firebase.auth(); 필요 => firebase 설정 js 파일
+                    2. import { authService } from "XXX"; 필요 => 기능을 사용할 js 파일
+                    2. 회원가입/로그인 여부 판단하는 변수 존재
+
+                ● 회원가입 및 로그인
+                    const onSubmit = async (event) => {
+                        //form의 submit 동작 막기
+                        event.preventDefault();
+                
+                        try
+                        {
+                            let data;
+
+                            if (newAccount) {
+                                //계정 생성의 경우
+                                data = await authService.createUserWithEmailAndPassword(
+                                email,
+                                password
+                                );
+                            }
+                            else
+                            {
+                                //로그인의 경우
+                                data = await authService.signInWithEmailAndPassword(email, password);
+                            }
+                            console.log(data);
+                        }
+                        catch (error)
+                        {
+                            console.log(error);
+                        }
+                    };
+            </pre>
+        </li>
+        <li>로그인한 유저의 정보 가져오기
+            <pre>
+                ※ 전제조건
+                    1. export const firebaseInstance = firebase; 필요 => firebase 설정 js 파일
+                    2. import { authService } from "XXX"; 필요 => 기능을 사용할 js 파일
+                
+                ● 코드
+                    //전제조건 만족 후
+                    authService.onAuthStateChanged((user) => {
+                        //user에 로그인한 유저의 정보가 들어있다.
+                        if (user) {
+                          //로그인에 성공한 경우
+                        } else {
+                          //로그인에 실패한 경우
+                        }
+                    });
+                
+                ※ 현재 로그인 중인 유저 정보 가져오기 : authService.currentUser;
+
+                ※ 참고 : <a href="https://firebase.google.com/docs/reference/js/firebase.auth">이동</a>
+            </pre>
+        </li>
+        <li>로그인한 유저의 정보 업데이트하기
+            <pre>
+                ※ 전제조건
+                    1. export const firebaseInstance = firebase; 필요 => firebase 설정 js 파일
+                    2. import { authService } from "XXX"; 필요 => 기능을 사용할 js 파일
+                    3. authService.onAuthStateChanged((user) => {} );를 통해서 유저 정보 가져오기
+                    4. 가져온 유저 정보를 변수에 저장 (예시 : userObj)
+                
+                ● 코드
+                    //전제조건 만족 후
+                    const 함수명 = async (event) => {
+                          await userObj.updateProfile(
+                            { displayName: newDisplayName }
+                          );
+                    };
+                
+                ※ displayName이 유저의 닉네임을 가리킨다.
+            </pre>
+        </li>
+        <li>소셜로그인 - 일반
+            <pre>
+                ※ 전제조건
+                    1. export const firebaseInstance = firebase; 필요 => firebase 설정 js 파일
+                    2. import { authService, firebaseInstance } from "XXX"; 필요 => 기능을 사용할 js 파일
+                
+                ● 코드
+                    const onSocialClick = async (event) => {
+                        const { target: { name } } = event;
+                        let provider;
+
+                        if (name === "google")
+                        {
+                            provider = new firebaseInstance.auth.GoogleAuthProvider();
+                        }
+                        else if (name === "github")
+                        {
+                            provider = new firebaseInstance.auth.GithubAuthProvider();
+                        }
+                        const data = await authService.signInWithPopup(provider);
+                        console.log(data);
+                    };
+                
+                ※ 참고 : <a href="https://firebase.google.com/docs/reference/js/firebase.auth">이동</a>
+
+                ※ 추후에 콘솔의 계정 메뉴(로그인 종류 설정 페이지)에서 승인된 도메인에 소셜 로그인 기능을 추가할 도메인을 추가한다.
+            </pre>
+        </li>
+        <li>소셜로그인 - 깃허브
+            <pre>
+                1. 깃허브 페이지로 가서 로그인을 한다.
+                2. Settings 메뉴로 간다.
+                3. Developer settings를 클릭한다.
+                4. OAuth App을 클릭한다.
+                5. Register a new application을 클릭한다.
+                6. 앱 이름과 URL을 작성한다.
+                    ※ URL은 firebase의 계정 메뉴에서 깃허브 활성화시 나오는 URL을 입력한다.
+                    ※ 홈페이지 URL은 콜백 URL과 동일하게 쓰되, 콜백 URL의 주소에서 "__/auth/handler"만 제외한다.
+                7. Register application을 클릭해서 등록한다.
+                8. 깃허브에서 앱을 등록했을 때 나오는 Client ID와 Client secrets를 복사해서 ㅇ
+                   firebase의 콘솔의 계정 메뉴의 깃허브 항목에 붙여넣은 뒤 저장한다.
+            </pre>
+        </li>
+        <li>로그아웃 (공통)
+            <pre>
+                ※ 전제조건
+                    1. export const authService = firebase.auth();
+                    2. import { authService } from "XXX"; 필요
+                    3. import { useHistory } from "react-router-dom";
+                
+                ● 코드
+                    const onLogOutClick = () => {
+                        authService.signOut();
+                        history.push("/");
+                    };
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="useFirestoreFunctionByReactJS" tag="">
+    <header class="note_title">데이터베이스 (Firestore Database) 기능 사용 - 리액트 JS</header>
+    <ul>
+        <li>데이터베이스 기능 사용하기 - 준비 코드
+            <pre>
+                1. firebase에 대한 KEY 정보를 담고 있는 js 파일로 이동한다.
+                2. 최상단에 import "firebase/firestore";를 추가한다
+                3. export const dbService = firebase.firestore();를 추가한다.
+            </pre>
+        </li>
+        <li>데이터베이스 기능
+            <pre>
+                ※ 전제조건
+                    1. export const dbService = firebase.firestore(); 필요 => firebase 설정 js 파일
+                    2. import { dbService, useEffect } from "XXX"; 필요 => 기능을 사용할 js 파일
+
+                ● 데이터 추가 (insert)
+                    ○ 기본틀
+                        //전제조건 만족 후
+                        const 함수명 = async (event) => {
+                            event.preventDefault();
+                            await dbService.collection("컬렉션명").add({
+                              항목명1 : 항목명1,
+                              항목명2: 항목명2,
+                              ...
+                            });
+                        };
+                    ○ 예시 코드
+                        const [nweet, setNweet] = useState("");
+
+                        const onSubmit = async (event) => {
+                            event.preventDefault();
+                            await dbService.collection("jack").add({
+                            nweet,
+                            createdAt: Date.now(),
+                            });
+                            setNweet("");
+                        };
+
+                ● 데이터 수정 (update)
+                    ○ 기본틀
+                        //전제조건 만족 후
+                        const 함수명 = async (event) => {
+                            event.preventDefault();
+                            await dbService.doc(`컬렉션명/${해당 문서의 id}`).update({
+                                항목: 내용,
+                            });
+                        };
+                    ○ 예시 코드
+                        const [editing, setEditing] = useState(false);
+
+                        const onSubmit = async (event) => {
+                            event.preventDefault();
+                            await dbService.doc(`jack/${nweetObj.id}`).update({
+                            text: newNweet,
+                            });
+                            setEditing(false);
+                        };
+
+                ● 데이터 삭제 (delete)
+                    ○ 기본틀
+                        //전제조건 만족 후
+                        const 함수명 = async () => {
+                              await dbService.doc(`컬렉션명/${해당 문서의 id}`).delete();
+                        };
+                    ○ 예시 코드
+                        const onDeleteClick = async () => {
+                            const ok = window.confirm("Are you sure you want to delete this nweet?");
+                            if (ok) {
+                            await dbService.doc(`jack/${nweetObj.id}`).delete();
+                            }
+                        };
+
+                ● 데이터 가져오기 (select)
+                    ○ 기본틀
+                        //전제조건 만족 후
+                        const [XXX, setXXX] = useState([]);
+                        const 함수명 = async (event) => {
+                            const 변수명 = await dbService.collection("컬렉션명").get();
+                            변수명.forEach((document) => {
+                                const nweetObject = {
+                                ...document.data(),
+                                id: document.id,
+                                };
+                                setXXX((prev) => [nweetObject, ...prev]);
+                            });
+                        };
+                        useEffect(() => {
+                          getNweets();
+                        }, []);
+
+                        ※ dbService.collection("컬렉션명").get();은 단순하게 object를 주기때문에 풀어서 사용해야 한다.
+                        ※ forEach를 돌릴때 마다 setXXX를 해야지 데이터의 개수만큼 정상적으로 데이터를 읽을 수 있다.
+                        ※ document.data()처럼 data() 함수를 써야지 해당 문서의 값들을 가져올수 있다.
+                        ※ 해당 문서의 id 값은 document.id처럼 개별 요소이기 때문에 필요한 경우에는 이처럼 직접 추가해줘야 한다.
+                        ※ 리액트의 useState를 통한 setXXX를 사용할 때 값이 아닌 함수로 전달할 수 있는데,
+                           이 때 사용되는 변수는 이전에 setXXX를 통해서 설정된 현재의 XXX의 값을 가져올 수 있다.
+                    ○ 예시 코드
+                        const [nweets, setNweets] = useState([]);
+                        const getNweets = async () => {
+                            const dbNweets = await dbService.collection("jack").get();
+                            dbNweets.forEach((document) => {
+                                const nweetObject = {
+                                    ...document.data(),
+                                    id: document.id,
+                                };
+                                setNweets((prev) => [nweetObject, ...prev]);
+                            });
+                        };
+                        useEffect(() => {
+                            getNweets();
+                        }, []);
+
+                ● 데이터 가져오기 - 정렬하기 (order by)
+                        ○ 오름차순
+                            //전제조건 만족 후
+                            dbService.collection("컬렉션명").orderBy("항목명", "asc")
+                        ○ 내림차순
+                            //전제조건 만족 후
+                            dbService.collection("컬렉션명").orderBy("항목명", "desc")
+
+                ● 데이터 가져오기 - 조건 추가하기 (where)
+                        //전제조건 만족 후
+                        dbService.collection("컬렉션명").where("","항목명", "값")
+
+                        ○ 단순 연산자 : &lt;, &gt; &lt;=, &gt;=, ==, !=
+                        ○ 하나라도 만족하는 경우 : in, not-in
+                            예시)
+                                where("", "in", ["a", "b", "c"])
+                        ○ 해당하는 값을 포함하는 배열 : array-contains
+                            예시)
+                                where("", "array-contains", "a")
+                        ○ 해당하는 값을 하나라도 포함하는 배열 : array-contains-any
+                            예시)
+                                where("", "array-contains-any", ["a", "b", "c"])
+                            
+                ● 데이터 가져오기 - 실시간 업데이트
+                    //전제조건 만족 후
+                    dbService.collection("컬렉션명").onSnapshot((snapshot) => {
+                        const nweetArray = snapshot.docs.map((doc) => ({
+                          id: doc.id,
+                          ...doc.data(),
+                        }));
+                        setNweets(nweetArray);
+                    });
+
+                    ※ 재랜더링을 하려면 this.setState()를 써야하지만 현재 useState를 쓰고 있기 때문에 값의 변화에 따른 재랜더링이 안된다.
+                        => 실시간 변경을 위해서는 onSnapshot()을 사용해야 한다.
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<section id="useStorageFunctionByReactJS">
+    <header class="note_title">스토리지 기능 사용 - 리액트 JS</header>
+    <ul>
+        <li>데이터베이스 기능 사용하기 - 준비 코드
+            <pre>
+                1. firebase에 대한 KEY 정보를 담고 있는 js 파일로 이동한다.
+                2. 최상단에 import "firebase/storage";를 추가한다
+                3. export const storageService = firebase.storage();를 추가한다.
+            </pre>
+        </li>
+        <li>파일 정보 가져오기 + 이미지 미리보기
+            <pre>
+                &lt;input type="file" accept="image/*" onChange={onFileChange} />
+
+                const [attachment, setAttachment] = useState();
+
+                const onFileChange = (event) => {
+                    const {
+                      target: { files },
+                    } = event;
+                    const theFile = files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = (finishedEvent) => {
+                        const {
+                          currentTarget: { result },
+                        } = finishedEvent;
+                        setAttachment(result);
+                    };
+                    reader.readAsDataURL(theFile);
+                };
+
+                {attachment && (
+                    &lt;div>
+                        &lt;img src={attachment} width="50px" height="50px" />
+                        &lt;button onClick={onClearAttachment}>Clear</button>
+                    &lt;/div>
+                )}
+
+                ※ event.target.files[0]은 file 태그에 올라온 파일의 정보를 가리킨다.
+                ※ FileReader.onloadend는 FileReader가 읽기 동작이 끝났을 때마다 발생시키는 이벤트다.
+                ※ reader.readAsDataURL(theFile);은 읽어들인 파일의 정보를 데이터 URL로 만드는 방법이다.
+                ※ 데이터 URL로 만들어진 파일의 정보는 reader.onloadend를 통해서 e.target.result 또는 e.currentTarget.result로 받을 수 있다.
+            </pre>
+        </li>
+        <li>파일 업로드
+            <pre>
+                ※ 전제조건
+                    1. 해당 프로젝트의 터미널에서 npm install uuid 입력 (식별자명을 랜덤으로 만들어주는 기능, 랜덤 함수를 직접 만들어서 대체 가능)
+                    2. 해당 기능을 사용할 js 파일에 가서 import { v4 as uuidv4 } from "uuid";를 통해서 import 하기
+                    3. export const storageService = firebase.storage(); 필요 => firebase 설정 js 파일
+                    4. import { storageService } from "XXX"; 필요 => 기능을 사용할 js 파일
+                
+                ● 코드
+                    const onSubmit = async (event) => {
+                        event.preventDefault();
+
+                        let attachmentUrl = "";
+
+                        if (attachment != "") {
+                            const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+                            const response = await attachmentRef.putString(attachment, "data_url");
+                            attachmentUrl = await response.ref.getDownloadURL();
+                        }
+                    };
+
+                    ※ attachment는 데이터 URL화 시킨 파일을 가리킨다.
+                    ※ storageService.ref()는 루트 폴더를 가리킨다.
+                    ※ storageService.ref().child("폴더명/파일명");을 통해서 원하는 위치에 원하는 파일명을 지정한다.
+                    ※ fileRef.putString(attachment, "data_url");를 통해서 업로드한다.
+                    ※ attachmentUrl = await response.ref.getDownloadURL();을 통해서 업로드한 파일이 업로드 된 실제 경로를 알 수 있다.
+            </pre>
+        </li>
+        <li>파일 삭제
+            <pre>
+                ※ 전제조건
+                    1. import { dbService, storageService } from "myDatabase";
+                
+                ● 코드
+                    const onDeleteClick = async () => {
+                        const ok = window.confirm("Are you sure you want to delete this nweet?");
+                        if (ok) {
+                            await dbService.doc(`nweets/${nweetObj.id}`).delete(); //데이터베이스 삭제
+                            await storageService.refFromURL(nweetObj.attachmentUrl).delete(); //스토리지 삭제
+                        }
+                    };
+                    
+                    ※ attachmentUrl는 글을 작성할 때 같이 업로드한 파일의 업로드 주소다.
+                    ※ storageService.refFromURL(주소)는 참조하고 있는 주소를 통해서 파일의 관리를 할 수 있다.
+            </pre>
+        </li>
+    </ul>
+</section>
+
+<div id="remote">
+    <article id="remote_setcion">
+        <select id="remote_menu" onchange="move_section()">
+            <option value="start">시작</option>
+            <option value="ready">준비하기 - 공통</option>
+            <option value="linkages">연동하기</option>
+            <option value="console">기능 사용을 위한 콘솔 설정하기</option>
+            <option value="useAuthFunctionByReactJS">계정 기능 사용 - 리액트 JS</option>
+            <option value="useFirestoreFunctionByReactJS">데이터베이스 (Firestore Database) 기능 사용 - 리액트 JS</option>
+            <option value="useStorageFunctionByReactJS">스토리지 기능 사용 - 리액트 JS</option>
+        </select>
+    </article>
+</div>
+
+<script src="./remote.js"></script>
+</body>
+</html>

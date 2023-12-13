@@ -7,7 +7,6 @@ categories: Group&nbsp;:&nbsp;JavaScript React
 
 ### 설치 방법
 
-
 1. 터미널에 명령어 npm install @fortawesome/react-fontawesome 입력하기
 2. 필요한 아이콘에 따라서 추가로 터미널에 명령어 입력하기
   - npm install @fortawesome/fontawesome-free
