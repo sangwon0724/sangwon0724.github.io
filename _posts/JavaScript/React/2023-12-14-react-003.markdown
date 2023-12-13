@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "Fragment"
+date:   2023-12-14 00:27:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React
+---
+
+### Fragment의 특징
+
+- React v16에 추가된 기능
+- 컴포넌트가 여러 엘리먼트를 return 할때 jsx 규칙상 하나의 태그로 묶어서 return 해줘야 하는데,  
+이 때, fragment를 사용하면 dom에 별도의 노드를 추가하지 않고 여러자식을 그룹화 할 수 있다.
+
+### 사용법
+- 기본 문법 : &lt;React.Fragment>&lt;컴포넌트명>&lt;/React.Fragment>
+- 간략화 문법 : &lt;>&lt;컴포넌트명>&lt;/>
+
+<!--
+{% highlight ruby %}
+
+{% endhighlight %}
+-->

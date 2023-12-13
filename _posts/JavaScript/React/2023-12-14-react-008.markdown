@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "경로 설정"
+date:   2023-12-14 00:41:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React
+---
+
+### jsconfig.json 사용방법
+
+1. jsconfig.json 파일을 package.json 파일과 같은 위치에 만들어서 아래의 코드를 복붙한다.
+{% highlight json %}
+{
+    "compilerOptions": {
+        "baseUrl": "src"
+    },
+    "include": [
+        "src"
+    ]
+}
+{% endhighlight %}
+2. import할 때 from의 주소를 절대경로로 작성한다.
+  - 기존 : import AppRouter from "./Router";
+  - 변경 : import AppRouter from "components/Router";
+
+3. 만약 작동하지 않는다면 vscode를 껐다가 다시 킨다.

@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "환경변수"
+date:   2023-12-14 00:39:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React
+---
+
+### .env 파일 사용 방법
+
+- 리액트에서 create-react-app을 사용한 이후에 .env 파일을 사용하고 싶다면  
+.env 파일 안에서 사용되는 환경변수명들 앞에는 반드시 "REACT_APP_"을 붙여야 한다.  
+예시) REACT_APP_PROJECT_ID=abc
+- 쉼표나 세미콜론이 아닌 엔터로 구분한다.
+- 사용할때는 process.env.REACT_APP_XXX=123로 사용할 수 있다.
+- 개인 API KEY를 가리기 위해 사용하는 경우가 많지만 결국 브라우저를 통해 요청되면  
+데이터가 이동하기 때문에 반드시 숨겨지는것은 아니다.

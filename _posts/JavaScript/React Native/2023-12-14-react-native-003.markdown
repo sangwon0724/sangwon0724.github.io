@@ -1,0 +1,42 @@
+---
+layout: post
+title:  "style"
+date:   2023-12-14 00:53:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+---
+
+### 스타일 만들기
+
+1. const styles  = StyleSheet.create({});라고 선언되있다고 가정한다.
+2. 스타일명 : { 속성명1 : x, 속성명2 : "y", ...}처럼 선언한다.
+
+### 스타일 적용하기
+
+1. const styles  = StyleSheet.create({});라고 선언되있다고 가정한다.
+2. App()의 return에 있는 태그들에 style 속성을 추가한다.
+3. 코드를 작성한다.
+>방법 1 : style 속성에 {styles.선언한스타일명}이라고 작성한다.
+>>예시) &lt;View style={styles.yellowView} />
+>방법 2: style 속성에 {{속성명1 : x, 속성명2 : y, ...}}라고 작성한다.
+>>예시) &lt;View style={{flex : 1, backgoundColor : "blue"}} />
+
+### flex
+
+- 리액트 네이티브에서 모든 flex box의 디폴트는 flexDirection이 column이다.
+- 하나의 View 안에 여러개의 View가 존재하면 각각의 View를 A와 B라고 했을 때,  
+각각 flex : 1, flex : 2 속성을 주게되면 A는 1/3의 공간을 B는 2/3의 공간을 차지하게 된다.
+
+### padding
+
+- 리액트 네이티브에는 웹에는 없는 padding 속성을 가지고 있다.
+  - paddingHorizontal : paddingLeft와 paddingRight의 동시 설정
+  - paddingVertical : paddingTop와 paddingBottom의 동시 설정
+
+### background
+
+- 배경색상은 backgoundColor 속성을 사용한다.
+
+### font
+
+- 글자색상은 color 속성을 사용한다.
+- 글자크기는 fontSize 속성을 사용한다.

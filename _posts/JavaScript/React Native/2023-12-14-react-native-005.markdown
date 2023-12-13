@@ -1,0 +1,35 @@
+---
+layout: post
+title:  "지역 정보 API"
+date:   2023-12-14 00:57:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+---
+
+### 설치 방법
+
+- 터미널에서 expo install expo-location을 실행한다.
+
+### 사용 방법
+
+1. App.js의 최상단에 import * as Location from "expo-location";를 명시해서 import한다.
+2. export default class extends React.Component {}로 클래스를 만든다.
+3. 만든 클래스에 가서 아래의 코드를 추가한다.
+{% highlight javascript %}
+    getLocation = async () => {
+    const location = await Location.getCurrentPositionAsync();
+    console.log(location);
+  };
+{% endhighlight %}
+4. 원하는 타이밍의 함수에 getLocation을 실행한다.  
+예시) componentDidMount
+
+### Location.requestPermissionsAsync
+
+- Location.requestPermissionsAsync()는 사용자에게 위치에 대한 권한을 부여하도록 요청한다.
+
+### Location.getCurrentPositionAsync
+
+- Location.getCurrentPositionAsync()는 사용자의 현재 위치에 대한 일회성 전송을 요청한다.
+  - coords 객체는 좌표를 의미한다.
+  - coords 객체의 latitude는 위도를 의미한다.
+  - coords 객체의 longitude는 경도를 의미한다.

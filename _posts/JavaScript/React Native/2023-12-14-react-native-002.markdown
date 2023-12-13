@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "리액트 네이티브의 구조"
+date:   2023-12-14 00:52:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+---
+
+### View
+
+- 리액트 네이티브의 &lt;View> 태그는 웹에서의 &lt;div> 태그와 같은 역할을 한다.
+
+### 새 파일에서 [함수/클래스] 내보내기
+
+- 애초에 함수를 만들 때 처음부터 export default [함수명/클래스명]을 하면 된다.
+
+### 스테이터스바 사용하기
+
+- "react-native";의 import에 StatusBar를 추가한다.
+- &lt;StatusBar/> 태그를 선언한다.
+- &lt;StatusBar> 태그의 barStyle 속성에 "light-content" 또는 "dark-content"를 선언한다.

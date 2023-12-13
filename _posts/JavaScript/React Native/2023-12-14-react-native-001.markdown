@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "리액트 네이티브에 대하여"
+date:   2023-12-14 00:48:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+---
+
+### 리액트 네이티브에 대한 준비
+
+01. AOS 유저라면 Expo를, IOS 유저라면 Expo Client를 스토어를 통해서 다운받는다.
+02. Expo 계정을 만든다.
+03. Node Js를 설치한다.
+04. vscode로 프로젝트를 생성한다.
+05. 해당 프로젝트의 터미널에 npm install -g expo-cli를 입력한다. (create-react-app과 비슷한 명령)
+06. 해당 프로젝트의 터미널에 npm audit를 실행한다.
+07. 해당 프로젝트의 터미널에 expo init [원하는 프로젝트명]을 실행한다. (정확히는 원하는 아무 경로에다가 만들어도 상관없음)
+08. blank를 선택한 후에 엔터키를 누른다.
+09. 설치가 완료될 때까지 기다린다.
+10. 해당 프로젝트의 터미널에 cd [만들었던 프로젝트명]을 실행한다.
+
+### 리액트 네이티브에 대한 실행
+
+1. npm start를 하면 자동으로 export Dev tools를 오픈한다.
+2. expo가 실행되고 있는 컴퓨터와, 휴대폰이 같은 인터넷으로 연결시킨다. (★ 필수)
+3. expo 앱을 실행 시켜서 Scan QR Code를 실행한다.
+4. QR 코드를 읽힌다.
+
+### expo 장점
+
+- Live Reloading (기본 옵션) : 프로젝트를 새롭게 저장했을 때, 프로젝트 전체를 시뮬레이터에 새로 불러오는 기능
+- Hot Reloading : 수정 또는 새로 추가한 코드만을 인지하여 그 부분만 새롭게 불러오는 기능
+    
+## Hot Reloading 실행
+(1) 핸드폰의 경우는 흔들고, 시뮬레이터의 경우에는 Ctrl + D를 눌러서 개발자 도구를 활성화시킨다.
+(2) Disable Live Reload 를 눌러 Live Reload 기능을 끈다.
+(3) 다시 개발자 도구를 활성화시킨 다음에 Enable Hot Reloading을 눌러서 실행시킨다.
+
+### 내 계정에 프로젝트 등록하기
+1. 터미널에 expo login을 입력하고 계정정보를 등록한다.
+2. npm start를 입력하고 export Dev tools를 오픈한다.
+3. Publish or republish project…를 실행한다.
+
+### 리액트 네이티브의 특징
+
+- 웹처럼 부모의 style을 갖는것이 아니라 각 태그는 각각의 style을 갖는다.
+

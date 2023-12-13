@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "fontAwesome 사용하기"
+date:   2023-12-14 00:43:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React
+---
+
+### 설치 방법
+
+
+1. 터미널에 명령어 npm install @fortawesome/react-fontawesome 입력하기
+2. 필요한 아이콘에 따라서 추가로 터미널에 명령어 입력하기
+  - npm install @fortawesome/fontawesome-free
+  - npm install @fortawesome/fontawesome-svg-core
+  - npm install @fortawesome/free-brands-svg-icons
+  - npm install @fortawesome/free-regular-svg-icons
+  - npm install @fortawesome/free-solid-svg-icons
+
+### 사용 방법
+
+1. "@fortawesome/react-fontawesome" 패키지에서 FontAwesomeIcon를 import 받는다.  
+예시) import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+1. 필요한 패키지에서 필요한 기능을 import 받는다.  
+예시)  
+(1) import { faTwitter } from "@fortawesome/free-brands-svg-icons";  
+(2) import { faUser } from "@fortawesome/free-solid-svg-icons";
+2. &lt;FontAwesomeIcon/> 태그를 통해서 아이콘을 사용한다.
+예시)  
+(1) &lt;FontAwesomeIcon icon={faTwitter} color={"#04AAFF"} size="2x" />  
+(2) &lt;FontAwesomeIcon icon={faUser} color={"#04AAFF"} size="2x" />

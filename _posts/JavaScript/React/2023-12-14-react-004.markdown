@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "PropTypes"
+date:   2023-12-14 00:29:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React
+---
+
+### 사용 배경
+
+- 프로그래머도 사람이기 때문에 실수가 생길수 있으니 속성명을 잘못 명시하는 등의 실수를 방지하기 위해서 사용한다.
+
+### 설치 방법
+
+- npm i prop-types을 통해서 설치한다.
+
+### 사용 방법
+
+
+1. App.js에 import PropTypes from "prop-types";를 통해서 import한다.
+2. 아래 예시같은 코드를 작성한다.  
+{% highlight javascript %}
+WhatEverProtoType.propTypes = {
+    name: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
+    rating: PropTypes.number
+  };
+{% endhighlight %}
+3. isRequired는 값이 반드시 필요함을 의미한다.  
+isRequired를 사용하지 않으면 값이 없거나 타입이 맞지 않아도 에러가 발생하지 않는다.
+4. PropTypes.oneOf([x,y,...])는 배열 안에 있는 값들만 가능하다는 것을 의미한다.

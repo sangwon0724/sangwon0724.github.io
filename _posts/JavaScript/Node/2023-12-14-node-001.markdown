@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "노드에 대하여"
+date:   2023-12-14 01:02:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript Node
+---
+
+### 설치 방법
+
+1. node js 사이트에 들어가서 node js 파일 다운로드 후 설치
+2. 설치 후 버전 확인 : node -v
+3. vscode의 터미널에서 npm install npx -g을 실행하여 npm 설치
+
+### 설치 관련 오류 발생 시 대처 방법
+
+- npm 업데이트를 위해 npm install -g npm할때 오류 발생
+1. 폴더의 보기에서 숨김 파일 보기 옵션 체크
+2. Node가 설치된 폴더에가서 npm과 npx에 임의의 이름 붙이기
+3. cmd를 관리자 권한으로 실행한 다음에 npm install -g npm 실행

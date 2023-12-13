@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "알림 기능"
+date:   2023-12-14 00:56:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+---
+
+### 사용 방법
+
+1. App.js의 최상단에 import {Alert} from "react-navite";를 명시해서 import한다.
+2. 사용하고 싶은 위치에 가서 Alert.alert("알림 내용")을 작성하면 된다.
