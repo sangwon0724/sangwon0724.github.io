@@ -1,0 +1,64 @@
+---
+layout: post
+title:  "Devlog (개발자들을 위한 개인 블로그)"
+date:   2023-12-13 11:00:00 +0900
+categories: Group&nbsp;:&nbsp;Portfolio Student
+---
+
+### 개발환경, 개발인원, 개발 기간, 담당 역할
+
+- 개발 환경
+    - OS : Window
+    - Language : JAVA, JSTL, Java Script
+    - Tools : Eclipse, Spring, HeidiSQL (MariaDB), Tomcat 8.5, MyBatis
+- 개발 인원 : 1명
+- 개발 기간 : 2021-01-18 ~ 2021-02-15
+- 담당 역할
+    - 프로젝트의 전반적인 계획, 디자인, 구현 등을 모두 담당
+
+### 개발개요
+
+네이버 블로그나 티스토리같은 블로그 사이트 등에서 개발자들이 자신들이 공부했던 부분이나  
+프로젝트 진행 중 발생했던 오류에 대해서 작성했던 게시글들을 보면서  
+나도 저렇게 내가 공부했던 것들을 내 개인 블로그에 기록해두고 싶다라는 생각이 들어서 만들게됨  
+하지만 실제로 서비스를 하기에는 단순 배포까지는 괜찮아도 데이터베이스 연결 시 요금이 발생하기에 프로젝트만 완성시키고 종료
+
+### 구현기능
+
+- 게시판 : 게시글 작성/보기/수정/삭제/페이징
+- 사용자 : 마이페이지 (비밀번호 변경/카테고리 관리/카테고리 추가)
+- 추가 기능 : 네비게이션, 카테고리 목록, 인터셉터
+
+### 후기
+
+과거에 써봤던 Oracle이나 MySQL이나 MS-SQL 대신 MariaDB를 사용해보고 싶다고 생각해서  
+처음으로 MariaDB를 사용하여 프로젝트를 진행하게 되었습니다.  
+화면의 구성이 사용자가 데이터베이스/테이블/데이터의 관리를 쉽게 할 수있도록  
+효율적인 형태로 되어있어서 이용이 편했으며, 프로시저와 함수를 만들기 편했습니다.  
+특히 MariaDB를 사용하면서 이전 프로젝트들에서는 DAO에서 직접 SQL을 작성하여  
+너무나도 긴 코드들이 많았지만 이번에는 MyBatis를 사용하면서 효울적인 SQL 이용 방법을  
+배울수 있게되면서 효율의 작업도 올릴 수 있었습니다.  
+또한 이전 프로젝트들에서는 JSP 코드에서 스크립트릿을 너무 남발하여 코드가 깨끗하지 않았지만.  
+이번 프로젝트에서는 JSTL을 공부하여 코드를 좀 더 깨끗하게 하고자 노력하였습니다.  
+JSTL을 공부하며 추가적으로 페이징 공부를 하면서 페이징을 다른 게시글에서  
+복사해서 어거지로 붙여 넣는 것이 아닌 직접 작성하여 구현함으로써 좀 더 발전하게 되었습니다.  
+그 외에도 인터셉터를 배우면서 학교에서 그냥 그렇다 정도로만 배웠던 AOP도 좀 더 이해할수 있게 되었고,  
+Summer-note같은 외부 기능들을 사용하면서 역시 개발할때는 모든 영역을  
+직접 개발하는 것보다는 필요한 부분만 개발하는 것이 가장 효율적이라는 새삼스럽지만  
+당연한 것을 깨달을 수 있게 되는 등 꽤 유익한 경험이 되는 프로젝트였습니다.
+
+### 링크
+[깃허브](https://github.com/sangwon0724/Devlog)
+
+### 스크린샷
+
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/01.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/02.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/03.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/04.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/05.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/06.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/07.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/08.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/09.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/10.png"/>

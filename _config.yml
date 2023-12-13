@@ -37,6 +37,7 @@ twitter:
   #username: twitter_username            # change to your twitter username
 
 post_img_root: '/assets/img/posts'
+portfolio_img_root: '/assets/img/portfolio'
 
 social:
   # Change to your full name.
