@@ -53,20 +53,20 @@ categories: Group&nbsp;:&nbsp;Portfolio Student
 
 ### 스크린샷
 
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/01.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/02.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/03.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/04.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/05.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/06.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/07.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/08.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/09.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/10.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/11.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/12.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/13.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/14.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/15.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/16.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/17.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/01.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/02.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/03.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/04.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/05.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/06.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/07.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/08.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/09.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/10.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/11.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/12.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/13.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/14.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/15.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/16.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step/17.JPG"/>

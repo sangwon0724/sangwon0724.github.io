@@ -52,13 +52,13 @@ Summer-note같은 외부 기능들을 사용하면서 역시 개발할때는 모
 
 ### 스크린샷
 
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/01.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/02.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/03.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/04.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/05.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/06.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/07.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/08.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/09.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/10.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/01.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/02.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/03.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/04.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/05.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/06.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/07.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/08.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/09.JPG"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Devlog/10.JPG"/>
