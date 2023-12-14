@@ -1,19 +1,15 @@
 ---
 layout: post
-title:  "java 01"
+title:  "클래스"
 date:   2023-12-16 09:00:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 생성자
 
-Jekyll requires blog post files to be named according to the following format:
+### this
 
-`YEAR-MONTH-DAY-title.MARKUP`
-
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
+### 접근 제어자
 
 {% highlight java %}
 {% endhighlight %}
