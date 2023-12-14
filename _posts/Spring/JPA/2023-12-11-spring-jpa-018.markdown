@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "로그 출력하기"
+date:   2023-12-11 22:49:00 +0900
+categories: Group&nbsp;:&nbsp;Spring JPA
+---
+
+### 
+
+{% highlight java %}
+{% endhighlight %}
