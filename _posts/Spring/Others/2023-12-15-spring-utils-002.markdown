@@ -1,0 +1,47 @@
+---
+layout: post
+title:  "썸네일 생성"
+date:   2023-12-15 01:16:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Others
+---
+
+### 데이터 속에서 추출하는 방식
+
+{% highlight java %}
+//System.out.println(matcher.group(0)); //이미지 태그 자체를 출력
+//System.out.println(matcher.group(1)); //이미지 태그의 src만 출력
+
+public List<HashMap<String, Object>> setThumbnail (List<HashMap<String, Object>> mapList){
+    for (HashMap<String, Object> map : mapList) {
+        String text = map.get("content").toString(); //게시글의 내용 가져오기
+        Pattern pattern = Pattern.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>"); //img 태그 src 추출 정규표현식
+        Matcher matcher = pattern.matcher(text);
+
+        String thumbnail_text =  "";
+
+        //썸네일을 한 장만 만들기
+        if(matcher.find()){
+            thumbnail_text = matcher.group(1);
+        }
+        /*
+            <<< 썸네일 여러 장 만들기 >>>
+        
+            String[] thumbnail_array;
+
+            //split을 위한 연결 문자 추가
+            while(matcher.find()){
+                thumbnail_text = thumbnail_text + matcher.group(1) + "_";
+            }
+            
+            //배열 만들기
+            thumbnail_array = thumbnail_text.split("_");
+            
+            map.put("thumbnail", thumbnail_array); //map에 썸네일 배열 추가 (멀티 썸네일용)
+        */
+        
+        map.put("thumbnail", thumbnail_text); //map에 썸네일 추가 (싱글 썸네일용)
+    }
+    
+    return mapList;
+} //단일용 종료
+{% endhighlight %}

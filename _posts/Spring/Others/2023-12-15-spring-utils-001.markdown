@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "파일 전송 (한글 파일명 깨짐 방지)"
+date:   2023-12-15 01:15:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Others
+---
+
+### 소스 코드
+
+{% highlight java %}
+public String fileUpload(MultipartHttpServletRequest request, String uploadRoot, String fileName) throws Exception {
+    MultipartFile mf = request.getFile(fileName); //ajax에서 이름을 주었던 대로 MultipartFile 객체에 저장
+    
+    String originalFileName = new String(mf.getOriginalFilename().getBytes("8859_1"),"utf-8"); //원본 파일명, 한글깨짐방지
+    String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
+    String savedFileName = UUID.randomUUID() + extension;   //저장될 파일 명
+    
+    try {
+        mf.transferTo(new File(uploadRoot + savedFileName)); //InputStream를 사용하지 않고 쉽게 저장하는 방법
+    } catch (IllegalStateException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    
+    return savedFileName;
+}
+{% endhighlight %}

@@ -1,0 +1,29 @@
+---
+layout: post
+title:  "폴더 관리"
+date:   2023-12-15 01:17:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Others
+---
+
+### 폴더 존재 여부 확인 및 생성
+
+{% highlight java %}
+public void checkFolder(String root) {
+    //폴더 존재 여부 확인
+    File Folder = new File(root); //필요한 경로에 폴더가 존재 하는 지 확인용 (확인 이유 : MultipartFile.transferTo 메소드는 해당 경로에 폴더가 없으면 오류가 발생한다.)
+    
+    // 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
+    if (!Folder.exists()) {
+        try{
+            Folder.mkdirs(); //폴더 생성합니다.
+            System.out.println("폴더가 생성되었습니다.");
+        } 
+        catch(Exception e){
+            e.getStackTrace();
+        }        
+    }
+    else {
+        System.out.println("이미 폴더가 생성되어 있습니다.");
+    }
+}
+{% endhighlight %}
