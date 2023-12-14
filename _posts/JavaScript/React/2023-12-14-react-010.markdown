@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "Firebase 연동하기"
+date:   2023-12-14 14:47:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript React
+---
+
+### 연동 방법
+
+1. 추가하기 버튼 중에서 웹 버튼을 클릭한다. (&lt;/> 모양 아이콘)
+2. 웹 앱의 이름을 입력하고 앱 등록하기를 클릭한다.
+3. 터미널에서 npm install --save firebase를 실행한다.
+4. firebase를 위한 js 파일을 만들어서 앱 등록시 제공하는 API 코드 중에서 최하단의 script 태그 안의 내용을 복붙한다.
+5. import * as firebase from "firebase/app";를 방금 전의 파일에 추가한다.
+6. 필요한 경우에만 firebase.initializeApp(firebaseConfig); 앞에 export default를 추가한다.
+
+- 참고 : https://firebase.google.com/docs/web/setup
