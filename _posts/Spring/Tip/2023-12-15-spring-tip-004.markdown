@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "이클립스 관련 설정"
+date:   2023-12-15 01:30:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Tip
+---
+
+### 이클립스의 패키지 목록을 트리 구조로 보기
+
+1. Project Explorer 패널 상단의 ▽ 버튼 클릭하기
+2. "Package Presentation" 메뉴의 "Hierarchical" 선택하기
+
+### Tab 대신에 Space 4칸이 사용되도록 설정하기
+
+1. Eclipse 최상단의 Windows 메뉴의 Preferences 메뉴 선택
+2. General → Editors → Text Editor 선택
+3. tab width 를 확인한 후에  Insert spaces for tabs 체크
+4. OK 클릭
+5. 적용 여부 확인

@@ -1,0 +1,43 @@
+---
+layout: post
+title:  "깃허브와 연동하기"
+date:   2023-12-15 01:25:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Tip
+---
+
+### repository 생성 및 프로젝트 연동
+
+1. 깃허브 홈페이지 들어가서 로그인
+2. repository 생성
+3. code 버튼 클릭 → 해당 repository의 주소 복사
+4. 이클립스 최상단의 Window → Show View → Other 클릭
+5. git을 검색 →  Git Repositories 선택
+6. Clone a Git repository 선택
+7. 아까 복사한 repository의 url과 자신의 깃허브 ID/PassWord를 입력 → Next 클릭
+8. 다시 한번 Next 클릭
+9. Git 저장소를 지정 → Finish 클릭
+10. 연결하려는 프로젝트 우클릭 → Team → Share Project → 클릭
+11. 방금 이클립스에 연결했던 repository 선택 → Finish 클릭
+
+### 토큰 생성하기
+
+1. 깃허브 홈페이지 들어가서 로그인
+2. 자신의 프로필을 클릭 → Settings 클릭
+3. Developer settings 클릭
+4. Personal access tokens 클릭 → Generate new token 클릭
+5. 토큰명을 입력 → 토큰 유효 기간 설정→ 토큰 허용 범위를 체크 → Generate token 버튼 클릭
+  - 주사용 토큰 범위 : repo, admin:org, admin:repo_hook, user, write:discussion, write:enterprise, write:gpg_key
+6. 출력된 토큰 코드를 이클립스에서 깃허브 로그인시에 비밀번호에 입력한다.
+  - 생성된 토큰 코드는 나중에 다시 볼 수 없기 때문에 반드시 따로 저장해놔야된다.
+
+>깃허브에서 2021년 8월 13일 기준으로 ID/PassWord 방식에서 ID/Token 방식으로 변경했다.
+
+> 비밀번호를 토큰으로 변경하고 싶을 때는  
+>Git Repositories 메뉴에서 해당하는 Repository의 Remotes의 origin 내부의 메뉴들 중에서  
+>아무거나 우클릭은 한 다음에 Change Credentials...를 클릭한 후에 바꿔주면 된다.
+
+### 커밋하기
+
+1. 해당 프로젝트 우클릭 → Team → commit 클릭
+2. commit할 파일 선택 및 commit comment 입력
+3. commit 또는 commit and push 클릭

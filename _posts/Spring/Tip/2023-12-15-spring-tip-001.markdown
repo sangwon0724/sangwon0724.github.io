@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "작동 중인 포트 종료시키기"
+date:   2023-12-15 01:24:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Tip
+---
+
+1. cmd 실행
+2. netstat -a -n -o -p tcp을 실행하여 해당 포트의 pid를 확인한다.
+3. taskkill /f /pid [해당 pid]를 입력하여 포트를 종료시킨다.

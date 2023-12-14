@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "svn과 연동하기"
+date:   2023-12-15 01:28:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Tip
+---
+
+### 이클립스에서 svn 연동
+
+1. 최상단 Help 메뉴 → Eclipse Marketplace 선택
+2. svn 검색
+3. Subclipes를 선택 → Install 클릭
+4. Confirm 클릭 → 저작권 동의 선택 → Finish 클릭
+5. 도중에 나오는 팝업들은 Install anyway 클릭
+6. 설치 완료시 반영을 위해서 Restart Noew 클릭
+7. 최상단 Windows 메뉴 → Show View → Other 클릭
+8. SVN → SVN Repositories → Open
+9. SVN Repositories View로 이동
+10. Add SVN Repository 클릭 (SVN Repositories View 상단 탭의 최우측에 존재)
+11. SVN 서버의 URL 입력 → Finish 클릭
+12. 디지털 인증서 등장시 Accept Permanently 클릭 (= 영구 동의)
+13. SVN 서버에서 추가한 유저 정보의 Username과 Password 입력 → OK 클릭
+
+### Share Project
+
+1. SVN 저장소에 등록할 프로젝트 우클릭 → Team → Share Project
+2. SVN 선택 → Next 클릭
+3. Use existing repository location 선택 → 프로젝트를 올릴 SVN Repository 선택 → Next 클릭
+4. 폴더명 관련 옵션 선택 (주로 Use project name as folder name 옵션 사용) → Finish 클릭
+5. 최종 확인 팝업 등장 → Yes 클릭 (설정을 저장하고 싶다면 Remeber my decision을 선택한 후에 Yes를 누를 것)
+
+### commit
+
+1. SVN 저장소에 등록할 프로젝트 우클릭 → Commit 클릭
+2. 저장소에 올릴 파일 선택 → commit 내용에대한 comment 작성 → OK 클릭
+
+### checkout
+
+1. 최상단 Windows 메뉴 → Show View → Other 클릭
+2. SVN → SVN Repositories → Open
+3. SVN Repositories View로 이동
+4. 불러올 프로젝트가 저장되어있는 SVN Repository 선택 → 불러올 프로젝트 우클릭 → Find/Check Out As 클릭하기
+5. Check out as a project with the name specified 선택 → 원하는 프로젝트명 작성 → Next 클릭
+6. workspace 지정
+  - workspace를 지금과 다른 폴더로 변경하고 싶은 경우
+    - Browse 클릭 → 폴더 선택 → Finish 클릭
+  - workspace를 지금과 같은 폴더로 하고 싶은 경우
+    - Finish 클릭
