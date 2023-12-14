@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "eGovFramework 편의기능"
+date:   2023-12-15 00:58:00 +0900
+categories: Group&nbsp;:&nbsp;Spring eGov&nbsp;Framework
+---
+
+### 편의기능 설치
+
+1. perspective가 eGovFrame인지 확인
+2. 최상단 eGovFrame 메뉴 → Configuration → Customize Development Tool 클릭
+3. Install Wizard에서 필요 기능을 선택 → Next 클릭
+
+### eGovFramework에서 제공하는 편의기능
+
+- eGovFrame AmaterasERD
+- eGovFrame AmaterasUML
+- eGovFrame CodeGen
+  - 구현도구의 UML 클래스 다이어그램을 사용한 코드 자동 생성
+  - XMI 파일을 이용한 코드 자동 생성
+  - 구현도구의 UML 클래스 다이어그램을 XMI 파일로 Export하는 기능
+- eGovFrame CodeGen Templates
+  - CRUD 프로그램 자동 생성 기능 (★)
+  - Configuration 자동 생성 기능
+  - 사용자 정의 템플릿 추가 기능
+- eGovFrame EclEmma
+- eGovFrame Help
+- eGovFrame RTE Distribution Tool
+- eGovFrame TestCase Generator Feature
+- eGovFrame TestCase Templates Feature
+- Spring IDE Web Flow Extension(optional)
+
+>※ CodeGen : Code Generation
+
+### eGovFrame CodeGen Templates
+
+- CRUD 프로그램 자동 생성 기능
+- 사용 방법
+  1. Project Explorer에서 코드를 생성할 프로젝트 선택
+  2. 최상단 Window 메뉴 → Show View → eGovFrame Templates
+  3. eGovFrame Templates View에서 eGovFrame Templates → CRUD → CRUD Program 선택
+  4. Data Source Explorer에서 연결된 Database의 테이블 선택 → Next 클릭
+  5. 필요한 리소스들을 선택한 후에 필요한 정보 입력 → Finish 클릭
+
+  >※ 만들어지는 파일 : XML (SQL), JAVA (VO, DAO, Service, ServiceImpl, Controller), Jsp (기본 화면)
+  >※ 테이블명이 User일때 UserVO, UserService, UserController처럼 만들어진다.

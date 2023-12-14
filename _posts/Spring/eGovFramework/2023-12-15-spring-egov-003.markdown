@@ -1,0 +1,91 @@
+---
+layout: post
+title:  "개발 환경 설정"
+date:   2023-12-15 00:53:00 +0900
+categories: Group&nbsp;:&nbsp;Spring eGov&nbsp;Framework
+---
+
+### 설치
+
+1. https://www.egovframe.go.kr/home/main.do로 이동
+2. 상단의 "다운로드" 메뉴에서 "개발환경" 메뉴 클릭
+3. 운영체제에 맞는 exe 파일 다운로드
+4. exe 파일 실행
+5. 설치경로를 지정하고 Extract를 클릭
+6. 설치 폴더 내부의 eclipse 폴더에 eclipse.exe 파일이 있는지 확인
+7. eclipse.exe를 실행한 후에 우측 상단의 Perspective가 eGovFrame으로 되어있는지 확인
+>※ Perspective가 eGovFrame이 아닐 경우 Perspective 좌측에 있는 아이콘을 클릭하여 “Other… > Open Perspective > eGovFrame”을 선택
+
+### 프로젝트 생성
+
+1. File > New 또는 Ctrl+N을 통해서 새로작성 마법사 실행
+2. eGovFrame > eGovFrame Web Project을 선택하고 Next를 클릭
+3. 프로젝트명과 Maven 설정에 필요한 값들을 입력하고 Next를 클릭
+  1. Project name : 프로젝트명
+  2.  Target Runtime : 실행 환경 (Tomcat 서버의 버전),
+    - Tomcat 서버는 나중에 연결해도 되기 때문에 None으로 설정해도 크게 상관없다.
+  3. Dynamic Web Moduel version : 지원하는 servlet api version
+    -  Tomcat 서버 버전에 맞는 Servlet Spec 버전 : <a href="http://tomcat.apache.org/whichversion.html" target="_blank">참고</a>
+    - 알맞지 않은 버전 사용시 환상적인 오류 축제 발생
+  4. Maven Setting - Group Id : 현재 프로젝트의 최상위 패키지명
+  5. Maven Setting - Artifact Id : 프로젝트명
+  6. Maven Setting - Version : 현재 프로젝트의 릴리스 버전
+4. 예제 소스 파일 생성 여부를 체크하고 Finish를 클릭
+5. 프로젝트 생성시 설정한 Dynamic Web Moduel version이 web.xml에 명시되어있는  
+Dynamic Web Moduel version과 맞지 않을 경우가 발생할 수도 있는데,  
+이 때는 web.xml의 &lt;web-app> 태그에 가서 version 관련 속성들을  
+모두 프로젝트 생성시 설정했던 Dynamic Web Moduel version와 동일하게 바꿔주면 된다.
+6. Alt + F5를 누른 다음에 Maven Update를 해준다.
+
+>※ 기본 양식 : com.[회사명].[프로젝트명]
+>※ 예시) 서비스 url : solution.company.com => Group Id : com.company / Artifact Id : solution
+
+### 샘플코드 제거
+
+1. src/main/java에 있는 egovframework.example.sample 패키지 삭제
+2. src/main/resource/egovframework/sqlmap/example에 있는 mappers와 sample 폴더 삭제 (sql-mapper-config.xml은 수정시 사용가능)
+3. src/main/webapp/WEB-INF/jsp에 있는 egovframework 폴더 삭제
+4. src/main/resource/egovframework/spring에 있는 context-mapper.xml을 상황에 맞게 수정
+5. src/main/resource/egovframework/sqlmap/example에 있는 sql-mapper-config.xml에서 삭제한 sample 패키지의 vo를 쓰는 코드를 삭제
+6. src/main/resource/egovframework/spring에 있는 context-sqlMap.xml의 내용물을 모두 삭제
+7. src/main/webapp/WEB-INF/config/egovframework/springmvc에 있는 dispathcer-servlet.xml에서 prefix 부분의 sample 파트 삭제
+
+### 컴포넌트 설정
+
+1. 생성 마법사 열기
+  1. 최상단 File 메뉴 → New → eGovFrame Common Component
+  2. Ctrl + N → eGovFrame Common Component
+  3. 최상단 eGovFrame 메뉴 → Implementation → Add eGovFrame Common Component (perspective가 eGovFrame일때만 가능)
+2. 컴포넌트를 설정할 eGovFrame 기반의 프로젝트 선택
+3. 필요한 컴포넌트 선택 → Next
+4. 선택한 컴포넌트를 확인하고 테이블 설치여부를 선택 (※ MySql, Oracle, Tibero, Altibase만 지원, 이외의 DB는 커스텀 필요)
+5. 컴포넌트 관련 테이블 설정
+  - 기본 설치
+    1. Finish 클릭
+  - 사용자 지정
+    1. Data Source Explorer에 등록한 사용자의 DB 중 하나를 선택 → Connection Test 클릭
+    2. Connection Test 성공 → Create Table 클릭
+    3. Finish 클릭
+
+>※ perspective가 java EE가 아닌 eGovFrame인 상태여야 한다.
+>※ 컴포넌트 설치시 에러가 발생하는데 이 때는 pom.xml에서 삭제한다.
+
+### Database 설정 및 관리 (Data Source Explorer)
+
+1. 최상단 Window 메뉴 → Show View → Other → Data Management → Data Source Explorer 선택
+2. Data Source Explorer 영역으로 이동
+3. Database Connections 우클릭 → New 클릭
+4. Drivers 콤보박스 옆의 추가 버튼 클릭
+5. 사용할 DBMS의 종류 선택 및 이름 지정
+6. DB에 접속할 Driver 선택
+7. JAR List에 6번에서 선택한 Driver에 대한 .jar을 연결 (다운로드 필요) → OK
+8. Properties에 필요한 정보 입력 → Test Connection 클릭
+9. 8번의 결과로 "Ping succeeded!"가 출력 → Finish 클릭
+
+>※ Data Source Explorer는 이름그대로 탐색기여서 내용물을 보는 기능만 있고 테이블이나 뷰를 만드는 등의 기능은 없다.
+
+### 참고
+
+- 설치 및 프로젝트 생성 가이드 : https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%EA%B0%80%EC%9D%B4%EB%93%9C
+- 공통 컴포넌트 적용 가이드 : https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:com:v3.10:init
+- 공통 컴포넌트에서 사용하는 Database 정보 : https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:com:v3.8:init_table

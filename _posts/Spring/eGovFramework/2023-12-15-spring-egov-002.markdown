@@ -1,0 +1,43 @@
+---
+layout: post
+title:  "표준 프레임워크 적용 가이드"
+date:   2023-12-15 00:49:00 +0900
+categories: Group&nbsp;:&nbsp;Spring eGov&nbsp;Framework
+---
+
+### 아키텍처 규칙
+
+- Annotation 기반 Spring MVC 준수
+  - @Controller 및 @RequestMapping을 통한 URL mapping 활용 (View 부분과 model(business logic 및 data) 부분을 controller를 통해 분리)
+- Annotation 기반 layered architecture 준수
+  - 화면처리, 업무처리, 데이터처리에 부분에 대하여 각각 @Controller, @Service, @Repository 활용 (인접 layer간 호출만 가능)
+- 업무처리를 담당하는 서비스 클래스(@Service)는 EgovAbstractServiceImpl 또는 AbstractServiceImpl을 확장하고  
+업무에 대한 특정 인터페이스를 구현하여야 함
+- 데이터처리를 담당하는 DAO 클래스(@Repository)는 EgovAbstractDAO(iBatis) 또는 EgovAbstractMapper(MyBatis)를 상속하여야 함  (Hibernate/JPA를 적용한 경우는 예외)
+
+### 데이터 처리 규칙
+
+- Data Access 서비스 준수
+  - 데이터처리 부분은 iBatis 또는 MyBatis 활용
+    - iBatis : SqlMapClientDaoSupport를 상속한 EgovAbstractDAO 활용
+    - MyBatis : SqlSessionDaoSupport를 상속한 EgovAbstractMapper 활용
+    >MyBatis의 경우 Mapper interface 방식으로 사용가능(권장)하며, 이 경우는 interface 상에 @Mapper를 지정하여 사용되어야 함
+- ORM 서비스 준수
+  - 데이터처리 부분은 Hibernate/JPA 적용
+    - DAO에서 SessionFactory 또는 EntityManagerFactory 설정을 통해 HibernateTemplate/JpaTemplate를 활용
+    - HibernateDaoSupport/JpaDaoSupport를 상속하여 활용
+- Data 서비스 준수
+  - 데이터 처리 부분은 다양한 persistence store(Big Data, NoSQL 등)를 지원하기 위한 Spring Data 적용  
+  (DAO에서 CrudRepository를 상속하는 interface 방식의 Repository를 활용)
+
+### 활용 및 확장 규칙
+
+- 표준프레임워크 실행환경 준수
+  - 표준프레임워크 실행환경은 적극적으로 활용되어야 함 (실행환경 부분 임의 변경 금지)
+- 확장 규칙
+  - 업무 클래스는 egovframework.rte 패키지 내에 정의될 수 없음
+
+### 기타
+
+- 이외에 개발환경, 운영환경 및 공통컴포넌트 부분은 선택적으로 적용 가능하며, 임의 변경 및 확장 가능함
+- UI부분에 RIA(Rich Internet Appliation)가 적용되는 경우는 UI Adaptor 또는 RESTful 방식을 적용 활용해야 함
