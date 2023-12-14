@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "다른 페이지 부르기"
+date:   2023-12-14 13:21:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript jQuery
+---
+
+### 사용 예시
+
+{% highlight javascript %}
+    $("#note_body").load("부를 html 파일");
+{% endhighlight %}

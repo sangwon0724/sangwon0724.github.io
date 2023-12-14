@@ -7,7 +7,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 ### 함수와 this  
 - this는 함수 내에서 함수 호출 맥락(context)를 가리킨다.  
-- 맥락이란 것은 상황에 따라 달라지기 떄문에,  
+- 맥락이란 것은 상황에 따라 달라지기 때문에,  
 함수를 어떻게 호출하느냐에 따라서 this가 가리키는 대상이 달라진다.
 
 {% highlight javascript %}

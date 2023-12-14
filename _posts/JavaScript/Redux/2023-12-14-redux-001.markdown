@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "Redux에 대하여"
+date:   2023-12-14 10:46:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript Redux
+---
+
+### 리덕스란 무엇인가?
+
+- Javascript Application들의 상태를 관리하는 방법이다.
+- Redux는 Javascript가 사용되는 모든 언어에서 사용할 수 있다.
+
+### 리덕스가 필요한 이유
+
+- Javascript Application들의 상태를 관리하는 방법이다.
+- Redux는 Javascript가 사용되는 모든 언어에서 사용할 수 있다.
+
+### 설치방법
+- 터미널에 npm add redux를 입력한다.
+
+### 특징
+- redux는 값을 삭제하는 것이 아닌 수정하는 작업을 한다.

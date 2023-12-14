@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "jQuery에 대하여"
+date:   2023-12-14 11:38:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript jQuery
+---
+
+### jQuery란?
+
+- JavaScript의 DOM을 내부에 감추고, 웹 페이지를 보다 쉽게 조작할 수 있도록 해 주는 라이브러리
+
+### 라이브러리란?
+
+- 자주 사용하는 로직을 재사용할 수 있도록 고안된 소프트웨어
+
+### 사용 방법
+
+1. Google에 jQuery CDN를 입력해서 jQuery 공식 홈페이지로 이동한다.
+2. 사용할 jQuery 버전에 맞는 코드를 클릭해서 확인한다. 
+    - uncompressed 버전 : 압축되지 않은 버전 (공백, 줄바꿈, 들여쓰기 등이 되어있음)
+    - minified 버전 : 압축되어 있는 버전 (공백, 줄바꿈, 들여쓰기 등을 최대한 적게 사용하여 용량 최소화함)
+3. 해당 코드를 복사해서 jQuery를 사용할 html 파일에 명시해준다.
+{% highlight html %}
+<script
+    src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous">
+</script>
+{% endhighlight %}
+{:start="4"}
+4. 테스트 해보기
+{% highlight javascript %}
+//body에 'Hello World' 추가
+jQuery(document).ready(function($){
+    $('body').prepend('<h1>Hello World</h1>');
+});
+{% endhighlight %}

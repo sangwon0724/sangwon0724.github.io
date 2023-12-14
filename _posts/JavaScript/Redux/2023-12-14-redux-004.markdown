@@ -1,0 +1,148 @@
+---
+layout: post
+title:  "Redux Toolkit"
+date:   2023-12-14 11:23:00 +0900
+categories: Group&nbsp;:&nbsp;JavaScript Redux
+---
+
+### Redux Toolkit이란?
+
+- 기존의 redux 사용자들이 불편하게 여겼던 Action이나 Action Creator 등등 많은 양의 코드를 사용해야 했기 때문에  
+Redux Communuty에서 제안한 상용구 코드(Boilerplate Code)를 적게 작성하여 효율적인 코드 작성을 위해 만들어진 package
+
+### 설치 방법
+
+- 해당 프로젝트의 터미널에 npm add @reduxjs/toolkit를 입력한다.
+
+### createAction
+
+1. import {createAction} from "@reduxjs/toolkit";을 통해서 import한다.
+2. const 변수명 = createAction("문자열");처럼 사용한다.
+{% highlight javascript %}
+//s:기존
+const ADD = "ADD";
+const addToDo = text => {
+  return {
+    type: ADD,
+    text
+  };
+};
+
+//switch문
+case ADD:
+    return [{ text: action.text, id: Date.now() }, ...state];
+//e:기존
+
+//★ 값이 payload라는 속성을 통해서 전달된다.
+//s:변경
+const addToDo = createAction("ADD");
+
+//switch문
+case addToDo.type:
+    return [{ text: action.payload, id: Date.now() }, ...state];
+//e:변경
+{% endhighlight %}
+
+### createReducer
+
+1. mport {createReducer} from "@reduxjs/toolkit";을 통해서 import한다.
+2. 아래 예시처럼 사용한다.
+{% highlight javascript %}
+const reducer =  createReducer([], {
+    [addToDo]: (state, action) => { 실행내용; }
+});
+{% endhighlight %}
+
+{% highlight javascript %}
+//s:기존
+const reducer = (state = [], action) => {
+    switch (action.type) {
+    case addToDo.type:
+        return [{ text: action.payload, id: Date.now() }, ...state];
+    case deleteToDo.type:
+        return state.filter(toDo => toDo.id !== action.payload);
+    default:
+        return state;
+    }
+};
+//e:기존
+
+//s:변경
+const reducer = createReducer([], {
+    [addToDo]: (state, action) => {
+        state.push({ text: action.payload, id: Date.now() });
+    },
+    [deleteToDo]: (state, action) => {
+        state.filter(toDo => toDo.id !== action.payload)
+    }
+});
+//e:변경
+{% endhighlight %}
+
+### configureStore
+
+- configureStore : Redux 개발자 도구 활성화 (자동)
+- 사용 방법
+1. import {configureStore} from "@reduxjs/toolkit";을 통해서 import한다.
+2. const store변수명 = configureStore({ reducer함수명 });처럼 사용한다.
+{% highlight javascript %}
+//기존
+const store = createStore(reducer);
+
+//변경
+const store = configureStore({ reducer });
+{% endhighlight %}
+- Redux 개발자 도구 활성화하는 것에 configureStore가 필수는 아니다.
+
+### createSlice
+
+1. import {createSlice} from "@reduxjs/toolkit";을 통해서 import한다.
+2. 아래 예시처럼 사용한다.
+
+{% highlight javascript %}
+//s:기존
+import { createAction, createReducer, configureStore } from "@reduxjs/toolkit";
+
+//action
+const addToDo = createAction("ADD");
+const deleteToDo = createAction("DELETE");
+
+//reducer
+const reducer = createReducer([], {
+[addToDo]: (state, action) => {
+    state.push({ text: action.payload, id: Date.now() });
+},
+[deleteToDo]: (state, action) =>
+    state.filter(toDo => toDo.id !== action.payload)
+});
+
+//createStore
+const store = configureStore({ reducer });
+
+export const actionCreators = {
+    addToDo,
+    deleteToDo
+};
+
+export default store;
+//e:기존
+
+//s:변경
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+
+const toDos = createSlice({
+    name: "toDosReducer",
+    initialState: [],
+    reducers: {
+    add: (state, action) => {
+        state.push({ text: action.payload, id: Date.now() });
+    },
+    remove: (state, action) => state.filter(toDo => toDo.id !== action.payload)
+    }
+});
+
+export const { add, remove } = toDos.actions;
+
+export default configureStore({ reducer: toDos.reducer });
+//e:변경
+{% endhighlight %}

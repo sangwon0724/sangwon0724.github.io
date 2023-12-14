@@ -53,7 +53,7 @@ categories: Group&nbsp;:&nbsp;Spring JPA
 
     em.remove(member); //객체를 삭제한 상태 (삭제) 
     
-    //member를 영속성 컨텍스트에서 분리시켰기 떄문에 SELECT 쿼리가 발생한다.
+    //member를 영속성 컨텍스트에서 분리시켰기 때문에 SELECT 쿼리가 발생한다.
     Member findMember = em.find(Member.class, 3L);
 {% endhighlight %}
 
