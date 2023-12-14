@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "maven install 에러"
+date:   2023-12-15 01:20:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Error
+---
+
+1. pom.xml 오픈
+2. 전체 내용 Ctrl + X 후 저장
+3. Ctrl + V 후 다시 저장
+4. maven intall 재실행

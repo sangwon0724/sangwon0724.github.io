@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "@RequestBody를 추가하였지만 Ajax로 보낸 데이터가 넘어오지 않던 상황"
+date:   2023-12-15 01:21:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Error
+---
+
+### 원인
+
+- @RequestBody의 패키지를 io.swagger.v3.oas.annotations.parameters.RequestBody로 설정
+  
+### 해결
+
+- @RequestBody의 패키지를 org.springframework.web.bind.annotation.RequestBody로 수정

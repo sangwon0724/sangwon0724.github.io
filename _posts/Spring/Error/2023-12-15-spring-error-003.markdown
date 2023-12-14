@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "JPA와 h2 연동 중에 Error creating bean with name 'entityManagerFactory' ~ 발생"
+date:   2023-12-15 01:22:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Error
+---
+
+### 원인
+
+- jdbc 관련 dependency의 부재
+
+### 해결
+
+- pom.xml에 dependency 추가
+  {% highlight xml %}
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+  </dependency>
+  {% endhighlight %}
