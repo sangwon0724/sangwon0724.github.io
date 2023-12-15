@@ -1,19 +1,98 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 15:30:00 +0900
+title:  "JUnit"
+date:   2023-12-15 16:17:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### JUnit이란?
 
-Jekyll requires blog post files to be named according to the following format:
+- Java 기반의 단위 테스트를 위한 프레임워크
+- 어노테이션 기반으로 테스트를 지원한다.
+- Assert를 통하여 (예상, 실제)를 통해 검증한다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 관련 개념
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- TDD (Test-driven Development)
+    - 코드의 유지 보수 및 운영 환경에서의 에러를 미리 방지하기 위해서 사용하는 단위 검증 테스트 프레임워크
+- 단위 테스트
+    - 작성한 코드가 기대하는 대로 동작하는지 검증하는 절차
 
-Jekyll also offers powerful support for code snippets:
+### JUnit 특징
 
-{% highlight java %}
-{% endhighlight %}
+- JUnit에서는 각각의 테스트가 서로 영향을 주지 않고 독립적으로 실행되는 것을 지향한다.
+
+### 설치 방법
+
+- xml
+    {% highlight xml %}
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>3.2.0</version>
+        <scope>test</scope>
+    </dependency>
+    {% endhighlight %}
+- gradle
+    {% highlight gradle %}
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.0'
+    {% endhighlight %}
+
+### Junit 제공 어노테이션
+
+- @Test
+    - 테스트를 수행하는 메소드를 지정하는 어노테이션
+    - @Test 단위 마다 필요한 객체를 생성해 지원해준다. 
+- @Ignore
+    - 테스트를 실행하지 않도록 해준다.
+    - 메소드는 남겨두되 테스트에 포함되지 않도록 하려면 @Ignore 어노테이션을 추가한다.
+- @Before / @After
+    - 테스트 메소드가 실행되기 전/후로 항상 실행되는 메소드를 지정한다.
+- @BeforeClass / @AfterClass
+    - 해당 클래스에서 각각 한번만 수행되는 메소드를 지정한다.
+    - 테스트 메소드의 갯수와 상관없이 반드시 한번만 실행된다.
+
+### Junit 기본 사용법
+
+1. src/test/java 폴더에 원하는 테스트할 클래스에 대한 클래스를 만든다.  
+    - 관례 : 만약 테스트할 클래스가 sample.class이면 sampleTest.class를 만든다.
+2. 테스트할 메소드를 만들고 해당 메소드에 @Test 어노테이션을 추가한다.
+3. 해당 메소드 안에서 확인해야할 값은 System.out.println()같은 걸로 출력하는 것이 아니라  
+Assertions.assertEquals(로직을 통해 나온 값, 정상작동시 나와야할 값);처럼 코드를 작성하여 테스트한다.
+
+### spring-boot-starter-test의 하위 라이브러리
+
+● JUnit 5 (빈티지 엔진 포함, 이유 : JUnit 4와의 호환성)
+● 스프링 테스트 및 스프링 부트 테스트
+● AssertJ
+● Hamcrest
+● Mockito
+● JSONassert
+● JsonPath
+
+### spring-boot-starter-test 제공 어노테이션
+
+● @SpringBootTest
+● @WebMvcTest
+● @DataJpaTest
+● @RestClientTest
+● @JsonTest
+● @WebFluxTest
+● @JooqTest
+● @DataLdapTest
+● @DataNeo4jTest
+● @DataRedisTest
+
+### src/test/java 폴더가 보이지 않는 오류 해결법
+
+1. 해당 프로젝트 우클릭
+2. Properties 클릭
+3. Java Build Path 메뉴 선택
+4. Order And Export 항목 선택
+5. src/test/java 폴더를 최상단으로 이동 후 저장
+6. src/test/java 폴더의 위치를 정상적으로 이동 후 저장
+
+### Jacoco
+
+● Java 코드의 코드 커버리지를 체크하는 라이브러리
+● 결과를 html, xml, csv로 확인가능하다.

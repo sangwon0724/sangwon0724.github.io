@@ -33,6 +33,154 @@ URI uri = UriComponentsBuilder
 
 ### RestTemplate를 통한 서버 호출 - GET 방식
 
+- getForObject
+    - GET 요청을 보내고 Java Object로 매핑받아서 반환받음
+    - 장점
+        - 각각의 필드의 대한 값을 개별적으로 볼 수 있다.
+    - 기본 형태
+        - getForObject(URI, ResponseType)
+    - 사용 예시
+        {% highlight java %}
+        RestTemplate restTemplate = new RestTemplate();
+        UserVO result = restTemplate.getForObject(uri, UserVO.class);
+        return result;
+        {% endhighlight %}
+- getForEntity
+    - GET 요청을 보내고 ResponseEntity로 반환받음
+    - 장점
+        - HttpHeader나 HttpBody나 HttpStatus같은 정보들을 볼 수 있음
+    - 기본 형태
+        - getForEntity(URI, ResponseType)
+    - 사용 예시
+        {% highlight java %}
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserVO> result = restTemplate.getForEntity(uri, UserVO.class);
+        return result.getBody();
+        {% endhighlight %}
 
-{% highlight java %}
-{% endhighlight %}
+### RestTemplate를 통한 서버 호출 - POST 방식
+
+- postForLocation
+    - POST 요청을 보내고 java.net.URI 로 반환받음
+    - 기본 형태
+        - postForLocation(URI, Request Object)
+        - 결과값 : URI
+    - 사용 예시
+        {% highlight java %}
+        UserVO user
+            = UserVO.builder()
+            .name("HongGilDong").age(25).email("hong@naver.com")
+            .birthday("19970229").phoneNumber("0001112222")
+            .build();
+        RestTemplate restTemplate = new RestTemplate();
+        URI result = restTemplate.postForLocation(uri, user);
+        return result;
+        {% endhighlight %}
+- postForObject
+    - POST 요청을 보내고 Java Object로 매핑받아서 반환받음
+    - 장점
+        - 각각의 필드의 대한 값을 개별적으로 볼 수 있다.
+    - 기본 형태
+        - postForObject(URI, Request Object, ResponseType)
+    - 사용 예시
+        {% highlight java %}
+        UserVO user
+            = UserVO.builder()
+            .name("HongGilDong").age(25).email("hong@naver.com")
+            .birthday("19970229").phoneNumber("0001112222")
+            .build();
+        RestTemplate restTemplate = new RestTemplate();
+        UserVO result = restTemplate.postForObject(uri, user, UserVO.class);
+        return result;
+        {% endhighlight %}
+- postForEntity
+    - POST 요청을 보내고 ResponseEntity로로 매핑받아서 반환받음
+        - 장점
+            - HttpHeader나 HttpBody나 HttpStatus같은 정보들을 볼 수 있음
+    - 기본 형태
+        - postForEntity(URI, Request Object, ResponseType)
+    - 사용 예시
+        {% highlight java %}
+        UserVO user
+            = UserVO.builder()
+            .name("HongGilDong").age(25).email("hong@naver.com")
+            .birthday("19970229").phoneNumber("0001112222")
+            .build();
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserVO> result = restTemplate.postForEntity(uri, user, UserVO.class);
+        return result.getBody();
+        {% endhighlight %}
+
+### RestTemplate를 통한 서버 호출 - PUT 방식
+
+- put
+    - POST 요청을 보내고 java.net.URI 로 반환받음
+    - 기본 형태
+        - put(URI, Request Object)
+    - 사용 예시
+        {% highlight java %}
+        UserVO user
+            = UserVO.builder()
+            .name("HongGilDong").age(25).email("hong@naver.com")
+            .birthday("19970229").phoneNumber("0003334444")
+            .build();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.put(uri, user);
+        {% endhighlight %}
+
+### RestTemplate를 통한 서버 호출 - DELETE 방식
+
+- delete
+    - POST 요청을 보내고 java.net.URI 로 반환받음
+    - 기본 형태
+        - delete(URI)
+    - 사용 예시
+        {% highlight java %}
+        //uri에 .queryParam("name", "HongGilDong") 추가
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(uri);
+        {% endhighlight %}
+
+### RestTemplate를 통한 서버 호출 - HTTP Method에 상관없이 호출하기
+
+- exchange
+    - POST 요청을 보내고 java.net.URI 로 반환받음
+    - 장점
+        - Http Header를 수정할 수 있다.
+    - 기본 형태
+        - exchange(URI, HttpMethod, HttpEntity, responseType)
+        - exchange(RequestEntity, responseType)
+        >※ RequestEntity와 ResponseEntity가 HttpEntity Class를 상속받고 있다.
+    - 사용 예시 1)
+        {% highlight java %}
+        UserVO user
+            = UserVO.builder()
+            .name("HongGilDong").age(25).email("hong@naver.com")
+            .birthday("19970229").phoneNumber("0001112222")
+            .build();
+        RequestEntity<UserVO> request = RequestEntity
+                .post(uri) //요청할 API 서버의 주소 설정
+                .contentType(MediaType.APPLICATION_JSON) //contentType 설정, org.springframework.http.MediaType
+                .header("x-authorization","my-header") //헤더 설정
+                .body(user); //몸체 설정 (= 전달할 데이터)
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserVO> response = restTemplate.exchange(uri, HttpMethod.POST, request, UserVO.class); //org.springframework.core.ParameterizedTypeReference
+        {% endhighlight %}
+
+    - 사용 예시 2)
+        {% highlight java %}
+        UserVO user
+            = UserVO.builder()
+            .name("HongGilDong").age(25).email("hong@naver.com")
+            .birthday("19970229").phoneNumber("0001112222")
+            .build();
+        RequestEntity<UserVO> request = RequestEntity
+                .post(uri) //요청할 API 서버의 주소 설정
+                .contentType(MediaType.APPLICATION_JSON) //contentType 설정, org.springframework.http.MediaType
+                .header("x-authorization","my-header") //헤더 설정
+                .body(user); //몸체 설정 (= 전달할 데이터)
+        RestTemplate restTemplate = new RestTemplate();
+
+        //org.springframework.core.ParameterizedTypeReference
+        ResponseEntity<UserVO> response = restTemplate.exchange(request, new ParameterizedTypeReference<>(){});
+        {% endhighlight %}
