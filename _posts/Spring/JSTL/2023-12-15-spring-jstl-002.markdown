@@ -1,29 +1,213 @@
 ---
 layout: post
-title:  "핵심 문법"
-date:   2023-12-15 09:00:00 +0900
+title:  "기본 문법"
+date:   2023-12-15 09:52:00 +0900
 categories: Group&nbsp;:&nbsp;Spring JSTL
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### 사용 조건
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>을 jsp 파일 최상단에 작성
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 변수 출력
 
-Jekyll also offers powerful support for code snippets:
-
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+- 기본 형식
+  - value로 명시된 값이 출력된다.
+{% highlight xml %}
+<c:out value="HongGilDong"/>
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+- 변수 출력
+  - value에 넣은 변수명으로 된 값이 존재하면 해당 값을 출력한다.
+  - value의 값이 null인 경우 default로 명시된 값을 출력한다.
+{% highlight xml %}
+<c:out value="${name}" default="HongGilDong" />
+{% endhighlight %}
 
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+- 태그 처리
+  - escapeXml 속성 값
+    - true (default) : xml 및 html 태그를 문자열로 취급한다.
+    - false : xml 및 html 태그를 실제 동작하게 한다.
+{% highlight xml %}
+<c:out value="<b>강조할 문자열</b>" escapeXml="false" />
+{% endhighlight %}
+
+### 변수 설정
+    
+- 기본 형식
+  - var로 명시된 이름에 value로 지정한 값이 저장된다.
+{% highlight xml %}
+<c:set var="name" value="HongGilDong" />
+{% endhighlight %}
+
+- 값 변경
+  - 기존에 선언된 변수명으로 동일하게 선언을 하면 마지막에 선언된 변수값을 저장된다.
+{% highlight xml %}
+<c:set var="name" value="HongGilDong" />
+<c:set var="name" value="JeonWooChi" />
+{% endhighlight %}
+
+- scope 설정
+  - 정의
+    - 변수(속성)의 공유 범위(유효기간)
+  - 종류
+    - request
+      - 클라이언트가 서버에 요청하고 응답할때 까지의 생명주기 동안 객체들을 저장하고 유지한다.
+    - session
+      - 다중 페이지 요청시 사용자를 구별하기 위해 세션을 사용하는데 그 세션이 유지되는 동안 객체들을 저장하고 유지한다.
+    - application
+      - 어플리케이션의 생명주기와 같이 한다.
+      - 모든 클라이언트와 어플리케이션에서 접근이 가능하다.
+    - page (default)
+      - JSP 페이지와 같은 생명주기를 가진다.
+      - JSP 페이지가 생성될 때 자동으로 생성되며 다른페이지로 이동하면 사라진다
+{% highlight xml %}
+<c:set var="name" value="HongGilDong" scope="request" />
+{% endhighlight %}
+
+### 변수 제거
+
+- 기본 형태
+{% highlight xml %}
+<c:remove var="name" />
+{% endhighlight %}
+
+- scope 설정
+  - scope를 지정하지 않을경우 동일한 이름의 변수를 모두 삭제한다.
+{% highlight xml %}
+<c:remove var="name" scope="page" />
+{% endhighlight %}
+
+### 연산자
+
+- 비교 연산자
+  - eq : == 연산자와 동일한 역할
+  - ne : != 연산자와 동일한 역할
+  - lt : < 연산자와 동일한 역할
+  - gt : > 연산자와 동일한 역할
+  - le : <= 연산자와 동일한 역할
+  - ge : >= 연산자와 동일한 역할
+  {% highlight xml %}
+    <c:if test="${member eq null}">...</c:if> <!-- null 비교 -->
+    <c:if test="${money ne 0}">...</c:if> <!-- 숫자 비교 -->
+    <c:if test="${name eq 'lion'}">...</c:if> <!-- 문자열 비교 -->
+  {% endhighlight %}
+
+  - null check
+    - empty : 공백 체크
+  {% highlight xml %}
+    <c:if test="${empty wallet}">...</c:if>
+  {% endhighlight %}
+
+  - 조건 연산자
+    - and : && 연산자와 동일한 역할
+    - or : || 연산자와 동일한 역할
+  {% highlight xml %}
+    <c:if test="${a eq 1 and b eq 2}">...</c:if>
+    <c:if test="${c eq 1 or d eq 2}">...</c:if>
+  {% endhighlight %}
+
+  - 부정 연산자
+    - not : ! 연산자와 동일한 역할
+  {% highlight xml %}
+    <c:if test="${not empty wallet}">...</c:if>
+  {% endhighlight %}
+
+### 조건문
+
+- if
+  - test 속성에 작성한 명제가 참일 경우 내부의 결과물을 노출한다.
+  - scope 속성 사용 가능
+  {% highlight xml %}
+  <c:if test="${1 == 1}">
+      <p>정답!<p>
+  </c:if>
+  {% endhighlight %}
+
+- switch
+  - choose : 감싸기용
+  - when : 위에서 작성된 when대로 차례대로 태그의 test 속성한 명제가 참일 경우 해당 태그 내부의 결과물을 노출한다.
+  - otherwise : 작성된 when에서 참인 경우가 없는 경우 해당 태그 내부의 결과물을 노출한다.
+  {% highlight xml %}
+  <c:set var="temp"  value="${7}"/>
+  <c:choose>
+      <c:when test="${temp == 2}">
+          ${temp}는 2와 같다.
+      </c:when>       
+      <c:when test="${temp == 3}">
+          ${temp}는 2와 같지 않고 3과 같다.
+      </c:when>         
+      <c:otherwise>
+          ${temp}는 2도 아니고 3도 아니다.
+        </c:otherwise>
+  </c:choose>
+  {% endhighlight %}
+
+
+### 반복문
+
+- foreach
+  - 목록을 입력 받아서 목록의 갯수만큼 반복하는 반복문이다.
+  - foreach 속성
+    - var : 사용할 변수명, 필수
+    - items : Collerction 객체, 필수
+    - begin : 반복 시작 index, default 0
+    - end : 반복 종료 index, default 마지막 index
+    - step : 반복할 때마다 건너 뛸 index 개수
+    - varStatus : 반복 상태를 알 수 있는 변수명
+      - index :	int	items에 정의한 항목을 가리키는 index 번호이다. 0부터 시작한다.
+      - count :	int	현재 몇번째 반복인지 나타낸다. 1부터 시작한다.
+      - first :	boolean	현재 반복이 첫번째인지 여부
+      - last :	boolean	현재 반복이 마지막인지 여부
+{% highlight xml %}
+<c:forEach var="item" items="${items}" begin="0" end="10" step="1" varStatus="status">
+    <p>번호 : ${status.index}</p>
+    <p>사번 : ${item.empNo}</p>
+    <p>사원명 : ${item.name}</p>
+    <p>부서명 : ${item.deptNm}</p>
+</c:forEach>
+{% endhighlight %}
+
+- forTokens
+  - 문자열을 특정기호로 잘라내어 반복하는 반복문
+  - forTokens 속성
+    - delims : 문자열을 분리를 위한 특정 기호
+{% highlight xml %}
+<ul>
+  <c:forTokens var="item" items="a,b,c" delims=",">
+      <li>알파벳 : ${item}</li>
+  </c:forTokens>
+</ul>
+{% endhighlight %}
+
+
+### URL 생성
+
+- &lt;c:url />
+  - value 속성에 지정된 값을 url 인코딩을 해서 반환
+### URL 이동
+
+- &lt;c:redirect />
+  - url 속성에 지정된 주소로 리다이렉트 된다.
+
+### 페이지 첨부
+
+- &lt;c:import />
+  - url 속성에 명시한 주소의 페이지 컨텐츠를 var 속성에 명시한 변수명에 저장한다.
+
+### 파라미터 추가
+
+- &lt;c:param />
+  - url, redirect, import 태그의 내부에서 쓰는 서브 태그
+  - name 속성에 파라미터명을 명시한다.
+  - value 속성에 값을 명시한다.
+
+### 예외 처리
+
+- 기본 형태
+  - 예외 발생 시 var에서 선언한 변수명에 에러 내용이 저장된다.
+{% highlight xml %}
+<c:catch var="변수명">
+  예외가 발생할 수 있는 코드
+</c:catch>
+{% endhighlight %}

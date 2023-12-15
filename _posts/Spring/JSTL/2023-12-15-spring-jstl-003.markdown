@@ -1,29 +1,56 @@
 ---
 layout: post
 title:  "문자열 처리"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-15 11:18:00 +0900
 categories: Group&nbsp;:&nbsp;Spring JSTL
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### 사용 조건
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- &lt;%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>을 jsp 파일 최상단에 작성
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 문자열 포함 여부 확인
 
-Jekyll also offers powerful support for code snippets:
+- fn:contains(target, search) : target이 search를 포함하면 true 반환
+- fn:containsIgnoreCase(target, search) : 대소문자 관계없이 target이 search를 포함하면 true 반환
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+### 문자열 시작/종료 여부 확인
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+- fn:startsWith(string, prefix) : target이 prefix로 시작하면 true 반환
+- fn:endsWith(string, suffix) : target이 suffix로 끝나면 true 반환
 
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+### 문자열 치환
+
+- fn:replace(target, before, after) : target 내에 있는 before 문자열을 after 문자열로 모두 변경해서 반환
+
+### 인덱스 값 구하기
+
+- fn:indexOf(target, search) : target에서 search이 처음으로 나타나는 인덱스 반환
+
+### 문자열을 구분자로 분할
+
+- fn:split(target, separator) : target내의 문자열 separetor에 따라 나누어서 배열로 구성해서 반환
+
+### 문자열을 구분자로 연결
+
+- fn:join(array, separator) : array 요소들을 separator를 구분자로 하여 연결해서 반환
+
+### 길이 구하기
+
+- fn:length(item) : item이 배열이나 컬렉션이면 요소의 개수를 문자열이면 문자의 개수를 반환
+
+### 특수 문자열 치환
+
+- fn:escapeXml(target) : target에 XML과 HTML에서 &lt; >& ' " 문자들이 있으면, XML엔티티 코드로 바꿔준뒤 문자열 반환
+
+### 조건에 맞는 문자열 반환
+
+- fn:substring(target, begin, end) : target에서 begin 인덱스에서 시작해서 end 인덱스에 끝나는 부분의 문자열 반환
+- fn:substringBefore(target, search) : target에서 search가 나타나는 이전의 문자열 반환
+- fn:substringAfter(target, search) : target에서 search가 나타나는 이후의 문자열 반환
+- fn:trim(target) :  target의 앞뒤의 공백을 모두 제거한 후 반환
+
+### 문자열 반환
+
+- fn:toLowerCase(target) : target을 모두 소문자로 변경 후 리턴
+- fn:toUpperCase(target) : target을 모두 대문자로 변경 후 리턴
