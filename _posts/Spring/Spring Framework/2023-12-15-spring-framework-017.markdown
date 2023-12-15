@@ -1,17 +1,32 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 11:34:00 +0900
+title:  "서비스"
+date:   2023-12-15 13:32:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
 ---
 
-Jekyll requires blog post files to be named according to the following format:
+### 서비스 어노테이션 (@Service)
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- 빈 객체를 만들어 주는 어노테이션
+- 가시성을 위해 사용한다.
+- 비즈니스 로직에 대해서 처리하는 경우에 명시한다.
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 서비스의 역할
 
-Jekyll also offers powerful support for code snippets:
+- 컨트롤러 <=> 서비스
+    - 컨트롤러는 단순히 요청을 받아 해당 요청에 맞는 서비스에 데이터를 주입하는 역할을 한다.
+- 서비스 <=>  DAO
+    - DAO는 단일 데이터 접근 로직이기 때문에 하나의 일만 처리하지만,  
+    특정한 작업을 진행한다고 했을 때 DB에 한 번만 접근하는 게 아닌  
+    여러번 접근하거나 혹은 병렬적으로 동시에 접근해야 되기에  
+    서비스는 특정한 작업을 위해 여러개의 DAO를 묶은 하나의 트랜잭션이 된다.
 
-{% highlight java %}
-{% endhighlight %}
+### 서비스의 특징
+
+- 서비스는 불필요하게 Http 통신을 위한 HttpServlet을 상속 받을 필요도 없는 순수한 자바 객체로 구성된다.
+- 서비스에 request나 response와 같은 객체를 매개변수로 받아선 안된다.
+- 모듈화를 통해 어디서든 재사용이 가능한 비즈니스 로직
+- view단이 변경되더라도 Service는 view에 종속적인 코드가 없기때문에 재사용이 가능한 것이다.
+- 서비스는 클래스 파일로 바로 만드는게 아닌 인터페이스로 구현한다.
+- 추가적인 요청사항이 들어오면 기존 소스를 수정하는게 아니라  
+기존 service 인터페이스를 구현한 다른 클래스를 구현해 그 객체를 사용하게 해야한다.

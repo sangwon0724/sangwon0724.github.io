@@ -1,17 +1,16 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 11:34:00 +0900
+title:  "PSA (Portable Service Abstraction)"
+date:   2023-12-15 13:11:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
 ---
 
-Jekyll requires blog post files to be named according to the following format:
+### 정의
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- xxx
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
+### 적용 방법
 
 {% highlight java %}
+/* 추후 작성 */
 {% endhighlight %}

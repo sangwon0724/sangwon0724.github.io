@@ -1,17 +1,29 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 11:34:00 +0900
+title:  "스프링 3대 요소 - 제어 역전 (IOC)"
+date:   2023-12-15 13:04:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
 ---
 
-Jekyll requires blog post files to be named according to the following format:
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 제어 역전 (Inversion of Control)
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 객체의 생성에서부터 생명주기의 관리까지 모든 객체에 대한 제어권이 바뀌는 것
+- 스프링 컨테이너가 필요에 따라 개발자 대신 빈들을 관리해주는 행위  
+(생명 주기 관리 : 생성 → 의존성 설정 → 초기화 → 소멸)
 
-Jekyll also offers powerful support for code snippets:
+### 제어 역전의 등장 배경
 
-{% highlight java %}
-{% endhighlight %}
+- 기존의 객체 관리는 개발자가 직접 했어야 했다. (new, 의존성 맺기, 초기화 등등)
+- 번거로운 객체의 생명주기 관리를 대신 해줄 무언가가 필요했다.
+
+### 제어 역전 방법
+
+- xml 파일을 통해서 빈을 등록
+- 어노테이션을 통해서 빈을 등록
+
+### 제어 역전의 장점
+
+- 개발자는 객체 관리에 덜 신경쓸 수 있게 되어 다른 부분에 더 집중할 수 있게 됨
+- 약한 결합을 이용하여 객체 간 의존관계를 쉽게 변경할 수 있음
+- 코드의 재사용성과 유지보수성을 높인다. 
