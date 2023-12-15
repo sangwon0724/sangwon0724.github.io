@@ -1,19 +1,53 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 15:30:00 +0900
+title:  "필터"
+date:   2023-12-15 15:48:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 필터(filter)란?
 
-Jekyll requires blog post files to be named according to the following format:
+- Web Application에서 관리되는 영역
+- 인터셉터는 DispatcherServlet이 실행되기 전에 호출된다.
+- Spring Boot Framework에서 클라이언트로부터 오는 요청/응답에 대해서 최초/최종 단계의 위치에 존재한다.
+- Filter를 통해서 요청/응답의 정보를 변경할수 있다.
+- Spring에 의해서 데이터가 변환되기 전의 순수한 클라이언트의 요청/응답 값을 확인 할 수 있다.
+- 유일하게 ServletRequest/ServletResponse 객체를 변환할 수 있다.
+- Filter에서는 주로 request/response의 logging 용도나 인증 logic 처리를 한다.
+- Filter에서 logic을 처리함으로써 Service Business Logic과 분리한다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 필터 구현하기
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+1. javax.servlet.Filter의 Filter 인터페이스를 구현한 클래스를 만든다.
+2. 상황에 맞는 메소드를 오버라이딩한다.
+    - public void init(FilterConfig filterConfig)
+        - 필터를 웹 콘테이너에 생성 후 초기화할 때 호출되는 메소드
+    - public void doFilter(ServletRequest request, SevletResponse response, FilterChain chain)
+        - request, response에 대한 필터링 로직을 작성하는 메소드
+        - resquest, response가 체인을 통과할 때 마다 서블릿 컨테이너에서 호출된다.
+        - FilterChain으로 연결한다.
+        - 필터링 로직을 사용하지 않을 때에는 요청을 servlet으로 보내지 않고 바로 응답하게 한다.
+    - public void destroy()
+        - 필터가 웹 콘테이너에서 삭제될 때 호출되는 메소드
+    - doFilter 예시
+        {% highlight java %}
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+            ContentCachingRequestWrapper wrappingRequest = new ContentCachingRequestWrapper((HttpServletRequest)request);
+            ContentCachingResponseWrapper wrappingResponse = new ContentCachingResponseWrapper((HttpServletResponse) response);
+    
+            chain.doFilter(wrappingRequest, wrappingResponse);
+    
+            System.out.println(new String(wrappingRequest.getContentAsByteArray(),"UTF-8"));
 
-Jekyll also offers powerful support for code snippets:
+            System.out.println(new String(wrappingResponse.getContentAsByteArray(),"UTF-8"));
+            
+            wrappingResponse.copyBodyToResponse();
+        }
+        {% endhighlight %}
 
-{% highlight java %}
-{% endhighlight %}
+### 필터 적용하기
+
+1. @SpringBootApplication이 적용된 클래스에 가서 @ServletComponentScan을 추가한다.
+2. Filter를 구현한 클래스에 가서 @WebFilter(urlPatterns="url 주소")를 추가한다.  
+(url 주소는 String 배열로 줄 수도 있다.)

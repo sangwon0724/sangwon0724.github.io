@@ -1,19 +1,72 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 15:30:00 +0900
+title:  "인터셉터"
+date:   2023-12-15 15:50:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 인터셉터(interceptor)란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 컨트롤러에 들어오는 요청 HttpRequest와 컨트롤러가 응답하는 HttpResponse를 가로채는 기능
+- Interceptor는 DispatcherServlet이 실행된 후에 호출된다.
+- Interceptor에서 logic을 처리함으로써 Service Business Logic과 분리한다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 인터셉터 구현하기
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+1. HandlerInterceptor 인터페이스를 구현한 인터셉터용 클래스를 추가한다.
+2. 해당 클래스에 @Component 어노테이션을 추가한다.
+3. 필요한 메소드들을 오버라이딩 한다.
+    - PreHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+        - 컨트롤러에 진입하기 전에 실행되는 메소드
+        - 반환 값이 true일 경우 컨트롤러로 진입하고, false일 경우 진입하지 않는다.
+        - Object handler는 진입하려는 컨트롤러의 클래스 객체가 담겨있다.
+    - PostHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
+        - 컨트롤러 진입 후 View가 랜더링 되기 전에 수행되는 메소드
+    - afterComplete(HttpServletRequest request, HttpServletResponse response, Object object, Exception ex)
+        - 컨트롤러 진입 후 view가 랜더링 된 후에 실행되는 메소드
+    - afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object h)
+        - 비동기 요청 시 PostHandle 메소드와 afterCompletion 메소드 대신에 실행되는 메소드
 
-Jekyll also offers powerful support for code snippets:
+### 인터셉터 적용하기
 
-{% highlight java %}
-{% endhighlight %}
+1. WebMvcConfigurer 인터페이스를 구현한 인터셉터 등록용 클래스를 추가한다.  
+    - WebMvcConfigurer 인터페이스
+        - ViewResolver 값을 자동으로 등록해준다.
+2. 해당 클래스에 @Configuration 어노테이션을 추가한다.
+3. 필요한 메소드들을 오버라이딩 한다.  
+    - InterceptorRegistry 클래스
+        - 매핑된 인터셉터 목록을 구성하는 데 도움을 주는 클래스
+    - public void addInterceptors(InterceptorRegistry registry)
+        - 인터셉터를 등록하는 메소드
+4. addInterceptors 메소드에서 자신이 생성한 인터셉터 클래스 객체를 등록한다.
+    - 예시 1)
+        {% highlight java %}
+        //Lombok의 @RequiredArgsConstructor 추가
+        private final AuthInterceptor authInterceptor;
+
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(authInterceptor)
+            .addPathPatterns("/api/test/*") // 해당 경로에 접근하기 전에 인터셉터가 가로챈다. (필수 X)
+            .excludePathPatterns("/api/service/*"); // 해당 경로는 인터셉터가 가로채지 않는다. (필수 X)
+        }
+        {% endhighlight %}
+
+    - 예시 2)
+        {% highlight java %}
+        private final AuthInterceptor authInterceptor;
+
+        //MvcConfig는 임의로 만든 인터셉터 등록용 클래스명
+        public MvcConfig(AuthInterceptor authInterceptor) {
+            this.authInterceptor = authInterceptor;
+        }
+
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(authInterceptor)
+            .addPathPatterns("/api/test/*") // 해당 경로에 접근하기 전에 인터셉터가 가로챈다. (필수 X)
+            .excludePathPatterns("/api/service/*"); // 해당 경로는 인터셉터가 가로채지 않는다. (필수 X)
+        }
+        {% endhighlight %}
+
+>※ 인터셉터 객체를 @AutoWired로 받을 수도 있지만 그렇게 되면 순환 참조가 일어날 수도 있다.

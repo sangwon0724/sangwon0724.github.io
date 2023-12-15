@@ -1,19 +1,66 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 15:30:00 +0900
+title:  "스프링 부트에 대하여"
+date:   2023-12-15 15:33:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 스프링 부트란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 추후 작성
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 특징
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 스프링을 편리하게 사용할 수 있도록 지원, 최근에는 기본으로 사용
+- 단독으로 실행할 수 있는 스프링 애플리케이션을 쉽게 생성
+- Tomcat 같은 웹 서버를 내장해서 별도의 웹 서버를 설치하지 않아도 됨
+- 손쉬운 빌드 구성을 위한 Starter 종속성 재공
+- 스프링 3rd path (외부) 라이브러리 자동 구성
+- 메트릭, 상태 확인, 외부 구성같은 프로덕션 준비 기능 제공
+- 관례에 의한 간결한 설정
 
-Jekyll also offers powerful support for code snippets:
+### 설치하기
 
-{% highlight java %}
-{% endhighlight %}
+1. 이클립스 최상단의 Help 메뉴에서 Eclipse Marketplace 선택하기
+2. STS (Spring Tool Suite)를 검색한 후에 해당 확장 모듈 설치하기
+
+### 프로젝트 생성 (방법 1)
+
+1. 이클립스 최상단의 File 메뉴의 New 메뉴에서 Spring Starter Project 선택하기
+2. Name 속성에 프로젝트명을 작성한 후에 해당 프로젝트에 맞게 기본 설정을 세팅한 다음에 Next를 누른다.
+    - type
+      - 프로젝트 관리도구를 Maven과 Gradle중 선택
+      - 종류
+        - Maven
+        - Gradle
+    - Packaging
+      - 프로젝트 빌드시 패키지의 형식
+      - 종류
+        - Jar
+        - War
+    - Java Version
+      - 사용할 Java의 Version 선택
+    - Language
+      - 사용할 프로그래밍 언어 선택
+      - 종류
+        - Java
+        - Kotlin
+        - Groovy
+    - Group
+      - 프로젝트의 큰 틀
+      - 예시 : com.example
+3. 프로젝트에 필요한 라이브러리(Dependency)항목들을 선택한 후에 Finish를 누른다.
+
+>※ 기본적으로 선택해야 하는 라이브러리 항목
+>
+>1. Web : @*Mapping 어노테이션때문에 필요
+>2. JDBC
+>3. ORM 계열
+>4. DBMS 계열
+
+### 프로젝트 생성 (방법 2)
+
+- start.spring.io로 이동하기
+- 방법 1과 동일하게 필요한 사항 입력
+- SNAPSHOT이나 M1은 아직 개발이 미완료된 버전
+- Dependencies에서 Spring Web 받기

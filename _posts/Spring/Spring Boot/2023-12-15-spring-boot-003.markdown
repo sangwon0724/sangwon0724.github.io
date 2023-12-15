@@ -1,19 +1,41 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 15:30:00 +0900
+title:  "예외 처리"
+date:   2023-12-15 15:46:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 예외처리 어노테이션
 
-Jekyll requires blog post files to be named according to the following format:
+- @ContrllerAdvice
+    - Global 예외처리
+    - 특정 패키지/컨트롤러 예외처리
+    - 종류
+        - @ContrllerAdvice : @Contrller에 대해 사용하는 어노테이션
+        - @RestContrllerAdvice : @RestContrller에 대해 사용하는 어노테이션
+- @ExceptionHandler
+    - 특정 예외에 대한 처리
 
-`YEAR-MONTH-DAY-title.MARKUP`
-
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
+### @ExceptionHandler 기본 코드
 
 {% highlight java %}
+@ExceptionHandler(value=예외종류.class)
+public ResponseEntity exception(예외종류 e) {
+    /*
+        원하는 예외 클래스의 종류를 모를 때는
+        Exception e로 매개변수를 주고
+        e.getClass().getName()를 확인해보면 된다.
+    */
+    return ResponseEntity.status(HttpStatus.에러코드).body(e.getMessage());
+}
 {% endhighlight %}
+
+### 작동 방식
+
+- @ContrllerAdvice 어노테이션이 선언된 클래스 내부에  
+@ExceptionHandler가 선언된 메소드는  
+모든 컨트롤러에 대해서 적용된다.
+- @ContrllerAdvice 어노테이션이 모든 컨트롤러에 대해서 적용되긴 하지만  
+만약 @ContrllerAdvice가 있는 클래스에 있는 @ExceptionHandler와  
+개별의 컨트롤러에 있는 @ExceptionHandler가 같은 exception에 대해서 처리한다고 했을 때,  
+개별의 컨트롤러 쪽에 있는 @ExceptionHandler가 우선적용된다.

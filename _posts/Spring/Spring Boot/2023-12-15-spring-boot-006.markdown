@@ -1,19 +1,86 @@
 ---
 layout: post
-title:  "제목"
-date:   2023-12-15 15:30:00 +0900
+title:  "비동기 처리"
+date:   2023-12-15 16:00:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 비동기 처리를 위한 서비스 Class 만드는 방법
 
-Jekyll requires blog post files to be named according to the following format:
+1. 비동기 처리를 위한 Class 파일을 만든다.
+2. 비동기 처리를 시킬 메소드를 만든다.
+    - 필요 어노테이션
+        - @Async
+    - 반환타입
+        - CompletableFuture
+    - 리턴형식
+        - return new AsyncResult(실행할_메소드()).completable();
+    - 예시 )
+        {% highlight java %}
+        @Async
+        public CompletableFuture run() {
+            return new AsyncResult(helloWolrd()).completable();
+        }
+        public String helloWolrd() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "Hello World !";
+        }
+        {% endhighlight %}
 
-`YEAR-MONTH-DAY-title.MARKUP`
+>※ 비동기 처리를 진행한 결과를 확인하기 위해 서비스의 메소드는 
+>주로 ListenableFuture나 CompletableFuture 형식으로 결과를 반환한다.
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+>※ 주로 return new AsyncResult(결과물) 형식으로 값을 전달한다.
 
-Jekyll also offers powerful support for code snippets:
+>※ completable() 메소드 : ListenableFuture 객체를 CompletableFuture로 변환해서 리턴한다.
 
-{% highlight java %}
-{% endhighlight %}
+>※ AsyncResult의 completable() 메소드는  
+>AsyncResult는 기본적으로 ListenableFuture 인터페이스를 구현하고 있기 때문에  
+>해당 결과를 CompletableFuture 형태로 바꾸기 위해 사용한다.
+
+### 비동기 처리 로직 적용 방법
+
+1. @SpringBootApplication 어노테이션이 있는 클래스에 가서 @EnableAsync 어노테이션을 추가한다.
+2. 컨트롤러에 가서 메소드를 작성한다.
+    - 예외처리를 반드시 추가한다.
+    - 예시 : InterruptedException, ExecutionException 등등
+3. 해당 메소드의 return을 비동기 처리를 위해 작성한 Service의 @Async 메소드를 반환한다.
+    - 예시
+        {% highlight java %}
+        @GetMapping("/api/test/async/listenableFuture")
+        public ListenableFuture<Integer> listenableFuture() throws InterruptedException, ExecutionException {
+            return asyncService.listenableFuture(10000);
+        }
+        {% endhighlight %}
+
+### Custom Thread
+
+1. Thread 용으로 사용할 Class를 만든다.
+2. 반환형이 Executor인 메소드를 만든다.
+3. ThreadPoolTaskExecutor 필드를 만들어 준다.
+4. ThreadPoolTaskExecutor의 메소드를 통해서 Thread에 대한 설정을 한다.
+5. 해당 객체를 return 시켜준다.
+6. 해당 메소드에 @Bean("Thread명")을 추가해준다.
+
+>※ @Async 어노테이션의 name 속성에 Thread Bean의 명시해주면  
+>해당 Thread를 사용하도록 할 수 있다.
+
+- 예시)
+    {% highlight java %}
+    @Configuration
+    public class AppConfig {
+        @Bean("asyncThread")
+        public Executor asyncThread(){
+            ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+            executor.setCorePoolSize(10);
+            executor.setMaxPoolSize(100);
+            executor.setQueueCapacity(10);
+            executor.setThreadNamePrefix("Async-");
+            return executor;
+        }
+    }
+    {% endhighlight %}
