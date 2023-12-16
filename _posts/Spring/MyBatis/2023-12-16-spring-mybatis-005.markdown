@@ -1,29 +1,49 @@
 ---
 layout: post
-title:  "데이터 치환"
-date:   2023-12-16 16:09:00 +0900
+title:  "설정 파일 이용하기"
+date:   2023-12-16 16:31:00 +0900
 categories: Group&nbsp;:&nbsp;Spring MyBatis
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### 별칭 사용하기
 
-`YEAR-MONTH-DAY-title.MARKUP`
+1. 자신이 설정한 [프로젝트명/src/main/resources] 경로에 있는 mybatis 관련 설정 파일로 이동
+2. <configuration> 태그 안에 <typeAliases> 태그 작성
+3. <typeAliases> 태그 안에 <typeAlias type="com.my.vo.BoardVO" alias="BoardVO" />처럼 작성
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
-
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+{% highlight xml %}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+      <typeAlias type="com.my.vo.BoardVO" alias="BoardVO" />
+  </typeAliases>
+</configuration>
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+{% highlight xml %}
+<!-- 별칭 사용 전 -->
+<select id="selectPostA" resultType="com.my.vo.BoardVO" >
+  SELECT * FROM BOARD WHERE CATEGORY=#{category} ORDER BY NO DESC
+</select>
 
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+<!-- 별칭 사용 후 -->
+<select id="selectPostB" resultType="BoardVO" >
+  SELECT * FROM BOARD WHERE category=#{category} ORDER BY NO DESC
+</select>
+{% endhighlight %}
+
+### 언더바(_)가 포함된 필드명 CamelCase로 맵핑하기
+
+1. 자신이 설정한 [프로젝트명/src/main/resources] 경로에 있는 mybatis 관련 설정 파일로 이동
+2. &lt;configuration> 태그 안에 <settings> 태그 작성
+3. &lt;settings> 태그 안에 &lt;setting name="mapUnderscoreToCamelCase" value="true" /> 작성
+
+{% highlight java %}
+@Data
+public class MemberVO{
+  private String memberId; //실제 컬럼명 : MEMBER_ID
+  private String phoneNumber; //실제 컬럼명 : PHONE_NUMBER
+  private String homeAddress; //실제 컬럼명 : HOME_ADDRESS
+}
+{% endhighlight %}

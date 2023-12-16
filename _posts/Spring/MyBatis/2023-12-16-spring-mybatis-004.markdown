@@ -1,29 +1,35 @@
 ---
 layout: post
-title:  "데이터 연결"
-date:   2023-12-16 16:09:00 +0900
+title:  "데이터 치환"
+date:   2023-12-16 16:27:00 +0900
 categories: Group&nbsp;:&nbsp;Spring MyBatis
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### 태그를 삭제하고 싶은 경우
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- REGEXP_REPLACE(칼럼명, 정규식, 교체 내용) 함수를 사용한다.
+- 사용 예시
+    {% highlight sql %}
+    /* html 태그를 빈 문자열로 교체한다. */
+    REGEXP_REPLACE(title, '&lt;[^>]*>|\&([^;])*;', '') LIKE '%${search}%'
+    {% endhighlight %}
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 특수문자를 사용하고 싶은 경우
 
-Jekyll also offers powerful support for code snippets:
-
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
-
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+- &lt;![CDATA[ 내용 ]]>을 사용한다.
+- 사용 예시
+    {% highlight sql %}
+    SELECT
+        TITLE, CONTENT
+    FROM
+        BLOG_POST
+    WHERE
+        USE_YN = 'Y'
+        <![CDATA[
+            AND (
+                REGEXP_REPLACE(title, '&lt;[^>]*>|\&([^;])*;', '') LIKE '%${search}%'
+                or 
+                REGEXP_REPLACE(content, '&lt;[^>]*>|\&([^;])*;', '') LIKE '%${search}%'
+            )
+        ]]>
+    {% endhighlight %}
