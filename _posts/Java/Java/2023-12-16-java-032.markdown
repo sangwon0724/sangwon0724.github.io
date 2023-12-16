@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Set 컬렉션"
+title:  "List 컬렉션"
 date:   2023-12-15 09:00:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
