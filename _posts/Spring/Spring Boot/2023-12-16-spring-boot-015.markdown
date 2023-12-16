@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "API 연동하기"
+date:   2023-12-16 16:08:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+---
+
+1. 네이버 메인 최하단의 "Developers" 메뉴 목록에서 "네이버 개발자" 센터 메뉴 클릭하기
+2. 최상단의 "Application" 메뉴의 "애플리케이션 등록" 메뉴를 클릭한다.
+3. 각 항목들을 설정하고 등록하기 버튼을 누른다.
+4. 각 API의 가이드 문서를 보고 사용하면 된다.

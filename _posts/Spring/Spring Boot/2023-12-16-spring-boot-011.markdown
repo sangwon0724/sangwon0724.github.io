@@ -1,0 +1,115 @@
+---
+layout: post
+title:  "ObjectMapper"
+date:   2023-12-16 15:33:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+---
+
+### ObjectMapper란?
+
+● Java 객체를 Json으로 직렬화 하거나 또는 Json 데이터를 Java 객체에 역직렬화 하는 기능을 수행하는 클래스
+● 최근 API 서비스가 아니더라도 복잡한 구조의 데이터를 쉽게 서로 주고 받을 수 있게 하기 위해  
+View 영역과 백엔드가 통신을 할 때 Json을 많이 이용하기 때문에 많이 사용하게 된 클래스
+
+### 설치 방법
+
+- xml
+    - Spring Framework의 경우
+        {% highlight xml %}
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        {% endhighlight %}
+    - Spring Boot의 경우
+        {% highlight xml %}
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        {% endhighlight %}
+- gradle
+    {% highlight gradle %}
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
+    {% endhighlight %}
+
+### Java Object → Json
+
+{% highlight java %}
+ObjectMapper objectMapper = new ObjectMapper();
+
+UserVO user = 
+UserVO
+.builder()
+.name("HongGilDong")
+.age(25)
+.email("hong@naver.com")
+.birthday("19970229")
+.phoneNumber("0001112222")
+.build();
+
+String javaObjectToJson = objectMapper.writeValueAsString(user);
+{% endhighlight %}
+
+### Json → Java Object
+
+{% highlight java %}
+ObjectMapper objectMapper = new ObjectMapper();
+
+String jsonString =
+"{\"name\":\"jsonString\",\"age\":25,\"email\":\"jsonString@naver.com\",\"phoneNumber\":\"0001112222\",\"birthday\":\"19970229\"}";
+
+UserVO jsonToJavaObject = objectMapper.readValue(jsonString, UserVO.class);
+{% endhighlight %}
+
+### JSON 배열을 Java List에 매핑하기
+
+{% highlight java %}
+ObjectMapper objectMapper = new ObjectMapper();
+
+String jsonStringA = "{\"name\":\"jsonStringA\",\"age\":25,\"email\":\"jsonStringA@naver.com\",\"phoneNumber\":\"0001112222\",\"birthday\":\"19970229\"}";
+String jsonStringB = "{\"name\":\"jsonStringB\",\"age\":25,\"email\":\"jsonStringB@naver.com\",\"phoneNumber\":\"0001112222\",\"birthday\":\"19970229\"}";
+
+String jsonArray = "["+jsonStringA+","+jsonStringB+"]";
+
+List<UserVO> users = objectMapper.readValue(jsonArray, new TypeReference<List<UserVO>>(){});
+{% endhighlight %}
+
+### JSON 데이터를 Map에 매핑하기
+
+{% highlight java %}
+ObjectMapper objectMapper = new ObjectMapper();
+
+String jsonStringForMap = "{\"name\":\"jsonStringForMap\",\"age\":25,\"email\":\"jsonStringForMap@naver.com\",\"phoneNumber\":\"0001112222\",\"birthday\":\"19970229\"}";
+
+HashMap<String, Object> map = objectMapper.readValue(jsonStringForMap, new TypeReference<HashMap<String,Object>>(){});
+{% endhighlight %}
+
+### @Builder 어노테이션을 사용하는 경우의 VO
+
+{% highlight java %}
+@Getter
+@Setter
+@Builder(builderClassName = "UserVOBuilder", toBuilder = true)
+@JsonDeserialize(builder = UserVO.UserVOBuilder.class)
+public class UserVO {
+    private String name; //이름
+    private int age; //나이
+    private String email; //이메일
+    private String phoneNumber; //핸드폰번호
+    private String birthday; //생년월일
+    
+    @JsonPOJOBuilder(withPrefix = "") public static class UserVOBuilder { 
+        
+    }
+}
+{% endhighlight %}
+
+### 역직렬화 실행시 존재하지 않는 필드 무시 설정
+
+{% highlight java %}
+// 없는 필드로 인한 오류 무시
+objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+{% endhighlight %}

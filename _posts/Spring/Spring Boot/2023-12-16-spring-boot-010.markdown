@@ -1,0 +1,188 @@
+---
+layout: post
+title:  "Thymeleaf"
+date:   2023-12-16 15:09:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+---
+
+### Thymeleaf란?
+
+- MVC 패턴에 적합하게 설계된 Java 기반의 템플릿 엔진
+- 생성할 html 파일의 기본 경로 : src/main/resources/templates
+- html 파일의 html 태그에 xmlns:th="http://www.thymeleaf.org"를 추가해서 사용한다.
+
+### 설치 방법
+
+- xml
+    {% highlight xml %}
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        <version>3.2.0</version>
+    </dependency>
+    {% endhighlight %}
+
+- gradle
+    {% highlight gradle %}
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.0'
+    {% endhighlight %}
+
+### 외부 파일 연결
+
+- 기본 경로
+    - src/main/resources/static
+-예시
+    - &lt;link th:href="@{/css/index.css}" rel="stylesheet" type="text/css">
+
+### 데이터 연결하기
+
+- 기본 객체 선택
+    - th:object="객체"
+    - 사용 예시
+        {% highlight html %}
+        <table>
+            <tr th:object="${board}">
+                <td><span class="no" th:text="{board.no}"></span></td>
+                <td><span class="title" th:text="{board.title}"></span></td>
+                <td><span class="writer" th:text="{board.writer}"></span></td>
+                <td><span class="signdate" th:text="${#temporals.format(board.signdate, 'yyyy-MM-dd HH:mm')}"></span></td>
+            </tr>
+        </table>
+        {% endhighlight %}
+
+- 반복문
+    - th:each="객체 : ${리스트}"
+    - 사용 예시
+        {% highlight html %}
+        <table>
+            <tr th:each="board : ${boardList}">
+                <!-- 인덱스 값 가져오기 ▼ -->
+                <!--<td><span class="no" th:text="{iterState.index}"></span></td>-->
+                <td><span class="no" th:text="{board.no}"></span></td>
+                <td><span class="title" th:text="{board.title}"></span></td>
+                <td><span class="writer" th:text="{board.writer}"></span></td>
+                <td><span class="signdate" th:text="${#temporals.format(board.signdate, 'yyyy-MM-dd HH:mm')}"></span></td>
+            </tr>
+        </table>
+        {% endhighlight %}
+
+- 조건문 (if-unless)
+    - th:if="${비교대상} [조건] [비교값]"
+    - 사용 예시
+        {% highlight html %}
+        <table>
+            <tr th:each="board : ${boardList}" th:if="${iterState.count} % 2 != 0">
+                <td><span class="no" th:text="{board.no}"></span></td>
+                <td><span class="title" th:text="{board.title}"></span></td>
+                <td><span class="writer" th:text="{board.writer}"></span></td>
+                <td><span class="signdate" th:text="${#temporals.format(board.signdate, 'yyyy-MM-dd HH:mm')}"></span></td>
+            </tr>
+        </table>
+        {% endhighlight %}
+
+- 조건문 (switch-case)
+    - th:switch="조건대상" + th:case=조건값"
+    - 사용 예시
+        {% highlight html %}
+        <div th:switch="${user.grade}">
+            <p th:case="'normal'">일반 회원</p>
+            <p th:case="'vip'">VIP 회원</p>
+        </div>
+        {% endhighlight %}
+
+- 값 설정하기
+    - input 태그의 값 지정하기
+        - th:value
+        - 사용 예시
+            - &lt;input type="text" id="nickname" th:value="${userInfo.nickname}"/>
+    - 속성 값 지정하기
+        - th:attr
+        - 사용 예시
+            - &lt;input type="radio" id="YesOrNo" th:attr="checked=${YesOrNo}"/>
+            ※ 실제로 존재하지 않는 임의의 속성을 만들고 싶을 때 사용하는 것이 좋다.
+            ※ action이나 checked같은 속성은 th:action이나 th:checked를 사용할수 있다.
+    - 로컬 변수 선언하기
+        - th:with
+        - 사용 예시
+            - &lt;div th:with="grade=${info.grade},size=${info.size}"></div>
+
+- html 태그 없이 조건문을 사용하고 싶은 경우에는 &lt;th:block> 태그를 사용하면 된다.
+- th:text와 th:utext의 차이
+    - th:text
+        - 태그 안의 텍스트 (태그 형식의 텍스트도 일반 텍스트로 취급)
+    - th:utext
+        - 태그 형식의 텍스트가 들어오면 태그로 인식한다.
+
+### 페이지 include 하기
+
+1. include 페이지의 영역에 th:fragment="고유영역명"을 추가한다. (= 조각 생성)
+2. include 페이지를 적용시킬 페이지에서 각 영역에 th:replace="[파일 경로 :: 고유영역명]"을 추가한다.
+
+- 사용 예시
+    1. src/main/resources/static/include 폴더의 common.html에서  
+        다른 페이지들에 적용시킬 header와 footer 영역을 만든 뒤에  
+        각각 th:fragment="header"와 th:fragment="footer"를 추가한다.
+    2. index.html에 가서 include 시킬 임시 영역을 만든다음에  
+        각각 th:replace="[include/common::header]"와 th:replace="[include/common::footer]"를 추가한다.  
+        => include/common은 include 폴더 안에 있는 common.html을 의미한다.
+
+### 요소 삭제하기
+
+- 삭제하고 싶은 내용이 있는 태그에 th:remove="속성값"을 추가한다.
+    - all
+        - th:remove가 선언된 태그와 그 자식 태그들도 모두 삭제한다.
+    - body
+        - th:remove가 선언된 태그는 그대로 두고 자식 태그들만 삭제한다.
+    - tag
+        - th:remove가 선언된 태그만 삭제하고 자식 태그들은 그대로 둔다.
+    - all-but-first
+        - 첫 번째 자식 태그만 두고 나머지 자식 태그는 모두 삭제한다.
+    - none
+        - 아무것도 삭제하지 않고 그대로 둔다. (조건 표현식을 사용하여 조건에 따라 삭제를 할지 말지 결정할 때 사용)
+
+### 페이지 하이퍼링크 생성하기
+
+- th:href="@{경로}"
+- 단순한 UR
+    - 사용 예시
+        - &lt;a th:href="@{/main}">메인 화면 이동&lt;/a>
+- 쿼리 파라미터
+    - () 에 있는 부분은 쿼리 파라미터로 처리
+    - 사용 예시
+        - &lt;a th:href="@{/main(paramA=${paramA}, paramB=${paramB})}">메인 화면 이동&lt;/a>
+        - /main?paramA=dataA&paramB=dataB와 동일하다.
+- 경로 변수
+    - URL 경로상에 변수가 있으면 () 부분은 경로 변수로 처리
+    - 사용 예시
+        - &lt;a th:href="@{/main/{param1}/{param2}(param1=${param1}, param2=${param2}))}">메인 화면 이동&lt;/a>
+        - /main/dataA/dataB와 동일하다.
+- 쿼리 파라미터와 경로 변수를 동시에 사용할 수도 있다.
+
+### Thymeleaf의 유틸
+
+- #message
+    - 메시지, 국제화 처리
+- #uris
+    - URI 이스케이프 지원
+- #dates
+    - java.util.Date 서식 지원
+- #calendars
+    - java.util.Calendar 서식 지원
+- #temporals
+    - java.time.LocalDateTime 서식 지원 (Java 8, 타임리프 권장)
+        - 사용 예시
+            - ${#temporals.format(형식을 지정할 LocalDateTime형의 데이터, 형식)}
+- #numbers
+    - 숫자 서식 지원
+- #strings
+    - 문자 관련 편의 기능
+- #objects
+    - 객체 관련 기능 제공
+- #bools
+    - boolean 관련 기능 제공
+- #arrays
+    - 배열 관련 기능 제공
+- #lists , #sets , #maps
+    - 컬렉션 관련 기능 제공
+- #ids
+    - 아이디 처리 관련 기능 제공

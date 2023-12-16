@@ -62,26 +62,26 @@ Assertions.assertEquals(로직을 통해 나온 값, 정상작동시 나와야�
 
 ### spring-boot-starter-test의 하위 라이브러리
 
-● JUnit 5 (빈티지 엔진 포함, 이유 : JUnit 4와의 호환성)
-● 스프링 테스트 및 스프링 부트 테스트
-● AssertJ
-● Hamcrest
-● Mockito
-● JSONassert
-● JsonPath
+- JUnit 5 (빈티지 엔진 포함, 이유 : JUnit 4와의 호환성)
+- 스프링 테스트 및 스프링 부트 테스트
+- AssertJ
+- Hamcrest
+- Mockito
+- JSONassert
+- JsonPath
 
 ### spring-boot-starter-test 제공 어노테이션
 
-● @SpringBootTest
-● @WebMvcTest
-● @DataJpaTest
-● @RestClientTest
-● @JsonTest
-● @WebFluxTest
-● @JooqTest
-● @DataLdapTest
-● @DataNeo4jTest
-● @DataRedisTest
+- @SpringBootTest
+- @WebMvcTest
+- @DataJpaTest
+- @RestClientTest
+- @JsonTest
+- @WebFluxTest
+- @JooqTest
+- @DataLdapTest
+- @DataNeo4jTest
+- @DataRedisTest
 
 ### src/test/java 폴더가 보이지 않는 오류 해결법
 
@@ -94,5 +94,5 @@ Assertions.assertEquals(로직을 통해 나온 값, 정상작동시 나와야�
 
 ### Jacoco
 
-● Java 코드의 코드 커버리지를 체크하는 라이브러리
-● 결과를 html, xml, csv로 확인가능하다.
+- Java 코드의 코드 커버리지를 체크하는 라이브러리
+- 결과를 html, xml, csv로 확인가능하다.

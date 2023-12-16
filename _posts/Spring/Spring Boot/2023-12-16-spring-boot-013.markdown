@@ -1,0 +1,78 @@
+---
+layout: post
+title:  "ResponseEntity"
+date:   2023-12-16 15:43:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+---
+
+### ResponseEntity란?
+
+- 사용자의 HttpRequest에 대한 응답 데이터를 포함하는 클래스
+- HttpEntity를 상속받아서 만들어진 클래스 (HttpEntity = HttpHeaders + HttpBody)
+- ResponseEntity = HttpStatus + HttpHeaders + HttpBody + a
+    - HttpHeaders
+        - HTTP의 request 또는 response에 대한 부가적인 정보
+        - 예시 : 전달받은 데이터 형식
+    - HttpBody
+        - HTTP의 request 또는 response가 전송하는 데이터 (본문), 존재하지 않는 경우도 있다.
+        - 예시 : GET 방식
+    - HttpStatus
+        - 클라이언트의 요청이 성공적으로 처리되었는지 상태를 알려주는 고유의 값
+        - 예시 : 405
+- ResponseEntity 객체가 반환되면 Json이나 Xml 등 다른 형식으로 직렬화가 된다.
+
+### 전달 형식 1 (한 번에 생성하는 방식)
+
+- 기본 형식 1
+    {% highlight java %}
+    return new ResponseEntity<반환할 타입>(전달할 body, 전달할 header, HttpStatus.코드명);
+    {% endhighlight %}
+- 사용 예시 1
+    {% highlight java %}
+    return new ResponseEntity<UserVO>(user, headers , HttpStatus.BAD_REQUEST);
+    {% endhighlight %}
+- 기본 형식 2
+    {% highlight java %}
+    return new ResponseEntity<반환할 타입>(전달할 body, 전달할 header, HttpStatus.valueOf(코드값));
+    {% endhighlight %}
+- 사용 예시 2
+    {% highlight java %}
+    return new ResponseEntity<UserVO>(user, headers , HttpStatus.valueOf(400));
+    {% endhighlight %}
+
+### 전달 형식 2 (오류메소드를 사용하여 바로 반환하는 방식)
+
+- 기본 형식 1
+    {% highlight java %}
+    //매개변수가 있는 ok 메소드는 ResponseEntity 형태로 return
+    return ResponseEntity.오류메소드명(객체명);
+    {% endhighlight %}
+- 사용 예시 1
+    {% highlight java %}
+    return ResponseEntity.badRequest(user);
+    {% endhighlight %}
+- 기본 형식 2
+    {% highlight java %}
+    //매개변수가 없는 ok 메소드는 BodyBuilder 형태이기 때문에
+    //build()를 통해서 ResponseEntity 변환 후 return
+    return ResponseEntity.오류메소드명().build();
+    {% endhighlight %}
+- 사용 예시 2
+    {% highlight java %}
+    return ResponseEntity.ok().build();
+    {% endhighlight %}
+
+### 전달 형식 3 (각각의 파라미터를 설정해서 개별 설정하는 방식)
+
+- 사용 예시
+    {% highlight java %}
+            HttpHeaders HttpHeaders변수명 = new HttpHeaders(); //org.springframework.http.HttpHeaders
+            HttpHeaders변수명.set("속성명", "값");
+
+            VO클래스 vo변수명 = UserVO.builder().필드명("값").build();
+        
+            return ResponseEntity.오류메소드명()
+                    .headers(HttpHeaders변수명)
+                    .body(vo변수명)
+                    .status(HttpStatus.코드명);
+    {% endhighlight %}

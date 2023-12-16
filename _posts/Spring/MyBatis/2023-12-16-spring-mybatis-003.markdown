@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "MyBatis에 대하여"
-date:   2023-12-15 09:00:00 +0900
+title:  "기본 사용법"
+date:   2023-12-16 16:09:00 +0900
 categories: Group&nbsp;:&nbsp;Spring MyBatis
 ---
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.

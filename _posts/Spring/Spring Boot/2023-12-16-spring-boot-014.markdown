@@ -1,0 +1,237 @@
+---
+layout: post
+title:  "어노테이션"
+date:   2023-12-16 15:55:00 +0900
+categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+---
+
+###  목록
+
+- @SpringBootApplication
+- @JsonProperty
+- @JsonNaming
+- @JsonInclude
+
+### 스프링 부트
+    
+- @SpringBootApplication
+    - 해당 클래스를 Spring Boot Application으로 설정
+
+### 컨트롤러 관련 어노테이션
+    
+- @RestController
+    - 정의
+        - 해당 클래스를 REST API를 제공하는 컨트롤러로 설정
+    - 요약
+        - @Controller + @ResponseBody
+    - 주의점
+        - @RestController를 붙이게 되면  
+        해당 컨트롤러는 view 페이지를 반환하는게 아닌 응답본문 객체를 반환하는 것이기 때문에  
+        Ajax같은 기능에 대한 메소드들이 모여있는 클래스에서 사용하는 것이 좋다.
+- @GetMapping
+    - Http Get Method URL 주소 매핑
+- @PostMapping
+    - Http Post Method URL 주소 매핑
+- @PutMapping
+    - Http Put Method URL 주소 매핑
+- @DeleteMapping
+    - Http Delete Method URL 주소 매핑
+- @Valid
+    - POJO Java class의 검증
+
+### Lombok 어노테이션
+    
+- @Data
+    - 종합 선물 세트
+    - @Data = @toString  + @EqualsAndHashCode + @Getter  + @Setter + @NoArgsConstructor + @RequiredArgsConstructor  + @AllArgsConstructor
+    - 효과가 너무 강하여 왠만하면 @Data 어노테이션보다는 필요한 어노테이션만 따로 설정하는 것이 좋다.
+- @Getter
+    - getter 메소드를 자동으로 만들어준다. 
+- @Setter
+    - setter 메소드를 자동으로 만들어준다.
+- @Value
+    - 불변하는 특성을 가진 객체를 만드려고 할 때 사용한다.
+- @NoArgsConstructor
+    - 파라미터가 없는 생성자를 생성해준다.
+    - final이 붙어있는 경우에는 필드를 초기화 할 수 없기 때문에 생성자를 만들 수가 없어서 에러가 발생한다.
+    - final이 붙어있는 경우에는 @NoArgsConstructor(force = true) 옵션을 이용해서 강체로 초기화시켜서 생성자를 만드는 방법을 사용한다.
+    - @NonNull 같이 필드에 제약조건이 설정되어 있는 경우, 생성자 내에 null-check 로직이 생성되지 않는다.
+- @RequiredArgsConstructor
+    - 추가 작업을 필요로 하는 필드에 대한 생성자를 생성
+    - 초기화 되지 않은 모든 final 필드와 @NonNull같은 validator로 마크돼있는 모든 필드들에 대한 생성자를 자동으로 생성해준다.
+    - validator 어노테이션이 붙어있는 필드에 대하여 만들어진 생성자는 자동적으로 해당 어노테이션에 대한 검증요소가 추가된다.
+- @AllArgsConstructor
+    - 클래스에 존재하는 모든 필드에 대한 생성자를 자동으로 생성해준다.
+    - @AllArgsConstructor = @NoArgsConstructor + @RequiredArgsConstructor
+- @Builder
+    - 클래스에 존재하는 모든 필드에 대한 생성자를 자동으로 생성해준다.
+    - @AllArgsConstructor 또는 @RequiredArgsConstructor
+    - @Builder 이외의 생성자 어노테이션들은 필드를 선언한 순서대로 생성자의 파라미터를 만들기 때문에
+        만약 VO Class에서 두 필드의 선언 순서를 바꿨는데 두 필드가 자료형까지 같다면 오류가 발생하지 않기 때문에
+        추후에 문제가 발생해도 모를 확률이 크기때문에 @Builder를 사용하는 것이 좋다.
+    - 기본 사용 예시
+        {% highlight java %}
+        UserVO tempUser
+        = UserVO.builder()
+            .name("홍길동")
+            .age(25)
+            .email("hong@naver.com")
+            .phoneNumber("0001112222")
+            .birthday("19970229")
+            .build();
+        {% endhighlight %}
+    - @Builder(toBuilder = true)
+        - builder 패턴으로 생성된 객체의 일부 값을 변경한 새로운 객체 생성
+        - 사용 예시
+            {% highlight java %}
+            UserVO userA
+            = UserVO.builder()
+                .name("A")
+                .age(25)
+                .email("hong@naver.com")
+                .phoneNumber("0001112222")
+                .birthday("19970229")
+                .build();
+
+                //userA에서 name/age 값만 변경된 새로운 객체를 생성 
+                BuilderVO b2 = b.toBuilder().name("B").age(24).build();
+            {% endhighlight %}
+    - @Builder.Default
+        - 사용 예시
+            {% highlight java %}
+                private String name; //기본 값 null
+                @Builder.Default private String job="programmer"; //기본 값 부여
+            {% endhighlight %}
+    - @Singular 옵션
+        -  사용 예시
+            {% highlight java %}
+            //vo
+            @Singular("hobbyList") private List<String> hobbyList;
+            //생성 영역
+            UserVO userC
+            = UserVO..builder() .hobbyList("game") .hobbyList("read book") .hobbyList("listen music") .build();
+            {% endhighlight %}
+- @ToString
+    - 해당 VO Class의 모든 필드를 출력하는 toString 메소드를 생성한다.
+    - includeFieldNames 옵션
+        - includeFieldNames=false 옵션을 사용하면 필드의 이름을 출력하지 않는다.
+    - exclude 옵션
+        - exclude="필드명" 옵션을 사용하면 해당 필드를 제외한다. 여러개면 {} 안에 명시
+        - ToString에서 제외하고 싶은 필드에 직접 @ToString.Exclude을 추가해도 된다.
+    - of 옵션
+        - of={"필드1", "필드2", ...} 옵션을 사용하면 특정 필드를 포함하게 한다.
+    - callSuper 옵션
+        - callSuper=true 옵션을 사용하면 부모 클래스의 toString()을 호출한다.
+- @EqualsAndHashCode
+    - hashcode와 equals 메소드를 생성한다.
+    - 불변 클래스를 제외하고는 아무 파라미터 없는 @EqualsAndHashCode 어노테이션은 사용하지 않는 것이 좋다.
+    - 항상 @EqualsAndHashCode(of={“필드 명시”}) 형태로 동등성 비교에 필요한 필드를 명시하는 형태로 사용한다.
+    - equals
+        - 두 객체의 내용이 같은지, 동등성(equality) 를 비교하는 연산자
+    - hashCode
+        - 두 객체가 같은 객체인지, 동일성(identity) 를 비교하는 연산자
+    - callSuper 옵션
+        - callSuper=true : 부모 클래스 필드 값들도 동일한지 체크
+        - callSuper=false (기본값) : 자신 클래스의 필드 값만 체크
+- @Log / @Slf4j (★) / @Log4j2
+    - log 기능을 바로 사용해줄 수 있게 해준다.
+- @NonNull
+    - null 값 체크
+- @Cleanup
+    - I/O 작업이나 JDBC 작업시 try-catch-finally문의 finally에서 close()를 사용해야 하던 번거로움을 줄여준다.
+    - 사용 예시
+        - @Cleanup Connection con = DriverManager.getConnection(url, user, password);
+- @SneakyThrows(예외오류명.class)
+    - throws나 try-catch문의 catch를 통한 번거로운 예외 처리 생략가능
+- @Synchronized
+    - 동기화
+- @Getter / @Setter에 필드를 포함시키지 않는 방법
+    - @Getter(AccessLevel.None)
+    - @Setter(AccessLevel.None)
+
+### Lombok 설치 방법
+
+- 설치 파일 다운로드
+    - xml
+        {% highlight xml %}
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+        {% endhighlight %}
+    - gradle
+        {% highlight gradle %}
+        compileOnly 'org.projectlombok:lombok:1.18.24'
+        {% endhighlight %}
+
+- 설치 진행
+    - 방법 1-A (cmd)
+        1. cmd를 켜서 cd C:\Users\사용자명\.m2\repository\org\projectlombok\lombok\lombok버전 실행
+        2. java -jar lombok.jar 실행 (버전이 있는 경우 java -jar lombok-1.18.16.jar)
+    - 방법 1-B (클릭)
+        1. 파일 탐색기를 열고 C:\Users\사용자명\.m2\repository\org\projectlombok\lombok\lombok로 이동
+        2. lombok.jar 파일 실행
+    {:start="2"}
+    2. IDEs 목록에 사용하는 STS(eclipse)를 선택 (안 보이면 Specify location 버튼으로 찾기)
+    3. Install / Update 클릭
+    4. Install Successful이 출력되면 성공 (Quit Installer는 단순 종료 버튼)
+
+### Lombok 사용 시 주의점
+
+- static 필드에도 @Getter / @Setter 적용이 가능하다.
+- enum에도 @Getter를 사용할 수 있다.
+- enum에는 @Setter를 사용할 수 없다.
+- 생성자 어노테이션에서 static 필드는 제외된다.
+- 생성자 어노테이션 사용 시 생성자의 파라미터의 순서는 해당 VO Class에서 필드를 선언한 순서와 같다. (주의 필요)
+- 생성자 어노테이션 사용시 기본값은 public이지만 필요로 따라서 접근 제한자를 설정해야 한다.
+- 생성자 어노테이션도 (access =AccessLevel.PROTECTED)처럼 기본 접근 제한자를 선택할 수 있는 옵션이 존재한다.
+- 왜인지는 모르겠는데 @Builder를 사용할 때 커스텀 어노테이션이 있으니까 오류가 생긴다.
+
+### 생성자 어노테이션을 고유 이름으로 만들기
+
+1. 해당 VO Class에 생성자 어노테이션을 추가한다.
+2. 해당 어노테이션에 staticName="원하는 이름" 옵션을 추가한다.
+3. 해당 Class에 대한 생성자는 private로 만들어진다.
+4. private로 만들어진 생성자를 return 시키는 public static 생성자가 만들어진다. (생성자명은 옵션에 명시한 이름)
+
+### Custom Annotation
+    
+1. 어노테이션용 패키지를 만든다.
+2. 해당 패키지에서 어노테이션 파일을 만든다. (New에 보면 어노테이션이 있다.)
+3. 어노테이션 제작 시 필요한 항목들을 선택해서 만들거나 아니면 아래의 기본적인 값들을 복사 및 붙여넣기 한다.
+
+- 기초 import 목록
+    {% highlight java %}
+    import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+    import static java.lang.annotation.ElementType.CONSTRUCTOR;
+    import static java.lang.annotation.ElementType.FIELD;
+    import static java.lang.annotation.ElementType.METHOD;
+    import static java.lang.annotation.ElementType.PARAMETER;
+    import static java.lang.annotation.ElementType.TYPE_USE;
+    import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+    import java.lang.annotation.Documented;
+    import java.lang.annotation.Retention;
+    import java.lang.annotation.Target;
+
+    import javax.validation.Constraint;
+    import javax.validation.Payload;
+    {% endhighlight %}
+
+- 기초 어노테이션 목록
+    {% highlight java %}
+    @Documented
+    @Constraint(validatedBy = { })
+    @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+    @Retention(RUNTIME)
+    {% endhighlight %}
+
+- 기초 속성 목록
+    {% highlight java %}
+    String message() default "{javax.validation.constraints.Email.message}";
+    Class<?>[] groups() default { };
+    Class<? extends Payload>[] payload() default { };
+    String regexp() default ".*";
+    {% endhighlight %}
