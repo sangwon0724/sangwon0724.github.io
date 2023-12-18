@@ -8,8 +8,8 @@ categories: Group&nbsp;:&nbsp;Spring MyBatis
 ### 별칭 사용하기
 
 1. 자신이 설정한 [프로젝트명/src/main/resources] 경로에 있는 mybatis 관련 설정 파일로 이동
-2. <configuration> 태그 안에 <typeAliases> 태그 작성
-3. <typeAliases> 태그 안에 <typeAlias type="com.my.vo.BoardVO" alias="BoardVO" />처럼 작성
+2. &nbsp;configuration> 태그 안에 &nbsp;typeAliases> 태그 작성
+3. &nbsp;typeAliases> 태그 안에 &nbsp;typeAlias type="com.my.vo.BoardVO" alias="BoardVO" />처럼 작성
 
 {% highlight xml %}
 <?xml version="1.0" encoding="UTF-8"?>
