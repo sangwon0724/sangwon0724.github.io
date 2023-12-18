@@ -3,6 +3,7 @@ layout: post
 title:  "윤년 구하기"
 date:   2023-12-15 09:37:00 +0900
 categories: Group&nbsp;:&nbsp;Java Others
+excerpt_separator: \n\n
 ---
 
 {% highlight java %}

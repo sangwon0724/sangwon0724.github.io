@@ -8,7 +8,7 @@ categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
 ### 스타일 만들기
 
 1. const styles  = StyleSheet.create({});라고 선언되있다고 가정한다.
-2. 스타일명 : { 속성명1 : x, 속성명2 : "y", ...}처럼 선언한다.
+2. 스타일명 : ```{속성명1 :x, 속성명2 : "y", ...}```처럼 선언한다.
 
 ### 스타일 적용하기
 
