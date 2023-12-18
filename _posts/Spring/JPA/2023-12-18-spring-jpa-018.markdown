@@ -1,11 +1,24 @@
 ---
 layout: post
-title:  "로그 출력하기"
+title:  "JPA 로그 출력하기"
 date:   2023-12-11 22:49:00 +0900
 categories: Group&nbsp;:&nbsp;Spring JPA
 ---
 
-### 
+### JPA 로그 출력 설정
 
-{% highlight java %}
+{% highlight properties %}
+spring.jpa.show-sql=true
+{% endhighlight %}
+
+### JPA 로그의 모양을 단정하게 하기
+
+{% highlight properties %}
+spring.jpa.properties.hibernate.format_sql=true
+{% endhighlight %}
+
+### JPA 로그의 ? 부분을 실제 값으로 치환
+
+{% highlight properties %}
+logging.level.org.hibernate.type.descriptor.sql=TRACE
 {% endhighlight %}

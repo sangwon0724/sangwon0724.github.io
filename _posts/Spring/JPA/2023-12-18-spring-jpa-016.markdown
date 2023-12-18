@@ -5,7 +5,61 @@ date:   2023-12-11 22:49:00 +0900
 categories: Group&nbsp;:&nbsp;Spring JPA
 ---
 
-### 
+### JPQL
 
-{% highlight java %}
-{% endhighlight %}
+- 테이블이 아닌 엔티티 객체를 대상으로 검색하는 객체지향 쿼리
+- from절 뒤에 테이블명이 아닌 객체명이 붙는다.
+- 반드시 객체명과 동일하게 명시해야 한다. (대소문자 오타 실수 주의)
+- 전체 검색을 할 때 *이 아닌 객체명이나 별칭을 명시한다.
+- 사용 예시
+    {% highlight java %}
+    //파라미터 사용 방법
+    //쿼리 => name 사용시 :name으로 명시
+    //파라미터 => name 사용 시 @Param("name") String name으로 명시
+    @Query(value="SELECT m FROM Member AS m WHERE m.name = :name")
+    public Member findByName(@Param("name") String name);
+    {% endhighlight %}
+
+### Native SQL
+
+- @Query 어노테이션에서 원래의 쿼리를 쓰는 방식
+- nativeQuery = true 옵션 활성화가 필요하다.
+- 사용 예시
+    {% highlight java %}
+    //파라미터 사용 방법
+    //쿼리 => name 사용시 :name으로 명시
+    //파라미터 => name 사용 시 @Param("name") String name으로 명시
+    @Query(value = "SELECT * FROM member AS m WHERE m.name = :name", nativeQuery = true)
+    public Member findByName(@Param("name") String name);
+    {% endhighlight %}
+
+### Converter
+
+- 엔티티의 데이터를 변환하는 기능
+- useYN같이 DB에서는 String이지만 객체에서는 boolean으로 저장하고 싶을 때 사용한다.
+- 항상 적용되기 원하면 autoApply=true 옵션을 활성화하면 된다.
+- 사용 예시
+    {% highlight java %}
+    @Entity
+    class Member{
+        @Id
+        @GeneratedValue
+        private Integer id;
+
+        @Convert(converter=BooleanToYNConverter.class)
+        private boolean useYn;
+    }
+
+    @Converter(autoApply=true)
+    class ConverterBooleanToYN implements AttributeConverter&lt;Boolean, String&gt;{
+        @Override
+        public String convertToDatabaseColumn(Boolean value){
+            return (value != null && value) ? "Y" : "N";
+        }
+
+        @Override
+        public Boolean convertToEntityAttribute(String dbData){
+            return "Y".eqauls(dbData);
+        }
+    }
+    {% endhighlight %}

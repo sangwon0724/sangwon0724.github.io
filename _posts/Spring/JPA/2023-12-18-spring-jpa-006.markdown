@@ -1,11 +1,245 @@
 ---
 layout: post
-title:  "연관관계 매핑 기초"
-date:   2023-12-11 22:43:00 +0900
+title:  "단방향/양방향 연관관계"
+date:   2023-12-18 21:26:00 +0900
 categories: Group&nbsp;:&nbsp;Spring JPA
 ---
 
-### 
+### 연관관계가 필요한 이유
 
+- 객체를 테이블에 맞추어 데이터 중심으로 모델링하면 협력 관계를 만들 수 없다.
+- 테이블은 외래 키로 조인을 사용해서 연관된 테이블을 찾는다. 
+- 객체는 참조를 사용해서 연관된 객체를 찾는다.
+
+### 단방향 연관관계
+
+- 1:N의 관계에 있을 때 N에 해당하는 쪽에 @ManyToOne을 명시한다.
+    - 예시
+        - 1개의 팀에는 여러 명의 회원이 소속된다.
+- @JoinColumn 어노테이션의 name에는 FK가 될 칼럼의 이름을 명시한다.
+
+- 사용 엔티티
 {% highlight java %}
+@Entity
+public class Member { 
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "USERNAME")
+    private String name;
+
+    private int age;
+
+    //@Column(name = "TEAM_ID")
+    //private Long teamId;
+
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+}
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Team {
+    @Id
+    private Long id;
+    private String name; 
+}
 {% endhighlight %}
+
+- 예시 코드 
+{% highlight java %}
+//s:연관관계 저장
+    //팀 저장
+    Team team = new Team();
+    team.setName("TeamA");
+    em.persist(team);
+
+    //회원 저장
+    Member member = new Member();
+    member.setName("member1");
+    member.setTeam(team); //단방향 연관관계 설정, 참조 저장
+    em.persist(member);
+//e:연관관계 저장
+
+//e:객체 그래프 탐색
+    //조회
+    Member findMember = em.find(Member.class, member.getId()); 
+    //참조를 사용해서 연관관계 조회
+    Team findTeam = findMember.getTeam();
+//e:객체 그래프 탐색
+
+//s:연관관계 수정
+    //새로운 팀 B
+    Team teamB = new Team();
+    teamB.setName("TeamB");
+    em.persist(teamB);
+
+    //회원1에 새로운 팀B 설정
+    member.setTeam(teamB)
+//e:연관관계 수정
+{% endhighlight %}
+
+### 양뱡향 연관관계
+
+- <b>1:N 관계일 때  
+1에 해당하는 엔티티에는 N에 해당하는 엔티티의 List를,
+N에 해당하는 엔티티에는 1에 해당하는 엔티티의 class를 명시한다. (★)</b>
+- add할때 NullPointException이 발생하는 것을 막기 위해 List는 ArrayList로 미리 초기화해둔다.
+- 순수 객체 상태를 고려해서 항상 양쪽에 값을 설정하자
+- 연관관계 편의 메소드를 생성하자
+    - 예시
+        {% highlight java %}
+        //로직이 들어가는 경우에는 기존 Java의 관례때문에 setXXX보다는 다른 이름을 쓰는 것이 좋다.
+        public void changeTeam(Team team){
+            this.team = team;
+            team.getMembers().add(this);
+        }
+        {% endhighlight %}
+- 양방향 매핑시에 무한 루프를 조심하자
+    - 예시
+        - toString()
+        - lombok
+        - JSON 생성 라이브러리
+- 단방향 매핑만으로도 이미 연관관계 매핑은 완료된 것이나 마찬가지다.
+- 양방향 매핑은 객체 그래프 탐색 기능이 추가된 것 뿐이다.
+    - JPQL에서 역방향으로 탐색할 일이 많다.
+- 단방향 매핑을 잘 하고 양방향은 필요할 때 추가해도 된다.
+- 테이블에 영향을 주지 않는다.
+- <b style="color: red;">왠만하면 컨트롤러에서 엔티티를 반환하면 안 된다. (★★★)</b>
+
+- 사용 엔티티
+{% highlight java %}
+@Entity
+public class Member { 
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "USERNAME")
+    private String name;
+
+    private int age;
+
+    //@Column(name = "TEAM_ID")
+    //private Long teamId;
+
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+}
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Team {
+    @Id
+    private Long id;
+    private String name;
+
+    @OneToMany(mappedBy = "team") //연결할 객체명을 적어준다.
+    private List<Member> members = new ArrayList<>()
+}
+{% endhighlight %}
+
+- 예시 코드
+{% highlight java %}
+//조회
+Team findTeam = em.find(Team.class, team.getId()); 
+int memberSize = findTeam.getMembers().size(); //역방향 조회
+{% endhighlight %}
+
+### 객체와 테이블이 관계를 맺는 차이
+
+- 객체 연관관계
+    - 종류
+        - 회원 -> 팀 연관관계 1개 (단방향) 
+        - 팀 -> 회원 연관관계 1개 (단방향)
+    - 특징
+        - 객체의 양방향 관계는 사실 양방향 관계가 아니라 서로 다른 단뱡향 관계 2개다.
+        - 객체를 양방향으로 참조하려면 단방향 연관관계를 2개 만들어야 한다. 
+- 테이블 연관관계
+    - 종류
+        - 회원 <-> 팀의 연관관계 1개 (양방향)
+    - 특징
+        - 테이블은 외래 키 하나로 두 테이블의 연관관계를 관리한다.
+
+### 연관관계의 주인
+
+- 객체의 두 관계중 하나를 연관관계의 주인으로 지정
+- 연관관계의 주인만이 외래 키를 관리(등록, 수정) 
+- 주인이 아닌쪽은 읽기만 가능
+- 주인은 mappedBy 속성을 사용하지 않는다. 
+- 주인이 아니면 mappedBy 속성으로 주인 지정
+- <b>왜래키가 있는 곳이 주인으로 정하는 것이 좋다. (★)</b>
+
+- 사용 엔티티
+    {% highlight java %}
+    /*
+        아래 코드의 경우에
+        Member.team이 연관관계의 주인이 된다.
+    */
+
+    @Entity
+    public class Member { 
+        @Id
+        @GeneratedValue
+        private Long id;
+
+        @Column(name = "USERNAME")
+        private String name;
+
+        private int age;
+
+        @ManyToOne
+        @JoinColumn(name = "TEAM_ID")
+        private Team team; //← 연관관계의 주인 ★★★
+    }
+
+    @Entity
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Team {
+        @Id
+        private Long id;
+        private String name;
+
+        @OneToMany(mappedBy = "team")
+        private List<Member> members = new ArrayList<>()
+    }
+    {% endhighlight %}
+
+- 예시 코드
+    {% highlight java %}
+    Team team = new Team();
+    team.setName("TeamA");
+    em.persist(team);
+
+    Member member = new Member();
+    member.setName("member1");
+    member.setTeam(team); //연관관계의 주인에 값 설정 ★★★
+
+    team.getMembers().add(member);
+
+    em.persist(member);
+    {% endhighlight %}
+
+
+### 관련 용어
+
+- 방향(Direction)
+    - 단방향
+    - 양방향
+- 다중성(Multiplicity)
+    - 다대일(N:1)
+    - 일대다(1:N)
+    - 일대일(1:1)
+    - 다대다(N:M)
+- 연관관계의 주인(Owner)
+    - 객체 양방향 연관관계는 관리 주인이 필요
+    - C언어로 치면 포인터

@@ -67,11 +67,13 @@ NoSQL이 분산 환경에서 단순 검색 및 추가 작업을 위한 키 값�
 ### JPA의 특징
 
 - JPA는 애플리케이션과 JDBC 사이에서 동작한다.
-- JPA는 인터페이스의 모음이다. (하이버네이트, EclipseLink, DataNucleus)
+- JPA는 인터페이스의 모음이다. (Hibernate, EclipseLink, DataNucleus)
 
 ### JPA를 왜 사용해야 하는가?
 
 - SQL 중심적인 개발에서 객체 중심으로 개발
+    - SQL 작성시 코드 반복의 감소
+    - 모델링 문제 해결
 - 생산성
     - 저장 : jpa.persist(member)
     - 조회 : Member member = jpa.find(memberId)
@@ -85,11 +87,31 @@ NoSQL이 분산 환경에서 단순 검색 및 추가 작업을 위한 키 값�
     - JPA와 객체 그래프 탐색
     - JPA와 비교하기 (동일한 트랜잭션 안에서 조회한 엔티티는 서로 같음을 JPA가 보장한다.)
 - 성능 최적화
-    - 1차 캐시와 동일성 보장
-    - 트랜잭션을 지원하는 쓰기 지연
-    - 지연 로딩 (Lazy Loading)
+    - 캐싱 기능 : 1차 캐시와 동일성 보장
+    - 버퍼링 기능 : 트랜잭션을 지원하는 쓰기 지연
+    - 지연 로딩 : 객체가 실제로 사용될 때 로딩하는 전략
+    - 즉시 로딩 : Join SQL로 한 번에 연관된 객체까지 미리 조회하는 전략
 - 데이터 접근 추상화와 벤더 독립성
 - 표준
+
+### JPA 동작 과정
+
+- 기본 구조
+    - 애플리케이션과 JDBC 사이에서 동작
+    - 개발자가 JPA 사용시 JPA 내부에서 JDBC API를 통해서 SQL을 호출하여 DataBase와 통신
+
+- 저장 과정
+    1. 개발자가 저장을 원하는 객체를 JPA에 전달
+    2. JPA가 Entity를 분석
+    3. JPA가 Insert SQL 생성
+    4. JPA가 JDBC API를 사용하여 SQL을 DB에 전송
+
+- 조회 과정
+    1. 개발자가 조회를 원하는 객체의 PK 값을 JPA에 전달
+    2. JPA가 Entity의 매핑 정보를 바탕으로 적절한 Selete SQL 생성
+    3. JPA가 JDBC API를 사용하여 SQL을 DataBase에 전달
+    4. DataBase가 JPA에게 결과를 전달
+    5. JPA가 DataBase한테 전달받은 결과를 객체에 매핑하여 전달
 
 ### 1차 캐시와 동일성 보장
 
