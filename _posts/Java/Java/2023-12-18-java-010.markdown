@@ -50,6 +50,7 @@ categories: Group&nbsp;:&nbsp;Java Java
 
 ### 메소드 호출
 
+{% highlight java %}
 //매개변수가 없는 메소드의 호출
 메소드이름();
 
