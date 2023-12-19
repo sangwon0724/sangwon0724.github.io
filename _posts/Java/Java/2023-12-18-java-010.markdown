@@ -1,19 +1,58 @@
 ---
 layout: post
-title:  "메소드"
-date:   2023-12-15 09:00:00 +0900
+title:  "메소드 (method)"
+date:   2023-12-19 17:34:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 메소드(method)란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 어떠한 특정 작업을 수행하기 위한 명령문의 집합
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 메소드의 사용 목적
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 중복되는 코드의 반복적인 프로그래밍 회피
+- 모듈화로 인한 코드의 가독성 증가
+- 유지보수의 난이도 보정
 
-Jekyll also offers powerful support for code snippets:
+>※ 메소드를 작성할 때는 되도록 하나의 메소드가 하나의 기능만을 수행하도록 작성하는 것이 좋다.
 
-{% highlight java %}
+### 메소드 정의
+
+- 접근 제어자
+    - 해당 메소드에 접근할 수 있는 범위를 명시합니다.
+- 반환 타입 (return type)
+    - 메소드가 모든 작업을 마치고 반환하는 데이터의 타입을 명시합니다.
+- 메소드 이름
+    - 메소드를 호출하기 위한 이름을 명시합니다.
+- 매개변수 목록 (parameters)
+    - 메소드 호출 시에 전달되는 인수의 값을 저장할 변수들을 명시합니다.
+- 구현부
+    - 메소드의 고유 기능을 수행하는 명령문의 집합입니다.
+
+>※ 메소드 시그니처 (method signature)
+>>메소드의 선언부에 명시되는 매개변수의 리스트
+>>만약 두 메소드가 매개변수의 개수와 타입, 그 순서까지 모두 같다면, 이 두 메소드의 시그니처는 같다고 표현한다.
+
+- 기본 형식
+    {% highlight java %}
+    접근제어자 반환타입 메소드이름(매개변수목록) { // 선언부
+        // 구현부
+    }
+    {% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    public void accelerate(int speed, int second) { // 선언부
+        // 구현부
+        System.out.println(second + "초간 속도를 시속 " + speed + "(으)로 가속함!!");
+    }
+    {% endhighlight %}
+
+### 메소드 호출
+
+//매개변수가 없는 메소드의 호출
+메소드이름();
+
+//// 매개변수가 있는 메소드의 호출
+메소드이름(인수1, 인수2, ...);
 {% endhighlight %}
