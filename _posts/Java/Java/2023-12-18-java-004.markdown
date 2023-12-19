@@ -1,19 +1,57 @@
 ---
 layout: post
-title:  "변수"
-date:   2023-12-15 09:00:00 +0900
+title:  "변수(variable)"
+date:   2023-12-19 15:43:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 변수(variable)란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 데이터(data)를 저장하기 위해 프로그램에 의해 이름을 할당받은 메모리 공간
+- 데이터를 저장할 수 있는 메모리 공간을 의미
+- 프로그램이 실행되는 동안 메모리에 저장된 데이터를 변경할 수 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 변수의 이름 생성 규칙
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 변수뿐만 아니라 클래스, 메소드 등의 이름을 짓는데 반드시 지켜야 하는 공통된 규칙 존재
+    - 변수의 이름은 영문 대소문자, 숫자, 언더스코어(_), 달러($)로만 구성 가능
+    - 변수의 이름은 숫자로 시작할 수 없다.
+    - 변수의 이름 사이에는 공백을 포함할 수 없다.
+    - 변수의 이름으로 자바에서 미리 정의된 키워드는 사용할 수 없습니다.
+    - 변수의 이름은 해당 변수에 저장될 데이터의 의미를 잘 나타내도록 짓는 것이 좋다.
 
-Jekyll also offers powerful support for code snippets:
+### 변수의 종류
 
-{% highlight java %}
-{% endhighlight %}
+- 기본형(primitive type) 변수
+    - 실제 연산에 사용되는 변수
+    - 종류
+        - 정수형
+            - byte
+            - short
+            - int
+            - long
+        - 실수형
+            - float
+            - double
+        - 문자형
+            - char
+        - 논리형
+            - boolean
+- 참조형(reference type) 변수
+    - 8개의 기본형 변수를 사용하여 사용자가 직접 만들어 사용하는 변수
+
+### 변수 정의 방법
+
+- ```타입 변수이름;```
+- 사용 예시
+    {% highlight java %}
+    int count;
+    {% endhighlight %}
+
+### 변수 초기화 방법
+
+- ```타입 변수이름 = 값;```
+- 사용 예시
+    {% highlight java %}
+    int count = 0;
+    {% endhighlight %}

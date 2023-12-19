@@ -1,19 +1,52 @@
 ---
 layout: post
-title:  "상수"
-date:   2023-12-15 09:00:00 +0900
+title:  "상수(constant)"
+date:   2023-12-19 15:50:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 상수(constant)란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 변수처럼 데이터를 저장할 수 있는 메모리 공간
+- 프로그램이 실행되는 동안 메모리에 저장된 데이터를 변경할 수 없다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 상수 선언 방법
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- ```final 타입 변수이름 = 값;```
+- 사용 예시
+    {% highlight java %}
+    final int AGES = 30;
+    {% endhighlight %}
 
-Jekyll also offers powerful support for code snippets:
+### 리터럴(literal)
 
-{% highlight java %}
-{% endhighlight %}
+- 그 자체의 값
+- 예시
+    {% highlight java %}
+    int num1 = 1; //리터럴 : 1
+    final int num2 = 2; //리터럴 : 2
+    {% endhighlight %}
+- 종류
+    - 정수형 리터럴(Integer literals)
+        - 아라비아 숫자와 부호로 표현된 값
+    - 실수형 리터럴(floating-point literals)
+        - 소수 부분을 가지는 아라비아 숫자
+    - 논리형 리터럴(boolean literals)
+        - true 또는 false
+    - 문자형 리터럴(character literals)
+        - 작은따옴표('')로 감싸진 문자
+    - 문자열 리터럴(string literals)
+        - 큰따옴표("")로 감싸진 문자열
+    - null 리터럴(null literals)
+        - null
+
+- 리터럴 타입 접미사(literal type suffix)
+    - 같은 값일 때 자료형을 인식시키는 방법
+    - 종류
+        - double
+            - D 또는 d
+            - 생략 가능
+        - float
+            - F 또는 f
+        - long
+            - L 또는 l

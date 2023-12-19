@@ -1,19 +1,133 @@
 ---
 layout: post
-title:  "조건문"
-date:   2023-12-15 09:00:00 +0900
+title:  "조건문 (conditional statements)"
+date:   2023-12-19 15:57:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 조건문(conditional statements)이란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 조건문은 주어진 조건식의 결과에 따라 별도의 명령을 수행하도록 제어하는 명령문입니다.
+- 종류
+    - if 문
+    - if-else 문
+    - if-else if-else 문
+    - 삼항 연산자에 의한 조건문
+    - switch 문
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### if문
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 기본 문법
+    {% highlight java %}
+    if (조건식) {
+        조건식의 결과가 참일 때 실행하고자 하는 명령문;
+    }
+    {% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    int a = 7;
+    int b = 3;
 
-Jekyll also offers powerful support for code snippets:
+    if (a > b) {
+        System.out.println("a는 b보다 큽니다.");
+    }
+    {% endhighlight %}
 
-{% highlight java %}
-{% endhighlight %}
+### if-else 문
+
+- 기본 문법
+    {% highlight java %}
+    if (조건식) {
+        조건식의 결과가 참일 때 실행하고자 하는 명령문;
+    } else {
+        조건식의 결과가 거짓일 때 실행하고자 하는 명령문;
+    }
+    {% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    int a = 1;
+    int b = 2;
+
+    if (a == b) {
+        System.out.println("a와 b는 같은 값입니다.");
+    } else {
+        System.out.println("a와 b는 다른 값입니다.");
+    }
+    {% endhighlight %}
+
+### if-else if-else 문
+
+- 기본 문법
+    {% highlight java %}
+    if (조건식1) {
+        조건식1의 결과가 참일 때 실행하고자 하는 명령문;
+    } else if (조건식2) {
+        조건식2의 결과가 참일 때 실행하고자 하는 명령문;
+    } else {
+        조건식1의 결과도 거짓이고, 조건식2의 결과도 거짓일 때 실행하고자 하는 명령문;
+    }
+    {% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    int a = 1;
+    int b = 1;
+
+    if (a > b) {
+        System.out.println("a는 b보다 큽니다.");
+    } else if (a < b) {
+        System.out.println("a는 b보다 작습니다.");
+    } else {
+        System.out.println("a와 b는 같습니다.");
+    }
+    {% endhighlight %}
+
+### 삼항 연산자에 의한 조건문
+
+- 기본 문법
+    {% highlight java %}
+    조건식 ? 반환값1 : 반환값2
+    {% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    int a = 1;
+    int b = 3;
+
+    int diff = a > b ? a - b : b - a;
+    {% endhighlight %}
+
+### switch 문
+
+- 기본 문법
+    {% highlight java %}
+    switch (조건 값) {
+        case 값1:
+            조건 값이 값1일 때 실행하고자 하는 명령문;
+            break;
+        case 값2:
+            조건 값이 값2일 때 실행하고자 하는 명령문;
+            break;
+        ...
+        default:
+            조건 값이 어떠한 case 절에도 해당하지 않을 때 실행하고자 하는 명령문;
+            break;
+    }
+    {% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    int temp = 7;
+
+    switch (temp) {
+        case 1:
+            System.out.println("temp의 값은 1입니다.");
+            break;
+        case 2:
+            System.out.println("temp의 값은 2입니다.");
+            break;
+        case 3:
+            System.out.println("temp의 값은 3입니다.");
+            break;
+        default:
+            System.out.println("사전에 정의된 case 중에 해당하는 건이 없습니다.");
+            break;
+    }
+    {% endhighlight %}
