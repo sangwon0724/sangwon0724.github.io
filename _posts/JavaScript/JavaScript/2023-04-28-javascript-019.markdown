@@ -6,6 +6,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
 ### 객체 생성 기본 방법
+
 {% highlight javascript %}
 //객체 생성 기본 방법 1
 var student = {};
@@ -23,7 +24,10 @@ var student = {
 //this를 명시하면 해당 객체 내부의 변수를 가리킨다. (= 객체 자기 자신이 가지고 있는 것을 가리키는 것)
 {% endhighlight %}
 
-### 생성자 (constructor) : 객체를 만드는 역할을 하는 함수
+### 생성자(constructor)란?
+
+- 객체를 만드는 역할을 하는 함수
+
 {% highlight javascript %}
 //알림 출력
 function Student(){}

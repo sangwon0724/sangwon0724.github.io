@@ -3,6 +3,7 @@ layout: post
 title:  "데이터 치환"
 date:   2023-12-16 16:27:00 +0900
 categories: Group&nbsp;:&nbsp;Spring MyBatis
+tags: [CDATA]
 ---
 
 ### 태그를 삭제하고 싶은 경우

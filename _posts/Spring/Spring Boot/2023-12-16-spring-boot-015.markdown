@@ -3,6 +3,7 @@ layout: post
 title:  "API 연동하기"
 date:   2023-12-16 16:08:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+tags: [API, 통신, 네이버, 연동]
 ---
 
 1. 네이버 메인 최하단의 "Developers" 메뉴 목록에서 "네이버 개발자" 센터 메뉴 클릭하기

@@ -37,7 +37,11 @@ layout: page
     {% assign posts = posts | push: default[i] %}
   {% endfor %}
 {% endif %}
-
+{% if page.tags %}
+  {% for tag in page.tags %}
+    <span class="tag">{{ tag }}</span>
+  {% endfor %}
+{% endif %}
 <div id="post-list">
 
 {% for post in posts %}

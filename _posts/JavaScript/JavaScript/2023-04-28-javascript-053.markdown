@@ -3,20 +3,21 @@ layout: post
 title:  "타이밍 제어"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [타이머]
 ---
 
 {% highlight javascript %}
-    //setTimeout(함수명, 시간) => 명시된 시간이 지나면 해당 함수를 한 번 실행하는 리스너
-    setTimeout(sayHi, 1000); //(실행될 함수명, 단위 : 1/1000초)
+//setTimeout(함수명, 시간) => 명시된 시간이 지나면 해당 함수를 한 번 실행하는 리스너
+setTimeout(sayHi, 1000); //(실행될 함수명, 단위 : 1/1000초)
 
-    //clearTimeout(setTimeout 변수명) => setTimeout을 제거하는 리스너
-    var timer = setTimeout(alertStr, 3000);
-    clearTimeout(timer);
+//clearTimeout(setTimeout 변수명) => setTimeout을 제거하는 리스너
+var timer = setTimeout(alertStr, 3000);
+clearTimeout(timer);
 
-    //setInterval(함수명, 시간) => 명시된 시간마다 해당 함수를 실행하는 리스너
-    setInterval(getTime, 1000); //(실행될 함수명, 단위 : 1/1000초)
+//setInterval(함수명, 시간) => 명시된 시간마다 해당 함수를 실행하는 리스너
+setInterval(getTime, 1000); //(실행될 함수명, 단위 : 1/1000초)
 
-    //clearInterval(setInterval 변수명) => setInterval을 제거하는 리스너
-    var temp = setInterval(getTime, 1000);
-    setTimeout(temp);체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
+//clearInterval(setInterval 변수명) => setInterval을 제거하는 리스너
+var temp = setInterval(getTime, 1000);
+setTimeout(temp);체 타입이면 그 안에는 참조 방법이 들어가있음을 의미한다.
 {% endhighlight %}

@@ -3,6 +3,7 @@ layout: post
 title:  "쿠키"
 date:   2023-12-15 13:12:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+tags: [쿠키]
 ---
 
 ### 쿠키 생성하기

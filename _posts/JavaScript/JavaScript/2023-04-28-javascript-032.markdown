@@ -3,27 +3,33 @@ layout: post
 title:  "Text 객체"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [Text 객체]
 ---
 
 ### Text 객체란?
-※ Text 객체 : 텍스트 노드에 대한 DOM 객체
+
+- 텍스트 노드에 대한 DOM 객체
 
 ### 특징
+
 - CharcterData 객체를 상속받는다.
 - 공백이나 문자열도 객체로 취급한다.
 
 ### 주요 기능
+
 - 값
 - 조작
 - 생성
 
 ### 값
+
 - data
     - 텍스트 노드의 값을 가져오거나 변경
 - nodeValue
     - 텍스트 노드의 값을 가져오거나 변경
 
 ### 조작
+
 - Node.appendData('내용')
     -  Node의 기존 내용 뒤에 내용 추가
 - Node.deleteData(n, count)

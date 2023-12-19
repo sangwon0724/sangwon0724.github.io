@@ -3,12 +3,15 @@ layout: post
 title:  "Document 객체"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [Document 객체]
 ---
 
 ### Document 객체란?
-※ Document 객체 : 문서 전체를 대표하는 객체
+
+- 문서 전체를 대표하는 객체
 
 ### 주요 기능
+
 -  노드 생성
 -  문서 정보
 
@@ -19,6 +22,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     - 지정한 문자열로 노드 만들기
 
 ### 문서 정보
+
 -  lastModified
     - HTML 문서의 마지막 갱신 날짜 및 시간을 반환
 -  referrer

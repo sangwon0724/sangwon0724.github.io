@@ -3,15 +3,18 @@ layout: post
 title:  "Node 객체"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [Node 객체]
 ---
 
 ### Node 객체란?
-※ Node 객체 : DOM의 시조 역할을 하는 객체
+
+- DOM의 시조 역할을 하는 객체
 
 ### 주요 기능
+
 -  관계
-    -   각각의 Node가 다른 Node와 연결된 정보를 보여주는 API를 통해서  
-문서를 프로그래밍적으로 탐색
+    - 각각의 Node가 다른 Node와 연결된 정보를 보여주는 API를 통해서  
+    문서를 프로그래밍적으로 탐색
 -  식별자
     - 모든 구성 요소의 대표격 객체로써 각 구성요소의 소속을 알려주는 식별자 제공
 -  값
@@ -20,6 +23,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     - Node 객체의 자식을 추가하는 방법에 대한 API
 
 ### 관계
+
 -  Node.childNodes
     -   자식 노드들을 유사 배열에 담아서 반환한다.
 -  Node.firstChild
@@ -35,7 +39,8 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 -  Node.hasChildNodes()
     -   Node가 자손을 갖고 있는 지에 대한 true/false 값을 반환한다.
     
-※ 주의점
+- 주의점
+
 - Node.firstChild를 사용할 때 줄바꿈 문자가 첫번째 자식으로 들어갈 수도 있으니 조심해야 한다.
 
 ### 노드의 종류
@@ -43,13 +48,15 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     -   Node의 타입을 반환한다.
 -  Node.nodeName
     -   Node의 이름을 반환한다. ( = 태그명 )
-{% highlight javascript %}
-for(var name in Node){
-    console.log(name, Node[name]);
-}
-{% endhighlight %}
+
+    {% highlight javascript %}
+    for(var name in Node){
+        console.log(name, Node[name]);
+    }
+    {% endhighlight %}
 
 ### 노드의 값
+
 -  Node.nodeValue
     - Node의 종류마다 각각 다른 값을 반환한다.
     - 요소 노드(element node) : undefined
@@ -61,39 +68,43 @@ for(var name in Node){
 ### 노드의 자식 관리
 -  Node.appendChild(child)
     - 노드의 마지막 자식으로 주어진 엘리먼트 추가
-{% highlight javascript %}
-var ul = document.getElementsByTagName('ul');
-var li = document.createElement('li'); //Documnet 객체의 기능
-ul.appendChild(li); //ul에 li 추가
-{% endhighlight %}
+    - 사용 예시
+        {% highlight javascript %}
+        var ul = document.getElementsByTagName('ul');
+        var li = document.createElement('li'); //Documnet 객체의 기능
+        ul.appendChild(li); //ul에 li 추가
+        {% endhighlight %}
 
 -  insertBefore(newElement, referenceElement)
     - appendChild와 사용법은 동일하나 newElement 노드를 referenceElement 앞에 추가한다.
--  Node.replaceChild(newChild, oldChild) : 노드 변경
-{% highlight javascript %}
-var parent = document.getElementById('#parent');    //parent 노드 설정
-var oldChild = document.createElement('div');  //oldChild 노드 생성
+-  Node.replaceChild(newChild, oldChild)
+    - 노드 변경
+    - 사용 예시
+        {% highlight javascript %}
+        var parent = document.getElementById('#parent');    //parent 노드 설정
+        var oldChild = document.createElement('div');  //oldChild 노드 생성
 
-parent.appendChild(oldChild); //parent 노드에 oldChild 노드를 자식 노드로 추가
+        parent.appendChild(oldChild); //parent 노드에 oldChild 노드를 자식 노드로 추가
 
-var newChild = document.createElement('span');  //newChild 노드 생성
+        var newChild = document.createElement('span');  //newChild 노드 생성
 
-//parent 노드의 자식 노드인 oldChild 노드를 제거하고,
-//그 자리에 newChild 노드를 새로 자식 노드로 연결한다.
-parent.replaceChild(newChild, oldChild);
-{% endhighlight %}
-
+        //parent 노드의 자식 노드인 oldChild 노드를 제거하고,
+        //그 자리에 newChild 노드를 새로 자식 노드로 연결한다.
+        parent.replaceChild(newChild, oldChild);
+        {% endhighlight %}
 -  Node.removeChild()
     - 노드의 마지막 자식으로 있는 엘리먼트 삭제
-{% highlight javascript %}
-var li = document.getElementsByTagName('li');
-li.parentNode.removeChild(li);
-{% endhighlight %}
+    - 사용 예시
+        {% highlight javascript %}
+        var li = document.getElementsByTagName('li');
+        li.parentNode.removeChild(li);
+        {% endhighlight %}
 
 
 ### 문자열로 노드 제어
->조건 1 : (1)<div id="target">(2)content<(3)/div>(4)  
-조건 2 : var target = document.getElementById('target');
+
+- 조건 1 : (1)&lt;div id="target">(2)content<(3)/div>(4)  
+- 조건 2 : var target = document.getElementById('target');
 
 -  Node.innerHTML
     -  값을 가져올 때에는 Node 내부에 있는 코드의 HTML 태그들까지 모두 가져온다.

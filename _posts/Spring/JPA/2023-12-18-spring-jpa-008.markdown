@@ -3,6 +3,7 @@ layout: post
 title:  "고급 매핑"
 date:   2023-12-11 22:45:00 +0900
 categories: Group&nbsp;:&nbsp;Spring JPA
+tags: [연관관계, JPA 연관관계]
 ---
 
 ### 

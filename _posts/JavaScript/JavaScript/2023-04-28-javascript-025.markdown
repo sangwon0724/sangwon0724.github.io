@@ -23,34 +23,36 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     - null
     - undefined
 
-### 레퍼 객체란?
-※ 레퍼 객체 (wrapper object) : 원시 데이터 타입을 임시로 감싸주는 객체  
-예시) => var str = "test";
+### 레퍼 객체(Wrapper object) 란?
 
-- 질문 : String은 객체인데 문자열은 어째서 객체가 아닐까?
+-  데이터 타입을 임시로 감싸주는 객체  
 - 예시
-{% highlight javascript %}
-var str = "test";
-str.temp = "temp";
-console.log(str.temp);  //출력 : undefined
-{% endhighlight %}
+    - var str = "test";
+- 의문
+    - String은 객체인데 문자열은 어째서 객체가 아닐까?
+- 예시
+    {% highlight javascript %}
+    var str = "test";
+    str.temp = "temp";
+    console.log(str.temp);  //출력 : undefined
+    {% endhighlight %}
 - 답변 :
-1. str에 문자열이 저장될 때는 var str = new String("test");처럼 저장된다고 볼 수 있다.
-2. JavaScript는 특정 변수에 대한 작업을 진행할 때  
-해당 변수에 저장된 것이 객체 타입이 아니라 원시 데이터 타입이라면  
-임시로 특정한 객체 타입으로 감싸주고 작업을 진행한다.  
-이 때, 원시 데이터 타입을 임시로 감싸주는 객체 타입을 `레퍼 객체`라고 한다.  
-3. JavaScript에서 레퍼 객체는 해당 변수에 대한 사용이 끝나고 나면 해당 객체를 제거해버린다.
-4. 예시의 2번째 줄에서 str의 temp 속성에 "temp"라는 값을 넣었다.  
-str.temp에서 .은 정확하게는 객체 접근 연산자라고 하는데 이것은 객체에만 사용이 가능하다.  
-그래서 아까 설명했듯이 str이라는 변수에 .으로 접근 하게 되면  
-str은 new String("test")으로 저장되기 때문에 String 객체 취급이 가능하다.  
-그렇기 때문에 객체에 key-value를 추가하는 것이 가능하기 때문에 오류가 발생하지 않은 것이다.
-5. 하지만 예시의 3번째 줄에서 console.log(str.temp);를 하면 "temp"가 아니라 undefined가 출력된다.
-6. 그 이유는 3번에서 설명했듯이 .연산자로 접근하는 당시에는 레퍼 객체가 감싸주기 때문에  
-객체 취급이라서 key-value의 추가가 가능헀지만 str.temp = "temp";가 끝나면  
-문자열을 감싸주고 있던 레퍼 객체가 사라지기 때문에 선언한 temp 속성이 사라지게 되는 것이다.
-7. (plus) :  
-원시 데이터 타입 중에서도  숫자, 문자열, true/false은 각각 Number, Stirng, Boolean이 감싸주지만,  
-null, undefined의 경우에는 레퍼 객체가 존재하지 않기 때문에  
-아까처럼 str.temp같은걸 쓰면 문법 오류가 발생하게 된다.
+    1. str에 문자열이 저장될 때는 var str = new String("test");처럼 저장된다고 볼 수 있다.
+    2. JavaScript는 특정 변수에 대한 작업을 진행할 때  
+    해당 변수에 저장된 것이 객체 타입이 아니라 원시 데이터 타입이라면  
+    임시로 특정한 객체 타입으로 감싸주고 작업을 진행한다.  
+    이 때, 원시 데이터 타입을 임시로 감싸주는 객체 타입을 `레퍼 객체`라고 한다.  
+    3. JavaScript에서 레퍼 객체는 해당 변수에 대한 사용이 끝나고 나면 해당 객체를 제거해버린다.
+    4. 예시의 2번째 줄에서 str의 temp 속성에 "temp"라는 값을 넣었다.  
+    str.temp에서 .은 정확하게는 객체 접근 연산자라고 하는데 이것은 객체에만 사용이 가능하다.  
+    그래서 아까 설명했듯이 str이라는 변수에 .으로 접근 하게 되면  
+    str은 new String("test")으로 저장되기 때문에 String 객체 취급이 가능하다.  
+    그렇기 때문에 객체에 key-value를 추가하는 것이 가능하기 때문에 오류가 발생하지 않은 것이다.
+    5. 하지만 예시의 3번째 줄에서 console.log(str.temp);를 하면 "temp"가 아니라 undefined가 출력된다.
+    6. 그 이유는 3번에서 설명했듯이 .연산자로 접근하는 당시에는 레퍼 객체가 감싸주기 때문에  
+    객체 취급이라서 key-value의 추가가 가능헀지만 str.temp = "temp";가 끝나면  
+    문자열을 감싸주고 있던 레퍼 객체가 사라지기 때문에 선언한 temp 속성이 사라지게 되는 것이다.
+    7. (추가정보) :  
+    원시 데이터 타입 중에서도  숫자, 문자열, true/false은 각각 Number, Stirng, Boolean이 감싸주지만,  
+    null, undefined의 경우에는 레퍼 객체가 존재하지 않기 때문에  
+    아까처럼 str.temp같은걸 쓰면 문법 오류가 발생하게 된다.

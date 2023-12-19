@@ -3,6 +3,7 @@ layout: post
 title:  "비동기 처리"
 date:   2023-12-15 16:00:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+tags: [비동기]
 ---
 
 ### 비동기 처리를 위한 서비스 Class 만드는 방법

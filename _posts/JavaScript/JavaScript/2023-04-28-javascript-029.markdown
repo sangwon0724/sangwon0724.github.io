@@ -7,36 +7,43 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 ### Element 객체란?
 
-※ Element 객체 : 엘리먼트를 추상화한 객체
+- 엘리먼트를 추상화한 객체
 
 ### 주요 기능
-- 식별자 : 문서내에서 특정한 엘리먼트를 식별하기 위한 용도로 사용되는 API
-- 조회 : 엘리먼트의 하위 엘리먼트를 조회하는 API
-- 속성 : 엘리먼트의 속성을 알아내고 변경하는 API
+
+- 식별자
+    - 문서내에서 특정한 엘리먼트를 식별하기 위한 용도로 사용되는 API
+- 조회
+    - 엘리먼트의 하위 엘리먼트를 조회하는 API
+- 속성
+    - 엘리먼트의 속성을 알아내고 변경하는 API
                 
-### 식별자
-※ 식별자 : id나 clas같은 식별자를 가져오고 변경하는 기능  
+### 식별자란?
+
+- id나 clas같은 식별자를 가져오고 변경하는 기능  
 - Element.classList
     - class명의 목록을 가져온다.
-    - 변경 가능.
+    - 변경 가능
     - Element.className보다 좀 더 발전한 API
-{% highlight javascript %}
+    - 사용 예시
+        {% highlight javascript %}
         var test = document.getElementById('test');
         test.classList.add('example');      //클래스 추가
-        for(var i=0; i<test.classList.length; i++){console.log(test.classList[i]);}
+        for(var i=0; i < test.classList.length; i++){console.log(test.classList[i]);}
         test.classList.remove('example');   //클래스 삭제
-        for(var i=0; i<test.classList.length; i++){console.log(test.classList[i]);}
-{% endhighlight %}
+        for(var i=0; i < test.classList.length; i++){console.log(test.classList[i]);}
+        {% endhighlight %}
 - Element.className
     - class명을 가져온다.
     - 변경 가능
-{% highlight javascript %}
+    - 사용 예시
+        {% highlight javascript %}
         var test = document.getElementById('test');
         test.className = "test1";
         console.log(test.className);
         test.className += " test2"
         console.log(test.className);
-{% endhighlight %}
+        {% endhighlight %}
 - Element.id
     - id명을 가져온다.
     - 변경 가능
@@ -44,22 +51,25 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     - 태그명을 가져온다.
     - 읽기 전용
                 
-### 조회
-※ 조회 : 엘리먼트의 하위 엘리먼트를 조회하는 API
-- Element.getElementsByClassName
-- Element.getElementsByTagName
-- Element.querySelector
-- Element.querySelectorAll
-                
-### 속성
-※ 속성 : 엘리먼트의 속성을 알아내고 변경하는 API
-- Element.getAttribute(name) : 해당 속성의 값을 조회
-- Element.setAttribute(name, value) : 해당 속성의 값 변경
-- Element.hasAttribute(name) : 해당 속성의 존재 여부 확인
-- Element.removeAttribute(name) : 해당 속성의 존재를 삭제
+### 조회 API
 
-                    
-{% highlight javascript %}
+- 엘리먼트의 하위 엘리먼트를 조회하는 API
+- 종류
+    - Element.getElementsByClassName
+    - Element.getElementsByTagName
+    - Element.querySelector
+    - Element.querySelectorAll
+                
+### 속성 API
+
+- 엘리먼트의 속성을 알아내고 변경하는 API
+- 종류
+    - Element.getAttribute(name) : 해당 속성의 값을 조회
+    - Element.setAttribute(name, value) : 해당 속성의 값 변경
+    - Element.hasAttribute(name) : 해당 속성의 존재 여부 확인
+    - Element.removeAttribute(name) : 해당 속성의 존재를 삭제
+- 사용 예시
+    {% highlight javascript %}
     <a href="https://www.naver.com/" id="aTag">Naver</a>
 
     var aTag = document.getElementById('aTag');
@@ -70,4 +80,4 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
     aTag.removeAttribute('title'); // title 속성을 제거한다.
     console.log(aTag.hasAttribute('title')); //출력 : false
-{% endhighlight %}
+    {% endhighlight %}

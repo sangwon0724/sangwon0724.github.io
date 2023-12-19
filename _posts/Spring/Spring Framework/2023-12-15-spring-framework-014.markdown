@@ -3,6 +3,7 @@ layout: post
 title:  "세션"
 date:   2023-12-15 13:13:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+tags: [세션]
 ---
 
 ### 세션 얻기

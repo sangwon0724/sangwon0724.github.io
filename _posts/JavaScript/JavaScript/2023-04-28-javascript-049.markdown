@@ -6,8 +6,8 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
 {% highlight javascript %}
-    const date = new Date();
-    const minutes = date.getMinutes();
-    const hours = date.getHours();
-    const seconds = date.getSeconds();
+const date = new Date();
+const minutes = date.getMinutes();
+const hours = date.getHours();
+const seconds = date.getSeconds();
 {% endhighlight %}

@@ -3,193 +3,204 @@ layout: post
 title:  "promise"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [promise, 비동기]
 ---
 
 ### promise란?
-※ promise : 약속된 값을 돌려주기 위한 문법
+
+- 약속된 값을 돌려주기 위한 문법
 
 ### 기본적인 구조
+
 {% highlight javascript %}
-    const promiseTest = new Promise(
-        (resolve, reject) => {
-            //resolve("success promiseTest");
-            //setTimeout(reject, 1000, "fail promiseTest");
-            //reject("fail promiseTest");
-            setTimeout(reject, 1, "fail promiseTest");
-        }
-    );
+const promiseTest = new Promise(
+    (resolve, reject) => {
+        //resolve("success promiseTest");
+        //setTimeout(reject, 1000, "fail promiseTest");
+        //reject("fail promiseTest");
+        setTimeout(reject, 1, "fail promiseTest");
+    }
+);
 
-    promiseTest
-        .then(value => console.log(value))
-        .catch(value => console.log(value));
+promiseTest
+    .then(value => console.log(value))
+    .catch(value => console.log(value));
 
-    //해설
-    /*
-        1. new Promise()를 작성하고 ()안에 함수를 선언한다.
-        2. 첫번째 인자는 작업이 성공했을 때의 값을 돌려주는 함수다. (resolve)
-        3. 두번째 인자는 작업이 실패했을 때의 값을 돌려주는 함수다. (reject)
-        4. promise를 할당한 해당 변수에 then을 걸어서 resolve 값이 돌아오면 호출된다.
-        5. promise를 할당한 해당 변수에 catch를 걸어서 reject 값이 돌아오면 호출된다.
-    */
+//해설
+/*
+    1. new Promise()를 작성하고 ()안에 함수를 선언한다.
+    2. 첫번째 인자는 작업이 성공했을 때의 값을 돌려주는 함수다. (resolve)
+    3. 두번째 인자는 작업이 실패했을 때의 값을 돌려주는 함수다. (reject)
+    4. promise를 할당한 해당 변수에 then을 걸어서 resolve 값이 돌아오면 호출된다.
+    5. promise를 할당한 해당 변수에 catch를 걸어서 reject 값이 돌아오면 호출된다.
+*/
 
-    //상태 값 (promise가 담겨있는 변수를 console.log로 출력했을 때)
-    /*
-        1. 대기(pending): 이행하거나 거부되지 않은 초기 상태.
-        2. 이행(fulfilled): 연산이 성공적으로 완료됨.
-        3. 거부(rejected) : 연산이 실패함.
-    */
+//상태 값 (promise가 담겨있는 변수를 console.log로 출력했을 때)
+/*
+    1. 대기(pending): 이행하거나 거부되지 않은 초기 상태.
+    2. 이행(fulfilled): 연산이 성공적으로 완료됨.
+    3. 거부(rejected) : 연산이 실패함.
+*/
 
-    //추가 실험
-    /*
-        1. resolve가 실행되고 나면 reject는 실행되지 않는다.
-        2. 이유는 모르겠지만 reject는 resolve처럼 콘솔창에서 실행되지 않고 실행되면 소스창으로 바로 이동된다.
-        3. if문으로 reject를 실행해도 오류가 발생한다.
-        4. setTimeout을 걸면 reject도 콘솔창에서 실행된다.
-    */
+//추가 실험
+/*
+    1. resolve가 실행되고 나면 reject는 실행되지 않는다.
+    2. 이유는 모르겠지만 reject는 resolve처럼 콘솔창에서 실행되지 않고 실행되면 소스창으로 바로 이동된다.
+    3. if문으로 reject를 실행해도 오류가 발생한다.
+    4. setTimeout을 걸면 reject도 콘솔창에서 실행된다.
+*/
 {% endhighlight %}
 
 
 ### 기본적인 예제
+
 {% highlight javascript %}
-    const promiseTestWithTimer = new Promise(
-        (resolve, reject) => {
-            setTimeout(resolve, 3000, prompt("success promiseTestWithTimer"));
-        }
-    );
+const promiseTestWithTimer = new Promise(
+    (resolve, reject) => {
+        setTimeout(resolve, 3000, prompt("success promiseTestWithTimer"));
+    }
+);
 
-    console.log(promiseTestWithTimer);
+console.log(promiseTestWithTimer);
 
-    setInterval(console.log, 1000, promiseTestWithTimer);
+setInterval(console.log, 1000, promiseTestWithTimer);
 
-    promiseTestWithTimer.then(
-        value => console.log("now resolve return : " + value)
-    );
+promiseTestWithTimer.then(
+    value => console.log("now resolve return : " + value)
+);
 {% endhighlight %}
 
 
 ### Chaining Promises
+
 {% highlight javascript %}
-    //기본 코드
-    const chainingPromiseTest = new Promise(
-        (resolve, reject) => {
-            resolve(2);
-        }
-    );
+//기본 코드
+const chainingPromiseTest = new Promise(
+    (resolve, reject) => {
+        resolve(2);
+    }
+);
 
-    //테스트 1
-    chainingPromiseTest
-        .then(
-            value1 => console.log("now resolve value1 => " + value1) //출력 : now resolve value1 => 2
-        )
-        .then(
-            value2 => console.log("now resolve value2 => " + value2) //출력 : now resolve value2 => undefined
-        ); 
+//테스트 1
+chainingPromiseTest
+.then(
+    value1 => console.log("now resolve value1 => " + value1) //출력 : now resolve value1 => 2
+)
+.then(
+    value2 => console.log("now resolve value2 => " + value2) //출력 : now resolve value2 => undefined
+); 
 
-        ※ undefined가 나오는 이유 : 연속된 then은 앞의 then에서 return되는 값을 받아야지 정상적으로 실행된다.
+※ undefined가 나오는 이유 : 연속된 then은 앞의 then에서 return되는 값을 받아야지 정상적으로 실행된다.
 
-    //테스트 2
-    chainingPromiseTest
-        .then(
-            value1 => {console.log("now resolve value1 => " + value1); return value1;} //출력 : now resolve value1 => 2
-        )
-        .then(
-            value2 => console.log("now resolve value2 => " + value2) //출력 : now resolve value2 => 2
-        );
+//테스트 2
+chainingPromiseTest
+.then(
+    value1 => {console.log("now resolve value1 => " + value1); return value1;} //출력 : now resolve value1 => 2
+)
+.then(
+    value2 => console.log("now resolve value2 => " + value2) //출력 : now resolve value2 => 2
+);
 {% endhighlight %}
 
-※ 첫번째 then에서 정상적으로 값을 리턴 받았기 때문에 두번째 then이 정상 작동 된다.
+>※ 첫번째 then에서 정상적으로 값을 리턴 받았기 때문에 두번째 then이 정상 작동 된다.
 
-### Promise.all
-※ Promise.all() :  
-인자로 사용되는 배열에 있는 이름들에 해당하는 모든 Promise들이 실행된 후에  
+### Promise.all()
+
+-인자로 사용되는 배열에 있는 이름들에 해당하는 모든 Promise들이 실행된 후에   
 최종적으로 사용되는 하나의 Promise를 반환한다.
     
 {% highlight javascript %}
-    const p1 = new Promise(
-        (resolve) => {
-            setTimeout(resolve, 5000, "First");
-        }
-    );
-    
-    const p2 = new Promise(
-        (resolve, reject) => {
-            setTimeout(resolve, 1000, "second");
-            //setTimeout(reject, 1000, "second");
-        }
-    );
-    
-    const p3 = new Promise(
-        (resolve) => {
-        setTimeout(resolve, 3000, "third");
-        }
-    );
-    
-    const allPromise = Promise.all([p1, p2, p3]);   //Promise.all() 사용법
+const p1 = new Promise(
+    (resolve) => {
+        setTimeout(resolve, 5000, "First");
+    }
+);
 
-    allPromise
-        .then(values => console.log(values))
-        .catch(err => console.log(err)); //출력 : ["First", "second", "third"]
+const p2 = new Promise(
+    (resolve, reject) => {
+        setTimeout(resolve, 1000, "second");
+        //setTimeout(reject, 1000, "second");
+    }
+);
+
+const p3 = new Promise(
+    (resolve) => {
+    setTimeout(resolve, 3000, "third");
+    }
+);
+
+const allPromise = Promise.all([p1, p2, p3]);   //Promise.all() 사용법
+
+allPromise
+    .then(values => console.log(values))
+    .catch(err => console.log(err)); //출력 : ["First", "second", "third"]
 {% endhighlight %}
 
-※ Promise.all()은 내부에서 실행되는 각 Promise들이 언제 끝나든지에 상관없이  
+- Promise.all()은 내부에서 실행되는 각 Promise들이 언제 끝나든지에 상관없이  
 모든 Promise가 resolve 값을 반환한 후에 실행된다.  
-※ 하나라도 reject가 발생되면 Promise.all()은 실행되지 않는다.  
-※ Promise.all()가 반환하는 배열은 내부에서 실행된 각 Promise의 resolve 값들이 저장된다.  
-※ 단, 값이 저장되는 순서는 종료 순서가 아닌 내부에서의 선언 순서다.
+- 하나라도 reject가 발생되면 Promise.all()은 실행되지 않는다.  
+- Promise.all()가 반환하는 배열은 내부에서 실행된 각 Promise의 resolve 값들이 저장된다.  
+- 단, 값이 저장되는 순서는 종료 순서가 아닌 내부에서의 선언 순서다.
 
-### Promise.race
-※ Promise.race() :  
-인자로 사용되는 배열에 있는 이름들에 해당하는 모든 Promise들이 실행된 후에  
+### Promise.race()
+
+- 인자로 사용되는 배열에 있는 이름들에 해당하는 모든 Promise들이 실행된 후에  
 가장 먼저 결과가 나오는 Promise의 resolve나 reject 값을 반환한다.
-{% highlight javascript %}
-    const p1 = new Promise(
-        (resolve) => {
-            setTimeout(resolve, 5000, "First");
-        }
-    );
-    
-    const p2 = new Promise(
-        (resolve, reject) => {
-            //setTimeout(resolve, 1000, "second");
-            setTimeout(reject, 1000, "second");
-        }
-    );
-    
-    const p3 = new Promise(
-        (resolve) => {
-        setTimeout(resolve, 3000, "third");
-        }
-    );
-    
-    const racePromise = Promise.race([p1, p2, p3]);   //Promise.race() 사용법
 
-    racePromise
-        .then(values => console.log(values))
-        .catch(err => console.log(err)); //출력 : second
+{% highlight javascript %}
+const p1 = new Promise(
+    (resolve) => {
+        setTimeout(resolve, 5000, "First");
+    }
+);
+
+const p2 = new Promise(
+    (resolve, reject) => {
+        //setTimeout(resolve, 1000, "second");
+        setTimeout(reject, 1000, "second");
+    }
+);
+
+const p3 = new Promise(
+    (resolve) => {
+    setTimeout(resolve, 3000, "third");
+    }
+);
+
+const racePromise = Promise.race([p1, p2, p3]);   //Promise.race() 사용법
+
+racePromise
+.then(values => console.log(values))
+.catch(err => console.log(err)); //출력 : second
 {% endhighlight %}
 
-※ Promise.race()는 내부에서 실행되는 각 Promise들 중에서  
-가장 먼저 값을 반환하는 Promise의 resolve 값이나 reject 값을 반환한다.
+>※ Promise.race()는 내부에서 실행되는 각 Promise들 중에서  
+>가장 먼저 값을 반환하는 Promise의 resolve 값이나 reject 값을 반환한다.
 
 ### Promise Finallizing
-※ Promise Finallizing : 해당 Promise의 then이나 catch가 완료된 이후에 실행될 코드
+
+- 해당 Promise의 then이나 catch가 완료된 이후에 실행될 코드
+
 {% highlight javascript %}
-    const p1 = new Promise(
-        (resolve, reject) => {
-            setTimeout(resolve, 5000, "First Resolve");
-            //setTimeout(resolve, reject, "First Reject");
-        }
-    )
-        .then(value => console.log(value))
-        .catch(err => console.log(err))
-        .finally(() => console.log("First Finally"));
+const p1 = new Promise(
+    (resolve, reject) => {
+        setTimeout(resolve, 5000, "First Resolve");
+        //setTimeout(resolve, reject, "First Reject");
+    }
+)
+.then(value => console.log(value))
+.catch(err => console.log(err))
+.finally(() => console.log("First Finally"));
 {% endhighlight %}
+
 ### fetch
-● fetch("url") : 해당 url 주소에서 Promise를 리턴한다.
+
+- fetch("url") : 해당 url 주소에서 Promise를 리턴한다.
+
 {% highlight javascript %}
-    //우클릭해서 Open With Live Server로 실행 후 콘솔에 입력해서 출력 내용 확인
-    fetch("http://192.168.0.8:5500/index.html")
-        .then((response) => response.text())
-        .then((text) => console.log(text))
-        .catch((err) => console.log(`error : ${err}`)); //출력 내용은 직접 확인
+//우클릭해서 Open With Live Server로 실행 후 콘솔에 입력해서 출력 내용 확인
+fetch("http://192.168.0.8:5500/index.html")
+.then((response) => response.text())
+.then((text) => console.log(text))
+.catch((err) => console.log(`error : ${err}`)); //출력 내용은 직접 확인
 {% endhighlight %}

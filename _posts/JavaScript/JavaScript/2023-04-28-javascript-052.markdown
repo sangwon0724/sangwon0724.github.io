@@ -3,41 +3,41 @@ layout: post
 title:  "이벤트"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [이벤트]
 ---
 
-{% highlight javascript %}
-{% endhighlight %}
+### 이벤트 막기
 
-### 이벤트 막기     
 {% highlight javascript %}
 event.preventDefault(); //이벤트 실행 막기, 예시) form의 submit()
 {% endhighlight %}
                     
                 
-### 드래그 앤 드롭
+### 드래그 앤 
+
 {% highlight javascript %}
-    <div ondrop="drop(event)" ondragover="dragEnter(event)">
-        <img id="monalisa" width="180" height="280" src="xxx.png" draggable="true" ondragstart="drag(event)">
-    </div>
-    <div ondrop="drop(event)" ondragover="dragEnter(event)"></div>
+<div ondrop="drop(event)" ondragover="dragEnter(event)">
+    <img id="monalisa" width="180" height="280" src="xxx.png" draggable="true" ondragstart="drag(event)">
+</div>
+<div ondrop="drop(event)" ondragover="dragEnter(event)"></div>
 
-    function dragEnter(ev) {
-        ev.preventDefault();
-    }
+function dragEnter(ev) {
+    ev.preventDefault();
+}
 
-    function drag(ev) {
-        ev.dataTransfer.setData("text", ev.target.id);
-    }
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
 
-    function drop(ev) {
-        ev.preventDefault();
-        var data = ev.dataTransfer.getData("text");
-        ev.target.appendChild(document.getElementById(data));
-    }
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
 {% endhighlight %}
 
-
 ### 뒤로가기 이벤트 감지
+
 {% highlight javascript %}
     //인터넷 익스플로러에서 뒤로가기시 검색창의 유저 아이디가 존재해서 페이징 에러를 발생시킴
     $(document).ready(function (){
@@ -51,6 +51,7 @@ event.preventDefault(); //이벤트 실행 막기, 예시) form의 submit()
 {% endhighlight %}
 
 ### 키보드 이벤트 감지
+
 - event.keyCode가 각각의 아스키 코드값과 같은 경우 이벤트를 실행
     - Backspace : 8
     - Tab : 9

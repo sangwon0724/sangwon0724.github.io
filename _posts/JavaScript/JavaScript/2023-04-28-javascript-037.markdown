@@ -6,19 +6,22 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
 ### Array.map()
+
 - map
     - 각 요소를 읽는 역할을 한다.
     - 인자로 넣은 함수에 각 요소들을 넣으면서 반복한다.
     - 반복하면서 실행된 값들은 다시 배열에 모여서 반환된다.
-{% highlight javascript %}
-const somethings = ['a', 'b', 'c'];
-function example(item){return item + "TEST";}
-const test = somethings.map(example);//test라는 배열에 실행 값들이 저장된다.
-console.log(test); //출력 : ["aTEST", "bTEST", "cTEST"]
-{% endhighlight %}
+    - 사용 예시
+        {% highlight javascript %}
+        const somethings = ['a', 'b', 'c'];
+        function example(item){return item + "TEST";}
+        const test = somethings.map(example);//test라는 배열에 실행 값들이 저장된다.
+        console.log(test); //출력 : ["aTEST", "bTEST", "cTEST"]
+        {% endhighlight %}
 
 
 ### Arrow Function
+
 {% highlight javascript %}
 const somethings = ['a', 'b', 'c'];
 const test = somethings.map(item => {
@@ -28,9 +31,9 @@ console.log(test);//출력 : ["aTEST", "bTEST", "cTEST"]
 {% endhighlight %}
   
 > - 하지만 방금의 코드는 기본적인 코드였고, 실제로는 좀 더 간단하게 줄일수 있다.
-- implicit return : 암시적 리턴
-- 암시적 리턴의 경우에는 {}가 없어야 실행된다.
-- {}를 할 경우에는 undefined를 반환하기 때문에 return을 명시해줘야 한다.
+>- implicit return : 암시적 리턴
+>- 암시적 리턴의 경우에는 {}가 없어야 실행된다.
+>- {}를 할 경우에는 undefined를 반환하기 때문에 return을 명시해줘야 한다.
   
 {% highlight javascript %}
 const somethings = ['a', 'b', 'c'];
@@ -39,6 +42,7 @@ console.log(test);//출력 : ["aTEST", "bTEST", "cTEST"]
 {% endhighlight %}
 
 > - 또다른 예시 (연산자가 없는 숫자나 문자열로 단순 초기화시 사용, map의 경우)
+
 {% highlight javascript %}
 const somethings = ['a', 'b', 'c'];
 const test = somethings.map(() => item + "TEST");
@@ -46,19 +50,22 @@ console.log(test);//출력 : ["aTEST", "bTEST", "cTEST"]
 {% endhighlight %}
 
 ### Arrow Function에서의 this
-- this를 사용해야 하는 상황에서는 Arrow Function을 사용하면 안 된다.
->addEventListener의 매개 변수 중 함수명을 선언하는 곳에  
-()=>{console.log(this);}라고 작성한다면  
-현재 이 리스너가 버튼에 적용된다고 가정했을 때  
-출력은 button 태그가 아니라 window가 찍힌다.
-- 주의점  
+
+>this를 사용해야 하는 상황에서는 Arrow Function을 사용하면 안 된다.
+>>addEventListener의 매개 변수 중 함수명을 선언하는 곳에  
+>>()=>{console.log(this);}라고 작성한다면  
+>>현재 이 리스너가 버튼에 적용된다고 가정했을 때  
+>>출력은 button 태그가 아니라 window가 찍힌다.
+
+>주의점  
 >리스너에서 사용할 때 ()=>{console.log(this);}라고 작성하면  
-this는 window를 가리키지만  
-function ()=>{console.log(this);}로 작성하면  
-그 때는 button 태그를 가리킨다.  
-즉, function 예약어의 유무에 따라 this가 가리키는 위치가 달라진다.  
+>>this는 window를 가리키지만  
+>>function ()=>{console.log(this);}로 작성하면  
+>>그 때는 button 태그를 가리킨다.  
+>>즉, function 예약어의 유무에 따라 this가 가리키는 위치가 달라진다.  
 
 ### 객체에 대한 Arrow Function
+
 {% highlight javascript %}
 const test = {
     name : "who",
@@ -83,10 +90,11 @@ test.addYear();
 console.log(test.age);//출력 : 25, 이유 : this가 객체를 가리킨다.
 {% endhighlight %}
 
-> ※ 즉, 객체의 메소드 내부에서 사용하는 this가  
-객체 자신을 가리키게 하고 싶다면 Arrow Function을 사용하면 안된다.
+>※ 즉, 객체의 메소드 내부에서 사용하는 this가  
+>객체 자신을 가리키게 하고 싶다면 Arrow Function을 사용하면 안된다.
 
 ### Arrow Function의 실제 예시
+
 {% highlight javascript %}
 //이메일 찾기 (find : 첫번째 값 반환)
 const email = ["test1@naver.com", "test2@gmail.com", "test3@hanmil.net"];
@@ -109,10 +117,10 @@ const email = ["test1@naver.com", "test2@gmail.com", "test3@hanmil.net"];
 const userNames = email.map(test=>test.split("@")[0]);
 {% endhighlight %}
 
-
-※ email.map((test, index) => {name : test.split("@")[0], point : index});처럼 객체로도 반환가능하다.
+>※ email.map((test, index) => {name : test.split("@")[0], point : index});처럼 객체로도 반환가능하다.
 
 ### Default Value
+
 {% highlight javascript %}
 //기본적인 함수의 사용 방법
 function basicFunction(text){ console.log(text);}
@@ -131,4 +139,4 @@ const defualValueAndArrowFunction = (text = "default value & arrow function") =>
 defualValueAndArrowFunction();//출력 : default value & arrow function
 {% endhighlight %}
 
-※ Default Value는 단순한 텍스트뿐만 아니라 숫자나 변수나 객체 등 뭐든 올수 있다.
+>※ Default Value는 단순한 텍스트뿐만 아니라 숫자나 변수나 객체 등 뭐든 올수 있다.

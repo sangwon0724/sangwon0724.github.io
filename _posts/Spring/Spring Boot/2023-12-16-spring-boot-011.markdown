@@ -3,6 +3,7 @@ layout: post
 title:  "ObjectMapper"
 date:   2023-12-16 15:33:00 +0900
 categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+tags: [ObjectMapper, Object Mapper, JSON]
 ---
 
 ### ObjectMapper란?

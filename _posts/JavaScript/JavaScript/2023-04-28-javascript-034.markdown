@@ -3,9 +3,11 @@ layout: post
 title:  "이벤트"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [이벤트]
 ---
 
 ### 이벤트의 기본 요소
+
 - 이벤트
     - 특정 상황에 일어나는 사건
 - 이벤트 타겟
@@ -16,54 +18,57 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     - 이벤트가 발생시 동작하는 코드
 
 ### 이벤트 등록 방법
+
 - 인라인 (inline) 방식
     - onclick같은 속성에 javascript 코드를 직접 등록하는 방식
     - 바람직한 방법은 아니다.
-{% highlight javascript %}
-<input type="button" onclick="alert('event '+this.value);" value="test" />
-{% endhighlight %}
+    - 사용 예시
+        {% highlight javascript %}
+        <input type="button" onclick="alert('event '+this.value);" value="test" />
+        {% endhighlight %}
 - 프로퍼티 리스너 방식
     - 이벤트 대상에 해당하는 객체의 프로퍼티로 이벤트를 등록하는 방식
-{% highlight javascript %}
-<input type="button" id="propertyListenerTest" value="propertyListenerTest" />
+    - 사용 예시
+        {% highlight javascript %}
+        <input type="button" id="propertyListenerTest" value="propertyListenerTest" />
 
-var target = document.getElementById('propertyListenerTest');
-    target.onclick = function(event){
-alert('propertyListenerTest success, event.target.value : ' + event.target.value);
-}
-{% endhighlight %}
+        var target = document.getElementById('propertyListenerTest');
+            target.onclick = function(event){
+        alert('propertyListenerTest success, event.target.value : ' + event.target.value);
+        }
+        {% endhighlight %}
 - addEventListener 방식
     - 객체에 특정 상황에 대한 이벤트를 등록하는 방식
-{% highlight javascript %}
-<input type="button" id="addListenerTest" value="propertyListenerTest" />
+    - 사용 예시
+        {% highlight javascript %}
+        <input type="button" id="addListenerTest" value="propertyListenerTest" />
 
+        var target = document.getElementById('addListenerTest');
 
-var target = document.getElementById('addListenerTest');
+        //방법 1
+        fucntion whatever(event){ alert('addEventListenerTest success, '+event.target.value); }
+        target.addEventListener('click', whatever);
 
-//방법 1
-fucntion whatever(event){ alert('addEventListenerTest success, '+event.target.value); }
-target.addEventListener('click', whatever);
+        //방법 2
+        target.addEventListener('click', function(event){
+            alert('addEventListenerTest success, '+event.target.value);
+        });
+        {% endhighlight %}
 
-//방법 2
-target.addEventListener('click', function(event){
-alert('addEventListenerTest success, '+event.target.value);
-});
-
-
-{% endhighlight %}
-
-※ 주의점
->방법 1에서 함수명을 명시할때 [ 함수명() ]가 아니라 [ 함수명 ]로 적어야지 맞는 방식이다.  
-왜냐하면 ()를 붙이면 바로 호출해버리기 때문에 우리가 원하는 이벤트때 호출되는게 아닌  
-홈페이지 로드시 바로 호출되버리기 때문이다.
+>※ 주의점
+>>방법 1에서 함수명을 명시할때 [ 함수명() ]가 아니라 [ 함수명 ]로 적어야지 맞는 방식이다.  
+>>왜냐하면 ()를 붙이면 바로 호출해버리기 때문에 우리가 원하는 이벤트때 호출되는게 아닌  
+>>홈페이지 로드시 바로 호출되버리기 때문이다.
 
 ### 이벤트 전파 방법
+
 - 캡처링 (capturing)
     - 이벤트가 부모에서부터 발생해서 자식으로 전파되는 방식
 - 버블링 (bubbling)
     - 이벤트가 자식으로부터 발생해서 부모로 전파되는 방식
 
 ### 기본 동작의 취소
+
 - 인라인 방식
     - 리턴 값이 false일 경우 취소
 - 프로퍼티 리스너 방식
@@ -72,6 +77,7 @@ alert('addEventListenerTest success, '+event.target.value);
     - 이벤트객체명.preventDefault() 실행시 취소
 
 ### 이벤트의 타입
+
 - UI 이벤트
 - 키보드 이벤트
 - 마우스 이벤트
@@ -79,6 +85,7 @@ alert('addEventListenerTest success, '+event.target.value);
 - 폼 이벤트
 
 ### UI 이벤트
+
 - load
     - 웹 페이지 로드의 완료
 - unload
@@ -92,6 +99,7 @@ alert('addEventListenerTest success, '+event.target.value);
     - 사용자가 페이지를 위아래로 스크롤
 
 ### 키보드 이벤트
+
 - keydown
     - 사용자가 키를 처음 눌렀을 때
 - keyup
@@ -102,6 +110,7 @@ alert('addEventListenerTest success, '+event.target.value);
 ※ 특수 키 사용시의 프로퍼티 : event.shiftKey, event.altKey, event.ctrlKey
 
 ### 마우스 이벤트
+
 - click
     - 사용자가 마우스로 클릭할 때
 - dbclick
@@ -122,12 +131,14 @@ alert('addEventListenerTest success, '+event.target.value);
 ※ 마우스 포인터의 위치 : clientX, clientY
 
 ### 포커스 이벤트
+
 - focus
     - 요소가 포커스를 얻었을 때
 - blur
     - 요소가 포커스를 잃었을 때
 
 ### 폼 이벤트
+
 - input
     - input 태그나 textarea 태그의 요소 값이 변경되었을 때
 - change
@@ -146,6 +157,7 @@ alert('addEventListenerTest success, '+event.target.value);
     - 해당 텍스트를 선택했을 때
 
 ### 드래그 앤 드롭 이벤트
+
 - dragstart
     - 요소나 텍스트 블록을 드래그 할 때
 - drag

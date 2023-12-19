@@ -3,16 +3,14 @@ layout: post
 title:  "Symbol & Set & Map"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [Symbol, Set, Map]
 ---
 
-#복제 (copy)
-{% highlight javascript %}
-{% endhighlight %}
+### Symbol이란?
 
-### Symbol
-- 심볼 (Symbol) :  새로운 데이터 타입
-- 사용법
-{% highlight javascript %}
+- 새로운 데이터 타입
+- 사용 예시
+    {% highlight javascript %}
     const hello = Symbol("test"); //new를 쓰지 않는다.   
     const world = Symbol("test");
 
@@ -20,7 +18,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     //해석 1 : "test"는 설명일뿐 심볼의 값이 아니다.
     //해석 2 : 단순히 Symbol()을 통해 만들어낸 심볼들은 모두 다른 심볼들이다.
 
-    //같은 심볼을 사용하고 싶아면 Symbol.for()을 사용하면 된다.
+    //같은 심볼을 사용하고 싶으면 Symbol.for()을 사용하면 된다.
     const t1 = Symbol.for("test");
     const t2 = Symbol.for("test");
     t1 === t2 //출력 : true
@@ -33,14 +31,15 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     };
     testObj.t3  //출력 : 3, 일반적인 객체 접근 방법
     testObj[t3] //출력 : 7, 심볼을 통한 객체 접근 방법
-{% endhighlight %}
+    {% endhighlight %}
 - 사용이유
     - 기존에 재정의했던 메소드가 어느 순간 업데이트를 통해 표준 메소드가 되버리면 충돌이 발생할수 있기 때문에
 
-### Set
-- Set : 중복되지 않는 유니크한 값을 가지게 해주는 생성자다.
-- 사용법
-{% highlight javascript %}
+### Set이란?
+
+- 중복되지 않는 유니크한 값을 가지게 해주는 생성자다.
+- 사용 예시
+    {% highlight javascript %}
     const setTest = new Set([1,2,3,4,5,6,7,7,7]);
     setTest //데이터를 7개만 가지고 있다고 나온다. 1에서 7까지 1개씩 가지고 있다.
 
@@ -54,32 +53,35 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     //요소 삭제
     setTest.delete(8);
     setTest //데이터 7개 보유
-{% endhighlight %}
+    {% endhighlight %}
 - 특징
     - object도 저장할 수 있다.
     - 작은 Database처럼 취급가능하다.
 
-### Weak Set
-- Weak Set : object만 저장가능한 Set
-- 사용법
-{% highlight javascript %}
+### Weak Set이란?
+
+- object만 저장가능한 Set
+- 사용 예시
+    {% highlight javascript %}
     const weakSetTest = new WeakSet();
     weakSetTest.add({hi : 'hi'});
-{% endhighlight %}
+    {% endhighlight %}
 - 특징
     - Set과 다르게 제한된 몇 개의 메소드만 가지고 있다.
     - WeakSet 안의 object를 가리키는 무언가가 없다면 그 object는 garbage collector가 가져간다.
 
-### Map
-- Map : key-value 방식을 통한 데이터 저장을 위한 콜렉션
-- 사용법
-{% highlight javascript %}
+### Map이란?
+
+- key-value 방식을 통한 데이터 저장을 위한 콜렉션
+- 사용 예시
+    {% highlight javascript %}
     const map = new Map();  //Map 선언
     map.set("test","ttt");   //값 설정 (key-value)
     map.has("test");        //출력 : true
     map.get("test");        //출력 : ttt
     map.entries();          //출력 : MapIterator {"test" => "ttt"}
-{% endhighlight %}
+    {% endhighlight %}
 
-### Weak Map
-- Weak Map : Map에 대해서 WeakSet처럼 사용하는 방식
+### Weak Map이란?
+
+- Map에 대해서 WeakSet처럼 사용하는 방식

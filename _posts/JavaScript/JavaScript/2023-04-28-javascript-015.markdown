@@ -3,15 +3,17 @@ layout: post
 title:  "함수 지향 - 클로저"
 date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [클로저]
 ---
 
-### 클로저란?
-※ 클로저 (closure) :
-- 내부 함수가 외부 함수의 맥락 (context)에 접근할 수 있는 것
-- function test(){}는 var test = function(){};와 같다.
+### 클로저(Closure)란?
+    - 내부 함수가 외부 함수의 맥락 (context)에 접근할 수 있는 것
+    - function test(){}는 var test = function(){};와 같다.
                 
 ### 내부 함수란?
-※ 내부 함수 : 함수 안에서 또 다른 함수를 선언할 수 있는 JavaScript 문법
+
+- 함수 안에서 또 다른 함수를 선언할 수 있는 JavaScript 문법
+
 {% highlight javascript %}
 function outside(){
     function inside(){
@@ -44,8 +46,10 @@ var outside = inside();
 outside();
 {% endhighlight %}
                 
-### 프라이빗 변수란?
-※ 프라이빗 변수 (private variable) : 아무나 수정할 수 있는 것을 방지하는 것
+### 프라이빗 변수(private variable)란?
+
+- 아무나 수정할 수 있는 것을 방지한 변수
+
 {% highlight javascript %}
 function factory_movie(title){
     return {
@@ -89,9 +93,11 @@ alert(ironman.get_title()); //실행 4
 {% endhighlight %}
                 
 ### 클로저 사용시 주의점
+
 >클로저라는 것은 내부 함수가 외부 함수의 지역 변수를 접근할 수 있다는 것이지  
-for문의 조건식의 i같은 변수에 바로 접근할 수 있다는 뜻이 아니다.  
-만약 for문의 i같은 변수에 바로 접근하고 싶다면 아래와 같이 코드를 작성하면 된다.
+>for문의 조건식의 i같은 변수에 바로 접근할 수 있다는 뜻이 아니다.  
+>만약 for문의 i같은 변수에 바로 접근하고 싶다면 아래와 같이 코드를 작성하면 된다.
+
 {% highlight javascript %}
 var arr = []
 for(var i = 0; i < 5; i++){

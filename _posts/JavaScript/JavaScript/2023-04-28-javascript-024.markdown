@@ -6,12 +6,16 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
 ### Object 객체의 특징
-- 객체의 가장 기본적인 형태를 가지고 있다. ( = 아무것도 상속 받지 않은 순수한 객체 )
+
+- 객체의 가장 기본적인 형태를 가지고 있다.
+    - 아무것도 상속 받지 않은 순수한 객체
 - JavaScript에서 값을 저장하는 기본적인 단위
-- JavaScript의 모든 객체는 Object 객체를 상속받는다. ( = 모든 객체는 Object 객체의 프로퍼티를 가지고 있다.)
+- JavaScript의 모든 객체는 Object 객체를 상속받는다.
+    - 모든 객체는 Object 객체의 프로퍼티를 가지고 있다.
 - Object 객체를 확장하면 모든 객체가 접근할 수 있는 API를 만들 수 있다.
 
 ### Object API
+
 - JavaScript API 홈페이지 가는 법
     1. https://developer.mozilla.org/en-US/docs/Web로 이동한다.
     2. Web technology references이나 Temporary에서 JavaScript 항목을 찾아서 클릭한다.
@@ -35,6 +39,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
         - 출력 : [object Object]
 
 ### Object 객체의 확장
+
 {% highlight javascript %}
 Object.prototype.searchElement = function(searchObject) {
     for(var index in this){
@@ -51,8 +56,11 @@ console.log(number.searchElement(1));         //출력 : true
 {% endhighlight %}
 
 ### Object 객체의 확장의 위험성
-만약 위에서럼 Object 객체에 대해서 prototype으로 재정의한 함수는  
-잘못하면 코드가 유출될수 있으니 객체의 내용물을 출력할때는 다음과 같이 작성하는 것이 좋다.
+
+>만약 위에서럼 Object 객체에 대해서 prototype으로 재정의한 함수는  
+>잘못하면 코드가 유출될수 있으니 객체의 내용물을 출력할때는  
+>다음과 같이 작성하는 것이 좋다.
+
 {% highlight javascript %}
 for(var item in 객체명){
     if(item.hasOwnProperty(item)){

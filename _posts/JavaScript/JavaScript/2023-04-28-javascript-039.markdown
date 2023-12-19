@@ -3,59 +3,64 @@ layout: post
 title:  "배열 메소드"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [배열 메소드]
 ---
 
 ### Array.of
-※ Array.of(요소)
+
+- Array.of(요소)
 - 넣은 데이터들을 배열로 만들어준다.
 {% highlight javascript %}
 const testArray = Array.of(3, true, "what");
 {% endhighlight %}
 
 ### Array.from
-※ Array.from(...)
+
+- Array.from(...)
 - 넣은 데이터들을 배열로 만들어준다.
-{% highlight javascript %}
-//가정 : buttonTest라는 class명을 가진 버튼들이 여러 개 존재
+    {% highlight javascript %}
+    //가정 : buttonTest라는 class명을 가진 버튼들이 여러 개 존재
+    const buttonArray = document.getElementsByClassName("buttonTest");
+    Array.from(buttonArray).forEach(
+        button => button.addEventListener("click", () => console.log("test"))
+    );
 
-const buttonArray = document.getElementsByClassName("buttonTest");
-Array.from(buttonArray).forEach(
-    button => button.addEventListener("click", () => console.log("test"))
-);
-
-/*
-이런식으로 이벤트를 추가해주려고 한다면 에러가 발생한다.
-왜냐하면 forEach는 Array 객체의 메소드인데 코드에 있는 buttonArray는 배열이 아니기 때문이다.
-실제로는 HTML Collection라는 Array-Like Object다.
-그렇기 때문에 코드에 있는 buttonArray에 ForEach를 사용하고 싶다면
-Array.from(buttonArray)를 해줘서 배열로 만들어준 다음에 ForEach를 사용하면 된다.
-*/
-{% endhighlight %}
+    /*
+        이런식으로 이벤트를 추가해주려고 한다면 에러가 발생한다.
+        왜냐하면 forEach는 Array 객체의 메소드인데 코드에 있는 buttonArray는 배열이 아니기 때문이다.
+        실제로는 HTML Collection라는 Array-Like Object다.
+        그렇기 때문에 코드에 있는 buttonArray에 ForEach를 사용하고 싶다면
+        Array.from(buttonArray)를 해줘서 배열로 만들어준 다음에 ForEach를 사용하면 된다.
+    */
+    {% endhighlight %}
 
 ### Array.find
-※ Array.find(조건)
+
+- Array.find(조건)
 - 배열에 있는 데이터들에 대하여 조건에 맞는 것들만 데이터 중 첫번째 요소의 값을 찾아준다.
-{% highlight javascript %}
-const testArray = ["testA", "testB", "testC", "textD", "textE"];
-const findStartTextIsTestArray = testArray.find(element => element.startsWith("test"));
-console.log(findStartTextIsTestArray);  //출력 : testA
-{% endhighlight %}
+    {% highlight javascript %}
+    const testArray = ["testA", "testB", "testC", "textD", "textE"];
+    const findStartTextIsTestArray = testArray.find(element => element.startsWith("test"));
+    console.log(findStartTextIsTestArray);  //출력 : testA
+    {% endhighlight %}
 
 ### Array.fill
-※ Array.findIndex(조건)
+
+- Array.findIndex(조건)
 - 배열에 있는 데이터들에 대하여 조건에 맞는 것들만 데이터 중 첫번째 요소의 인덱스를 찾아준다.
-{% highlight javascript %}
-const testArray = ["testA", "testB", "testC", "textD", "textE"];
-const findStartTextIsTestArray = testArray.findIndex(element => element.startsWith("test"));
-console.log(findStartTextIsTestArray);  //출력 : 0
-{% endhighlight %}
+    {% highlight javascript %}
+    const testArray = ["testA", "testB", "testC", "textD", "textE"];
+    const findStartTextIsTestArray = testArray.findIndex(element => element.startsWith("test"));
+    console.log(findStartTextIsTestArray);  //출력 : 0
+    {% endhighlight %}
 
 ### Array.fill
-※ Array.fill(문자열, x, y)
+
+- Array.fill(문자열, x, y)
 - 배열의 인덱스 중 x에서 y까지 설정한 문자열로 교체
 - y 생략시 x에서 마지막 인덱스까지 전부 교체
-{% highlight javascript %}
-const testArray = ["testA", "testB", "testC", "textD", "textE"];    
-testArray.fill("###", 3);
-console.log(testArray); //출력 : ["testA", "testB", "testC", "###", "###"]
-{% endhighlight %}
+    {% highlight javascript %}
+    const testArray = ["testA", "testB", "testC", "textD", "textE"];    
+    testArray.fill("###", 3);
+    console.log(testArray); //출력 : ["testA", "testB", "testC", "###", "###"]
+    {% endhighlight %}

@@ -5,7 +5,8 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-### 함수와 this  
+### 함수와 this
+
 - this는 함수 내에서 함수 호출 맥락(context)를 가리킨다.  
 - 맥락이란 것은 상황에 따라 달라지기 때문에,  
 함수를 어떻게 호출하느냐에 따라서 this가 가리키는 대상이 달라진다.
@@ -23,7 +24,9 @@ test(); //출력 : window === this;
 {% endhighlight %}
 
 ### 메소드와 this
+
 - 객체의 소속인 this는 그 객체를 가리킨다.
+
 {% highlight javascript %}
 var t = {
     test : function (){
@@ -39,6 +42,7 @@ t.test(); //출력 : t === this;
 {% endhighlight %}
 
 ### 생성자와 this
+
 {% highlight javascript %}
 var funcThis = null; 
             
@@ -60,19 +64,21 @@ if(funcThis === B){
 {% endhighlight %}
 
 ### 객체로서의 함수
-기본적으로 함수를 만들때에는  
-function sum(x, y){return x+y;}처럼 만든다.
 
-하지만 이것은 사실  
-var sum = new Function('x', 'y', 'return x+y;');처럼  
-new를 통해서 Function이라는 생성자 함수를 불러내서 만드는 것이다.  
-
-그렇지만 이런 식으로 모든 인자와 본문 내용을 저렇게 표현하면  
-길고 복잡한 코드를 사용할 때 문제가 커질수 있다.  
-그래서 함수나 배열 등을 문법적으로 표현할 수 있도록 하는 방법을 사용하는데  
-이런 것을 `리터럴`이라고 한다.
+>기본적으로 함수를 만들때에는  
+>function sum(x, y){return x+y;}처럼 만든다.
+>
+>하지만 이것은 사실  
+>var sum = new Function('x', 'y', 'return x+y;');처럼  
+>new를 통해서 Function이라는 생성자 함수를 불러내서 만드는 것이다.  
+>
+>그렇지만 이런 식으로 모든 인자와 본문 내용을 저렇게 표현하면  
+>길고 복잡한 코드를 사용할 때 문제가 커질수 있다.  
+>그래서 함수나 배열 등을 문법적으로 표현할 수 있도록 하는 방법을 사용하는데  
+>이런 것을 `리터럴`이라고 한다.
 
 ### apply와 this
+
 {% highlight javascript %}
 var a = {}
 var b = {}

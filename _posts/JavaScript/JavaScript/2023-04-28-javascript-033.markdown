@@ -6,6 +6,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
 ### 요소의 크기와 위치
+
 - 객체명.getBoundingClientRect()
     - 해당 객체가 문서에 가지고 있는 width, height, margin같은 정보를 반환한다.
 - 객체명.clientWidth
@@ -18,16 +19,19 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ※ tr이나 td의 경우에는 측정의 기준이 table이 된다.
 
 ### Viewport
+
 - Viewport의 정의
     - 문서의 내용 중 사용자에게 보여주는 영역 (= 전체 문서 중에서 브라우저에서 보이는 영역)
 - window.pageXoffset, window.pageYoffset
     - 뷰포트의 크기를 반환
 
 ### 스크롤 제어
+
 - window.scrollTo(x,y)
     - 페이지의 오프셋을 오른쪽으로 x px, 아래쪽으로 y px만큼 이동(스크롤)한다.
 
 ### 스크린의 크기
+
 - window.innerWidth, window.innerHeight
     - Viewport의 크기
 - screen.width, screen.height

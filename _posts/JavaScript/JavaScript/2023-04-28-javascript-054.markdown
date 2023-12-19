@@ -3,43 +3,46 @@ layout: post
 title:  "캔버스 제어"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [캔버스]
 ---
 
 ### 이미지 그리기
+
 {% highlight javascript %}   
-    const canvas = document.getElementById("jsCanvas");
-    const ctx = canvas.getContext("2d"); //canvas의 그림 그리기 기능을 가져옴
+const canvas = document.getElementById("jsCanvas");
+const ctx = canvas.getContext("2d"); //canvas의 그림 그리기 기능을 가져옴
 
-    //canvas의 그리기 기능 이용시 크기 설정 필요
-    //상위 요소에 relative가 없으면 컨텐츠의 절대값으로 설정
-    canvas.width = 700;
-    canvas.height = 700;
+//canvas의 그리기 기능 이용시 크기 설정 필요
+//상위 요소에 relative가 없으면 컨텐츠의 절대값으로 설정
+canvas.width = 700;
+canvas.height = 700;
 
-    ctx.strokeStyle = "#2c2c2c";//선의 기본 색상
-    ctx.lineWidth = 2.5;//선의 굵기
+ctx.strokeStyle = "#2c2c2c";//선의 기본 색상
+ctx.lineWidth = 2.5;//선의 굵기
 
-    if (!painting) {
-        //painting이 false인 상태 또는 값이 없는 상태 = 클릭 안 한 상태
-        ctx.beginPath(); //path 생성
-        ctx.moveTo(x, y); //내가 클릭한 위치
-    } else {
-        //painting이 true인 상태 또는 값이 있는 상태 = 클린 한 상태
-        ctx.lineTo(x, y); //선을 긋는다.
-        ctx.stroke(); //선을 현재의 stokeStyle로 채운다.
-    }
+if (!painting) {
+    //painting이 false인 상태 또는 값이 없는 상태 = 클릭 안 한 상태
+    ctx.beginPath(); //path 생성
+    ctx.moveTo(x, y); //내가 클릭한 위치
+} else {
+    //painting이 true인 상태 또는 값이 있는 상태 = 클린 한 상태
+    ctx.lineTo(x, y); //선을 긋는다.
+    ctx.stroke(); //선을 현재의 stokeStyle로 채운다.
+}
 {% endhighlight %}
 
 ### 이미지 다운로드
+
 {% highlight javascript %}   
-    const image = canvas.toDataURL(); //이미지로 변환함과 동시에 그에 해당하는 url 반환
-    const link = document.createElement("a"); //가상의  태그 생성
+const image = canvas.toDataURL(); //이미지로 변환함과 동시에 그에 해당하는 url 반환
+const link = document.createElement("a"); //가상의  태그 생성
 
-    //<a> 태그에 download 속성이 존재시 링크가 가리키는 파일을 다운로드 한다.
-    link.href = image;
+//<a> 태그에 download 속성이 존재시 링크가 가리키는 파일을 다운로드 한다.
+link.href = image;
 
-    //저장할 파일의 이름, 확장자 변경 가능
-    link.download = "PaintJS[🎨].jpg";
+//저장할 파일의 이름, 확장자 변경 가능
+link.download = "PaintJS[🎨].jpg";
 
-    //<a> 태그를 가상으로 클릭함으로써 이미지를 다운로드 하게 한다.
-    link.click();
+//<a> 태그를 가상으로 클릭함으로써 이미지를 다운로드 하게 한다.
+link.click();
 {% endhighlight %}

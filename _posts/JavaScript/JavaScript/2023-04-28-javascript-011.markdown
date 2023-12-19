@@ -6,9 +6,11 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
 ### 모듈화란?
-※ 모듈화 : 하나의 코드를 여러 개의 파일로 분리하는 작업
+
+>※ 모듈화 : 하나의 코드를 여러 개의 파일로 분리하는 작업
 
 ### 모듈화 특징
+
 1. 자주 사용되는 코드를 별도의 파일로 만들어서 필요할 때마다 재활용이 가능하다.
 2. 코드를 개선하면 이를 사용하는 모든 애플리케이션의 동작이 개선된다.
 3. 코드 수정 시에 필요한 로직을 빠르게 찾을수 있다. 
@@ -17,6 +19,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 시간과 네트워크 트래픽을 절약할 수 있다. (브라우저에서만 해당) 
     
 ### 모듈화 방법 (기본)
+
 만약 index.html의 script 태그 안에
 function returnHelloWorld(){
         return "Hello World";

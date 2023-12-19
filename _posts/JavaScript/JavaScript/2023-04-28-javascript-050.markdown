@@ -3,34 +3,37 @@ layout: post
 title:  "로컬 스토리지와 세션 스토리지"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [로컬 스토리지, 세션 스토리지]
 ---
 
 ### 로컬 스토리지
-{% highlight javascript %}
-    //로컬스토리지 값 설정하기
-    localStorage.setItem(USER_LS, text);
 
-    //로컬스토리지 값 가져오기
-    localStorage.getItem(USER_LS);
+{% highlight javascript %}
+//로컬스토리지 값 설정하기
+localStorage.setItem(USER_LS, text);
+
+//로컬스토리지 값 가져오기
+localStorage.getItem(USER_LS);
 {% endhighlight %}
 
 ### 세션 스토리지
+
 {% highlight javascript %}
-    //세션스토리지에 세션 값 저장하기
-    sessionStorage.setItem("testSession", "test value" );
+//세션스토리지에 세션 값 저장하기
+sessionStorage.setItem("testSession", "test value" );
 
-    //세션스토리지에 세션 값 가져오기
-    sessionStorage.getItem("testSession");
+//세션스토리지에 세션 값 가져오기
+sessionStorage.getItem("testSession");
 
-    //세션스토리지에 저장된 데이터의 개수 가져오기
-    sessionStorage.length;
+//세션스토리지에 저장된 데이터의 개수 가져오기
+sessionStorage.length;
 
-    //세션스토리지에서 특정 순서(index)의 키 이름을 가져온다. (0번부터 존재)
-    sessionStorage.key(0);
+//세션스토리지에서 특정 순서(index)의 키 이름을 가져온다. (0번부터 존재)
+sessionStorage.key(0);
 
-    //세션스토리지에서 특정한 key 값의 데이터를 삭제한다. 
-    sessionStorage.removeItem("testSession");
+//세션스토리지에서 특정한 key 값의 데이터를 삭제한다. 
+sessionStorage.removeItem("testSession");
 
-    //세션스토리지 비우기 ( = 전체삭제 )
-    sessionStorage.clear();
+//세션스토리지 비우기 ( = 전체삭제 )
+sessionStorage.clear();
 {% endhighlight %}

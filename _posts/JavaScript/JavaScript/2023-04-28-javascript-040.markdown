@@ -3,14 +3,15 @@ layout: post
 title:  "비구조화"
 date:   2023-05-02 00:45:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+tags: [비구조화]
 ---
 
-### 비구조화란?
-※ 비구조화 (destructuring) :  
-객체나 배열 등의 요소 안에 있는 변수들을  
-바깥으로 끄집어 내서 사용할 수 있도록 하는 것
+### 비구조화(destructuring)란?
+
+- 객체나 배열 등의 요소 안에 있는 변수들을 바깥으로 끄집어 내서 사용할 수 있도록 하는 것
 
 ### 객체의 비구조화
+
 - 객체의 내부 요소에 접근하는 기본적인 방식
 
 {% highlight javascript %}
@@ -35,6 +36,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 
 ### 객체의 내부 요소에 접근하는 방식
+
 {% highlight javascript %}
     //위의 코드에 있는 student 객체에서 이름, 학년, 반, 수학 점수를 찾을 때 밑의 코드처럼 선언한다.
     const {
@@ -58,6 +60,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 
 ### 이름 변경 (Renaming)
+
 {% highlight javascript %}
     //아까 작성하던 코드 중에서 수학 점수를 찾을 때 math라는 이름으로 사용되었다.
     //하지만 이렇게 짧은 코드가 아니라 무척 길고 어려운 코드를 짜다보면
@@ -82,6 +85,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 
 ### 배열의 비구조화
+
 - 가져온 정보를 조작할 일이 없을 때 쓰는 것이 좋다.
 - 배열의 내부 요소에 접근하는 기본적인 방식
 {% highlight javascript %}
@@ -92,63 +96,63 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 
 - 배열의 내부 요소에 접근하는 새로운 방식
-예시 1)
-{% highlight javascript %}
+- 예시 1
+    {% highlight javascript %}
     const test = ["testA", "testB", "testC"];
     const [test0, test1, test2] = test; //각 인덱스에 객체처럼 이름을 준다고 생가하면 된다.
 
     console.log(test0); //출력 : testA
-{% endhighlight %}
-
-
-예시 2)
-{% highlight javascript %}
+    {% endhighlight %}
+- 예시 2
+    {% highlight javascript %}
     //객체를 반환하는 함수에도 사용할 수 있다.
     const test = () => ["testA", "testB", "testC"];
     const [test0, test1, test2] = test();
     console.log(test0); //출력 : testA
-{% endhighlight %}
-
+    {% endhighlight %}
 
 ### Variable Swapping (값 교환)
+
 - 일반적인 값 교환
-{% highlight javascript %}
+    {% highlight javascript %}
     var a=1, b=2 ,temp;
     console.log("a =>",a,", b =>",b); //출력 : a => 1 , b => 2
     temp=a;
     a=b;
     b=temp;
     console.log("a =>",a,", b =>",b); //출력 : a => 2 , b => 1
-{% endhighlight %}
+    {% endhighlight %}
 - 배열의 비구조화를 통한값 교환
-{% highlight javascript %}
+    {% highlight javascript %}
     var a=1, b=2 ,temp;
     console.log("a =>",a,", b =>",b); //출력 : a => 1 , b => 2
     [a, b] = [b, a];
     console.log("a =>",a,", b =>",b); //출력 : a => 2 , b => 1
-{% endhighlight %}
+    {% endhighlight %}
 
 ### Variable Omitting (값 생략)
-{% highlight javascript %}
-    const test = ["testA", "testB", "testC"];
 
-    //위의 test 배열에서 "testC"만 가져오고 싶을 때
-    const [ , , omittingTest] = test;
-    console.log(omittingTest);  //출력 : testC
+{% highlight javascript %}
+const test = ["testA", "testB", "testC"];
+
+//위의 test 배열에서 "testC"만 가져오고 싶을 때
+const [ , , omittingTest] = test;
+console.log(omittingTest);  //출력 : testC
 {% endhighlight %}
 
 
 ### 함수의 비구조화
+
 - 함수의 내부 요소에 접근하는 기본적인 방식
-{% highlight javascript %}
+    {% highlight javascript %}
     //인자가 너무 많아지면 좋지 않다.
     function test (a, b, c, d, e){
         ...;
     }
-{% endhighlight %}
+    {% endhighlight %}
 - 함수의 내부 요소에 접근하는 새로운 방식
-{% highlight javascript %}
-//인자가 많으면 아예 인자를 객체로 받는다.
+    {% highlight javascript %}
+    //인자가 많으면 아예 인자를 객체로 받는다.
     function test({name, classInfo, score}){
         console.log(score.math);
     }
@@ -168,30 +172,31 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
     });
 
     //출력 : 97
-{% endhighlight %}
+    {% endhighlight %}
 
 ### 변수명 단축
+
 {% highlight javascript %}
-    //만약 다음과 같은 함수가 있다고 가정해보자.
-    const test = () => console.log("execute function, function name : test");
+//만약 다음과 같은 함수가 있다고 가정해보자.
+const test = () => console.log("execute function, function name : test");
 
-    //그 다음에는 obj라는 객체가 있고 해당 객체에는 whatever과 test라는 항목이 있다고 했을 때
-    //whatever에는 "whatever text"를 test에는 아까 선언한 test라는 함수를 저장하고자 한다면
-    //일반적으로는 다음과 같이 선언한다.
+//그 다음에는 obj라는 객체가 있고 해당 객체에는 whatever과 test라는 항목이 있다고 했을 때
+//whatever에는 "whatever text"를 test에는 아까 선언한 test라는 함수를 저장하고자 한다면
+//일반적으로는 다음과 같이 선언한다.
 
-    const obj = {
-        whatever : "whatever text",
-        test : test
-    };
-    obj.test(); //출력 : execute function, function name : test
+const obj = {
+    whatever : "whatever text",
+    test : test
+};
+obj.test(); //출력 : execute function, function name : test
 
-    //하지만 발전해버린 JavaScript는 똑똑해졌기 때문에
-    //만약 객체에서 해당 항목에 값을 생략해버리면
-    //해당 항목과 같은 이름을 가진 변수를 값으로 저장한다.
+//하지만 발전해버린 JavaScript는 똑똑해졌기 때문에
+//만약 객체에서 해당 항목에 값을 생략해버리면
+//해당 항목과 같은 이름을 가진 변수를 값으로 저장한다.
 
-    const obj = {
-        whatever : "whatever text",
-        test
-    };
-    obj.test(); //출력 : execute function, function name : test
+const obj = {
+    whatever : "whatever text",
+    test
+};
+obj.test(); //출력 : execute function, function name : test
 {% endhighlight %}

@@ -5,16 +5,19 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-### 객체 :
+### 객체
+
 >index 번호로 요소를 꺼내오던 배열과 다르게  
 key 값이라는 문자열을 통하여 값을 꺼내오는 형태의  
 연관된 데이터들을 한꺼번에 관리하기 위해 사용하는 데이터형
 
 ### 객체의 특징
+
 객체명에 const가 붙어있지만 object 안의 내용 값을 바꿀수있다.
 - (예시) const 객체명={ name:"lee",age:25,gender:"male"};
 
 ### 객체 생성 방법
+
 {% highlight javascript %}
 //선언 후 초기화
 var grade = {};     //중괄호를 사용한다.
@@ -25,6 +28,7 @@ var grade = {'a' : 1, 'b' : 2, 'c' : 3};
 {% endhighlight %}
 
 ### 객체의 속성 추가하기
+
 {% highlight javascript %}
 const member = {};
 
@@ -34,6 +38,7 @@ console.log(member.name); //출력 : lee
 {% endhighlight %}
 
 ### 객체의 속성 정의하기
+
 {% highlight javascript %}
 const member = {};
 
@@ -64,8 +69,8 @@ var width = 100;
 
 //picture.width와 width가 항상 같은 것임을 정의한다.
 Object.defineProperty(picture, 'width', {
-get() { return width; },
-set(value) { width = value; }
+    get() { return width; },
+    set(value) { width = value; }
 });
 
 console.log(picture.width); //출력 : 100
@@ -76,6 +81,7 @@ console.log(picture.width); //출력 : 200
 {% endhighlight %}
 
 ### 객체 사용 방법
+
 {% highlight javascript %}
 alert(grade['a']);  //출력 : 1
 
@@ -88,6 +94,7 @@ for(keyName in forEachTest) {
 {% endhighlight %}
 
 ### 객체 지향 프로그래밍
+
 ※ 객체에는 배열이나 함수도 선언할 수 있다.
 {% highlight javascript %}
 var studentInfo={
@@ -111,6 +118,7 @@ var studentInfo={
 {% endhighlight %}
 
 ### 객체의 독립성
+
 {% highlight javascript %}
 //객체는 원시 데이터 변수와 다르게 같은 데이터를 가졌어도 다르게 취급한다.
 var a1 = {test : 1};
@@ -155,6 +163,7 @@ console.log(a2.test2); //출력 : [1,2,3,4]
 {% endhighlight %}
 
 ### 객체의 데이터 가져오기
+
 {% highlight javascript %}
 var test = {"first":1,"second":2,"third":3};
 
@@ -163,9 +172,9 @@ Object.entries(test).forEach(ele=>console.log(ele));
 
 //출력1
 /*
-first / 1
-second / 2
-third / 3
+['first', 1]
+['second', 2]
+['third', 3]
 */
 
 //방법2 (IE X)
@@ -186,7 +195,7 @@ Object.values(test);
 
 //출력3
 /*
-["first", "second", "third"]
+['first', 'second', 'third']
 [1, 2, 3]
 */
 
@@ -203,7 +212,7 @@ key 값 : third / value : 3
 */
 {% endhighlight %}
 
-#객체에 불변성 추가하기
+### 객체에 불변성 추가하기
 {% highlight javascript %}
 //1. 새로운 속성 추가 (불가능)
 //2. configurable 속성 변경 (불가능)
@@ -225,7 +234,7 @@ console.log(member.name); //출력 : lee, 값이 변경되지 않음을 알 수 
 Object.isFrozen(member); //출력 : true, 해당 객체에 불변성이 추가되었나를 알 수 있다.
 {% endhighlight %}
 
-#객체의 확장성 배제하기
+### 객체의 확장성 배제하기
 {% highlight javascript %}
 const member = {};
 
@@ -241,6 +250,7 @@ Object.isExtensible(member); //출력 : false, 확장 불가능한 상태
 {% endhighlight %}
 
 ### 객체 봉인하기
+
 {% highlight javascript %}
 //1. 새로운 속성 추가 (불가능)
 //2. configurable 속성 변경 (불가능)
@@ -261,6 +271,7 @@ Object.isSealed(member); //출력 : true, 현재 객체가 봉인된 상태
 {% endhighlight %}
 
 ### 객체 ←→ 배열
+
 {% highlight javascript %}
 var test = {"first":1,"second":2,"third":3};
 
@@ -271,7 +282,7 @@ var targetA = Object.entries(test); //[['first', 1], ['second', 2], ['third', 3]
 var targetB = Object.fromEntries(targetA); //{first: 1, second: 2, third: 3}
 {% endhighlight %}
 
-#속성 보유 체크
+### 속성 보유 체크
 {% highlight javascript %}
 const member = {};
 
@@ -283,6 +294,7 @@ member.hasOwnProperty('age'); //출력 : false
 {% endhighlight %}
 
 ### 동일 여부 체크
+
 {% highlight javascript %}
 Object.is('hi', 'hi'); //출력 : true
 Object.is('hi', 'hello'); //출력 : false
