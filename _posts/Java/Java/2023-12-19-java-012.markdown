@@ -1,19 +1,27 @@
 ---
 layout: post
-title:  "재귀 호출"
-date:   2023-12-15 09:00:00 +0900
+title:  "재귀 호출(recursive call)"
+date:   2023-12-19 09:00:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 재귀 호출(recursive call)이란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 메소드 내부에서 해당 메소드가 다시 호출되는 것
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 재귀 호출의 특징
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 재귀 호출은 자기가 자신을 계속해서 호출하므로 끝없이 반복되기 때문에  
+메소드 내에 재귀 호출을 중단하도록 조건이 변경될 명령문을 반드시 포함해야 한다.
 
-Jekyll also offers powerful support for code snippets:
+### 재귀 호출 예시
 
 {% highlight java %}
+//팩토리얼 계산하기
+int factorial(int n) {
+    if (n == 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
 {% endhighlight %}
