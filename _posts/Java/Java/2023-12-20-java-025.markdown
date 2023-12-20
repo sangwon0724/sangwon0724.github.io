@@ -1,19 +1,39 @@
 ---
 layout: post
 title:  "Wrapper"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-20 13:51:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 특징
 
-Jekyll requires blog post files to be named according to the following format:
+- 8개의 기본 타입에 해당하는 데이터를 객체로 포장해 주는 클래스
+- 각각의 타입에 해당하는 데이터를 인수로 전달받아, 해당 값을 가지는 객체로 만들어준다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+| 기본 타입 | 래퍼 클래스 |
+|-------|--------|
+| byte | Byte |
+| short | Short |
+| int | Integer |
+| long | Long |
+| float | Float |
+| double | Double |
+| char | Character |
+| boolean | Boolean |
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 박싱(Boxing)과 언박싱(UnBoxing)
 
-Jekyll also offers powerful support for code snippets:
-
+- 박싱(Boxing)
+    - 기본 타입의 데이터를 래퍼 클래스의 인스턴스로 변환하는 과정
+- 언박싱(UnBoxing)
+ -  래퍼 클래스의 인스턴스에 저장된 값을 다시 기본 타입의 데이터로 꺼내는 과정
+- JDK 1.5부터는 박싱과 언박싱이 필요한 상황에서 자바 컴파일러가 이를 자동으로 처리해준다
+    - 각각 오토 박싱(AutoBoxing)과 오토 언박싱(AutoUnBoxing)이라고 부른다.
+- 사용 예시
 {% highlight java %}
+Integer num = new Integer(17); // 박싱
+int n = num.intValue(); // 언박싱
+
+Character ch = 'X'; //오토 박싱
+char c = ch; //오토 언박싱
 {% endhighlight %}

@@ -1,19 +1,96 @@
 ---
 layout: post
-title:  "Enum"
-date:   2023-12-15 09:00:00 +0900
+title:  "Math"
+date:   2023-12-20 13:39:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 특징
 
-Jekyll requires blog post files to be named according to the following format:
+- 수학에서 자주 사용하는 상수들과 함수들을 미리 구현해 놓은 클래스
+- Math 클래스의 모든 메소드는 클래스 메소드이므로 객체를 생성하지 않고도 바로 사용할 수 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 상수
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- Math.E
+    - 오일러의 수
+    - 자연로그(natural logarithms)의 밑(base) 값
+    - 약 2.718
+- Math.PI
+    - 원의 원주를 지름으로 나눈 비율 값 (원주율)
+    - 약 3.14159
 
-Jekyll also offers powerful support for code snippets:
+### random() 메소드
 
-{% highlight java %}
-{% endhighlight %}
+- 0.0 이상 1.0 미만의 범위에서 임의의 double형 값을 하나 생성하여 반환한다.
+- 사용 예시
+    {% highlight java %}
+    System.out.println((int)(Math.random() * 100)); // 0 ~ 99
+    Random ran = new Random();
+    System.out.println(ran.nextInt(100));           // 0 ~ 99
+    System.out.println(ran.nextInt(100) + 1);           // 1 ~ 100
+    {% endhighlight %}
+
+### abs(숫자_자료형 a) 메소드
+
+- 절댓값을 반환한다.
+
+### floor(double a) 메소드
+
+- 인수로 전달받은 값과 같거나 작은 수 중에서 가장 큰 정수를 반환한다.
+
+### ceil(double a) 메소드
+
+- 인수로 전달받은 값과 같거나 큰 수 중에서 가장 작은 정수를 반환한다.
+
+### round(double a) 메소드
+
+- 전달받은 실수를 소수점 첫째 자리에서 반올림한 정수를 반환한다.
+
+### rint(double a) 메소드
+
+- 전달된 double형 값과 가장 가까운 정수값을 double형으로 반환한다.
+
+### max(숫자_자료형 a, 숫자_자료형 b) 메소드
+
+- 전달된 두 값을 비교하여 그 중에서 큰 값을 반환한다.
+
+### min(숫자_자료형 a, 숫자_자료형 b) 메소드
+
+- 전달된 두 값을 비교하여 그 중에서 작은 값을 반환한다.
+
+## pow(double a, double b) 메소드
+
+- 전달된 두 개의 double형 값을 가지고 제곱 연산을 수행합니다.
+- 사용 예시
+    {% highlight java %}
+    System.out.println((int)Math.pow(5, 2)); //출력 : 25
+    {% endhighlight %}
+
+### sqrt(double a) 메소드
+
+- 전달된 double형 값의 제곱근 값을 반환합니다.
+- 사용 예시
+    {% highlight java %}
+    System.out.println((int)Math.sqrt(25)); //출력 : 5
+    {% endhighlight %}
+
+### 삼각함수 관련 메소드
+
+- sin()
+- cos()
+- tan()
+- asin()
+- acos()
+- atan()
+- atan2()
+- sinh()
+- cosh()
+- tanh()
+
+### 각도 관련 메소드
+
+- toDegrees(double angrad)
+    - 호도법의 라디안 값을 대략적인 육십분법의 각도 값으로 변환한다.
+- toRaidans(double angdeg)
+    - 육십분법의 각도 값을 대략적인 호도법의 라디안 값으로 변환한다.

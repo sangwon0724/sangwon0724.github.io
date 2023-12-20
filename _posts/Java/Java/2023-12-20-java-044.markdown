@@ -1,19 +1,35 @@
 ---
 layout: post
-title:  "Java8 java.time"
+title:  "Optional 클래스"
 date:   2023-12-15 09:00:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 정의
 
-Jekyll requires blog post files to be named according to the following format:
+- 'T'타입의 객체를 포장해 주는 래퍼 클래스(Wrapper class)
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 특징
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 예상치 못한 NullPointerException 예외를 제공되는 메소드로 간단히 회피할 수 있게 해준다.
 
-Jekyll also offers powerful support for code snippets:
+### 메소드
 
-{% highlight java %}
-{% endhighlight %}
+- 초기화
+    - Optional&lt;자료형> opt = Optional.of(내용);
+    - Optional&lt;자료형> opt = Optional.ofNullable(내용);
+    - Optional&lt;자료형> opt = Optional.empty(); //null로 초기화
+- 내용 가져오기 (객체에 저장된 값이 null이면 NoSuchElementException  예외 발생)
+    - opt.get()
+- null 여부 확인하기
+    - opt.isPresent()
+- null 값 대체하기
+    - orElse()
+        - 저장된 값 존재 O : 저장된 값 반환
+        - 저장된 값 존재 X : 인수로 전달된 값을 반환함.
+    - orElseGet()
+        - 저장된 값 존재 O : 저장된 값 반환
+        - 저장된 값 존재 X : 인수로 전달된 람다 표현식의 결과값 반환
+    - orElseThrow()
+        - 저장된 값 존재 O : 저장된 값 반환
+        - 지정된 값 존재 X : 인수로 전달된 예외를 발생

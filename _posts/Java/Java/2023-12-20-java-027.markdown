@@ -1,19 +1,65 @@
 ---
 layout: post
 title:  "Arrays"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-20 14:07:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 특징
 
-Jekyll requires blog post files to be named according to the following format:
+- 배열을 다루기 위한 다양한 메소드가 포함되어 있는 클래스
+- Arrays 클래스의 모든 메소드는 클래스 메소드이므로 객체를 생성하지 않고도 바로 사용할 수 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### binarySearch() 메소드
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 전달받은 배열에서 특정 객체의 위치를 이진 검색 알고리즘을 사용하여 검색한 후 해당 위치를 반환한다.
+- 이진 검색 알고리즘을 사용한다.
+    - 매개변수로 전달되는 배열이 sort() 메소드 등을 사용하여 미리 정렬되어 있어야만 제대로 동작한다.
+- 사용 예시
+    {% highlight java %}
+    int[] arr = new int[1000];
 
-Jekyll also offers powerful support for code snippets:
+    for(int i = 0; i < arr.length; i++) {
+        arr[i] = i * 2;
+    }
 
-{% highlight java %}
-{% endhighlight %}
+    System.out.println(Arrays.binarySearch(arr, 437)); //출력 : -220
+    {% endhighlight %}
+
+### copyOf() 메소드
+
+- 전달받은 배열의 특정 길이만큼을 새로운 배열로 복사하여 반환한다.
+- 매개변수
+    - 첫 번째 매개변수
+        - 원본 배열
+    - 두 번째 매개변수
+        - 원본 배열에서 새로운 배열로 복사할 요소의 개수
+- 새로운 배열의 길이가 원본 배열보다 길면 나머지 요소는 배열 요소의 타입에 맞게 다음과 같은 기본값으로 채워진다.
+
+### opyOfRange() 메소드
+
+- 전달받은 배열의 특정 범위에 해당하는 요소만을 새로운 배열로 복사하여 반환한다.
+- 매개변수
+    - 첫 번째 매개변수
+        - 복사의 대상이 될 원본 배열
+    - 두 번째 매개변수
+        - 원본 배열에서 복사할 시작 인덱스
+    - 세 번째 매개변수
+        - 마지막으로 복사될 배열 요소의 바로 다음 인덱스
+
+### fill() 메소드
+
+- 전달받은 배열의 모든 요소를 특정 값으로 초기화한다.
+- 매개변수
+    - 첫 번째 매개변수
+        - 초기화할 배열
+    - 두 번째 매개변수
+        - 초기값
+
+### sort() 메소드
+
+- 전달받은 배열의 모든 요소를 오름차순으로 정렬한다.
+
+### asList() 메소드
+
+- 전달받은 배열을 고정 크기의 리스트(list)로 변환하여 반환한다.

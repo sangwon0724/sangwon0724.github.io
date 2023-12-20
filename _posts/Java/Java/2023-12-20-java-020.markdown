@@ -1,19 +1,60 @@
 ---
 layout: post
-title:  "내부 클래스"
-date:   2023-12-15 09:00:00 +0900
+title:  "내부 클래스(inner class)"
+date:   2023-12-20 11:22:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 내부 클래스(inner class)란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 하나의 클래스 내부에 선언된 다른 클래스
+- 클래스(outer class)에 대해 두 개의 클래스가 서로 긴밀한 관계를 맺고 있을 때 선언할 수 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
-
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
+### 선언 방법
 
 {% highlight java %}
+class Outer {     // 외부 클래스
+    ...
+    class Inner { // 내부 클래스
+        ...
+    }
+    ...
+}
 {% endhighlight %}
+
+### 내부 클래스의 장점
+
+- 내부 클래스에서 외부 클래스의 멤버에 접근하기 쉽다.
+- 코드의 캡슐화를 증가시킨다.
+    - 서로 관련 있는 클래스를 논리적으로 묶어서 표현하기 때문에
+- 코드의 복잡성을 줄일 수 있다.
+    - 외부에서는 내부 클래스에 접근할 수 없기 때문에
+
+### 내부 클래스의 종류
+
+- 정적 클래스(static class)
+    - 외부 클래스 영역에 선언된 클래스 중에서 static 키워드를 가지는 클래스
+    -  주로 외부 클래스(outer class)의 클래스 메소드에 사용될 목적으로 선언
+- 인스턴스 클래스(instance class)
+    - 외부 클래스 영역에 선언된 클래스 중에서 static 키워드를 가지지 않는 클래스
+    - 주로 외부 클래스(outer class)의 인스턴스 변수나 인스턴스 메소드에 사용될 목적으로 선언
+- 지역 클래스(local class)
+    - 외부 클래스의 메소드나 초기화 블록에 선언된 클래스
+    - 선언된 블록 내에서만 사용 가능
+- 익명 클래스(anonymous class)
+    - 이름을 가지지 않는 클래스
+    - 클래스의 선언과 동시에 객체를 생성한다.
+        - 단 하나의 객체만을 생성하는 일회용 클래스
+        - 생성자를 선언할 수 없다.
+        - 단 하나의 클래스나 단 하나의 인터페이스를 상속받거나 구현할 수 있다.
+    - 매우 제한적인 용도에 사용된다.
+    - 구현해야 하는 메소드가 매우 적은 클래스를 구현할 때 사용된다.
+    - 사용 예시
+        {% highlight java %}
+        public class 외부_클래스 {
+            //익명 클래스는 선언과 동시에 생성하여 참조변수에 대입한다.
+            클래스이름 참조변수이름 = new 클래스이름(){
+                //메소드의 선언
+            };
+        }
+        {% endhighlight %}

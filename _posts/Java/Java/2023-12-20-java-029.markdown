@@ -1,19 +1,87 @@
 ---
 layout: post
-title:  "제네릭"
-date:   2023-12-15 09:00:00 +0900
+title:  "제네릭(generic)"
+date:   2023-12-20 14:46:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 제네릭(generic)이란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 데이터의 타입을 일반화하는 것
+-  클래스나 메소드에서 사용할 내부 데이터 타입을 컴파일 시에 미리 지정하는 방법
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 컴파일 시에 미리 타입 검사를 수행하는 경우의 장점
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 클래스나 메소드 내부에서 사용되는 객체의 타입 안정성을 높일 수 있다.
+- 반환값에 대한 타입 변환 및 타입 검사에 들어가는 노력을 줄일 수 있다.
 
-Jekyll also offers powerful support for code snippets:
+### 제네릭의 선언 및 생성
 
-{% highlight java %}
-{% endhighlight %}
+- T
+    - 타입 변수 (type variable)
+    - 임의의 참조형 타입
+    - 'T'말고 다른 문자를 사용해도 된다.
+    - 여러 개의 타입 변수는 쉼표로 구분하여 명시한다.
+- 사용 예시
+    {% highlight java %}
+    class MyArray<T> {
+        T element;
+        void setElement(T element) { this.element = element; }
+        T getElement() { return element; }
+    }
+    MyArray<Integer> myArr = new MyArray<Integer>();
+
+    //Java SE 7부터 인스턴스 생성 시 타입을 추정할 수 있는 경우에는 타입을 생략할 수 있다.
+    MyArray<Integer> myArr = new MyArray<>(); // Java SE 7부터 가능함.
+    {% endhighlight %}
+
+### 제네릭의 제거 시기
+
+- Java 코드에서 선언되고 사용된 제네릭 타입은 컴파일 시 컴파일러에 의해 자동으로 검사되어 타입 변환된다.
+- 코드 내의 모든 제네릭 타입은 제거되어 컴파일된 class 파일에는 어떠한 제네릭 타입도 포함되지 않게 된다.
+- 이유 : 제네릭을 사용하지 않는 코드와의 호환성을 유지하기 위해서
+
+### 타입 변수의 제한
+
+- 제네릭은 'T'와 같은 타입 변수(type variable)를 사용하여 타입을 제한한다.
+- extends 키워드를 사용하면 타입 변수에 특정 타입만을 사용하도록 제한할 수 있다.
+- <b>클래스가 아닌 인터페이스를 구현할 경우에도 implements 키워드가 아닌 extends 키워드를 사용해야 한다.</b>
+- 사용 예시
+    {% highlight java %}
+    class AnimalList<T extends LandAnimal> { ... }
+
+    //클래스와 인터페이스를 동시에 상속받고 구현해야 한다면 엠퍼센트(&) 기호를 사용하면 된다.
+    class AnimalList<T extends LandAnimal & WarmBlood> { ... }
+    {% endhighlight %}
+
+### 제네릭 메소드(generic method)
+
+- 메소드의 선언부에 타입 변수를 사용한 메소드
+- 타입 변수의 선언은 메소드 선언부에서 반환 타입 바로 앞에 위치한다.
+- 사용 예시
+    {% highlight java %}
+    /*
+        제네릭 클래스에서 정의된 타입 변수 T와
+        제네릭 메소드에서 사용된 타입 변수 T는
+        전혀 별개의 것이다.
+    */
+    class AnimalList<T> {
+        ...
+        public static <T> void sort(List<T> list, Comparator<? super T> comp) {
+            ...
+        }
+        ...
+    }
+    {% endhighlight %}
+
+### 와일드카드의 사용
+
+- 와일드카드(wild card)
+    - 이름에 제한을 두지 않음을 표현하는 데 사용되는 기호
+- Java의 제네릭에서는 물음표 기호를 사용하여 이러한 와일드카드를 사용할 수 있다.
+- 사용 예시
+    {% highlight java %}
+    <?> // 타입 변수에 모든 타입을 사용할 수 있다.
+    <? extends T> // T 타입과 T 타입을 상속받는 자손 클래스 타입만 사용할 수 있다.
+    <? super T> // T 타입과 T 타입이 상속받은 조상 클래스 타입만 사용할 수 있다.
+    {% endhighlight %}

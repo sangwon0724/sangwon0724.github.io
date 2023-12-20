@@ -1,19 +1,72 @@
 ---
 layout: post
 title:  "Calendar"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-20 14:16:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### add 메소드()
 
-Jekyll requires blog post files to be named according to the following format:
+- add() 메소드는 전달된 Calendar 필드에서 일정 시간 만큼을 더하거나 뺀다.
+- 사용 예시
+    {% highlight java %}
+    Calendar time = Calendar.getInstance();
+    System.out.println(time.getTime()); //출력 : Wed Dec 20 05:37:04 GMT 2023
 
-`YEAR-MONTH-DAY-title.MARKUP`
+    time.add(Calendar.SECOND, 120); //120초 더하기
+    System.out.println(time.getTime()); //출력 : Wed Dec 20 05:39:04 GMT 2023
+		
+    time.add(Calendar.DATE, -120); //120일 빼기
+    System.out.println(time.getTime()); //출력 : Tue Aug 22 05:39:04 GMT 2023
+    {% endhighlight %}
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### before() 메소드와 after() 메소드
 
-Jekyll also offers powerful support for code snippets:
+- before()
+    - 현재 Calendar 인스턴스가 전달된 객체가 나타내는 시간보다 앞서는지를 판단한다.
+- after()
+    - 현재 Calendar 인스턴스가 전달된 객체가 나타내는 시간보다 나중인지를 판단한다.
+- 사용 예시
+    {% highlight java %}
+    Calendar time1 = Calendar.getInstance();
+    Calendar time2 = Calendar.getInstance();
+    
+    time2.set(1982, 2, 19);
+    
+    System.out.println(time1.before(time2));
+    System.out.println(time1.after(time2));
+    {% endhighlight %}
 
-{% highlight java %}
-{% endhighlight %}
+### get() 메소드
+
+- 전달된 Calendar 필드에 저장된 값을 반환한다.
+- 사용 예시
+    {% highlight java %}
+    Calendar time = Calendar.getInstance();
+
+    System.out.println(time.getTime()); //출력 : Wed Dec 20 05:41:16 GMT 2023
+    System.out.println(time.get(Calendar.DAY_OF_WEEK)); //출력 : 4
+    System.out.println(time.get(Calendar.MONTH) + 1); //출력 : 12
+    System.out.println(time.get(Calendar.DAY_OF_MONTH)); //출력 : 20
+    System.out.println(time.get(Calendar.HOUR_OF_DAY)); //출력 : 5
+    System.out.println(time.get(Calendar.MINUTE)); //출력 : 41
+    System.out.println(time.get(Calendar.SECOND)); //출력 : 16
+    System.out.println(time.get(Calendar.YEAR)); //출력 : 2023
+    {% endhighlight %}
+
+### roll() 메소드
+
+- 전달된 Calendar 필드에서 일정 시간 만큼을 더하거나 뺀다.
+- add() 메소드와는 달리 다른 Calendar 필드에는 영향을 주지 않는다.
+    - 계산 결과가 해당 필드의 최댓값이나 최솟값을 넘어가도 다른 필드에 영향을 주지 않는다.
+    - 예시
+        - add()
+            1. add(Calendar.SECOND, 60)
+            2. Calendar.SECOND가 60 증가되고 최종적으로 Calendar.MINUTE가 1 증가됨
+        - roll()
+            1. roll(Calendar.SECOND, 60)
+            2. Calendar.SECOND가 60 증가됨 (Calendar.MINUTE는 변하지 않는다.)
+
+### set() 메소드
+
+- 전달된 Calendar 필드를 특정 값으로 설정한다.

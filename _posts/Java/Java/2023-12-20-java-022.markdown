@@ -1,19 +1,96 @@
 ---
 layout: post
 title:  "String"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-20 13:09:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 특징
 
-Jekyll requires blog post files to be named according to the following format:
+- String 인스턴스는 한 번 생성되면 그 값을 읽기만 할 수 있고, 변경할 수는 없다. (불변 객체)
+- Java에서 + 연산자를 이용하여 문자열 결합을 수행하면,  
+기존 문자열의 내용이 변경되는 것이 아니라 내용이 합쳐진 새로운 String 인스턴스가 생성된다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### charAt(int i) 메소드
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 해당 문자열의 특정 인덱스에 해당하는 문자를 반환한다.
+- 해당 문자열의 길이보다 큰 인덱스나 음수를 전달하면 IndexOutOfBoundsException 오류가 발생한다.
+- 사용 예시
+    {% highlight java %}
+    String str = new String("Java");
+    System.out.print(str.charAt(2)); //출력 : v
+    {% endhighlight %}
 
-Jekyll also offers powerful support for code snippets:
+### compareTo(String s) 메소드
 
-{% highlight java %}
-{% endhighlight %}
+-  해당 문자열을 인수로 전달된 문자열과 사전 편찬 순으로 비교한다.
+- 문자열을 비교할 때 대소문자를 구분하여 비교한다.
+- 두 문자열이 같다면 0을 반환하며, 해당 문자열이 인수로 전달된 문자열보다 작으면 음수를, 크면 양수를 반환한다.
+- 대소문자를 구분하지 않고 비교하고 싶을 때는 compareToIgnoreCase(String s) 메소드를 사용한다.
+- 사용 예시
+    {% highlight java %}
+    String str = new String("abcd");
+    System.out.println(str.compareTo("bcef")); //출력 : -1
+    {% endhighlight %}
+
+### oncat(String s) 메소드
+
+- 해당 문자열의 뒤에 인수로 전달된 문자열을 추가한 새로운 문자열을 반환한다.
+- 인수로 전달된 문자열의 길이가 0이면, 해당 문자열을 그대로 반환한다.
+- 사용 예시
+    {% highlight java %}
+    String str = new String("앞");
+    System.out.println(str.concat("뒤")); //출력 : 앞뒤
+    System.out.println(str.concat("")); //출력 : 앞
+    {% endhighlight %}
+
+### indexOf(String s) 메소드
+
+- 해당 문자열에서 특정 문자나 문자열이 처음으로 등장하는 위치의 인덱스를 반환한다.
+- 해당 문자열에 전달된 문자나 문자열이 포함되어 있지 않으면 -1을 반환한다.
+- 사용 예시
+    {% highlight java %}
+    String str = new String("ABC");
+    System.out.println(str.indexOf('C')); //출력 : 2
+    {% endhighlight %}
+
+### trim() 메소드
+
+- 해당 문자열의 맨 앞과 맨 뒤에 포함된 모든 공백 문자를 제거한다.
+- 사용 예시
+    {% highlight java %}
+    String str = new String(" 문자열 ");
+    System.out.println(str.trim()); //출력 : 문자열
+    {% endhighlight %}
+
+### toLowerCase() 메소드와 toUpperCase() 메소드
+
+- toLowerCase() 메소드
+    - 해당 문자열의 모든 문자를 소문자로 변환한다.
+- toUpperCase() 메소드
+    - 해당 문자열의 모든 문자를 대문자로 변환한다.
+- 사용 예시
+    {% highlight java %}
+    String str = new String("Java");
+    System.out.println(str.toLowerCase()); //출력 : java
+    System.out.println(str.toUpperCase()); //출력 : JAVA
+    {% endhighlight %}
+
+### split(String s) 메소드
+
+- 해당 문자열을 전달된 정규 표현식(regular expression)에 따라 나눠서 반환한다.
+
+### substring(int begin) 메소드와 subString(int begin, int end) 메소드
+
+- substring(int begin)
+    - 해당 문자열의 전달된 인덱스부터 끝까지를 새로운 문자열로 반환한다.
+- subString(int begin, int end)
+    - 해당 문자열의 전달된 시작 인덱스부터 마지막 인덱스까지를 새로운 문자열로 반환한다.
+
+### length() 메소드
+
+- 해당 문자열의 길이를 반환한다.
+
+### isEmpty() 메소드
+
+- 해당 문자열의 길이가 0이면 true를 반환하고, 아니면 false를 반환한다.

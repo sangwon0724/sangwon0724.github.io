@@ -1,19 +1,83 @@
 ---
 layout: post
 title:  "Enum"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-20 14:00:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
+tags: [Enum]
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 특징
 
-Jekyll requires blog post files to be named according to the following format:
+- JDK 1.5부터 사용가능한 열거체
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 장점
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- 열거체를 비교할 때 실제 값뿐만 아니라 타입까지도 체크한다.
+- 열거체의 상숫값이 재정의되더라도 다시 컴파일할 필요가 없다.
 
-Jekyll also offers powerful support for code snippets:
+### 열거체의 정의 및 사용
 
 {% highlight java %}
+//원형
+enum 열거체이름 { 상수1이름, 상수2이름, ... }
+열거체이름.상수이름;
+
+//예시
+enum Rainbow { RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET }
+Rainbow.VIOLET;
 {% endhighlight %}
+
+### 열거체의 상숫값 정의 및 추가 (class처럼 사용하기)
+
+{% highlight java %}
+enum Rainbow {
+    RED(3), ORANGE(10), YELLOW(21), GREEN(5), BLUE(1), INDIGO(-1), VIOLET(-11);
+
+    private final int value;
+    Rainbow(int value) { this.value = value; }
+    public int getValue() { return value; }
+}
+{% endhighlight %}
+
+### values() 메소드
+
+- 해당 열거체의 모든 상수를 저장한 배열을 생성하여 반환한다.
+- 자바의 모든 열거체에 컴파일러가 자동으로 추가해 주는 메소드다.
+- 사용 예시
+    {% highlight java %}
+    enum Rainbow { RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET }
+
+    public class Enum01 {
+        public static void main(String[] args) {
+            Rainbow[] arr = Rainbow.values();
+            for (Rainbow rb : arr) {
+                System.out.println(rb);
+            }
+        }
+    }
+    {% endhighlight %}
+
+### valueOf() 메소드
+
+- 전달된 문자열과 일치하는 해당 열거체의 상수를 반환한다.
+- 사용 예시
+    {% highlight java %}
+    enum Rainbow { RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET }
+
+    public class Enum02 {
+        public static void main(String[] args) {
+            Rainbow rb = Rainbow.valueOf("GREEN");
+            System.out.println(rb);
+        }
+    }
+    {% endhighlight %}
+
+### ordinal() 메소드
+
+- 해당 열거체 상수가 열거체 정의에서 정의된 순서(0부터 시작)를 반환한다.
+- 반환되는 값은 열거체 정의에서 해당 열거체 상수가 정의된 순서다.
+- 상숫값 자체가 반환되는 것이 아니다.
+
+### name() 메소드
+
+- 해당 열거체 상수의 이름을 반환한다.

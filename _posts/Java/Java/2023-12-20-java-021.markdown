@@ -1,19 +1,89 @@
 ---
 layout: post
 title:  "Object"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-20 11:39:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### Object class
 
-Jekyll requires blog post files to be named according to the following format:
+- 모든 Java 클래스의 최고 조상 클래스
+    - Java의 모든 클래스는 Object 클래스의 모든 메소드를 바로 사용할 수 있다.
+    - Object 클래스는 필드를 가지지 않는다.
+    - 총 11개의 메소드만으로 구성되어 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### toString() 메소드
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
-
-Jekyll also offers powerful support for code snippets:
-
+- 해당 인스턴스에 대한 정보를 문자열로 반환한다.
+- 인스턴스의 주소를 반환한다.
+    - '@'는 단순 구분자
+    - 16진수 해시 코드 값
+- 인스턴스마다 모두 다르게 반환된다.
+- 사용 예시
 {% highlight java %}
+Car car = new Car();
+
+System.out.println(car.toString()); //출력 : Car@6b95977
 {% endhighlight %}
+
+### equals() 메소드
+
+- 해당 인스턴스를 매개변수로 전달받는 참조 변수와 비교하여 그 결과를 반환한다.
+- 참조 변수가 가리키는 값을 비교한다.
+- 서로 다른 두 객체는 언제나 false를 반환한다.
+- Java에서 equals() 메소드는 기본적으로 각 API 클래스마다 자체적으로 오버라이딩을 통해 재정의되어 있다.
+- 사용 예시
+    {% highlight java %}
+    Car car01 = new Car();
+    Car car02 = new Car();
+
+    System.out.println(car01.equals(car02)); //출력 : false
+
+    car01 = car02; // 두 참조 변수가 같은 주소를 가리킴.
+
+    System.out.println(car01.equals(car02)); //출력 : true
+    {% endhighlight %}
+
+### clone() 메소드
+
+- 해당 인스턴스를 복제하여 새로운 인스턴스를 생성해 반환한다.
+- Object 클래스의 clone() 메소드는 필드의 값만 복사한다.
+    - 필드의 값이 배열이나 인스턴스면 제대로 복제할 수 없다.
+        - 해당 클래스에서 clone() 메소드를 오버라이딩하여 복제가 제대로 이루어지도록 재정의해야 한다.
+- 데이터의 보호를 이유로 Cloneable 인터페이스를 구현한 클래스의 인스턴스만이 사용할 수 있다.
+
+### finalize() 메소드
+
+- 해당 객체를 더는 아무도 참조하지 않아 가비지 컬렉터가 객체의 리소스를 정리하기 위해 호출한다.
+
+### getClass() 메소드
+
+- 해당 객체의 클래스 타입을 반환한다.
+
+### hashCode() 메소드
+
+- 해당 객체의 해시 코드값을 반환한다.
+
+### notify() 메소드
+
+- 해당 객체의 대기(wait)하고 있는 하나의 스레드를 다시 실행할 때 호출한다.
+
+### notifyAll() 메소드
+
+- 해당 객체의 대기(wait)하고 있는 모든 스레드를 다시 실행할 때 호출한다.
+
+### wait() 메소드
+
+-  해당 객체의 다른 스레드가 notify()나 notifyAll() 메소드를 실행할 때까지  
+현재 스레드를 일시적으로 대기(wait)시킬 때 호출한다.
+
+### wait(long timeout) 메소드
+
+- 해당 객체의 다른 스레드가 notify()나 notifyAll() 메소드를 실행하거나 전달받은 시간이 지날 때까지  
+현재 스레드를 일시적으로 대기(wait)시킬 때 호출한다.
+
+### wait(long timeout, int nanos) 메소드
+
+- 해당 객체의 다른 스레드가 notify()나 notifyAll() 메소드를  
+실행하거나 전달받은 시간이 지나거나 다른 스레드가 현재 스레드를 인터럽트(interrupt) 할 때까지  
+현재 스레드를 일시적으로 대기(wait)시킬 때 호출한다.
