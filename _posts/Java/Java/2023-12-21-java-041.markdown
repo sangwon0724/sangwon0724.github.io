@@ -1,19 +1,113 @@
 ---
 layout: post
-title:  "스레드"
-date:   2023-12-15 09:00:00 +0900
+title:  "람다 (lambda)"
+date:   2023-12-21 11:42:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
+tags: [람다, lambda, 화살표]
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 람다 표현식(lambda expression)이란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 메소드를 하나의 식으로 표현한 것
+- 클래스를 작성하고 객체를 생성하지 않아도 메소드를 사용할 수 있다.
+- Java에서 람다 표현식은 익명 클래스와 같다.
+-  메소드의 매개변수로 전달될 수도 있으며 메소드의 결괏값으로 반환될 수도 있다.
+- 기존의 불필요한 코드를 줄여주고 작성된 코드의 가독성을 높여준다.
+- Java SE 8부터 제공
+- 사용 예시
+    {% highlight java %}
+    //원형
+    int min(int x, int y) {
+        return x < y ? x : y;
+    }
 
-`YEAR-MONTH-DAY-title.MARKUP`
+    //예시
+    (x, y) -> x < y ? x : y;
+    {% endhighlight %}
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 람다 표현식 작성
 
-Jekyll also offers powerful support for code snippets:
+- 유의 사항
+    - 매개변수의 타입을 추론할 수 있는 경우에는 타입을 생략할 수 있다.
+    - 매개변수가 하나인 경우에는 매개변수를 감싸는 소괄호를 생략할 수 있다.
+    - 함수의 몸체가 하나의 명령문만으로 이루어진 경우에는 함수몸체를 감싸는 중괄호를 생략할 수 있다.
+        - 이 때 세미콜론(;)은 붙이지 않는다.
+    - 함수의 몸체가 하나의 return 문으로만 이루어진 경우에는 함수몸체를 감싸는 중괄호를 생략할 수 없다.
+    - return 문 대신 표현식을 사용할 수 있다.
+        - 이 때 반환값은 표현식의 결괏값이 된다.
+        - 이 때 세미콜론(;)은 붙이지 않는다.
+- 사용 예시
+    {% highlight java %}
+    //원형
+    (매개변수목록) -> { 함수몸체 }
+    
+    //예시
+    new Thread(()->{
+        System.out.println("일회용 스레드 동작!!!");
+    }).start();
+    {% endhighlight %}
+
+### 함수형 인터페이스 (functional interface)
+
+- 람다 표현식을 하나의 변수에 대입할 때 사용하는 참조 변수의 타입
+- 람다 표현식을 사용할 때는 람다 표현식을 저장하기 위한 참조 변수의 타입을 결정해야 한다.
+- 함수형 인터페이스는 추상 클래스와는 달리 단 하나의 추상 메소드만을 가져야 한다.
+- @FunctionalInterface 어노테이션을 사용하여 함수형 인터페이스임을 명시할 수 있다.
+- 사용 예시
+    {% highlight java %}
+    //원형
+    참조변수의타입 참조변수의이름 = 람다 표현식
+
+    //s:예시
+    @FunctionalInterface
+    interface Calc {
+        public int min(int x, int y);
+    }
+
+    Calc minNum = (x, y) -> x < y ? x : y; //추상 메소드의 구현
+    System.out.println(minNum.min(3, 4));  //함수형 인터페이스의 사용
+    //e:예시
+    {% endhighlight %}
+
+### 메소드 참조 (method reference)
+
+- 람다 표현식이 단 하나의 메소드만을 호출하는 경우에  
+해당 람다 표현식에서 불필요한 매개변수를 제거하고 사용할 수 있도록 해주는 것
+- 사용 예시
+    {% highlight java %}
+    //원형 1
+    클래스이름::메소드이름
+
+    //원형 2
+    참조변수이름::메소드이름
+
+    //예시
+    /*
+        (base, exponent) -> Math.pow(base, exponent);
+    */
+    Math::pow;
+    {% endhighlight %}
+
+### 생성자 참조
+
+- 생성자를 호출하는 람다 표현식도 앞서 살펴본 메소드 참조를 이용할 수 있다.
+- 단순히 객체를 생성하고 반환하는 람다 표현식은 생성자 참조로 변환할 수 있다.
+- 당연히 해당 생성자가 존재하지 않으면 컴파일 시 오류가 발생합니다.
 
 {% highlight java %}
+//람다 표현식의 경우
+(a) -> { return new Object(a); }
+
+//메소드 참조의 경우
+Object::new;
 {% endhighlight %}
+
+- 배열을 생성할 때에도 다음과 같이 생성자 참조를 사용할 수 있다.
+{% highlight java %}
+//람다 표현식의 경우
+Function<Integer, double[]> func1 = a -> new double[a];
+
+//메소드 참조의 경우
+Function<Integer, double[]> func2 = double[]::new;
+{% endhighlight %}
+
