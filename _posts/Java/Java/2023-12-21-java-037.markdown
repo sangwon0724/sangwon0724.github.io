@@ -1,19 +1,172 @@
 ---
 layout: post
-title:  "Comparable"
-date:   2023-12-15 09:00:00 +0900
+title:  "예외 처리"
+date:   2023-12-21 09:38:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
+tags: [오류, 예외, 예외 처리, Exception]
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 오류(error)와 예외(exception)
 
-Jekyll requires blog post files to be named according to the following format:
+- 오류
+    - 시스템 레벨에서 프로그램에 심각한 문제를 야기하여 실행 중인 프로그램을 종료시키는 것
+    - 개발자가 미리 예측하여 처리할 수 없는 것이 대부분이라서 오류에 대한 처리는 할 수 없다.
+- 예외(exception)
+    - 오류와 마찬가지로 실행 중인 프로그램을 비정상적으로 종료시킨다.
+    - 발생할 수 있는 상황을 미리 예측하여 처리할 수 있다.
+    - 개발자는 예외 처리(exception handling)를 통해 예외 상황을 처리할 수 있도록 코드의 흐름을 바꿀 필요가 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 예외 처리(exception handling)
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- try 블록
+    - 기본적으로 맨 먼저 실행되는 코드로 여기에서 발생한 예외는 catch 블록에서 처리된다.
+    - 필수적으로 사용
+    - 1번만 선언할 수 있다.
+- catch 블록
+    - try 블록에서 발생한 예외 코드나 예외 객체를 인수로 전달받아 그 처리를 담당한다.
+    - 선택적으로 사용
+    - 여러 번 선언할 수 있다.
+    - <b style="color: red;">예외가 발생하면, try 블록과 가장 가까운 catch 블록부터 순서대로 검사한다. (★)</b>
+- finally 블록
+    - 이 블록은 try 블록에서 예외가 발생하건 안 하건 맨 마지막에 무조건 실행된다.
+    - 선택적으로 사용
+    - 1번만 선언할 수 있다.
 
-Jekyll also offers powerful support for code snippets:
+>catch 블록과 finally 블록 중 1개는 있어야 한다.
 
-{% highlight java %}
-{% endhighlight %}
+- 사용 예시
+    {% highlight java %}
+    try {
+        예외를 처리하길 원하는 실행 코드;
+    } catch (e1) {
+        e1 예외가 발생할 경우에 실행될 코드;
+    } catch (e2) {
+        e2 예외가 발생할 경우에 실행될 코드;
+    }
+    ...
+    finally {
+        예외 발생 여부와 상관없이 무조건 실행될 코드;
+    }
+
+    //Java SE 7부터는 '|' 기호를 사용하여 하나의 catch 블록에서 여러 타입의 예외를 동시에 처리할 수 있다.
+    try {
+        this.db.commit();
+    } catch (IOException | SQLException e) {
+        e.printStackTrace();
+    }
+    {% endhighlight %}
+
+### 예외(Exception) 클래스
+
+- Java에서 모든 예외의 조상 클래스
+- 종류
+    - RuntimeException 클래스
+        - 주로 치명적인 예외 상황을 발생시키지 않는 예외들로 구성
+        - try-catch 문을 사용하기보다는 프로그램을 작성하면서 예외가 발생하지 않도록 주의를 기울이는 편이 좋다.
+    - 그 외의 Exception 클래스의 자식 클래스
+        - 치명적인 예외 상황을 발생시킨다.
+        - 반드시 try-catch 문을 사용하여 예외를 처리해야 한다.
+        - 자바 컴파일러는 RuntimeException 클래스 이외의  
+        Exception 클래스의 자식 클래스에 속하는 예외가 발생할 가능성이 있는 구문에는    
+        반드시 예외를 처리하도록 강제하고 있다.
+- 자주 사용되는 예외 클래스
+    - ClassCastException
+        - 수행할 수 없는 타입 변환이 진행될 경우
+    - ArrayIndexOutOfBoundsException	배열에 잘못된 인덱스를 사용하여 접근할 경우
+    - NullPointerException
+        - null 객체의 인스턴스 메소드를 호출하는 등의 경우
+    - ArithmeticException
+        - 산술 연산에서 정수를 0으로 나누는 등 연산을 수행할 수 없는 경우
+
+ ### Throwable 클래스
+
+- Exception 클래스와 모든 오류의 조상이 되는 Error 클래스의 부모 클래스
+- hrowable 타입과 이 클래스를 상속받은 서브 타입만이 자바 가상 머신(JVM)이나 throw 키워드에 의해 던져질 수 있다.
+- 메소드
+    - getMessage()
+        - 해당 throwable 객체에 대한 자세한 내용을 문자열로 반환한다.
+    - printStackTrace()
+        - 해당 throwable 객체와 표준 오류 스트림(standard error stream)에서  
+        해당 객체의 스택 트레이스(stack trace)를 출력한다.
+    - toString()
+        - 해당 throwable 객체에 대한 간략한 내용을 문자열로 반환한다.
+- 사용 예시
+    {% highlight java %}
+    try {
+        System.out.println(5 / 0);
+    } catch (ArithmeticException e) {
+        System.out.println("현재 발생한 예외 정보 : " + e.getMessage());
+    }
+    {% endhighlight %}
+
+### 예외 발생
+
+- Java에서는 throw 키워드를 사용하여 강제로 예외를 발생시킬 수 있다.
+- 사용 예시
+    {% highlight java %}
+    Exception e = new Exception("오류 메시지");
+    throw e;
+    {% endhighlight %}
+
+### 예외 회피
+
+- 사용 예시
+    {% highlight java %}
+        void handlingException() {
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                System.out.println("호출된 메소드에서 예외가 처리됨!");
+            }
+        }
+
+        try {
+            handlingException();
+        } catch (Exception e) {
+            System.out.println("main() 메소드에서 예외가 처리됨!");
+        }
+    {% endhighlight %}
+
+### 사용자 정의 예외 클래스
+
+- Java에서는 Exception 클래스를 상속받아 새로운 예외 클래스를 정의할 수 있다.
+- 생성자뿐만 아니라 필드 및 메소드도 원하는 만큼 추가할 수 있다.
+- 요즘에는 예외 처리를 강제하지 않는 RuntimeException 클래스를 상속받아 작성하는 경우가 많다.
+- 사용 예시
+    {% highlight java %}
+    class MyException extends RuntimeException {
+        MyException(String errMsg) {
+            super(errMsg);
+        }
+    }
+    {% endhighlight %}
+
+### try-with-resources 문
+
+- 사용한 자원을 자동으로 해제
+- Java SE 7부터 제공
+- 사용 예시
+    {% highlight java %}
+    //원형
+    try (파일을열거나자원을할당하는명령문) {
+        ...
+    }
+
+    //예시 (Java SE 7 이전)
+    static String readFile(String filePath) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        try {
+            return br.readLine();
+        } finally {
+            if (br != null)
+                br.close();
+        }
+    }
+
+    //예시 (Java Se 7)
+    static String readFile(String filePath) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            return br.readLine();
+        }
+    }
+    {% endhighlight %}

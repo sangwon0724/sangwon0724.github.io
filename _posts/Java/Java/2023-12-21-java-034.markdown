@@ -1,0 +1,210 @@
+---
+layout: post
+title:  "Map 컬렉션"
+date:   2023-12-21 09:01:00 +0900
+categories: Group&nbsp;:&nbsp;Java Java
+tags: [Map]
+---
+
+### 특징
+
+- Map 인터페이스를 구현한 Map 컬렉션 클래스들은 키와 값을 하나의 쌍으로 저장하는 방식(key-value 방식)을 사용한다.
+- 요소의 저장 순서를 유지하지 않는다.
+- 키는 중복을 허용하지 않지만 값의 중복은 허용한다. 
+
+- HashMap&lt;K, V>
+    - 해시 알고리즘을 사용하여 검색 속도가 매우 빠르다.
+    - Map 인터페이스를 구현하므로, 중복된 키로는 값을 저장할 수 없다.
+        - 같은 값을 다른 키로 저장하는 것은 가능하다.
+    - JDK 1.2부터 제공
+    - 메소드
+        - clear()
+            - 해당 맵(map)의 모든 매핑(mapping)을 제거한다.
+        - containsKey(Object key)
+            - 해당 맵이 전달된 키를 포함하고 있는지를 확인한다.
+        - containsValue(Object value)
+            - 해당 맵이 전달된 값에 해당하는 하나 이상의 키를 포함하고 있는지를 확인한다.
+        -  get(Object key)
+            - 해당 맵에서 전달된 키에 대응하는 값을 반환한다.
+            - 만약 해당 맵이 전달된 키를 포함한 매핑을 포함하고 있지 않으면 null을 반환한다.
+        - isEmpty()
+            - 해당 맵이 비어있는지를 확인한다.
+        - keySet()
+            - 해당 맵에 포함되어 있는 모든 키로 만들어진 Set 객체를 반환한다.
+        - put(K key, V value)
+            - 해당 맵에 전달된 키에 대응하는 값으로 특정 값을 매핑한다.
+        - remove(Object key)
+            - 해당 맵에서 전달된 키에 대응하는 매핑을 제거한다.
+        - remove(Object key, Object value)
+            - 해당 맵에서 특정 값에 대응하는 특정 키의 매핑을 제거한다.
+        - replace(K key, V value)
+            - 해당 맵에서 전달된 키에 대응하는 값을 특정 값으로 대체한다.
+        - replace(K key, V oldValue, V newValue)
+            - 해당 맵에서 특정 값에 대응하는 전달된 키의 값을 새로운 값으로 대체한다.
+        - size()
+            - 해당 맵의 매핑의 총 개수를 반환한다.
+    - 사용 예시
+        {% highlight java %}
+        HashMap<String, Integer> hm = new HashMap<String, Integer>();
+
+        //put() 메소드를 이용한 요소의 저장
+        hm.put("삼십", 30);
+        hm.put("십", 10);
+        hm.put("사십", 40);
+        hm.put("이십", 20);
+
+        //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+        System.out.println("맵에 저장된 키들의 집합 : " + hm.keySet());
+        for (String key : hm.keySet()) {
+            System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
+        }
+
+        //remove() 메소드를 이용한 요소의 제거
+        hm.remove("사십");
+
+        //iterator() 메소드와 get() 메소드를 이용한 요소의 출력
+        Iterator<String> keys = hm.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
+        }
+
+        //replace() 메소드를 이용한 요소의 수정
+        hm.replace("이십", 200);
+
+        for (String key : hm.keySet()) {
+            System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
+        }
+
+        //size() 메소드를 이용한 요소의 총 개수
+        System.out.println("맵의 크기 : " + hm.size());
+        {% endhighlight %}
+
+- Hashtable&lt;K, V>
+    - HashMap 클래스와 같은 동작을 하는 클래스
+        - Hashtable 클래스에서 사용할 수 있는 메소드는 HashMap 클래스에서 사용할 수 있는 메소드와 거의 같다.
+            - Hashtable 클래스는 HashMap 클래스와 마찬가지로 Map 인터페이스를 상속받는다.
+    - JDK 1.0부터 제공
+    - 현재에는 기존 코드와의 호환성을 위해서만 남아있으므로 Hashtable 클래스보다는 HashMap 클래스를 사용하는 것이 좋다.
+
+
+- TreeMap&lt;K, V>
+    - 키와 값을 한 쌍으로 하는 데이터를 이진 검색 트리(binary search tree)의 형태로 저장한다.
+        - 이진 검색 트리는 데이터를 추가하거나 제거하는 등의 기본 동작 시간이 매우 빠르다.
+    - NavigableMap 인터페이스를 기존의 이진 검색 트리의 성능을 향상시킨 레드-블랙 트리(Red-Black tree)로 구현한다.
+    - Map 인터페이스를 구현하므로, 중복된 키로는 값을 저장할 수 없다.
+        - 같은 값을 다른 키로 저장하는 것은 가능합니다.
+    - JDK 1.2부터 제공
+    - 메소드
+        - ceilingEntry(K key)
+            - 해당 맵에서 전달된 키와 같거나, 전달된 키보다 큰 키 중에서  
+            가장 작은 키와 그에 대응하는 값의 엔트리를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+        - ceilingKey(K key)	
+            - 해당 맵에서 전달된 키와 같거나, 전달된 키보다 큰 키 중에서 가장 작은 키를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+        - clear()
+            - 해당 맵(map)의 모든 매핑(mapping)을 제거한다.
+        - containsKey(Object key)
+            - 해당 맵이 전달된 키를 포함하고 있는지를 확인한다.
+        - containsValue(Object value)
+            - 해당 맵이 전달된 값에 해당하는 하나 이상의 키를 포함하고 있는지를 확인한다.
+        - descendingMap()
+            - 해당 맵에 포함된 모든 매핑을 역순으로 반환한다.
+        - entrySet()
+            - 해당 맵에 포함된 모든 매핑을 Set 객체로 반환한다.
+        - firstEntry()
+            - 해당 맵에서 현재 가장 작은(첫 번째) 키와 그에 대응하는 값의 엔트리를 반환한다.
+        - firstKey()
+            - 해당 맵에서 현재 가장 작은(첫 번째) 키를 반환한다.
+        - floorEntry(K key)
+            - 해당 맵에서 전달된 키와 같거나, 전달된 키보다 작은 키 중에서  
+            가장 큰 키와 그에 대응하는 값의 엔트리를 반환한다.   
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+
+        - floorKey(K key)	
+            - 해당 맵에서 전달된 키와 같거나, 전달된 키보다 작은 키 중에서 가장 큰 키를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+
+        - get(Object key)	
+            - 해당 맵에서 전달된 키에 대응하는 값을 반환한다.
+                - 만약 해당 맵이 전달된 키를 포함한 매핑을 포함하고 있지 않으면 null을 반환한다.
+        - headMap(K toKey)
+            - 해당 맵에서 전달된 키보다 작은 키로 구성된 부분만을 반환한다.
+        - higherEntry(K key)
+            - 해당 맵에서 전달된 키보다 작은 키 중에서 가장 큰 키와 그에 대응하는 값의 엔트리를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+        - higherKey(K key)
+            - 해당 맵에서 전달된 키보다 작은 키 중에서 가장 큰 키를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+        - keySet()
+            - 해당 맵에 포함되어 있는 모든 키로 만들어진 Set 객체를 반환한다.
+        - lastEntry()
+            - 해당 맵에서 현재 가장 큰(마지막) 키와 그에 대응하는 값의 엔트리를 반환한다.
+        - lastKey()
+            - 해당 맵에서 현재 가장 큰(마지막) 키를 반환한다.
+        - lowerEntry(K key)
+            - 해당 맵에서 전달된 키보다 큰 키 중에서 가장 작은 키와 그에 대응하는 값의 엔트리를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+        - lowerKey(K key)
+            - 해당 맵에서 전달된 키보다 큰 키 중에서 가장 작은 키를 반환한다.
+                - 만약 해당하는 키가 없으면 null을 반환한다.
+        - pollFirstEntry()
+            - 해당 맵에서 현재 가장 작은(첫 번째) 키와 그에 대응하는 값의 엔트리를 반환하고,  
+            해당 엔트리를 맵에서 제거한다.
+        - pollLastEntry()
+            - 해당 맵에서 현재 가장 큰(마지막) 키와 그에 대응하는 값의 엔트리를 반환하고,  
+            해당 엔트리를 맵에서 제거한다.
+        - put(K key, V value)
+            - 해당 맵에 전달된 키에 대응하는 값으로 특정 값을 매핑한다.
+        - remove(Object key)
+            - 해당 맵에서 전달된 키에 대응하는 매핑을 제거한다.
+        - remove(K key, V value)
+            - 해당 맵에서 특정 값에 대응하는 특정 키의 매핑을 제거한다.
+        - replace(K key, V value)
+            - 해당 맵에서 전달된 키에 대응하는 값을 특정 값으로 대체한다.
+        - replace(K key, V oldValue, V newValue)
+            - 해당 맵에서 특정 값에 대응하는 전달된 키의 값을 새로운 값으로 대체한다.
+        - size()
+            - 해당 맵의 매핑의 총 개수를 반환한다.
+        - subMap(K fromKey, K toKey)
+            - 해당 맵에서 fromKey부터 toKey까지로 구성된 부분만을 반환한다.
+                - fromKey는 포함되나, toKey는 포함되지 않음.
+        - tailMap(K fromKey)
+            - 해당 맵에서 fromKey와 같거나, fromKey보다 큰 키로 구성된 부분만을 반환한다.
+    - 사용 예시
+        {% highlight java %}
+        TreeMap<Integer, String> tm = new TreeMap<Integer, String>();
+
+        //put() 메소드를 이용한 요소의 저장
+        tm.put(30, "삼십");
+        tm.put(10, "십");
+        tm.put(40, "사십");
+        tm.put(20, "이십");
+
+        //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+        System.out.println("맵에 저장된 키들의 집합 : " + tm.keySet());
+        for (Integer key : tm.keySet()) {
+            System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
+        }
+
+        //remove() 메소드를 이용한 요소의 제거
+        tm.remove(40);
+
+        //iterator() 메소드와 get() 메소드를 이용한 요소의 출력
+        Iterator<Integer> keys = tm.keySet().iterator();
+        while (keys.hasNext()) {
+            Integer key = keys.next();
+            System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
+        }
+
+        //replace() 메소드를 이용한 요소의 수정
+        tm.replace(20, "twenty");
+
+        for (Integer key : tm.keySet()) {
+            System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
+        }
+
+        //size() 메소드를 이용한 요소의 총 개수
+        System.out.println("맵의 크기 : " + tm.size());
+        {% endhighlight %}

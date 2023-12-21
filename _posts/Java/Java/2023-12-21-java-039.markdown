@@ -1,19 +1,65 @@
 ---
 layout: post
-title:  "스레드"
-date:   2023-12-15 09:00:00 +0900
+title:  "파일 입출력"
+date:   2023-12-21 10:34:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 표준 입출력
 
-Jekyll requires blog post files to be named according to the following format:
+- Java에서는 콘솔과 같은 표준 입출력 장치를 위해 System이라는 표준 입출력 클래스를 정의하고 있다.
+- System 클래스는 표준 입출력을 위해 클래스 변수를 제공한다.
+- 표준 입출력 스트림은 Java가 자동으로 생성하므로, 개발자가 별도로 스트림을 생성하지 않아도 사용할 수 있다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+| 클래스 변수 | 입출력 스트림 | 설명 |
+|-------|--------|---------|
+| System.in | InputStream | 콘솔로부터 데이터를 입력 |
+| System.out | PrintStream | 콘솔로 데이터를 출력. |
+| System.err | PrintStream | 콘솔로 데이터를 출력 |
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 표준 입출력의 대상 변경
 
-Jekyll also offers powerful support for code snippets:
+- 특정 System 메소드를 사용하면 스트림의 대상을 다른 입출력 장치로 변경할 수 있다.
 
-{% highlight java %}
-{% endhighlight %}
+| 메소드 | 설명 |
+|--------|---------|
+| static void setIn(InputStream in) | 입력 스트림의 대상을 전달된 입력 스트림으로 변경 |
+| static void setOut(PrintStream out) | 출력 스트림의 대상을 전달된 출력 스트림으로 변경 |
+| static void setErr(PrintStream err) | 출력 스트림의 대상을 전달된 출력 스트림으로 변경 |
+
+### RandomAccessFile 클래스
+
+- 순차적인 접근이 아닌 임의의 지점에 접근하여 작업을 수행하고 싶을 때 사용하는 클래스
+- 이 클래스는 파일만을 대상으로 하며, 임의의 지점에서 입출력을 동시에 수행할 수 있다.
+- RandomAccessFile 클래스의 생성자에는 인수로 파일의 이름뿐만 아니라 파일 모드까지 함께 전달해야 한다.
+- 파일 모드
+    - 파일의 사용 용도를 나타내는 문자열
+    - 종류
+        - r
+            - 읽기 전용
+        - rw
+            - 읽기쓰기 가능
+            - 파일이 없으면 새로운 파일 생성
+- 메소드
+    - getFilePointer()
+        - 파일 포인터의 현재 위치를 확인
+    - seek()
+        - 파일 포인터의 위치를 변경
+- 사용 예시
+    {% highlight java %}
+    public static void main(String[] args){
+        try {
+            //"rw" 모드로 "data.txt" 파일 개방
+            RandomAccessFile file = new RandomAccessFile("data.txt", "rw");
+            System.out.println(file.getFilePointer()); //출력 : 0, 파일 포인터의 현재 위치를 반환
+
+            file.writeInt(10);                         //정수 10을 저장
+            System.out.println(file.getFilePointer()); //출력 : 4
+
+            file.seek(20);                             //파일 포인터의 위치를 20으로 이동
+            System.out.println(file.getFilePointer()); //출력 : 20
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    {% endhighlight %}
