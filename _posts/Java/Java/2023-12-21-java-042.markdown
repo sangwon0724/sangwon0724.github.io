@@ -5,7 +5,7 @@ date:   2023-12-21 13:02:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-### 스트림 API란?
+## 스트림 API란?
 
 - 입출력 스트림과는 전혀 다른 개념
 - 데이터를 추상화하여 다룬다.
@@ -22,7 +22,7 @@ categories: Group&nbsp;:&nbsp;Java Java
         - 데이터베이스의 쿼리와 같이 정형화된 처리 패턴이 없다.
             - 데이터마다 다른 방법으로 접근해야 한다.
 
-### 특징
+## 스트림 API의 특징
 
 - 외부 반복을 통해 작업하는 컬렉션과는 달리 내부 반복(internal iteration)을 통해 작업을 수행한다.
 - 재사용이 가능한 컬렉션과는 달리 단 한 번만 사용할 수 있다.
@@ -30,7 +30,7 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 스트림의 연산은 필터-맵(filter-map) 기반의 API를 사용하여 지연(lazy) 연산을 통해 성능을 최적화한다.
 - parallelStream() 메소드를 통한 손쉬운 병렬 처리를 지원한다. 
 
-### 스트림 API의 동작 흐름
+## 스트림 API의 동작 흐름
 
 1. 스트림의 생성
 2. 스트림의 중개 연산 (스트림의 변환)
@@ -43,7 +43,7 @@ flowchart LR
     id3(["중개연산 (맵)"]) --> id4((필터))
 </div>
 
-### 스트림의 생성
+## 스트림의 생성
 
 - 생성 범위
     - 컬렉션
@@ -189,7 +189,7 @@ java.nio.file.Files 클래스에는 lines() 메소드가 정의되어 있다.
     System.out.println(stream.count()); //스트림의 요소의 총 개수를 출력
     {% endhighlight %}
 
-### 스트림의 중개 연산 (intermediate operation)
+## 스트림의 중개 연산 (intermediate operation)
 
 - 스트림 API에 의해 생성된 초기 스트림은 중개 연산을 통해 또 다른 스트림으로 변환된다.
 - 중개 연산은 스트림을 전달받아 스트림을 반환하므로 중개 연산은 연속으로 연결해서 사용할 수 있다.
