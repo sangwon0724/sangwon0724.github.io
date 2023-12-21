@@ -42,6 +42,7 @@ categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
     - 원본은 계속 서비스되고 있는 상태를 가진다.
 
 ### 서비스의 상태 - 변경 방법
+
 - <span style="color: red;">C*</span> ←→  <span style="color: blue;">A</span>
     - <span style="color: red;">C*</span> → [Activate] → <span style="color: blue;">A</span>
     - <span style="color: red;">C*</span> ← [Deactivate] ← <span style="color: blue;">A</span>
@@ -54,6 +55,18 @@ categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
 - <span class="">S</span> ←→ <span class="">M*</span>
     - <span class="">S</span> → [Apply] → <span class="">M*</span>
     - <span class="">S</span> ← [Reactivate/Cancle] ← <span class="">M*</span>
+
+<div class="mermaid">
+graph TD
+    id1[C*] -- Activate --> id2[A]
+    id2 -- Deactivate --> id1
+    id2 -- Apply --> id3[M*]
+    id3 -- Reactivate/Cancle --> id2
+    id2 -- Expose Service --> id4[S]
+    id4 -- Hide Service --> id2
+    id4 -- Apply --> id3
+    id3 -- Reactivate/Cancle --> id4
+</div>
 
 ### 서비스의 소유권
 
