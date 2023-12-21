@@ -3,6 +3,7 @@ layout: post
 title:  "스트림 API"
 date:   2023-12-21 13:02:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
+tags: [스트림 API]
 ---
 
 ## 스트림 API란?
