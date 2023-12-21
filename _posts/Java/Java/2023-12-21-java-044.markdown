@@ -1,19 +1,220 @@
 ---
 layout: post
-title:  "Java8 java.time"
-date:   2023-12-15 09:00:00 +0900
+title:  "java.time 패키지"
+date:   2023-12-21 17:27:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
+tags: [java.time]
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+## java.time 패키지
 
-Jekyll requires blog post files to be named according to the following format:
+- Java SE 8부터 제공
+- Java에서 날짜와 시간을 다루는 데 사용되는 필수 클래스들이 포함되어 있다.
+- 다양한 기능을 하는 하위 패키지를 포함하고 있다.
+    - java.time.chrono
+        - ISO-8601에 정의된 표준 달력 이외의 달력 시스템을 사용할 때 필요한 클래스들
+    - java.time.format
+        - 날짜와 시간에 대한 데이터를 구문분석하고 형식화하는 데 사용되는 클래스들
+    - java.time.temporal
+        - 날짜와 시간에 대한 데이터를 연산하는 데 사용되는 보조 클래스들
+    - java.time.zone
+        - 타임 존(time-zone)과 관련된 클래스들
+- java.time 패키지에 속하는 모든 클래스의 인스턴스는 불변 객체로 생성된다.
+    - 기존에 사용되던 Calendar 클래스의 단점 보완
+    - 소속된 메소드들은 모두 새로운 객체를 생성하여 반환한다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+## java.time 패키지의 구성 클래스
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- LocalDate 클래스
+    - 날짜 표현
+- LocalTime 클래스
+    - 시간 표현
+- LocalDateTime 클래스
+    - 날짜와 시간을 함께 표현
+- ZonedDateTime 클래스
+    - 특정 타임 존(time-zone)에 해당하는 날짜와 시간을 표현
+- Instant 클래스
+    - 기존의 Date 클래스와 비슷한 용도
+    - 특정 시점의 날짜와 시간을 나노 초(ns) 단위로 표현하는 타임스탬프를 다루는 데 사용된다.
+- Period 클래스
+    - 두 날짜 사이의 차이를 표현
+- Duration 클래스
+    - 두 시각 사이의 차이를 표현
 
-Jekyll also offers powerful support for code snippets:
+## LocalDate와 LocalTime
+
+- java.time 패키지에 포함된 대부분의 클래스들은 이 두 클래스를 확장한 것이 많다.
+
+## 날짜와 시간 객체의 생성
+
+- LocalDate와 LocalTime 클래스가 객체를 생성하기 위한 메소드
+    - now() 메소드
+        - 현재의 날짜와 시간을 이용하여 새로운 객체를 생성하여 반환
+    - of() 메소드
+        - 전달된 인수를 가지고 특정 날짜와 시간을 표현하는 새로운 객체를 생성하여 반환
+- 사용 예시
+    {% highlight java %}
+    LocalDate today = LocalDate.now();
+    LocalTime present = LocalTime.now();
+    System.out.println(today + " " + present);
+
+    //static LocalDate of(int year, int month, int dayOfMonth)
+    LocalDate birthDay = LocalDate.of(1982, 02, 19);
+
+    //static LocalTime of(int hour, int minute, int second, int nanoOfSecond)
+    LocalTime birthTime = LocalTime.of(02, 02, 00, 100000000);
+
+    System.out.println(birthDay + " " + birthTime);
+    {% endhighlight %}
+
+## 날짜와 시간 객체에 접근하기
+
+### LocalDate
+
+| 메소드 | 설명 |
+|-------|--------|
+| int get(TemporalField field)<br/>long getLong(TemporalField field) | 해당 날짜 객체의 명시된 필드의 값을 int형이나 long형으로 반환 |
+| int getYear() | 해당 날짜 객체의 연도(YEAR) 필드의 값을 반환 |
+| Month getMonth() | 해당 날짜 객체의 월(MONTH_OF_YEAR) 필드의 값을 Month 열거체를 이용하여 반환 |
+| int getMonthValue() | 해당 날짜 객체의 월(MONTH_OF_YEAR) 필드의 값을 반환 (1~12) |
+| int getDayOfMonth() | 해당 날짜 객체의 일(DAY_OF_MONTH) 필드의 값을 반환 (1~31) |
+| int getDayOfYear() | 해당 날짜 객체의 일(DAY_OF_YEAR) 필드의 값을 반환 (1~365, 윤년이면 366) |
+| DayOfWeek getDayOfWeek() | 해당 날짜 객체의 요일(DAY_OF_WEEK) 필드의 값을 DayOfWeek 열거체를 이용하여 반환 |
 
 {% highlight java %}
+LocalDate today = LocalDate.now();
+
+System.out.println("올해는 " + today.getYear() + "년입니다.");
+System.out.println("이번달은 " + today.getMonthValue() + "월입니다.");
+System.out.println("오늘은 " + today.getDayOfWeek() + "입니다.");
+System.out.println("오늘은 1년 중 " + today.get(ChronoField.DAY_OF_YEAR) + "일째 날입니다.");
+{% endhighlight %}
+
+### LocalTime
+
+| 메소드 | 설명 |
+|-------|--------|
+| int get(TemporalField field)<br/>long getLong(TemporalField field) | 해당 시간 객체의 명시된 필드의 값을 int형이나 long형으로 반환 |
+| int getHour() | 해당 시간 객체의 시(HOUR_OF_DAY) 필드의 값을 반환 |
+| int getMinute() | 해당 시간 객체의 분(MINUTE_OF_HOUR) 필드의 값을 반환 |
+| int getSecond() | 해당 시간 객체의 초(SECOND_OF_MINUTE) 필드의 값을 반환 |
+| int getNano() | 해당 시간 객체의 나노초(NANO_OF_SECOND) 필드의 값을 반환 |
+
+{% highlight java %}
+LocalTime present = LocalTime.now();
+System.out.println("현재 시각은 " + present.getHour() + "시 " + present.getMinute() + "분입니다.");
+{% endhighlight %}
+
+### TemporalField 인터페이스
+
+- 월과 시와 같이 날짜와 시간과 관련된 필드를 정의한 인터페이스
+- ChronoField
+    - TemporalField 인터페이스를 구현하여 날짜와 시간을 나타낼 때 사용하는 열거체
+    - java.time 패키지를 구성하는 클래스의 메소드에서는 ChronoField를 이용하여 날짜와 시간을 처리한다.
+
+| 열거체 상수 | 설명 |
+|-------|--------|
+| ERA | 시대 |
+| YEAR | 연도 |
+| MONTH_OF_YEAR | 월 |
+| DAY_OF_MONTH | 일 |
+| DAY_OF_WEEK | 요일 (월요일~일요일 : 1~7) |
+| AMPM_OF_DAY | 오전/오후 |
+| HOUR_OF_DAY | 시 (0~23) |
+| CLOCK_HOUR_OF_DAY | 시 (1~24) |
+| HOUR_OF_AMPM | 시 (0~11) |
+| CLOCK_HOUR_OF_AMPM | 시 (1~12) |
+| MINUTE_OF_HOUR | 분 |
+| SECOND_OF_MINUTE | 초 |
+| DAY_OF_YEAR | 해당 연도의 몇 번째 날 (1~365, 윤년이면 366) |
+| EPOCH_DAY | EPOCH(1970년 1월 1일)을 기준으로 몇 번째 날 |
+
+{% highlight java %}
+LocalTime present = LocalTime.now();
+
+String ampm;
+if(present.get(ChronoField.AMPM_OF_DAY) == 0) {
+    ampm = "오전";
+} else {
+    ampm = "오후";
+}
+
+System.out.println("지금은 " + ampm + " " + present.get(ChronoField.HOUR_OF_AMPM) + "시입니다.");
+{% endhighlight %}
+
+## 날짜와 시간 객체의 필드값 변경
+
+- with() 메소드
+    - LocalDate와 LocalTime 클래스가 날짜와 시간 객체에 접근하여 특정 필드의 값을 변경할 때 사용
+    - 값이 변경될 필드를 사용자가 직접 명시할 수 있습니다.
+    - 특정 필드의 값을 변경하기 위해 미리 정의되어 제공되는 다양한 with() 메소드가 있다.
+
+### LocalDate
+
+| 메소드 | 설명 |
+|-------|--------|
+| LocalDate with(TemporalField field, long newValue) | 해당 날짜 객체에서 특정 필드를 전달된 새로운 값으로 설정한 새로운 날짜 객체를 반환 |
+| LocalDate withYear(int year) | 해당 날짜 객체에서 연도(YEAR) 필드를 전달된 새로운 값으로 설정한 새로운 날짜 객체를 반환 |
+| LocalDate withMonth(int month) | 해당 날짜 객체에서 월(MONTH_OF_YEAR) 필드를 전달된 새로운 값으로 설정한 새로운 날짜 객체를 반환 |
+| LocalDate withDayOfMonth(int dayOfMonth) | 해당 날짜 객체에서 일(DAY_OF_MONTH) 필드를 전달된 새로운 값으로 설정한 새로운 날짜 객체를 반환 |
+| LocalDate withDayOfYear(int dayOfYear) | 해당 날짜 객체에서 DAY_OF_YEAR 필드를 전달된 새로운 값으로 설정한 새로운 날짜 객체를 반환 |
+
+{% highlight java %}
+LocalDate today = LocalDate.now();
+System.out.println("올해는 " + today.getYear() + "년입니다.");
+
+LocalDate otherDay = today.withYear(1982);
+System.out.println("올해는 " + otherDay.getYear() + "년입니다.");
+{% endhighlight %}
+
+### LocalTime
+
+| 메소드 | 설명 |
+|-------|--------|
+| LocalTime with(TemporalField field, long newValue) | 해당 시간 객체에서 특정 필드를 전달된 새로운 값으로 설정한 새로운 시간 객체를 반환 |
+| LocalTime withHour(int hour) | 해당 시간 객체에서 시(HOUR_OF_DAY) 필드를 전달된 새로운 값으로 설정한 새로운 시간 객체를 반환 |
+| LocalTime withMinute(int minute) | 해당 시간 객체에서 분(MINUTE_OF_HOUR) 필드를 전달된 새로운 값으로 설정한 새로운 시간 객체를 반환 |
+| LocalTime withSecond(int second) | 해당 시간 객체에서 초(SECOND_OF_MINUTE) 필드를 전달된 새로운 값으로 설정한 새로운 시간 객체를 반환 |
+| LocalTime withNano(int nanoOfSecond) | 해당 시간 객체에서 나노초(NANO_OF_SECOND) 필드를 전달된 새로운 값으로 설정한 새로운 시간 객체를 반환 |
+
+{% highlight java %}
+LocalTime present = LocalTime.now();
+System.out.println("현재 시각은 " + present.getHour() + "시입니다.");
+
+LocalTime otherTime = present.withHour(8);
+System.out.println("현재 시각은 " + otherTime.getHour() + "시입니다.");
+{% endhighlight %}
+
+### plus() 메소드와 minus() 메소드
+
+{% highlight java %}
+LocalTime present = LocalTime.now();
+System.out.println("현재 시각은 " + present.get(ChronoField.HOUR_OF_DAY) + "시입니다.");
+
+LocalTime otherTime = present.plus(2, ChronoUnit.HOURS);
+System.out.println("바뀐 시간은 " + otherTime.getHour() + "시입니다.");
+
+LocalTime anotherTime = present.minus(6, ChronoUnit.HOURS);
+System.out.println("바뀐 시간은 " + anotherTime.getHour() + "시입니다.");
+{% endhighlight %}
+
+### 날짜와 시간 객체의 비교
+
+- LocalDate와 LocalTime 클래스에도 객체를 비교할 수 있는 compareTo() 메소드가 오버라이딩되어 있다.
+- 메소드
+    - isEqual() 메소드
+        - equals() 메소드와는 달리 오직 날짜만을 비교한다.
+        - LocalDate 클래스에서만 제공
+    - isBefore() 메소드
+        - 두 개의 날짜와 시간 객체를 비교하여 현재 객체가 명시된 객체보다 앞선 시간인지를 비교
+    - isAfter() 메소드
+        - 두 개의 날짜와 시간 객체를 비교하여 현재 객체가 명시된 객체보다 늦은 시간인지를 비교
+
+{% highlight java %}
+LocalDate today = LocalDate.now();
+LocalDate otherDay = LocalDate.of(1982, 02, 19);
+
+System.out.println(today.compareTo(otherDay));
+System.out.println(today.isBefore(otherDay));
+System.out.println(today.isEqual(otherDay));
 {% endhighlight %}
