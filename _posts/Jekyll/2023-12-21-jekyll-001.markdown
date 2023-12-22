@@ -1,12 +1,30 @@
 ---
 layout: post
-title:  "Jekyll"
-date:   2023-01-10 20:51:33 +0900
+title:  "Jekyll 블로그 만들기"
+date:   2023-12-21 13:00:00 +0900
 categories: Jekyll
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### Repository 생성
+
+1. github 로그인
+2. New repository
+3. repository 이름 작성
+  - repository의 이름에 따라서 접속 URL이 변경된다.
+    - 형식 : https://[유저 id].github.io/[repository의 이름]
+4. 생성된 repository의 Settings 탭으로 이동
+5. GitHub Pages 항목으로 이동
+6. 퍼블리싱된 브랜치 확인
+
+### 테마 선택하기
+
+1. [http://jekyllthemes.org/](http://jekyllthemes.org/)로 이동하기
+2. 마음에 드는 테마 선택하기
+  - 확인사항
+    - 라이센스
+    - 데모
+      - 없는 경우도 있다.
+      - 실물을 보는게 좀 더 취향에 맞는 걸 찾기 쉽다.
 
 `YEAR-MONTH-DAY-title.MARKUP`
 

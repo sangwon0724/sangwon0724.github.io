@@ -13,7 +13,7 @@ event.preventDefault(); //이벤트 실행 막기, 예시) form의 submit()
 {% endhighlight %}
                     
                 
-### 드래그 앤 
+### 드래그 앤 드랍
 
 {% highlight javascript %}
 <div ondrop="drop(event)" ondragover="dragEnter(event)">
@@ -42,7 +42,9 @@ function drop(ev) {
     //인터넷 익스플로러에서 뒤로가기시 검색창의 유저 아이디가 존재해서 페이징 에러를 발생시킴
     $(document).ready(function (){
         window.onpageshow = function(event) {
-            if ( event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            if (
+                event.persisted || (window.performance && window.performance.navigation.type === 2)
+            ) {
                 // Back Forward Cache로 브라우저가 로딩될 경우 혹은 브라우저 뒤로가기 했을 경우
                 $("#USER_ID").val("");
             }

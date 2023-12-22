@@ -6,8 +6,9 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 tags: [DOM, Document Object Model]
 ---
 
-### DOM이란?
-※ DOM (Document Object Model) : 웹페이지를 자바스크립트로 제어하기 위한 객체 모델
+### DOM(Document Object Model)이란?
+
+- 웹페이지를 자바스크립트로 제어하기 위한 객체 모델
 - window 객체의 document 프로퍼티를 통해서 사용
 - Document 객체는 윈도우에 로드된 문서를 의미
 

@@ -13,7 +13,8 @@ tags: ['? 연산자', '?? 연산자', 배열 메소드]
     - or 연산자(&#124;&#124;)로도 default value를 줄 수 있긴 하다.
     - 하지만 or 연산자는 논리연산자이기 때문에  
     만약 위의 코드에서 name의 값이 0이나 false여도 뒤의 값이 주어지게 된다.
-    - name같이 이름에 대한 경우면 신경 안 쓸 수도 있겠지만, point나 score같은 경우면 문제가 될 수 있다.
+    - name같이 이름에 대한 경우면 신경 안 쓸 수도 있겠지만,  
+    point나 score같은 경우면 문제가 될 수 있다.
 - 사용 예시
     {% highlight javascript %}
     let name="";
@@ -38,9 +39,14 @@ tags: ['? 연산자', '?? 연산자', 배열 메소드]
 - 문자열에 padding을 집어 넣는다.
 - 사용 예시
     {% highlight javascript %}
-    let seconds = 3; //10미만보다 작은 숫자는 앞에 0을 붙이고, 마지막에 초 단위를 붙이려고 함
-    seconds = String(seconds).padStart(2, "0").padEnd(3, "초"); //seconds 길이가 2보다 작으면 앞에 0 추가, 3보다 작으면 뒤에 초 단위 추가
-    console.log(seconds);   //출력 : 03초
+    //의도 : 10미만보다 작은 숫자는 앞에 0을 붙이고, 마지막에 초 단위를 붙이려고 함
+    let seconds = 3; 
+
+    //seconds 길이가 2보다 작으면 앞에 0 추가, 3보다 작으면 뒤에 초 단위 추가
+    seconds = String(seconds).padStart(2, "0").padEnd(3, "초");
+
+    //출력 : 03초
+    console.log(seconds);
     {% endhighlight %}
 - 주의사항
     - padStart와 padEnd는 문자열의 함수이기 때문에 숫자인 경우에는 문자열로 형변환을 해줘야한다.
@@ -102,4 +108,5 @@ tags: ['? 연산자', '?? 연산자', 배열 메소드]
 
 - Promise.all()과의 차이
     - Promise.all()은 포함된 모든 Promise들 중에서 하나라도 실패하면 모두 실패지만,
-    - Promise.allSttled()는 포함된 Promise들 중에서 실패한 Promise가 있어도 모든 status 값들을 반환한다.
+    - Promise.allSettled()는 포함된 Promise들 중에서  
+    실패한 Promise가 있어도 모든 status 값들을 반환한다.

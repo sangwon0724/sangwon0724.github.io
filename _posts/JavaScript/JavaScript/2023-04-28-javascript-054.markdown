@@ -46,3 +46,242 @@ link.download = "PaintJS[🎨].jpg";
 //<a> 태그를 가상으로 클릭함으로써 이미지를 다운로드 하게 한다.
 link.click();
 {% endhighlight %}
+
+### 예시
+
+<style>
+    .canvas {
+    width: 700px;
+    height: 700px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .controls {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+
+    .controls .controls__btns {
+    margin-bottom: 30px;
+    }
+
+    .controls__btns button {
+    all: unset;
+    cursor: pointer;
+    background-color: white;
+    padding: 5px 0px;
+    width: 80px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.7);
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 12px;
+    }
+
+    .controls__btns button:active {
+    transform: scale(0.98);
+    }
+
+    .controls .controls__colors {
+    display: flex;
+    }
+
+    .controls__colors .controls__color {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .controls .controls__range {
+    margin-bottom: 30px;
+    }
+</style>
+
+<canvas id="jsCanvas" class="canvas"></canvas>
+<div class="controls">
+    <div class="controls__range">
+    <input
+        type="range"
+        id="jsRange"
+        min="0.1"
+        max="5"
+        value="2.5"
+        step="0.1"
+    />
+    </div>
+    <div class="controls__btns">
+    <button id="jsMode">Fill</button>
+    <button id="jsSave">Save</button>
+    </div>
+    <div class="controls__colors" id="jsColors">
+        <div class="controls__color jsColor" style="background-color: #2c2c2c"></div>
+        <div class="controls__color jsColor" style="background-color: white"></div>
+        <div class="controls__color jsColor" style="background-color: #ff3b30"></div>
+        <div class="controls__color jsColor" style="background-color: #ff9500"></div>
+        <div class="controls__color jsColor" style="background-color: #ffcc00"></div>
+        <div class="controls__color jsColor" style="background-color: #4cd963"></div>
+        <div class="controls__color jsColor" style="background-color: #5ac8fa"></div>
+        <div class="controls__color jsColor" style="background-color: #0579ff"></div>
+        <div class="controls__color jsColor" style="background-color: #5856d6"></div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById("jsCanvas");
+    const ctx = canvas.getContext("2d"); //canvas의 그림 그리기 기능을 가져옴
+    const colors = document.getElementsByClassName("jsColor");
+    const range = document.getElementById("jsRange");
+    const mode = document.getElementById("jsMode");
+    const saveBtn = document.getElementById("jsSave");
+
+    const INITIAL_COLOR = "#2c2c2c";
+    const CANVAS_SIZE = 700;
+
+    //canvas의 그리기 기능 이용시 크기 설정 필요
+    canvas.width = CANVAS_SIZE;
+    canvas.height = CANVAS_SIZE;
+
+    //이미지 저장시 기본 배경이 투명으로 처리되는거 방지용
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+    ctx.strokeStyle = INITIAL_COLOR; //선의 기본 색상
+    ctx.fillStyle = INITIAL_COLOR; //면의 기본 색상
+
+    ctx.lineWidth = 2.5; //선의 굵기
+
+    let painting = false; //그리기
+    let filling = false; //채우기
+
+    //s:마우스 업/다운 이벤트
+    function stopPainting() {
+        painting = false;
+    }
+    function startPainting() {
+        painting = true;
+    }
+    //e:마우스 업/다운 이벤트
+
+    //s:마우스 무브 이벤트
+    function onMouseMove(event) {
+        //마우스의 위치값 설정
+        //상위 요소에 relative가 없으면 컨텐츠의 절대값으로 설정
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        if (!painting) {
+            //painting이 false인 상태 또는 값이 없는 상태 = 클릭 안 한 상태
+            ctx.beginPath(); //path 생성
+            ctx.moveTo(x, y); //내가 클릭한 위치
+        } else {
+            //painting이 true인 상태 또는 값이 있는 상태 = 클린 한 상태
+            ctx.lineTo(x, y); //선을 긋는다.
+            ctx.stroke(); //선을 현재의 stokeStyle로 채운다.
+        }
+    }
+    //e:마우스 무브 이벤트
+
+    //s:색상 변경 이벤트
+    function handleColorClick(event) {
+        //console.log(event.target.style);
+        const color = event.target.style.backgroundColor;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+    }
+    //e:색상 변경 이벤트
+
+    //s:사이즈 변경 이벤트
+    function handleRangeChange(event) {
+        const size = event.target.value;
+        ctx.lineWidth = size;
+    }
+    //e:사이즈 변경 이벤트
+
+    //s:모드 변경 이벤트
+    function handleModeClick() {
+        if (filling === true) {
+            filling = false;
+            mode.innerText = "Fill";
+        } else {
+            filling = true;
+            mode.innerText = "Paint";
+        }
+    }
+    //e:모드 변경 이벤트
+
+    //s:채우기 이벤트
+    function handleCanvasClick() {
+        if (filling) {
+            ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+        }
+    }
+    //e:채우기 이벤트
+
+    //s:이미지 저장 관련 이벤트
+    function handleCM(event) {
+        event.preventDefault(); //이벤트 생성 방지 - 마우스 우클릭 목적
+    }
+
+    function handleSaveClick() {
+        const image = canvas.toDataURL(); //이미지로 변환함과 동시에 그에 해당하는 url 반환
+        const link = document.createElement("a"); //가상의 <a> 태그 생성
+        link.href = image;
+        //<a> 태그에 download 속성이 존재시 링크가 가리키는 파일을 다운로드 한다.
+        //저장할 파일의 이름, 확장자 변경 가능
+        link.download = "PaintJS[🎨].jpg";
+        //<a> 태그를 가상으로 클릭함으로써 이미지를 다운로드 하게 한다.
+        link.click();
+    }
+    //e:이미지 저장 관련 이벤트
+
+    //s:캔버스 관련 이벤트 리스너 추가
+    if (canvas) {
+        //canvas가 존재하는 경우
+        //if(변수===null){}같이 쓰지말고 이렇게 쓰자
+        canvas.addEventListener("mousemove", onMouseMove);
+        canvas.addEventListener("mousedown", startPainting); //마우스 왼쪽 버튼을 누르고 있는 상태
+        canvas.addEventListener("mouseup", stopPainting);
+        canvas.addEventListener("mouseleave", stopPainting);
+        canvas.addEventListener("click", handleCanvasClick);
+        canvas.addEventListener("contextmenu", handleCM); //이미지 저장 관련
+    }
+    //e:캔버스 관련 이벤트 리스너 추가
+
+    //s:색상 변경 관련 이벤트 리스너 추가
+    //console.log(Array.from(color));
+    //Array.from은 Object에서 Array를 만든다.
+    //forEach를 통해 Array 안에 있는 모든 요소들에게 이벤트를 추가한다.
+    //Lambda를 이용해서 코드를 간결하게 만든다.
+    //단 this가 필요한 경우에는 Lambda를 이용하지 않는 것이 좋다.
+    Array.from(colors).forEach((color) =>
+        color.addEventListener("click", handleColorClick)
+    );
+    //e:색상 변경 관련 이벤트 리스너 추가
+
+    //s:사이즈 변경 관련 이벤트 리스너 추가
+    if (range) {
+        range.addEventListener("input", handleRangeChange);
+    }
+    //e:사이즈 변경 관련 이벤트 리스너 추가
+
+    //s:모드 변경 관련 이벤트 리스너 추가
+    if (mode) {
+        mode.addEventListener("click", handleModeClick);
+    }
+    //e:모드 변경 관련 이벤트 리스너 추가
+
+    //s:이미지 저장 관련 이벤트 리스너 추가
+    if (saveBtn) {
+        saveBtn.addEventListener("click", handleSaveClick);
+    }
+    //e:이미지 저장 관련 이벤트 리스너 추가
+</script>
