@@ -1,19 +1,40 @@
 ---
 layout: post
 title:  "Java10 타입 추론"
-date:   2023-12-15 09:00:00 +0900
+date:   2023-12-22 09:02:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+### 타입 추론이란?
 
-Jekyll requires blog post files to be named according to the following format:
+- 개발자가 변수의 타입을 정확하게 명시하지 않아도 컴파일러가 알아서 이 변수의 타입을 대입된 리터럴로 추론하는 것
+- Java 10부터 제공
+- 사용 예시
+    {% highlight java %}
+    //기존
+    String name = "홍길동";
 
-`YEAR-MONTH-DAY-title.MARKUP`
+    //타입 추론 사용 시
+    var name = "홍길동";
+    if(name instanceof String){
+        System.out.println("name 변수의 자료형은 String이다.");
+    }
+    {% endhighlight %}
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### Java에서의 var의 특징
 
-Jekyll also offers powerful support for code snippets:
+- 초기화 값이 있는 지역 변수로만 선언 가능하다.
+- 멤버 변수, 메소드의 파라미터, 리턴 타입으로는 사용할 수 없다.
+- var는 키워드가 아니다. (= 변수명으로도 사용 가능하다.)
+- 런타임 오버헤드가 없다.
+- var로 선언된 변수는 중간에 타입이 절대 변경되지 않는다.
+- null이 들어갈 수 없다.
+- <> 연산자는 같이 쓸 수 없다.
+    - 예시
+        - List
+- 람다 표현식에는 명시적인 타입 지정이 필요하다.
 
-{% highlight java %}
-{% endhighlight %}
+>런타임 오버헤드가 없는 이유
+>>1. Java에서는 컴파일 시점에 var 변수의 초기화 값을 보고 추론에서 바이트코드에 명시적으로 자료형을 결정한다.  
+>>2. 미리 자료형을 결정해두기 때문에 타입추론 변수를 읽을 때 마다 타입을 알아내기위한 추가 연산을 하지 않는다.  
+>>(JavaScript와 달리 var로 선언된 변수가 중간에 자료형이 변경되지 않는 이유)
