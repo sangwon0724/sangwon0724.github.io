@@ -56,7 +56,7 @@ categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
     - <span class="">S</span> → [Apply] → <span class="">M*</span>
     - <span class="">S</span> ← [Reactivate/Cancle] ← <span class="">M*</span>
 
-<div class="mermaid">
+```mermaid
 graph TD
     id1[C*] -- Activate --> id2[A]
     id2 -- Deactivate --> id1
@@ -66,7 +66,7 @@ graph TD
     id4 -- Hide Service --> id2
     id4 -- Apply --> id3
     id3 -- Reactivate/Cancle --> id4
-</div>
+```
 
 ### 서비스의 소유권
 
