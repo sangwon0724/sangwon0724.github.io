@@ -54,12 +54,14 @@ var test = document.querySelector('.test'); //클래스 선택자를 통해서 �
 - HTML Collection의 메소드는 이 홈페이지에서 찾아보자. <a href="https://developer.mozilla.org/ko/docs/Web/API/HTMLCollection" target="_blank">HTMLCollection - Web API | MDN - Mozilla</a>
 
 ### DOM Tree (돔 트리)
->
+
 1. 모든 엘리먼트는 HTMLElement의 자식이다.
 2. 따라서 HTMLElement의 프로퍼티를 똑같이 가지고 있다.
-3. 동시에 엘리먼트의 성격에 따라서 자신만의 프로퍼티를 가지고 있는데 이것은 엘리먼트의 성격에 따라서 달라진다.
+3. 동시에 엘리먼트의 성격에 따라서 자신만의 프로퍼티를 가지고 있는데  
+이것은 엘리먼트의 성격에 따라서 달라진다.
 4. HTMLElement은 Element의 자식이다.
 5. 따라서 Element의 프로퍼티를 똑같이 가지고 있다.
 6. Element은 Element의 Node의 자식이다.
-7. 이렇게 자신의 부모가 되는 객체의 프로퍼티나 메소드를 차례대로 자식 객체들이 물려받는 구조를 DOM Tree라고 한다.  
+7. 이렇게 자신의 부모가 되는 객체의 프로퍼티나 메소드를  
+차례대로 자식 객체들이 물려받는 구조를 DOM Tree라고 한다.  
 예시) Node → Element → HTMLElement → HTMLLIElement, HTMLAnchroElement 등등

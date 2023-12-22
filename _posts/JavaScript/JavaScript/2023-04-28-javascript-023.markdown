@@ -15,15 +15,25 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 ### 표준 내장 객체의 종류
 
-- Object : 객체
-- Function : 함수
-- Array : 배열
-- String : 문자
-- Boolean : 참/거짓
-- Number : 숫자
-- Math : 수학
-- Date : 날짜
-- RegExp : 정규 표현식
+- Object
+    - 객체
+- Function
+    - 함수
+- Array
+    -  배열
+- String
+    - 문자
+- Boolean
+    - 참
+    - 거짓
+- Number
+    - 숫자
+- Math
+    - 수학
+- Date
+    - 날짜
+- RegExp
+    - 정규 표현식
 
 ### 배열의 확장
 

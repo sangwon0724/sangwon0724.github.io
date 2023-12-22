@@ -17,7 +17,7 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ### Object API
 
 - JavaScript API 홈페이지 가는 법
-    1. https://developer.mozilla.org/en-US/docs/Web로 이동한다.
+    1. [https://developer.mozilla.org/en-US/docs/Web](https://developer.mozilla.org/en-US/docs/Web)으로 이동한다.
     2. Web technology references이나 Temporary에서 JavaScript 항목을 찾아서 클릭한다.
     3. References의 Built-in objects에서 Object 항목을 찾아서 클릭한다.
     
@@ -57,9 +57,9 @@ console.log(number.searchElement(1));         //출력 : true
 
 ### Object 객체의 확장의 위험성
 
->만약 위에서럼 Object 객체에 대해서 prototype으로 재정의한 함수는  
->잘못하면 코드가 유출될수 있으니 객체의 내용물을 출력할때는  
->다음과 같이 작성하는 것이 좋다.
+만약 위에서럼 Object 객체에 대해서 prototype으로 재정의한 함수는  
+잘못하면 코드가 유출될수 있으니 객체의 내용물을 출력할때는  
+다음과 같이 작성하는 것이 좋다.
 
 {% highlight javascript %}
 for(var item in 객체명){

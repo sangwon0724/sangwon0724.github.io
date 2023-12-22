@@ -5,9 +5,10 @@ date:   2023-04-28 10:07:33 +0900
 categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 ---
 
-- 값으로서의 함수
-    - JavaScript에서는 함수도 객체이기 때문에 일종의 값이 될 수 있음을 의미한다.
-    - function test(){}는 var test = function(){};와 같다.
+### 값으로서의 함수
+
+- JavaScript에서는 함수도 객체이기 때문에 일종의 값이 될 수 있음을 의미한다.
+- function test(){}는 var test = function(){};와 같다.
 
 ### 메소드란?
 

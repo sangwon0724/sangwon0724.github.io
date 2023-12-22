@@ -34,7 +34,7 @@ tags: [이벤트]
 
         var target = document.getElementById('propertyListenerTest');
             target.onclick = function(event){
-        alert('propertyListenerTest success, event.target.value : ' + event.target.value);
+            alert('propertyListenerTest success, event.target.value : ' + event.target.value);
         }
         {% endhighlight %}
 - addEventListener 방식
@@ -55,7 +55,7 @@ tags: [이벤트]
         });
         {% endhighlight %}
 
->※ 주의점
+>주의점
 >>방법 1에서 함수명을 명시할때 [ 함수명() ]가 아니라 [ 함수명 ]로 적어야지 맞는 방식이다.  
 >>왜냐하면 ()를 붙이면 바로 호출해버리기 때문에 우리가 원하는 이벤트때 호출되는게 아닌  
 >>홈페이지 로드시 바로 호출되버리기 때문이다.
