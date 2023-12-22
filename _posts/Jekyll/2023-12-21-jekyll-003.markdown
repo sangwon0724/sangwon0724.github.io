@@ -1,29 +1,35 @@
 ---
 layout: post
-title:  "md 파일로 Jekyll 게시글 작성하기"
+title:  "환경설정"
 date:   2023-12-21 14:01:00 +0900
 categories: Jekyll
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### 환경설정 파일
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- _config.yml에서 수정한다.
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 설정 항목
 
-Jekyll also offers powerful support for code snippets:
+| 항목 | 설명 |
+|-------|---------|
+| lang | 언어를 한글로 설정합니다. 기본값은 en입니다. |
+| timezone | 서울 표준시로 설정합니다.(만든분이 중국인인 것 같습니다 😁) |
+| title | 블로그 제목을 넣어 줍니다. 아바타 바로 아래 큰 글씨로 표시됩니다 |
+| tagline | title 아래에 작은 글씨로 부연설명을 넣을 수 있습니다 |
+| description | SEO를 위한 키워드들을 입력합니다. |
+| url | 내 블로그로 실제 접속할 url을 입력합니다 |
+| github | 본인의 github 아이디를 입력합니다 |
+| twitter.username | 트위터를 사용한다면 아이디를 입력합니다 |
+| social.name | 포스트 등에 표시할 나의 이름을 입력합니다 |
+| social.email | 나의 이메일 계정을 입력합니다 |
+| social.links | 트위터, 페이스등 내가 사용하고 있는 소셜 서비스의 나의 홈 url을 입력합니다 |
+| theme_mode | 원하는 테마 스킨을 선택합니다. 기본은 light입니다 |
+| avatar | 블로그 왼쪽 상단에 표시될 나의 아바타 이미지를 설정합니다 |
+| toc | 포스팅된 글의 오른쪽에 목차를 표시합니다 |
+| paginate | 한 목록에 몇개의 글을 표시해 줄 것인지 선택합니다 |
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+### 사용자 정의 변수
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+- 임의의 변수를 설정해서 사용해도 된다.
+- `{{site.변수명}}`처럼 사용할 수 있다.

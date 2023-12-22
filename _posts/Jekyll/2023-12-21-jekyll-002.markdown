@@ -2,55 +2,134 @@
 layout: post
 title:  "게시글 작성 방법"
 date:   2023-12-21 14:00:00 +0900
-#categories: Jekyll
-categories:
-  - Jekyll
-  - 야호
+categories: Jekyll
 ---
 
-### 게시글 파일 만들기
+## 게시글 파일 만들기
 
 1. _post 폴더로 이동한다.
 2. yyyy-mm-dd-title.md 형식의 파일을 만든다.
 
-### 게시글 작성 과정
+## 게시글 작성 과정
 
 1. 파일 생성
 2. 머릿말 작성
 3. 본문 작성
 
-### 머릿말 작성
+## 머릿말 작성 방법
 
 - 위아래의 --- 사이에 작성한다.
 - 필요한 각 요소들을 작성한다.
+  - layout
+    - 레이아웃 파일명 (확장자 제외)
+    - 레이아웃 파일은 반드시 _layouts 디렉토리에 존재해야 한다.
   - title
+    - 게시글 제목
+    - 기본값 : 파일명에 있는 title 위치
   - excerpt
+    - 게시글 목록에서 보여지는 게시글 소개
+  - date
+    - 게시글 작성 날짜
   - categories
+    - 게시글의 카테고리
+    - 카테고리끼리 띄워서 쓰면 계층형 구조가 된다.
+      - 같은 이름을 쓰면 한 번만 쓴 거로 취급된다.
   - tags
+    - 태그 목록
+    - 대괄호 안에서 쉼표로 구분해서 작성한다.
+    - 작성했는데도 표시가 안 되면 별도 설정이 필요하다.
+  - toc
+    - true로 값을 주면 포스트의 헤더들만 보여주는 목차가 나타난다.
+  - toc_sticky 
+    - true로 값을 주면 목차가 스크롤에 따라서 움직인다.
+  - published
+    - false로 설정하면 해당 게시글이 노출되지 않는다.
 
 {% highlight ruby %}
 ---
+layout: post
 title:  "제목"
 excerpt: "설명"
+date:   2023-12-21 14:00:00 +0900
 categories:
-  - Blog
-
+  - 카테고리
 tags:
-  - [Blog, jekyll, Github, Git]
-
-toc: true
-toc_sticky: true
- 
-date: 2020-05-25
-last_modified_at: 2020-05-25
+  - [ 태그_목록 ]
 ---
 {% endhighlight %}
 
+## 사용자 정의 변수
+
+- 머릿말 쪽에서 변수를 설정하면 본문에서 Liquid로 사용할 수 있다.
 {% highlight ruby %}
+---
+food: Pizza
+---
+
+<h1>{{ page.food }}</h1>
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+## 본문 작성 방법
 
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+### 줄바꿈
+
+- &lt;br/> 태그 추가
+- 문장 끝에 공백 2개 이상 추가
+- ``\`` 추가
+  - 블록 인용구에서 가능
+  - ``\`` 뒤에 아무것도 입력하지 않아야 한다.
+
+### 블록 인용구
+
+- ``>``를 앞에 붙인다.
+- 다중 인용구를 사용할 때는 깊이만큼 ``>``의 개수를 앞에 붙인다.
+
+### 인라인 코드
+
+- ``\``` 사이에 내용을 입력한다.
+
+### 코드 블럭
+
+#### 기본 형식
+
+\`\`\`사용할_언어  
+코드 내용  
+\`\`\`
+
+#### 사용 예시
+
+\`\`\`java 
+public class Member {
+  String name;
+} 
+\`\`\`
+
+```java
+public class Member {
+  String name;
+} 
+```
+
+### 링크
+
+#### 기본 형식
+
+`[링크텍스트](링크)`
+
+#### 새창으로 넣기
+
+`[링크텍스트](링크){:target="_blank"}`
+
+- `{}` 사이에 html 요소를 지정할 수 있다.
+
+### 이미지
+
+#### 기본 형식
+
+`![설명](링크)`
+
+#### 사용 예시
+
+`![설명](링크){:style="border:1px solid #eaeaea; border-radius: 7px; padding: 0px;" }`
+
+- `{}` 사이에 html 요소를 지정할 수 있다.

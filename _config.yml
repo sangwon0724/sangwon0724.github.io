@@ -39,6 +39,7 @@ twitter:
 post_img_root: '/assets/img/posts'
 portfolio_img_root: '/assets/img/portfolio'
 excerpt_separator: \n\n,\\n\\n
+mermaid: true
 
 social:
   # Change to your full name.

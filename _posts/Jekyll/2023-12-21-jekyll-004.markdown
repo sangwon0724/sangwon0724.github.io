@@ -7,7 +7,7 @@ categories: Jekyll
 
 ### 환경설정
 
-- 게시글 최상단 영역에 추가하기
+- 게시글 머릿말 영역에 추가하기
 
 {% highlight yaml %}
 mermaid: true
