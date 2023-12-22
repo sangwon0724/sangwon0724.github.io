@@ -27,7 +27,8 @@ const testArray = Array.of(3, true, "what");
 
     /*
         이런식으로 이벤트를 추가해주려고 한다면 에러가 발생한다.
-        왜냐하면 forEach는 Array 객체의 메소드인데 코드에 있는 buttonArray는 배열이 아니기 때문이다.
+        왜냐하면 forEach는 Array 객체의 메소드인데  
+        코드에 있는 buttonArray는 배열이 아니기 때문이다.
         실제로는 HTML Collection라는 Array-Like Object다.
         그렇기 때문에 코드에 있는 buttonArray에 ForEach를 사용하고 싶다면
         Array.from(buttonArray)를 해줘서 배열로 만들어준 다음에 ForEach를 사용하면 된다.
@@ -40,7 +41,8 @@ const testArray = Array.of(3, true, "what");
 - 배열에 있는 데이터들에 대하여 조건에 맞는 것들만 데이터 중 첫번째 요소의 값을 찾아준다.
     {% highlight javascript %}
     const testArray = ["testA", "testB", "testC", "textD", "textE"];
-    const findStartTextIsTestArray = testArray.find(element => element.startsWith("test"));
+    const findStartTextIsTestArray
+        = testArray.find(element => element.startsWith("test"));
     console.log(findStartTextIsTestArray);  //출력 : testA
     {% endhighlight %}
 
@@ -50,7 +52,8 @@ const testArray = Array.of(3, true, "what");
 - 배열에 있는 데이터들에 대하여 조건에 맞는 것들만 데이터 중 첫번째 요소의 인덱스를 찾아준다.
     {% highlight javascript %}
     const testArray = ["testA", "testB", "testC", "textD", "textE"];
-    const findStartTextIsTestArray = testArray.findIndex(element => element.startsWith("test"));
+    const findStartTextIsTestArray
+        = testArray.findIndex(element => element.startsWith("test"));
     console.log(findStartTextIsTestArray);  //출력 : 0
     {% endhighlight %}
 

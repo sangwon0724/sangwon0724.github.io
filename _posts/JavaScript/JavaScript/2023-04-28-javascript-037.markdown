@@ -22,6 +22,8 @@ categories: Group&nbsp;:&nbsp;JavaScript JavaScript
 
 ### Arrow Function
 
+- 기본 예시
+    - {}를 사용하는 경우에는 undefined를 반환하기 때문에 return을 명시해줘야 한다.
 {% highlight javascript %}
 const somethings = ['a', 'b', 'c'];
 const test = somethings.map(item => {
@@ -30,18 +32,19 @@ const test = somethings.map(item => {
 console.log(test);//출력 : ["aTEST", "bTEST", "cTEST"]
 {% endhighlight %}
   
-> - 하지만 방금의 코드는 기본적인 코드였고, 실제로는 좀 더 간단하게 줄일수 있다.
 >- implicit return : 암시적 리턴
 >- 암시적 리턴의 경우에는 {}가 없어야 실행된다.
 >- {}를 할 경우에는 undefined를 반환하기 때문에 return을 명시해줘야 한다.
-  
+
+- 암시적 리턴 예시
+    - 암시적 리턴의 경우에는 {}가 없어야 실행된다.
 {% highlight javascript %}
 const somethings = ['a', 'b', 'c'];
 const test = somethings.map(item => item + "TEST");
 console.log(test);//출력 : ["aTEST", "bTEST", "cTEST"]
 {% endhighlight %}
 
-> - 또다른 예시 (연산자가 없는 숫자나 문자열로 단순 초기화시 사용, map의 경우)
+- 또다른 예시 (연산자가 없는 숫자나 문자열로 단순 초기화시 사용, map의 경우)
 
 {% highlight javascript %}
 const somethings = ['a', 'b', 'c'];
@@ -117,7 +120,8 @@ const email = ["test1@naver.com", "test2@gmail.com", "test3@hanmil.net"];
 const userNames = email.map(test=>test.split("@")[0]);
 {% endhighlight %}
 
->※ email.map((test, index) => {name : test.split("@")[0], point : index});처럼 객체로도 반환가능하다.
+>※ email.map((test, index) => {name : test.split("@")[0], point : index});처럼  
+>객체로도 반환가능하다.
 
 ### Default Value
 

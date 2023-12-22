@@ -10,6 +10,7 @@ tags: [Rest, Spread]
 
 - 함수의 파라미터 중에서 필요한 차례의 매개변수까지 선언해준 후에  
 "...변수명"를 해주면 그 이름의 배열이 된다.
+- 보통은 rest라는 이름으로 많이 쓴다.  
 - 일반적인 함수 호출 방법
     {% highlight javascript %}
     function test(a,b, ...temp){
@@ -22,8 +23,6 @@ tags: [Rest, Spread]
     //출력 1 : 두번째 인자의 값 => testB
     //출력 2 : 나머지 값들 => ["testC", "testD", "testE"]
     {% endhighlight %}
-
->※ 보통은 rest라는 이름으로 많이 쓴다.  
 
 >※ 만약 5개를 받았는데 3번째 인자를 쓰고 싶다면  
 >1번째에서 3번째까지의 매개변수까지는 선언을 해주고 "...변수명"을 해줘야 한다.  
@@ -81,7 +80,7 @@ tags: [Rest, Spread]
     console.log(testMerge);  //출력 : {name: "test2", a: 1, b: 2}
     {% endhighlight %}
 
-    - ※ 만약에 같은 이름이 있다면 나중에 온 값으로 덮어씌워지게 된다.
+    > ※ 만약에 같은 이름이 있다면 나중에 온 값으로 덮어씌워지게 된다.
 - Spread를 통한 객체의 항목 추가
     - 기본 문법 : ...(condition && object)
         - condition : 조건
