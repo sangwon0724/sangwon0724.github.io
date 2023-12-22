@@ -11,6 +11,50 @@ categories: Jekyll
 코드 내용  
 &#123;% endhighlight %&#125;
 
+### 자주 사용되는 언어
+
+| 명칭 | 설명 | 별칭 |
+|-------|--------|---------|
+| apache | Apache 웹 서버용 구성 파일 | |
+| c | C 프로그래밍 언어 | |
+| clojure | Clojure 프로그래밍 언어 | clj, cljs |
+| cpp | C++ 프로그래밍 언어 | c++ |
+| css | Cascading Style Sheet | |
+| dart | Dart 프로그래밍 언어 | |
+| docker | Dockerfile 구문 | dockerfile |
+| go | Go 프로그래밍 언어 | |
+| gradle | JVM을 위한 강력한 빌드 시스템 | |
+| graphql | GraphQL | |
+| groovy | Groovy 프로그래밍 언어 | |
+| html | HTML | |
+| http | http 요청 및 응답 | |
+| java | Java 프로그래밍 언어 | |
+| javascript | JavaScript | js |
+| json | Json | |
+| json-doc | 문서 확장 기능이 포함된 JavaScript 객체 표기법 | |
+| jsp | JSP | |
+| jsx | React JSX | jsx, react |
+| kotlin | Kotlin 프로그래밍 언어 | |
+| markdown | Markdown, 작성자를 위한 경량 마크업 언어 | md,mkd |
+| nginx | nginx 웹 서버용 구성 파일 | |
+| perl | Perl 스크립트 언어 | pl |
+| php | PHP 스크립트 언어 | |
+| powershell | powershell | |
+| properties | Java용 .properties 구성 파일 | |
+| python | Python 프로그래밍 언어 | py |
+| ruby | Ruby 프로그래밍 언어 | rb |
+| rust | Rust 프로그래밍 언어 | rs,rust |
+| sass | Sass 스타일시트 언어 언어 | |
+| scala | Scala 프로그래밍 언어 | |
+| scss | SCSS 스타일시트 | |
+| shell | sh 및 bash를 포함한 다양한 쉘 언어 | bash, zsh, ksh, sh |
+| sql | 관계형 데이터베이스용 구조적 쿼리 언어 | |
+| Swift | iOS 개발을 위해 Apple에서 개발한 프로그래밍 언어 | |
+| typescript | TypeScript, JavaScript의 상위 집합 | ts |
+| vue | Vue.js 단일 파일 구성 요소 | vuejs |
+| xml | XML | |
+| yaml | Yaml | yml |
+
 ### 참고
 
 [링크](https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers){:target="_blank"}`
