@@ -110,17 +110,15 @@
   <script src="{{ site.data.assets[origin].jquery.js | relative_url }}"></script>
 
   {% if page.layout == 'post' %}
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
   <script>
-  /*
   $(document).ready(function () {
     mermaid.initialize({
       startOnLoad:true,
     });
     window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
   });
-  */
-  </script>
+  </script> -->
   {% endif %}
   
   {% unless site.theme_mode %}

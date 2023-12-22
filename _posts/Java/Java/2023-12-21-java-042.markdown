@@ -4,6 +4,7 @@ title:  "스트림 API"
 date:   2023-12-21 13:02:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 tags: [스트림 API]
+mermaid: true
 ---
 
 ## 스트림 API란?
@@ -43,6 +44,13 @@ flowchart LR
     id2(["중개연산 (필터)"]) --> id3(["중개연산 (맵)"])
     id3(["중개연산 (맵)"]) --> id4(("필터"))
 </div>
+
+```mermaid
+flowchart LR
+    id1("데이터 소스") --> id2(["중개연산 (필터)"])
+    id2(["중개연산 (필터)"]) --> id3(["중개연산 (맵)"])
+    id3(["중개연산 (맵)"]) --> id4(("필터"))
+```
 
 ## 스트림의 생성
 
