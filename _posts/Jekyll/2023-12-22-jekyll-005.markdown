@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "코드 강조 기능 사용하기"
+date:   2023-12-22 16:24:00 +0900
+categories: Jekyll
+---
+
+### 사용 방법
+
+&#123;% highlight 강조할_언어명 %&#125;  
+코드 내용  
+&#123;% endhighlight %&#125;
