@@ -13,15 +13,8 @@ categories: Jekyll
 mermaid: true
 {% endhighlight %}
 
-{% highlight html %}
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
-<script>
-    mermaid.initialize({startOnLoad:true});
-    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-</script>
-{% endhighlight %}
-
 ### 사용하기
+
 {% highlight html %}
 <div class="mermaid"> 
 graph TD;
