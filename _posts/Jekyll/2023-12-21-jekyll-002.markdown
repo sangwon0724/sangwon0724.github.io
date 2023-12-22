@@ -1,25 +1,52 @@
 ---
 layout: post
-title:  "Jekyll로 깃허브 블로그 만들기"
+title:  "게시글 작성 방법"
 date:   2023-12-21 14:00:00 +0900
-categories: Jekyll
+#categories: Jekyll
+categories:
+  - Jekyll
+  - 야호
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+### 게시글 파일 만들기
 
-`YEAR-MONTH-DAY-title.MARKUP`
+1. _post 폴더로 이동한다.
+2. yyyy-mm-dd-title.md 형식의 파일을 만든다.
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+### 게시글 작성 과정
 
-Jekyll also offers powerful support for code snippets:
+1. 파일 생성
+2. 머릿말 작성
+3. 본문 작성
+
+### 머릿말 작성
+
+- 위아래의 --- 사이에 작성한다.
+- 필요한 각 요소들을 작성한다.
+  - title
+  - excerpt
+  - categories
+  - tags
 
 {% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+---
+title:  "제목"
+excerpt: "설명"
+categories:
+  - Blog
+
+tags:
+  - [Blog, jekyll, Github, Git]
+
+toc: true
+toc_sticky: true
+ 
+date: 2020-05-25
+last_modified_at: 2020-05-25
+---
+{% endhighlight %}
+
+{% highlight ruby %}
 {% endhighlight %}
 
 Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].

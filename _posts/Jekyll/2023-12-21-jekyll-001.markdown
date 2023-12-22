@@ -25,23 +25,41 @@ categories: Jekyll
     - 데모
       - 없는 경우도 있다.
       - 실물을 보는게 좀 더 취향에 맞는 걸 찾기 쉽다.
+3. 선택한 테마의 홈페이지로 이동한다. (깃허브 repository 주소)
+4. 원하는 방식으로 해당 프로젝트를 clone 받는다.
+5. 클론받은 프로젝트를 본인이 생성한 repository 위에 얹는다.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+### 로컬 실행 환경 구축
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+1. ruby 설치
+  1. [홈페이지](https://rubyinstaller.org/downloads/)에서 설치 파일 다운로드
+    - Jekyll이 32bit라서 ruby도 32bit용으로 설치
+  2. 설치 파일 실행
+  3. 계속 넘기기
+  4. ridk install 체크박스에 체크하기
+  5. Finish
+  6. cmd 창이 띄워지길 기다리기
+  7. cmd 창에 나오는 안내에 따라서 엔터 누리기
+  8. 설치 완료 후 cmd 창이 꺼질 때까지 기다리기
+  9. cmd 실행 후 ruby -v를 입력하여 정상적으로 설치됬는지 확인하기
+2. Jekyll 설치
+  1. repository 폴더로 이동
+  2. ```gem install jekyll bundler``` 명령어 실행
+    - 만약 webrick 오류 발생 시 ```gem install webrick``` 명령어 실행
+  3. ```bundle install``` 명령어 실행
+  4. ```bundle exec jekyll serve --trace``` 명령어를 실행하여 프로젝트 동작시키기
 
-Jekyll also offers powerful support for code snippets:
+### Jekyll 구성
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
-
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+| 이름 | 용도 |
+|-------|--------|---------|
+| _includes | 모든 파일들에서 참조 가능한 html파일들 위치 |
+| _layouts | 주요 layout 구성(html 혹은 md) |
+| _posts | 블로그 글을 작성하는 폴더 |
+| _sass | 스타일 설정 |
+| css | 스타일 설정 |
+| fonts | 기본 폰트 외 추가 폰트 |
+| images | image 파일들 위치 |
+| js | js파일들 모음 |
+| index.html | 첫 페이지 구성 |
+| _config.yml | 주요 설정 |
