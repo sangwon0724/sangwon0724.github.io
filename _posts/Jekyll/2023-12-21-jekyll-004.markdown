@@ -5,7 +5,13 @@ date:   2023-12-21 14:02:00 +0900
 categories: Jekyll
 ---
 
-### 설치하기
+### 환경설정
+
+- 게시글 최상단 영역에 추가하기
+
+{% highlight yaml %}
+mermaid: true
+{% endhighlight %}
 
 {% highlight html %}
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
@@ -24,6 +30,16 @@ graph TD;
     B-->D;
     C-->D;
 </div>
+
+또는
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
 {% endhighlight %}
 
 ### 문법 참고
