@@ -37,9 +37,9 @@ graph TD;
 
 ### 문법 참고
 
-[https://mermaid.js.org/intro/syntax-reference.html]
+[https://mermaid.js.org/intro/syntax-reference.html](https://mermaid.js.org/intro/syntax-reference.html)
 
 
 ### 라이브 데모
 
-[https://mermaid.live/edit]
+[https://mermaid.live/edit](https://mermaid.live/edit)
