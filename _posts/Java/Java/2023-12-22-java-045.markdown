@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Java10 타입 추론"
+title:  "타입 추론"
 date:   2023-12-22 09:02:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
