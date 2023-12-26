@@ -2,7 +2,7 @@
 layout: post
 title:  "maven (메이븐)"
 date:   2023-12-15 11:40:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 ---
 
 ### maven의 정의

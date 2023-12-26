@@ -2,7 +2,7 @@
 layout: post
 title:  "설정 파일 - pom.xml"
 date:   2023-12-15 13:42:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 ---
 
 ### pom.xml의 역할

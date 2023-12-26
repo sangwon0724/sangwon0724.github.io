@@ -2,7 +2,7 @@
 layout: post
 title:  "eGovFramework 편의기능"
 date:   2023-12-15 00:58:00 +0900
-categories: Group&nbsp;:&nbsp;Spring eGov&nbsp;Framework
+categories: eGov&nbsp;Framework
 ---
 
 ### 편의기능 설치

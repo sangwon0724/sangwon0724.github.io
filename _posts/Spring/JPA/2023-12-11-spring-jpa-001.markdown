@@ -2,7 +2,7 @@
 layout: post
 title:  "JPA 소개"
 date:   2023-12-11 21:01:00 +0900
-categories: Group&nbsp;:&nbsp;Spring JPA
+categories: JPA
 ---
 
 ### SQL 중심적인 개발의 문제점

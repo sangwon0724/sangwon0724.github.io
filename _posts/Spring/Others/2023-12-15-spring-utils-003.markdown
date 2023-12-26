@@ -2,7 +2,7 @@
 layout: post
 title:  "폴더 관리"
 date:   2023-12-15 01:17:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Others
+categories: Others
 ---
 
 ### 폴더 존재 여부 확인 및 생성

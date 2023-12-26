@@ -2,7 +2,7 @@
 layout: post
 title:  "예외 처리"
 date:   2023-12-15 15:46:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+categories: Spring&nbsp;Boot
 tags: [예외 처리]
 ---
 

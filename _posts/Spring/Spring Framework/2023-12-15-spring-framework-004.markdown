@@ -2,7 +2,7 @@
 layout: post
 title:  "빈 생명주기"
 date:   2023-12-15 11:46:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 ---
 
 ### 빈 생명주기

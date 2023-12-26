@@ -2,7 +2,7 @@
 layout: post
 title:  "서비스"
 date:   2023-12-15 13:32:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 tags: [서비스]
 ---
 

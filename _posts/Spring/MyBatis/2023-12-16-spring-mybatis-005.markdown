@@ -2,7 +2,7 @@
 layout: post
 title:  "설정 파일 이용하기"
 date:   2023-12-16 16:31:00 +0900
-categories: Group&nbsp;:&nbsp;Spring MyBatis
+categories: MyBatis
 ---
 
 ### 별칭 사용하기

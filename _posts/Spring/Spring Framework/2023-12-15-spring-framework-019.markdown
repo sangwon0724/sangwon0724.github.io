@@ -2,7 +2,7 @@
 layout: post
 title:  "설정 파일 - web.xml"
 date:   2023-12-15 13:50:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 ---
 
 ### web.xml의 역할

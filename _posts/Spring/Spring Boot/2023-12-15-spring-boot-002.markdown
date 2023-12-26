@@ -2,7 +2,7 @@
 layout: post
 title:  "유효성 검증"
 date:   2023-12-15 15:39:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+categories: Spring&nbsp;Boot
 tags: [유효성 검증]
 ---
 

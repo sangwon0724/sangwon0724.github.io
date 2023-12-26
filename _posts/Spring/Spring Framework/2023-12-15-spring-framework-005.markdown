@@ -2,7 +2,7 @@
 layout: post
 title:  "빈 스코프"
 date:   2023-12-15 11:48:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 ---
 
 ### 정의

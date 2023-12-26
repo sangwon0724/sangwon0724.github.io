@@ -2,7 +2,7 @@
 layout: post
 title:  "MyBatis 캐시"
 date:   2023-12-16 16:43:00 +0900
-categories: Group&nbsp;:&nbsp;Spring MyBatis
+categories: MyBatis
 ---
 
 ### Local Session Cache (1nd Level)

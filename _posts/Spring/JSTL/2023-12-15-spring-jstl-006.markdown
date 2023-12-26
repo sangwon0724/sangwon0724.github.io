@@ -2,7 +2,7 @@
 layout: post
 title:  "XML 처리"
 date:   2023-12-15 11:29:00 +0900
-categories: Group&nbsp;:&nbsp;Spring JSTL
+categories: JSTL
 ---
 
 ### 사용 조건

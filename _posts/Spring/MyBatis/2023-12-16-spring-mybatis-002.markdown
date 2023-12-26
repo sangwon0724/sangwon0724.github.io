@@ -2,7 +2,7 @@
 layout: post
 title:  "기본 사용법"
 date:   2023-12-16 16:18:00 +0900
-categories: Group&nbsp;:&nbsp;Spring MyBatis
+categories: MyBatis
 ---
 
 ### 사용법 (v 3.0 이상)

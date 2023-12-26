@@ -2,7 +2,7 @@
 layout: post
 title:  "MyBatis에 대하여"
 date:   2023-12-16 16:11:00 +0900
-categories: Group&nbsp;:&nbsp;Spring MyBatis
+categories: MyBatis
 ---
 
 ### MyBatis란?

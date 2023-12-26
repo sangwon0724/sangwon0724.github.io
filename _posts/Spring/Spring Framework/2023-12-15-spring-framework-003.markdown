@@ -2,7 +2,7 @@
 layout: post
 title:  "스프링 빈"
 date:   2023-12-15 11:43:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 ---
 ### 스프링 컨테이너
 

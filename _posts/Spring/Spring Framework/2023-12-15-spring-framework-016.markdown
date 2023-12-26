@@ -2,7 +2,7 @@
 layout: post
 title:  "컨트롤러"
 date:   2023-12-15 13:19:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Framework
+categories: Spring&nbsp;Framework
 tags: [컨트롤러]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "인터셉터"
 date:   2023-12-15 15:50:00 +0900
-categories: Group&nbsp;:&nbsp;Spring Spring&nbsp;Boot
+categories: Spring&nbsp;Boot
 tags: [인터셉터]
 ---
 

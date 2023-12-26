@@ -2,7 +2,7 @@
 layout: post
 title:  "문자열 처리"
 date:   2023-12-15 11:18:00 +0900
-categories: Group&nbsp;:&nbsp;Spring JSTL
+categories: JSTL
 ---
 
 ### 사용 조건
