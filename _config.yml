@@ -50,15 +50,16 @@ category_depth:
     - Flutter
   Java:
     - Java
+    - Sample&nbsp;Codes&nbsp;(Java)
   JavaScript:
     - JavaScript
     - jQuery
     - Node
-    - Others
     - React
     - React&nbsp;Hooks
     - React&nbsp;Native
     - Redux
+    - Sample&nbsp;Codes&nbsp;(JavaScript)
   Jekyll:
     - Jekyll
   Others:
@@ -68,7 +69,7 @@ category_depth:
     - Study
   Spring:
     - eGovFramework
-    - SpringError
+    - Error&nbsp;(Spring)
     - JPA
     - JSTL
     - MyBatis
