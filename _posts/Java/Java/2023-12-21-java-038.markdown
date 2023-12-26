@@ -89,14 +89,18 @@ categories: Group&nbsp;:&nbsp;Java Java
     - 1바이트씩 전송되는 바이트 기반 스트림으로는 원활한 처리가 힘든 경우가 있다.
         - 문자 기반의 스트림도 별도로 제공합니다.
 - 기존의 바이트 기반 스트림에서 InputStream을 Reader로, OutputStream을 Writer로 변경하면 사용할 수 있다.
+
 - 문자 기반의 입출력 스트림
+
 | 입력 스트림 | 출력 스트림 | 입출력 대상 |
 |-------|--------|---------|
 | FileReader | FileWriter | 파일 |
 | CharArrayReader | CharArrayWriter | 메모리 |
 | PipedReader | PipedWriter | 프로세스 |
 | StringReader | StringWriter | 오디오 장치 |
+
 - 문자 기반의 보조 스트림
+
 | 입력 스트림 | 출력 스트림 | 설명 |
 |-------|--------|---------|
 | FilterReader | FilterWriter | 필터를 이용한 입출력 |

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "재귀 호출(recursive call)"
+title:  "재귀 호출 (recursive call)"
 date:   2023-12-20 09:06:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 ---
