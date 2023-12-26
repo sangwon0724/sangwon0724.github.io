@@ -2,7 +2,7 @@
 layout: post
 title:  "Black Jack (1인 블랙잭 게임 앱)"
 date:   2023-12-13 10:44:00 +0900
-categories: Group&nbsp;:&nbsp;Portfolio Student
+categories:  Student
 ---
 
 ### 개발환경, 개발인원, 개발 기간, 담당 역할

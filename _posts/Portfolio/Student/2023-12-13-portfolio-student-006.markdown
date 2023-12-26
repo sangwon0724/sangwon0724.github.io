@@ -2,7 +2,7 @@
 layout: post
 title:  "Natural Blog (보다 완성도 있고 자연스러운 블로그)"
 date:   2023-12-13 11:03:00 +0900
-categories: Group&nbsp;:&nbsp;Portfolio Student
+categories:  Student
 ---
 
 ### 개발환경, 개발인원, 개발 기간, 담당 역할

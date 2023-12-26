@@ -2,7 +2,7 @@
 layout: post
 title:  "공부하면서 만든 심플 프로젝트 목록"
 date:   2023-12-13 10:30:00 +0900
-categories: Group&nbsp;:&nbsp;Portfolio Study
+categories:  Study
 ---
 
 ### 카카오톡 클론코딩 v1
