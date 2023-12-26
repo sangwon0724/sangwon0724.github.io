@@ -173,8 +173,8 @@ link.click();
 
     /* s:마우스 무브 이벤트 */
     function onMouseMove(event) {
-        //마우스의 위치값 설정 */
-        //상위 요소에 relative가 없으면 컨텐츠의 절대값으로 설정 */
+        /* 마우스의 위치값 설정 */
+        /* 상위 요소에 relative가 없으면 컨텐츠의 절대값으로 설정 */
         const x = event.offsetX;
         const y = event.offsetY;
 
@@ -228,12 +228,12 @@ link.click();
 
     /* s:이미지 저장 관련 이벤트 */
     function handleCM(event) {
-        event.preventDefault(); //이벤트 생성 방지 - 마우스 우클릭 목적 */
+        event.preventDefault(); /* 이벤트 생성 방지 - 마우스 우클릭 목적 */
     }
 
     function handleSaveClick() {
-        const image = canvas.toDataURL(); //이미지로 변환함과 동시에 그에 해당하는 url 반환 */
-        const link = document.createElement("a"); //가상의 <a> 태그 생성 */
+        const image = canvas.toDataURL(); /* 이미지로 변환함과 동시에 그에 해당하는 url 반환 */
+        const link = document.createElement("a"); /* 가상의 <a> 태그 생성 */
         link.href = image;
         /* <a> 태그에 download 속성이 존재시 링크가 가리키는 파일을 다운로드 한다. */
         /* 저장할 파일의 이름, 확장자 변경 가능 */
