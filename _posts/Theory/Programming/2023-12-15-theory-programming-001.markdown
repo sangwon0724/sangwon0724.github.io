@@ -2,7 +2,7 @@
 layout: post
 title:  "좋은 객체지향 프로그래밍"
 date:   2023-12-15 09:46:00 +0900
-categories: Group&nbsp;:&nbsp;이론 프로그래밍
+categories: 프로그래밍
 tags: [객체지향 프로그래밍]
 ---
 
