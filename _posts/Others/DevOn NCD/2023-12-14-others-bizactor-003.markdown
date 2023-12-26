@@ -2,7 +2,7 @@
 layout: post
 title:  "서비스"
 date:   2023-12-14 15:35:00 +0900
-categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
+categories:  DevOn&nbsp;NCD
 ---
 
 ### 서비스 종류

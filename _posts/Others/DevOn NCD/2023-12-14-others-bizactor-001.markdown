@@ -2,7 +2,7 @@
 layout: post
 title:  "설치 및 실행"
 date:   2023-12-14 15:31:00 +0900
-categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
+categories:  DevOn&nbsp;NCD
 ---
 
 ### DevOn NCD 설치

@@ -2,7 +2,7 @@
 layout: post
 title:  "관리 계층"
 date:   2023-12-14 15:33:00 +0900
-categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
+categories:  DevOn&nbsp;NCD
 ---
 
 ### 구조

@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터"
 date:   2023-12-14 15:37:00 +0900
-categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
+categories:  DevOn&nbsp;NCD
 ---
 
 ### DevOn NCD 에서 사용하는 데이터 단위

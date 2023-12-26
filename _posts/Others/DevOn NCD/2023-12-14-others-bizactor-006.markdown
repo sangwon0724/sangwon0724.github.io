@@ -2,7 +2,7 @@
 layout: post
 title:  "Data Access Layer"
 date:   2023-12-14 15:50:00 +0900
-categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
+categories:  DevOn&nbsp;NCD
 ---
 
 ### 정의

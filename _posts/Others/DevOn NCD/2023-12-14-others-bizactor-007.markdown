@@ -2,7 +2,7 @@
 layout: post
 title:  "Service Access Layer"
 date:   2023-12-14 15:55:00 +0900
-categories: Group&nbsp;:&nbsp;Others DevOn&nbsp;NCD
+categories:  DevOn&nbsp;NCD
 ---
 
 ### 정의 및 역할
