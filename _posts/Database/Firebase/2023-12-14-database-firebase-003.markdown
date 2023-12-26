@@ -2,7 +2,7 @@
 layout: post
 title:  "기능 사용을 위한 콘솔 설정하기"
 date:   2023-12-14 14:45:00 +0900
-categories: Group&nbsp;:&nbsp;Database Firebase
+categories:  Firebase
 tags: [Firebase]
 ---
 

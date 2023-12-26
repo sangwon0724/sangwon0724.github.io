@@ -2,7 +2,7 @@
 layout: post
 title:  "Firebase에 대하여"
 date:   2023-12-14 14:27:00 +0900
-categories: Group&nbsp;:&nbsp;Database Firebase
+categories:  Firebase
 ---
 
 ### 사이트

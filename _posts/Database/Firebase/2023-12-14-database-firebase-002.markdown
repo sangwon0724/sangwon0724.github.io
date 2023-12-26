@@ -2,7 +2,7 @@
 layout: post
 title:  "프로젝트 생성하기"
 date:   2023-12-14 14:30:00 +0900
-categories: Group&nbsp;:&nbsp;Database Firebase
+categories:  Firebase
 tags: [Firebase]
 ---
 
