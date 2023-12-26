@@ -2,7 +2,7 @@
 layout: post
 title:  "메소드 오버로딩 (method overloading)"
 date:   2023-12-19 17:49:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 ---
 
 ### 메소드 오버로딩(method overloading)이란?

@@ -2,7 +2,7 @@
 layout: post
 title:  "상수(constant)"
 date:   2023-12-19 15:50:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 ---
 
 ### 상수(constant)란?

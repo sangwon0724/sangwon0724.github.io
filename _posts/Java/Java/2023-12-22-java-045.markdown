@@ -2,7 +2,7 @@
 layout: post
 title:  "타입 추론"
 date:   2023-12-22 09:02:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 ---
 
 ### 타입 추론이란?

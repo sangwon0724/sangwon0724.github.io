@@ -2,7 +2,7 @@
 layout: post
 title:  "조건문 (conditional statements)"
 date:   2023-12-19 15:57:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 ---
 
 ### 조건문(conditional statements)이란?

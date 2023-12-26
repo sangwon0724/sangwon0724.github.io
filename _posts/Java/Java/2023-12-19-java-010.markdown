@@ -2,7 +2,7 @@
 layout: post
 title:  "클래스(class)"
 date:   2023-12-19 16:53:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 tags: [클래스, 생성자, this]
 ---
 

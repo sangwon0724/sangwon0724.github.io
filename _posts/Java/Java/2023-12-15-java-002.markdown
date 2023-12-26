@@ -2,7 +2,7 @@
 layout: post
 title:  "원시 타입 자료형"
 date:   2023-12-15 09:31:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 ---
 
 ### 특징

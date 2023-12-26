@@ -2,7 +2,7 @@
 layout: post
 title:  "스트림 (stream)"
 date:   2023-12-21 10:06:00 +0900
-categories: Group&nbsp;:&nbsp;Java Java
+categories: Java
 ---
 
 ### 스트림(stream)이란?
