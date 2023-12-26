@@ -39,6 +39,45 @@ twitter:
 post_img_root: '/assets/img/posts'
 portfolio_img_root: '/assets/img/portfolio'
 excerpt_separator: \n\n,\\n\\n
+category_depth:
+  Database:
+    - DCL
+    - DDL
+    - DML
+    - Firebase
+  Flutter:
+    - Dart
+    - Flutter
+  Java:
+    - Java
+  JavaScript:
+    - JavaScript
+    - jQuery
+    - Node
+    - Others
+    - React
+    - React&nbsp;Hooks
+    - React&nbsp;Native
+    - Redux
+  Jekyll:
+    - Jekyll
+  Others:
+    - DevOn&nbsp;NCD
+  Portfolio:
+    - Student
+    - Study
+  Spring:
+    - eGovFramework
+    - SpringError
+    - JPA
+    - JSTL
+    - MyBatis
+    - Spring&nbsp;Boot
+    - Spring&nbsp;Framework
+    - Spring&nbsp;Security
+    - Spring&nbsp;Tip
+  이론:
+    - 프로그래밍
 
 social:
   # Change to your full name.
