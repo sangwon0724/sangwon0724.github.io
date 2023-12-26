@@ -28,6 +28,7 @@ URI uri = UriComponentsBuilder
 
 //.expand(값) : path의 값에서 중간에 {name}처럼 Path Value를 쓸 수 있는데 그 값을 차례대로 채워준다.
 //({}가 두 번이면 expand()도 두 번)
+//xxx.replaceQueryParam("name", "{name}").build().expand("홍길동").encode();
 {% endhighlight %}
 
 >※ RestTemplate의 메소드로 파라미터로 사용될 값에 URI 대신에 String으로 주소를 직접 써도 된다.
@@ -152,36 +153,37 @@ URI uri = UriComponentsBuilder
         - exchange(URI, HttpMethod, HttpEntity, responseType)
         - exchange(RequestEntity, responseType)
         >※ RequestEntity와 ResponseEntity가 HttpEntity Class를 상속받고 있다.
-    - 사용 예시 1)
+    - 사용 예시
         {% highlight java %}
-        UserVO user
-            = UserVO.builder()
-            .name("HongGilDong").age(25).email("hong@naver.com")
-            .birthday("19970229").phoneNumber("0001112222")
-            .build();
-        RequestEntity<UserVO> request = RequestEntity
-                .post(uri) //요청할 API 서버의 주소 설정
-                .contentType(MediaType.APPLICATION_JSON) //contentType 설정, org.springframework.http.MediaType
-                .header("x-authorization","my-header") //헤더 설정
-                .body(user); //몸체 설정 (= 전달할 데이터)
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<UserVO> response = restTemplate.exchange(uri, HttpMethod.POST, request, UserVO.class); //org.springframework.core.ParameterizedTypeReference
-        {% endhighlight %}
+        //s:예시 1
+            UserVO user
+                = UserVO.builder()
+                .name("HongGilDong").age(25).email("hong@naver.com")
+                .birthday("19970229").phoneNumber("0001112222")
+                .build();
+            RequestEntity<UserVO> request = RequestEntity
+                    .post(uri) //요청할 API 서버의 주소 설정
+                    .contentType(MediaType.APPLICATION_JSON) //contentType 설정, org.springframework.http.MediaType
+                    .header("x-authorization","my-header") //헤더 설정
+                    .body(user); //몸체 설정 (= 전달할 데이터)
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<UserVO> response = restTemplate.exchange(uri, HttpMethod.POST, request, UserVO.class); //org.springframework.core.ParameterizedTypeReference
+        //e:예시 1
 
-    - 사용 예시 2)
-        {% highlight java %}
-        UserVO user
-            = UserVO.builder()
-            .name("HongGilDong").age(25).email("hong@naver.com")
-            .birthday("19970229").phoneNumber("0001112222")
-            .build();
-        RequestEntity<UserVO> request = RequestEntity
-                .post(uri) //요청할 API 서버의 주소 설정
-                .contentType(MediaType.APPLICATION_JSON) //contentType 설정, org.springframework.http.MediaType
-                .header("x-authorization","my-header") //헤더 설정
-                .body(user); //몸체 설정 (= 전달할 데이터)
-        RestTemplate restTemplate = new RestTemplate();
+        //s:예시 2
+            UserVO user
+                = UserVO.builder()
+                .name("HongGilDong").age(25).email("hong@naver.com")
+                .birthday("19970229").phoneNumber("0001112222")
+                .build();
+            RequestEntity<UserVO> request = RequestEntity
+                    .post(uri) //요청할 API 서버의 주소 설정
+                    .contentType(MediaType.APPLICATION_JSON) //contentType 설정, org.springframework.http.MediaType
+                    .header("x-authorization","my-header") //헤더 설정
+                    .body(user); //몸체 설정 (= 전달할 데이터)
+            RestTemplate restTemplate = new RestTemplate();
 
-        //org.springframework.core.ParameterizedTypeReference
-        ResponseEntity<UserVO> response = restTemplate.exchange(request, new ParameterizedTypeReference<>(){});
+            //org.springframework.core.ParameterizedTypeReference
+            ResponseEntity<UserVO> response = restTemplate.exchange(request, new ParameterizedTypeReference<>(){});
+        //e:예시 2
         {% endhighlight %}

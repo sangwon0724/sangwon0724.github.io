@@ -16,84 +16,91 @@ tags: [테스트, Swagger]
 ### 설치 방법
 
 - xml
-    {% highlight xml %}
-    <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-boot-starter</artifactId>
-        <version>3.0.0</version>
-    </dependency>
-    {% endhighlight %}
+{% highlight xml %}
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-boot-starter</artifactId>
+    <version>3.0.0</version>
+</dependency>
+{% endhighlight %}
+
 - gradle
-    {% highlight gradle %}
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
-    {% endhighlight %}
+{% highlight gradle %}
+implementation("io.springfox:springfox-boot-starter:3.0.0")
+{% endhighlight %}
 
 ### Swagger 제공 어노테이션
 
 - @Api
     - 클래스를 스웨거의 리소스로 표시
     - 사용 예시
-        {% highlight java %}
-        /*
-            [루트 주소]/swagger-ui/index.html에서
-            해당 컨트롤러 클래스의 이름이 REST API CONTROLLER로 보인다. 
-        */
-        @Api(tags = {"REST API CONTROLLER"})
-        {% endhighlight %}
+{% highlight java %}
+/*
+    [루트 주소]/swagger-ui/index.html에서
+    해당 컨트롤러 클래스의 이름이 REST API CONTROLLER로 보인다. 
+*/
+@Api(tags = {"REST API CONTROLLER"})
+{% endhighlight %}
+
 - @ApiOperation
     - 특정 경로의 오퍼레이션 HTTP 메소드 설명
     - 사용 예시
-        {% highlight java %}
-        /*
-            ● @ApiOperation 없는 경우
-                ● 메소드명
-            ● @ApiOperation 있는 경우
-                ● hello method
-                ● note는 /swagger-ui/index.html에서 해당 메소드 클릭시 보이는 주석을 설정한다.
-        */
-        @ApiOperation(value = "hello method", notes = "기본적인 인사 GET API")
-        {% endhighlight %}
+{% highlight java %}
+/*
+    ● @ApiOperation 없는 경우
+        ● 메소드명
+    ● @ApiOperation 있는 경우
+        ● hello method
+        ● note는 /swagger-ui/index.html에서 해당 메소드 클릭시 보이는 주석을 설정한다.
+*/
+@ApiOperation(value = "hello method", notes = "기본적인 인사 GET API")
+{% endhighlight %}
+
 - @ApiParam
     - 메소드의 파라미터에 대한 메타 데이터 설명 (Controller의 메소드의 파라미터에서 사용)
     - 사용 예시
-        {% highlight java %}
-        /*
-            ● @ApiParam 없는 경우
-                ● name - name
-            ● @ApiParam 있는 경우
-                ● name - 사용자 이름
-        */
-        @ApiParam(value = "사용자 이름") String name
-        {% endhighlight %}
+{% highlight java %}
+/*
+    ● @ApiParam 없는 경우
+        ● name - name
+    ● @ApiParam 있는 경우
+        ● name - 사용자 이름
+*/
+@ApiParam(value = "사용자 이름") String name
+{% endhighlight %}
+
 - @ApiResponse
     - 메소드의 응답 지정
     - 사용 예시
-        {% highlight java %}
-        @ApiResponse(code = 404, message = "not found")
-        {% endhighlight %}
+{% highlight java %}
+@ApiResponse(code = 404, message = "not found")
+{% endhighlight %}
+
 - @ApiModelProperty
     - 모델의 속성 데이터를 설명 (VO의 필드에서 사용)
     - 사용 예시
-        {% highlight java %}
-        /*
-            ● @ApiModelProperty이 없는 경우
-                ● name - name
-            ● @ApiModelProperty이 있는 경우
-                ● name - 사용자 이름
-        */
-        /*
-            ● value
-                ● 해당 필드에 대한 설명
-            ● example
-                ● /swagger-ui/index.html에서
-                  해당 메소드의 Responses의 Example Value 항목에서 보일 예시 값
-            ● required
-                ● 필수 여부
-        */
-        @ApiModelProperty(value = "사용자 이름", example = "steve")
-        {% endhighlight %}
+{% highlight java %}
+/*
+    ● @ApiModelProperty이 없는 경우
+        ● name - name
+    ● @ApiModelProperty이 있는 경우
+        ● name - 사용자 이름
+*/
+/*
+    ● value
+        ● 해당 필드에 대한 설명
+    ● example
+        ● /swagger-ui/index.html에서
+            해당 메소드의 Responses의 Example Value 항목에서 보일 예시 값
+    ● required
+        ● 필수 여부
+*/
+@ApiModelProperty(value = "사용자 이름", example = "steve")
+{% endhighlight %}
+
 - @ApiImplicitParam
     - 메소드 단위의 오퍼레이션 파라미터를 설명
+    
 - @APiImplicitParams
     - @ApiImplicitParam의 배열을 지정
 

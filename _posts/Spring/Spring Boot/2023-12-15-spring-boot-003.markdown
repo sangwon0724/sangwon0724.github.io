@@ -12,8 +12,10 @@ tags: [예외 처리]
     - Global 예외처리
     - 특정 패키지/컨트롤러 예외처리
     - 종류
-        - @ContrllerAdvice : @Contrller에 대해 사용하는 어노테이션
-        - @RestContrllerAdvice : @RestContrller에 대해 사용하는 어노테이션
+        - @ContrllerAdvice
+            - @Contrller에 대해 사용하는 어노테이션
+        - @RestContrllerAdvice
+            - @RestContrller에 대해 사용하는 어노테이션
 - @ExceptionHandler
     - 특정 예외에 대한 처리
 
@@ -36,6 +38,7 @@ public ResponseEntity exception(예외종류 e) {
 - @ContrllerAdvice 어노테이션이 선언된 클래스 내부에  
 @ExceptionHandler가 선언된 메소드는  
 모든 컨트롤러에 대해서 적용된다.
+
 - @ContrllerAdvice 어노테이션이 모든 컨트롤러에 대해서 적용되긴 하지만  
 만약 @ContrllerAdvice가 있는 클래스에 있는 @ExceptionHandler와  
 개별의 컨트롤러에 있는 @ExceptionHandler가 같은 exception에 대해서 처리한다고 했을 때,  

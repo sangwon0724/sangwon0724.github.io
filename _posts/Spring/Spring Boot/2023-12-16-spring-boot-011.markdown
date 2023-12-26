@@ -15,26 +15,26 @@ View 영역과 백엔드가 통신을 할 때 Json을 많이 이용하기 때문
 ### 설치 방법
 
 - xml
-    - Spring Framework의 경우
-        {% highlight xml %}
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-        {% endhighlight %}
-    - Spring Boot의 경우
-        {% highlight xml %}
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-        {% endhighlight %}
+{% highlight xml %}
+<!-- Spring Framework의 경우 -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.15.2</version>
+</dependency>
+
+<!-- Spring Boot의 경우 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <version>3.2.0</version>
+</dependency>
+{% endhighlight %}
+
 - gradle
-    {% highlight gradle %}
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
-    {% endhighlight %}
+{% highlight gradle %}
+implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
+{% endhighlight %}
 
 ### Java Object → Json
 
