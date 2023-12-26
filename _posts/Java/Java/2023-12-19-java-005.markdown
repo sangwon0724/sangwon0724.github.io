@@ -14,18 +14,18 @@ categories: Group&nbsp;:&nbsp;Java Java
 
 - ```final 타입 변수이름 = 값;```
 - 사용 예시
-    {% highlight java %}
-    final int AGES = 30;
-    {% endhighlight %}
+{% highlight java %}
+final int AGES = 30;
+{% endhighlight %}
 
 ### 리터럴(literal)
 
 - 그 자체의 값
 - 예시
-    {% highlight java %}
-    int num1 = 1; //리터럴 : 1
-    final int num2 = 2; //리터럴 : 2
-    {% endhighlight %}
+{% highlight java %}
+int num1 = 1; //리터럴 : 1
+final int num2 = 2; //리터럴 : 2
+{% endhighlight %}
 - 종류
     - 정수형 리터럴(Integer literals)
         - 아라비아 숫자와 부호로 표현된 값

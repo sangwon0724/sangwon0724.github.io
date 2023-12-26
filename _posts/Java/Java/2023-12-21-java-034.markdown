@@ -44,41 +44,41 @@ tags: [Map]
         - size()
             - 해당 맵의 매핑의 총 개수를 반환한다.
     - 사용 예시
-        {% highlight java %}
-        HashMap<String, Integer> hm = new HashMap<String, Integer>();
+{% highlight java %}
+HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
-        //put() 메소드를 이용한 요소의 저장
-        hm.put("삼십", 30);
-        hm.put("십", 10);
-        hm.put("사십", 40);
-        hm.put("이십", 20);
+//put() 메소드를 이용한 요소의 저장
+hm.put("삼십", 30);
+hm.put("십", 10);
+hm.put("사십", 40);
+hm.put("이십", 20);
 
-        //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
-        System.out.println("맵에 저장된 키들의 집합 : " + hm.keySet());
-        for (String key : hm.keySet()) {
-            System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
-        }
+//Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+System.out.println("맵에 저장된 키들의 집합 : " + hm.keySet());
+for (String key : hm.keySet()) {
+    System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
+}
 
-        //remove() 메소드를 이용한 요소의 제거
-        hm.remove("사십");
+//remove() 메소드를 이용한 요소의 제거
+hm.remove("사십");
 
-        //iterator() 메소드와 get() 메소드를 이용한 요소의 출력
-        Iterator<String> keys = hm.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
-        }
+//iterator() 메소드와 get() 메소드를 이용한 요소의 출력
+Iterator<String> keys = hm.keySet().iterator();
+while (keys.hasNext()) {
+    String key = keys.next();
+    System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
+}
 
-        //replace() 메소드를 이용한 요소의 수정
-        hm.replace("이십", 200);
+//replace() 메소드를 이용한 요소의 수정
+hm.replace("이십", 200);
 
-        for (String key : hm.keySet()) {
-            System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
-        }
+for (String key : hm.keySet()) {
+    System.out.println(String.format("키 : %s, 값 : %s", key, hm.get(key)));
+}
 
-        //size() 메소드를 이용한 요소의 총 개수
-        System.out.println("맵의 크기 : " + hm.size());
-        {% endhighlight %}
+//size() 메소드를 이용한 요소의 총 개수
+System.out.println("맵의 크기 : " + hm.size());
+{% endhighlight %}
 
 - Hashtable&lt;K, V>
     - HashMap 클래스와 같은 동작을 하는 클래스
@@ -173,38 +173,38 @@ tags: [Map]
         - tailMap(K fromKey)
             - 해당 맵에서 fromKey와 같거나, fromKey보다 큰 키로 구성된 부분만을 반환한다.
     - 사용 예시
-        {% highlight java %}
-        TreeMap<Integer, String> tm = new TreeMap<Integer, String>();
+{% highlight java %}
+TreeMap<Integer, String> tm = new TreeMap<Integer, String>();
 
-        //put() 메소드를 이용한 요소의 저장
-        tm.put(30, "삼십");
-        tm.put(10, "십");
-        tm.put(40, "사십");
-        tm.put(20, "이십");
+//put() 메소드를 이용한 요소의 저장
+tm.put(30, "삼십");
+tm.put(10, "십");
+tm.put(40, "사십");
+tm.put(20, "이십");
 
-        //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
-        System.out.println("맵에 저장된 키들의 집합 : " + tm.keySet());
-        for (Integer key : tm.keySet()) {
-            System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
-        }
+//Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+System.out.println("맵에 저장된 키들의 집합 : " + tm.keySet());
+for (Integer key : tm.keySet()) {
+    System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
+}
 
-        //remove() 메소드를 이용한 요소의 제거
-        tm.remove(40);
+//remove() 메소드를 이용한 요소의 제거
+tm.remove(40);
 
-        //iterator() 메소드와 get() 메소드를 이용한 요소의 출력
-        Iterator<Integer> keys = tm.keySet().iterator();
-        while (keys.hasNext()) {
-            Integer key = keys.next();
-            System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
-        }
+//iterator() 메소드와 get() 메소드를 이용한 요소의 출력
+Iterator<Integer> keys = tm.keySet().iterator();
+while (keys.hasNext()) {
+    Integer key = keys.next();
+    System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
+}
 
-        //replace() 메소드를 이용한 요소의 수정
-        tm.replace(20, "twenty");
+//replace() 메소드를 이용한 요소의 수정
+tm.replace(20, "twenty");
 
-        for (Integer key : tm.keySet()) {
-            System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
-        }
+for (Integer key : tm.keySet()) {
+    System.out.println(String.format("키 : %s, 값 : %s", key, tm.get(key)));
+}
 
-        //size() 메소드를 이용한 요소의 총 개수
-        System.out.println("맵의 크기 : " + tm.size());
-        {% endhighlight %}
+//size() 메소드를 이용한 요소의 총 개수
+System.out.println("맵의 크기 : " + tm.size());
+{% endhighlight %}

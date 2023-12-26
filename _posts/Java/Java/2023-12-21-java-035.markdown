@@ -22,19 +22,19 @@ Iterator 인터페이스를 구현한 클래스의 인스턴스를 반환하는 
     - remove()
         - 해당 반복자로 반환되는 마지막 요소를 현재 컬렉션에서 제거한다.
 - 사용 예시
-    {% highlight java %}
-    LinkedList<Integer> lnkList = new LinkedList<Integer>();
+{% highlight java %}
+LinkedList<Integer> lnkList = new LinkedList<Integer>();
 
-    lnkList.add(4);
-    lnkList.add(2);
-    lnkList.add(3);
-    lnkList.add(1);
+lnkList.add(4);
+lnkList.add(2);
+lnkList.add(3);
+lnkList.add(1);
 
-    Iterator<Integer> iter = lnkList.iterator();
-    while (iter.hasNext()) {
-        System.out.print(iter.next() + " ");
-    }
-    {% endhighlight %}
+Iterator<Integer> iter = lnkList.iterator();
+while (iter.hasNext()) {
+    System.out.print(iter.next() + " ");
+}
+{% endhighlight %}
 
 >현재 Java에서는 될 수 있으면 JDK 1.5부터 추가된 Enhanced for 문을 사용하도록 권장하고 있다.
 
@@ -79,20 +79,20 @@ Enumeration 인터페이스보다는 Iterator 인터페이스를 사용하는 �
     - set(E e)
         - next()나 previous() 메소드에 의해 반환된 가장 마지막 요소를 전달된 객체로 대체한다.
 - 사용 예시
-    {% highlight java %}
-    LinkedList<Integer> lnkList = new LinkedList<Integer>();
+{% highlight java %}
+LinkedList<Integer> lnkList = new LinkedList<Integer>();
 
-    lnkList.add(4);
-    lnkList.add(2);
-    lnkList.add(3);
-    lnkList.add(1);
+lnkList.add(4);
+lnkList.add(2);
+lnkList.add(3);
+lnkList.add(1);
 
-    ListIterator<Integer> iter = lnkList.listIterator();
-    while (iter.hasNext()) {
-        System.out.print(iter.next() + " ");
-    }
+ListIterator<Integer> iter = lnkList.listIterator();
+while (iter.hasNext()) {
+    System.out.print(iter.next() + " ");
+}
 
-    while (iter.hasPrevious()) {
-        System.out.print(iter.previous() + " ");
-    }
-    {% endhighlight %}
+while (iter.hasPrevious()) {
+    System.out.print(iter.previous() + " ");
+}
+{% endhighlight %}

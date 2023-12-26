@@ -9,16 +9,16 @@ categories: Group&nbsp;:&nbsp;Java Java
 
 - add() 메소드는 전달된 Calendar 필드에서 일정 시간 만큼을 더하거나 뺀다.
 - 사용 예시
-    {% highlight java %}
-    Calendar time = Calendar.getInstance();
-    System.out.println(time.getTime()); //출력 : Wed Dec 20 05:37:04 GMT 2023
+{% highlight java %}
+Calendar time = Calendar.getInstance();
+System.out.println(time.getTime()); //출력 : Wed Dec 20 05:37:04 GMT 2023
 
-    time.add(Calendar.SECOND, 120); //120초 더하기
-    System.out.println(time.getTime()); //출력 : Wed Dec 20 05:39:04 GMT 2023
-		
-    time.add(Calendar.DATE, -120); //120일 빼기
-    System.out.println(time.getTime()); //출력 : Tue Aug 22 05:39:04 GMT 2023
-    {% endhighlight %}
+time.add(Calendar.SECOND, 120); //120초 더하기
+System.out.println(time.getTime()); //출력 : Wed Dec 20 05:39:04 GMT 2023
+    
+time.add(Calendar.DATE, -120); //120일 빼기
+System.out.println(time.getTime()); //출력 : Tue Aug 22 05:39:04 GMT 2023
+{% endhighlight %}
 
 ### before() 메소드와 after() 메소드
 
@@ -27,32 +27,32 @@ categories: Group&nbsp;:&nbsp;Java Java
 - after()
     - 현재 Calendar 인스턴스가 전달된 객체가 나타내는 시간보다 나중인지를 판단한다.
 - 사용 예시
-    {% highlight java %}
-    Calendar time1 = Calendar.getInstance();
-    Calendar time2 = Calendar.getInstance();
-    
-    time2.set(1982, 2, 19);
-    
-    System.out.println(time1.before(time2));
-    System.out.println(time1.after(time2));
-    {% endhighlight %}
+{% highlight java %}
+Calendar time1 = Calendar.getInstance();
+Calendar time2 = Calendar.getInstance();
+
+time2.set(1982, 2, 19);
+
+System.out.println(time1.before(time2));
+System.out.println(time1.after(time2));
+{% endhighlight %}
 
 ### get() 메소드
 
 - 전달된 Calendar 필드에 저장된 값을 반환한다.
 - 사용 예시
-    {% highlight java %}
-    Calendar time = Calendar.getInstance();
+{% highlight java %}
+Calendar time = Calendar.getInstance();
 
-    System.out.println(time.getTime()); //출력 : Wed Dec 20 05:41:16 GMT 2023
-    System.out.println(time.get(Calendar.DAY_OF_WEEK)); //출력 : 4
-    System.out.println(time.get(Calendar.MONTH) + 1); //출력 : 12
-    System.out.println(time.get(Calendar.DAY_OF_MONTH)); //출력 : 20
-    System.out.println(time.get(Calendar.HOUR_OF_DAY)); //출력 : 5
-    System.out.println(time.get(Calendar.MINUTE)); //출력 : 41
-    System.out.println(time.get(Calendar.SECOND)); //출력 : 16
-    System.out.println(time.get(Calendar.YEAR)); //출력 : 2023
-    {% endhighlight %}
+System.out.println(time.getTime()); //출력 : Wed Dec 20 05:41:16 GMT 2023
+System.out.println(time.get(Calendar.DAY_OF_WEEK)); //출력 : 4
+System.out.println(time.get(Calendar.MONTH) + 1); //출력 : 12
+System.out.println(time.get(Calendar.DAY_OF_MONTH)); //출력 : 20
+System.out.println(time.get(Calendar.HOUR_OF_DAY)); //출력 : 5
+System.out.println(time.get(Calendar.MINUTE)); //출력 : 41
+System.out.println(time.get(Calendar.SECOND)); //출력 : 16
+System.out.println(time.get(Calendar.YEAR)); //출력 : 2023
+{% endhighlight %}
 
 ### roll() 메소드
 

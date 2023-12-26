@@ -19,48 +19,48 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 인수로 전달된 값을 문자열로 변환한 후, 해당 문자열의 마지막에 추가한다.
 -  String 클래스의 concat() 메소드와 같은 결과를 반환하지만 내부적인 처리 속도가 훨씬 빠르다.
 - 사용 예시
-    {% highlight java %}
-    StringBuffer str = new StringBuffer("앞");
-    System.out.println(str.append("뒤")); //출력 : 앞뒤
-    {% endhighlight %}
+{% highlight java %}
+StringBuffer str = new StringBuffer("앞");
+System.out.println(str.append("뒤")); //출력 : 앞뒤
+{% endhighlight %}
 
 ### capacity() 메소드
 
 - StringBuffer 인스턴스의 현재 버퍼 크기를 반환한다.
 - 사용 예시
-    {% highlight java %}
-    StringBuffer str01 = new StringBuffer();
-    StringBuffer str02 = new StringBuffer("Java");
+{% highlight java %}
+StringBuffer str01 = new StringBuffer();
+StringBuffer str02 = new StringBuffer("Java");
 
-    System.out.println(str01.capacity()); //출력 : 16
-    System.out.println(str02.capacity()); //출력 : 20
-    {% endhighlight %}
+System.out.println(str01.capacity()); //출력 : 16
+System.out.println(str02.capacity()); //출력 : 20
+{% endhighlight %}
 
 ### delete(String s) 메소드
 
 - 전달된 인덱스에 해당하는 부분 문자열을 해당 문자열에서 제거한다.
 - 특정 위치의 문자 한 개만을 제거하고 싶을 때는 deleteCharAt() 메소드를 사용하면 된다.
 - 사용 예시
-    {% highlight java %}
-    StringBuffer str = new StringBuffer("Java Oracle");
-    System.out.println("원본 문자열 : " + str);
-    
-    System.out.println(str.delete(4, 8));
-    System.out.println(str.deleteCharAt(1));
-    System.out.println("deleteCharAt() 메소드 호출 후 원본 문자열 : " + str);
-    {% endhighlight %}
+{% highlight java %}
+StringBuffer str = new StringBuffer("Java Oracle");
+System.out.println("원본 문자열 : " + str);
+
+System.out.println(str.delete(4, 8));
+System.out.println(str.deleteCharAt(1));
+System.out.println("deleteCharAt() 메소드 호출 후 원본 문자열 : " + str);
+{% endhighlight %}
 
 ### insert(int offset, String s) 메소드
 
 - 인수로 전달된 값을 문자열로 변환한 후 해당 문자열의 지정된 인덱스 위치에 추가한다.
 - 전달된 인덱스가 해당 문자열의 길이와 같으면 append() 메소드와 같은 결과를 반환한다.
 - 사용 예시
-    {% highlight java %}
-    StringBuffer str = new StringBuffer("Java");
-    System.out.println("원본 문자열 : " + str); //출력 : Java
-    System.out.println(str.insert(4, "Script")); //출력 : JavaScript
-    System.out.println("insert() 메소드 호출 후 원본 문자열 : " + str); //출력 : JavaScript
-    {% endhighlight %}
+{% highlight java %}
+StringBuffer str = new StringBuffer("Java");
+System.out.println("원본 문자열 : " + str); //출력 : Java
+System.out.println(str.insert(4, "Script")); //출력 : JavaScript
+System.out.println("insert() 메소드 호출 후 원본 문자열 : " + str); //출력 : JavaScript
+{% endhighlight %}
 
 ###  reverse()
 

@@ -24,10 +24,10 @@ tags: [Optional]
         - 명시된 값이 null이면 비어있는 Optional 객체를 반환한다.
 - 참조 변수의 값이 만에 하나 null이 될 가능성이 있다면, ofNullable() 메소드를 사용하여 Optional 객체를 생성하는 것이 좋다.
 - 사용 예시 
-    {% highlight java %}
-    Optional<String> opt = Optional.ofNullable("자바 Optional 객체");
-    System.out.println(opt.get());
-    {% endhighlight %}
+{% highlight java %}
+Optional<String> opt = Optional.ofNullable("자바 Optional 객체");
+System.out.println(opt.get());
+{% endhighlight %}
 
 ### Optional 객체에 접근
 
@@ -36,13 +36,13 @@ tags: [Optional]
 - get() 메소드를 호출하기 전에 isPresent() 메소드를 사용하여  
 Optional 객체에 저장된 값이 null인지 아닌지를 먼저 확인한 후 호출하는 것이 좋다.
 - 사용 예시
-    {% highlight java %}
-    Optional<String> opt = Optional.ofNullable("자바 Optional 객체");
+{% highlight java %}
+Optional<String> opt = Optional.ofNullable("자바 Optional 객체");
 
-    if(opt.isPresent()) {
-        System.out.println(opt.get());
-    }
-    {% endhighlight %}
+if(opt.isPresent()) {
+    System.out.println(opt.get());
+}
+{% endhighlight %}
 
 ### Null에 대한 대체값 지정하기
 
@@ -57,12 +57,12 @@ Optional 객체에 저장된 값이 null인지 아닌지를 먼저 확인한 후
         - 저장된 값이 존재하면 그 값을 반환한다.
         - 값이 존재하지 않으면 인수로 전달된 예외를 발생시킨다.
 - 사용 예시
-    {% highlight java %}
-    Optional<String> opt = Optional.empty(); // Optional를 null로 초기화함.
+{% highlight java %}
+Optional<String> opt = Optional.empty(); // Optional를 null로 초기화함.
 
-    System.out.println(opt.orElse("빈 Optional 객체"));
-    System.out.println(opt.orElseGet(String::new));
-    {% endhighlight %}
+System.out.println(opt.orElse("빈 Optional 객체"));
+System.out.println(opt.orElseGet(String::new));
+{% endhighlight %}
 
 ### 기본 타입의 Optional 클래스
 

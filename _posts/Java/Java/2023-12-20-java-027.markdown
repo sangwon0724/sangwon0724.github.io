@@ -16,15 +16,15 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 이진 검색 알고리즘을 사용한다.
     - 매개변수로 전달되는 배열이 sort() 메소드 등을 사용하여 미리 정렬되어 있어야만 제대로 동작한다.
 - 사용 예시
-    {% highlight java %}
-    int[] arr = new int[1000];
+{% highlight java %}
+int[] arr = new int[1000];
 
-    for(int i = 0; i < arr.length; i++) {
-        arr[i] = i * 2;
-    }
+for(int i = 0; i < arr.length; i++) {
+    arr[i] = i * 2;
+}
 
-    System.out.println(Arrays.binarySearch(arr, 437)); //출력 : -220
-    {% endhighlight %}
+System.out.println(Arrays.binarySearch(arr, 437)); //출력 : -220
+{% endhighlight %}
 
 ### copyOf() 메소드
 

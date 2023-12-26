@@ -29,19 +29,19 @@ categories: Group&nbsp;:&nbsp;Java Java
 ### 사용 예시
 
 - 메소드 정의
-    {% highlight java %}
-    void temp(int num1){}
+{% highlight java %}
+void temp(int num1){}
 
-    void temp(int num1, int num2){}
+void temp(int num1, int num2){}
 
-    void temp(int num1, double num2){}
-    {% endhighlight %}
+void temp(int num1, double num2){}
+{% endhighlight %}
 
 - 메소드 호출
-    {% highlight java %}
-    temp(10);       // 1번 display() 메소드 호출 -> 10
+{% highlight java %}
+temp(10);       // 1번 display() 메소드 호출 -> 10
 
-    temp(10, 20);   // 2번 display() 메소드 호출 -> 200
+temp(10, 20);   // 2번 display() 메소드 호출 -> 200
 
-    temp(10, 3.14); // 3번 display() 메소드 호출 -> 13.14
-    {% endhighlight %}
+temp(10, 3.14); // 3번 display() 메소드 호출 -> 13.14
+{% endhighlight %}

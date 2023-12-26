@@ -29,14 +29,14 @@ categories: Group&nbsp;:&nbsp;Java Java
 | private | ○ | X | X | X |
 
 - 사용 예시
-    {% highlight java %}
-    public class Car {
-        private String name = "";
-        public String getName() {
-            return this.name;
-        }
+{% highlight java %}
+public class Car {
+    private String name = "";
+    public String getName() {
+        return this.name;
     }
-    {% endhighlight %}
+}
+{% endhighlight %}
 
 ### 기타 제어자
 
@@ -50,16 +50,16 @@ categories: Group&nbsp;:&nbsp;Java Java
         - 필드
         - 지역 변수
     - 사용 예시
-        {% highlight java %}
-        final class Car { //상속을 통한 하위 클래스 생성 불가
-            final int REG_YEAR = 2023; //상수라서 값 변경 불가
-            final void brake() { //메소드 오버라이딩 불가
-                final int DOWN_STEP_SPEED = 5; //상수라서 값 변경 불가
-                System.out.println("브레이크!");
-            }
+{% highlight java %}
+final class Car { //상속을 통한 하위 클래스 생성 불가
+    final int REG_YEAR = 2023; //상수라서 값 변경 불가
+    final void brake() { //메소드 오버라이딩 불가
+        final int DOWN_STEP_SPEED = 5; //상수라서 값 변경 불가
+        System.out.println("브레이크!");
+    }
 
-        }
-        {% endhighlight %}
+}
+{% endhighlight %}
 - static
     - 변수에 사용하면 해당 변수를 클래스 변수로 만들어 준다.
     - 메소드에 사용하면 해당 메소드를 클래스 메소드로 만들어 준다.
@@ -72,25 +72,25 @@ categories: Group&nbsp;:&nbsp;Java Java
         - 필드
         - 초기화
     - 사용 예시
-        {% highlight java %}
-        class Car {
-            static int name;
+{% highlight java %}
+class Car {
+    static int name;
 
-            //스태틱 초기화 블럭
-            static{
-                //초기화 내용
-            }
+    //스태틱 초기화 블럭
+    static{
+        //초기화 내용
+    }
 
-            //인스턴스 초기화 블럭
-            {
-                //초기화 내용
-            }
-            static void brake() {
-                System.out.println("브레이크!");
-            }
+    //인스턴스 초기화 블럭
+    {
+        //초기화 내용
+    }
+    static void brake() {
+        System.out.println("브레이크!");
+    }
 
-        }
-        {% endhighlight %}
+}
+{% endhighlight %}
     - 스태틱 초기화 블럭
         - 클래스가 로딩될 때 호출되며 따라서 각 클래스당 최초 1회만 실행되는 블럭
         - 객체가 생성되기 이전에 수행된다.
@@ -122,8 +122,8 @@ categories: Group&nbsp;:&nbsp;Java Java
         - 클래스
         - 메소드
     - 사용 예시
-        {% highlight java %}
-        abstract class Car {
-            abstract void brake();
-        }
-        {% endhighlight %}
+{% highlight java %}
+abstract class Car {
+    abstract void brake();
+}
+{% endhighlight %}

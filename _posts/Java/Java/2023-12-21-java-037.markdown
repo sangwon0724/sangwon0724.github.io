@@ -35,26 +35,26 @@ tags: [오류, 예외, 예외 처리, Exception]
 >catch 블록과 finally 블록 중 1개는 있어야 한다.
 
 - 사용 예시
-    {% highlight java %}
-    try {
-        예외를 처리하길 원하는 실행 코드;
-    } catch (e1) {
-        e1 예외가 발생할 경우에 실행될 코드;
-    } catch (e2) {
-        e2 예외가 발생할 경우에 실행될 코드;
-    }
-    ...
-    finally {
-        예외 발생 여부와 상관없이 무조건 실행될 코드;
-    }
+{% highlight java %}
+try {
+    예외를 처리하길 원하는 실행 코드;
+} catch (e1) {
+    e1 예외가 발생할 경우에 실행될 코드;
+} catch (e2) {
+    e2 예외가 발생할 경우에 실행될 코드;
+}
+...
+finally {
+    예외 발생 여부와 상관없이 무조건 실행될 코드;
+}
 
-    //Java SE 7부터는 '|' 기호를 사용하여 하나의 catch 블록에서 여러 타입의 예외를 동시에 처리할 수 있다.
-    try {
-        this.db.commit();
-    } catch (IOException | SQLException e) {
-        e.printStackTrace();
-    }
-    {% endhighlight %}
+//Java SE 7부터는 '|' 기호를 사용하여 하나의 catch 블록에서 여러 타입의 예외를 동시에 처리할 수 있다.
+try {
+    this.db.commit();
+} catch (IOException | SQLException e) {
+    e.printStackTrace();
+}
+{% endhighlight %}
 
 ### 예외(Exception) 클래스
 
@@ -91,41 +91,41 @@ tags: [오류, 예외, 예외 처리, Exception]
     - toString()
         - 해당 throwable 객체에 대한 간략한 내용을 문자열로 반환한다.
 - 사용 예시
-    {% highlight java %}
-    try {
-        System.out.println(5 / 0);
-    } catch (ArithmeticException e) {
-        System.out.println("현재 발생한 예외 정보 : " + e.getMessage());
-    }
-    {% endhighlight %}
+{% highlight java %}
+try {
+    System.out.println(5 / 0);
+} catch (ArithmeticException e) {
+    System.out.println("현재 발생한 예외 정보 : " + e.getMessage());
+}
+{% endhighlight %}
 
 ### 예외 발생
 
 - Java에서는 throw 키워드를 사용하여 강제로 예외를 발생시킬 수 있다.
 - 사용 예시
-    {% highlight java %}
-    Exception e = new Exception("오류 메시지");
-    throw e;
-    {% endhighlight %}
+{% highlight java %}
+Exception e = new Exception("오류 메시지");
+throw e;
+{% endhighlight %}
 
 ### 예외 회피
 
 - 사용 예시
-    {% highlight java %}
-        void handlingException() {
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                System.out.println("호출된 메소드에서 예외가 처리됨!");
-            }
-        }
-
+{% highlight java %}
+    void handlingException() {
         try {
-            handlingException();
+            throw new Exception();
         } catch (Exception e) {
-            System.out.println("main() 메소드에서 예외가 처리됨!");
+            System.out.println("호출된 메소드에서 예외가 처리됨!");
         }
-    {% endhighlight %}
+    }
+
+    try {
+        handlingException();
+    } catch (Exception e) {
+        System.out.println("main() 메소드에서 예외가 처리됨!");
+    }
+{% endhighlight %}
 
 ### 사용자 정의 예외 클래스
 
@@ -133,40 +133,40 @@ tags: [오류, 예외, 예외 처리, Exception]
 - 생성자뿐만 아니라 필드 및 메소드도 원하는 만큼 추가할 수 있다.
 - 요즘에는 예외 처리를 강제하지 않는 RuntimeException 클래스를 상속받아 작성하는 경우가 많다.
 - 사용 예시
-    {% highlight java %}
-    class MyException extends RuntimeException {
-        MyException(String errMsg) {
-            super(errMsg);
-        }
+{% highlight java %}
+class MyException extends RuntimeException {
+    MyException(String errMsg) {
+        super(errMsg);
     }
-    {% endhighlight %}
+}
+{% endhighlight %}
 
 ### try-with-resources 문
 
 - 사용한 자원을 자동으로 해제
 - Java SE 7부터 제공
 - 사용 예시
-    {% highlight java %}
-    //원형
-    try (파일을열거나자원을할당하는명령문) {
-        ...
-    }
+{% highlight java %}
+//원형
+try (파일을열거나자원을할당하는명령문) {
+    ...
+}
 
-    //예시 (Java SE 7 이전)
-    static String readFile(String filePath) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(filePath));
-        try {
-            return br.readLine();
-        } finally {
-            if (br != null)
-                br.close();
-        }
+//예시 (Java SE 7 이전)
+static String readFile(String filePath) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(filePath));
+    try {
+        return br.readLine();
+    } finally {
+        if (br != null)
+            br.close();
     }
+}
 
-    //예시 (Java Se 7)
-    static String readFile(String filePath) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            return br.readLine();
-        }
+//예시 (Java Se 7)
+static String readFile(String filePath) throws IOException {
+    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        return br.readLine();
     }
-    {% endhighlight %}
+}
+{% endhighlight %}

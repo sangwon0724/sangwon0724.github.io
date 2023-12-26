@@ -53,19 +53,19 @@ tags: [java.time]
     - of() 메소드
         - 전달된 인수를 가지고 특정 날짜와 시간을 표현하는 새로운 객체를 생성하여 반환
 - 사용 예시
-    {% highlight java %}
-    LocalDate today = LocalDate.now();
-    LocalTime present = LocalTime.now();
-    System.out.println(today + " " + present);
+{% highlight java %}
+LocalDate today = LocalDate.now();
+LocalTime present = LocalTime.now();
+System.out.println(today + " " + present);
 
-    //static LocalDate of(int year, int month, int dayOfMonth)
-    LocalDate birthDay = LocalDate.of(1982, 02, 19);
+//static LocalDate of(int year, int month, int dayOfMonth)
+LocalDate birthDay = LocalDate.of(1982, 02, 19);
 
-    //static LocalTime of(int hour, int minute, int second, int nanoOfSecond)
-    LocalTime birthTime = LocalTime.of(02, 02, 00, 100000000);
+//static LocalTime of(int hour, int minute, int second, int nanoOfSecond)
+LocalTime birthTime = LocalTime.of(02, 02, 00, 100000000);
 
-    System.out.println(birthDay + " " + birthTime);
-    {% endhighlight %}
+System.out.println(birthDay + " " + birthTime);
+{% endhighlight %}
 
 ## 날짜와 시간 객체에 접근하기
 

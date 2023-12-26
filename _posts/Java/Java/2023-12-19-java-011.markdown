@@ -35,18 +35,18 @@ categories: Group&nbsp;:&nbsp;Java Java
 >>만약 두 메소드가 매개변수의 개수와 타입, 그 순서까지 모두 같다면, 이 두 메소드의 시그니처는 같다고 표현한다.
 
 - 기본 형식
-    {% highlight java %}
-    접근제어자 반환타입 메소드이름(매개변수목록) { // 선언부
-        // 구현부
-    }
-    {% endhighlight %}
+{% highlight java %}
+접근제어자 반환타입 메소드이름(매개변수목록) { // 선언부
+    // 구현부
+}
+{% endhighlight %}
 - 사용 예시
-    {% highlight java %}
-    public void accelerate(int speed, int second) { // 선언부
-        // 구현부
-        System.out.println(second + "초간 속도를 시속 " + speed + "(으)로 가속함!!");
-    }
-    {% endhighlight %}
+{% highlight java %}
+public void accelerate(int speed, int second) { // 선언부
+    // 구현부
+    System.out.println(second + "초간 속도를 시속 " + speed + "(으)로 가속함!!");
+}
+{% endhighlight %}
 
 ### 메소드 호출
 

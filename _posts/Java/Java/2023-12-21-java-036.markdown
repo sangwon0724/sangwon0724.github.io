@@ -16,39 +16,39 @@ tags: [Comparable, Comparator]
     - compareTo(T o)
         - 해당 객체와 전달된 객체의 순서를 비교한다.
 - 사용 예시
-    {% highlight java %}
-    //예시 클래스
-    class Car implements Comparable<Car> {
-        private String modelName;
-        private int modelYear;
-        private String color;
+{% highlight java %}
+//예시 클래스
+class Car implements Comparable<Car> {
+    private String modelName;
+    private int modelYear;
+    private String color;
 
-        Car(String mn, int my, String c) {
-            this.modelName = mn;
-            this.modelYear = my;
-            this.color = c;
-        }
-
-        public String getModel() {
-            return this.modelYear + "식 " + this.modelName + " " + this.color;
-        }
-
-        public int compareTo(Car obj) {
-            if (this.modelYear == obj.modelYear) {
-                return 0;
-            } else if(this.modelYear < obj.modelYear) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
+    Car(String mn, int my, String c) {
+        this.modelName = mn;
+        this.modelYear = my;
+        this.color = c;
     }
 
-    //사용 방법
-    Car car01 = new Car("아반떼", 2016, "노란색");
-    Car car02 = new Car("소나타", 2010, "흰색");
-    System.out.println(car01.compareTo(car02));
-    {% endhighlight %}
+    public String getModel() {
+        return this.modelYear + "식 " + this.modelName + " " + this.color;
+    }
+
+    public int compareTo(Car obj) {
+        if (this.modelYear == obj.modelYear) {
+            return 0;
+        } else if(this.modelYear < obj.modelYear) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+}
+
+//사용 방법
+Car car01 = new Car("아반떼", 2016, "노란색");
+Car car02 = new Car("소나타", 2010, "흰색");
+System.out.println(car01.compareTo(car02));
+{% endhighlight %}
 
 ### Comparator&lt;T> 인터페이스
 
@@ -65,28 +65,28 @@ tags: [Comparable, Comparator]
     - reversed()
         - 해당 comparator의 역순인 comparator를 반환한다.
 - 사용 예시
-    {% highlight java %}
-    //예시 클래스
-    class DescendingOrder implements Comparator<Integer> {
-        public int compare(Integer o1, Integer o2) {
-            if(o1 instanceof Comparable && o2 instanceof Comparable) {
-                Integer c1 = (Integer)o1;
-                Integer c2 = (Integer)o2;
-                return c2.compareTo(c1);
-            }
-            return -1;
+{% highlight java %}
+//예시 클래스
+class DescendingOrder implements Comparator<Integer> {
+    public int compare(Integer o1, Integer o2) {
+        if(o1 instanceof Comparable && o2 instanceof Comparable) {
+            Integer c1 = (Integer)o1;
+            Integer c2 = (Integer)o2;
+            return c2.compareTo(c1);
         }
-
+        return -1;
     }
 
-    //사용 방법
-    TreeSet<Integer> ts = new TreeSet<Integer>(new DescendingOrder());
-    ts.add(30);
-    ts.add(40);
-    ts.add(20);
-    ts.add(10);
-    Iterator<Integer> iter = ts.iterator();
-    while(iter.hasNext()) {
-        System.out.println(iter.next());
-    }
-    {% endhighlight %}
+}
+
+//사용 방법
+TreeSet<Integer> ts = new TreeSet<Integer>(new DescendingOrder());
+ts.add(30);
+ts.add(40);
+ts.add(20);
+ts.add(10);
+Iterator<Integer> iter = ts.iterator();
+while(iter.hasNext()) {
+    System.out.println(iter.next());
+}
+{% endhighlight %}

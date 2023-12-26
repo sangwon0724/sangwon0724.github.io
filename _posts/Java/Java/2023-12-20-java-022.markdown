@@ -16,10 +16,10 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 해당 문자열의 특정 인덱스에 해당하는 문자를 반환한다.
 - 해당 문자열의 길이보다 큰 인덱스나 음수를 전달하면 IndexOutOfBoundsException 오류가 발생한다.
 - 사용 예시
-    {% highlight java %}
-    String str = new String("Java");
-    System.out.print(str.charAt(2)); //출력 : v
-    {% endhighlight %}
+{% highlight java %}
+String str = new String("Java");
+System.out.print(str.charAt(2)); //출력 : v
+{% endhighlight %}
 
 ### compareTo(String s) 메소드
 
@@ -28,40 +28,40 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 두 문자열이 같다면 0을 반환하며, 해당 문자열이 인수로 전달된 문자열보다 작으면 음수를, 크면 양수를 반환한다.
 - 대소문자를 구분하지 않고 비교하고 싶을 때는 compareToIgnoreCase(String s) 메소드를 사용한다.
 - 사용 예시
-    {% highlight java %}
-    String str = new String("abcd");
-    System.out.println(str.compareTo("bcef")); //출력 : -1
-    {% endhighlight %}
+{% highlight java %}
+String str = new String("abcd");
+System.out.println(str.compareTo("bcef")); //출력 : -1
+{% endhighlight %}
 
 ### oncat(String s) 메소드
 
 - 해당 문자열의 뒤에 인수로 전달된 문자열을 추가한 새로운 문자열을 반환한다.
 - 인수로 전달된 문자열의 길이가 0이면, 해당 문자열을 그대로 반환한다.
 - 사용 예시
-    {% highlight java %}
-    String str = new String("앞");
-    System.out.println(str.concat("뒤")); //출력 : 앞뒤
-    System.out.println(str.concat("")); //출력 : 앞
-    {% endhighlight %}
+{% highlight java %}
+String str = new String("앞");
+System.out.println(str.concat("뒤")); //출력 : 앞뒤
+System.out.println(str.concat("")); //출력 : 앞
+{% endhighlight %}
 
 ### indexOf(String s) 메소드
 
 - 해당 문자열에서 특정 문자나 문자열이 처음으로 등장하는 위치의 인덱스를 반환한다.
 - 해당 문자열에 전달된 문자나 문자열이 포함되어 있지 않으면 -1을 반환한다.
 - 사용 예시
-    {% highlight java %}
-    String str = new String("ABC");
-    System.out.println(str.indexOf('C')); //출력 : 2
-    {% endhighlight %}
+{% highlight java %}
+String str = new String("ABC");
+System.out.println(str.indexOf('C')); //출력 : 2
+{% endhighlight %}
 
 ### trim() 메소드
 
 - 해당 문자열의 맨 앞과 맨 뒤에 포함된 모든 공백 문자를 제거한다.
 - 사용 예시
-    {% highlight java %}
-    String str = new String(" 문자열 ");
-    System.out.println(str.trim()); //출력 : 문자열
-    {% endhighlight %}
+{% highlight java %}
+String str = new String(" 문자열 ");
+System.out.println(str.trim()); //출력 : 문자열
+{% endhighlight %}
 
 ### toLowerCase() 메소드와 toUpperCase() 메소드
 
@@ -70,11 +70,11 @@ categories: Group&nbsp;:&nbsp;Java Java
 - toUpperCase() 메소드
     - 해당 문자열의 모든 문자를 대문자로 변환한다.
 - 사용 예시
-    {% highlight java %}
-    String str = new String("Java");
-    System.out.println(str.toLowerCase()); //출력 : java
-    System.out.println(str.toUpperCase()); //출력 : JAVA
-    {% endhighlight %}
+{% highlight java %}
+String str = new String("Java");
+System.out.println(str.toLowerCase()); //출력 : java
+System.out.println(str.toUpperCase()); //출력 : JAVA
+{% endhighlight %}
 
 ### split(String s) 메소드
 

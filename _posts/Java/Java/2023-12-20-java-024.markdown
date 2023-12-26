@@ -24,12 +24,12 @@ categories: Group&nbsp;:&nbsp;Java Java
 
 - 0.0 이상 1.0 미만의 범위에서 임의의 double형 값을 하나 생성하여 반환한다.
 - 사용 예시
-    {% highlight java %}
-    System.out.println((int)(Math.random() * 100)); // 0 ~ 99
-    Random ran = new Random();
-    System.out.println(ran.nextInt(100));           // 0 ~ 99
-    System.out.println(ran.nextInt(100) + 1);           // 1 ~ 100
-    {% endhighlight %}
+{% highlight java %}
+System.out.println((int)(Math.random() * 100)); // 0 ~ 99
+Random ran = new Random();
+System.out.println(ran.nextInt(100));           // 0 ~ 99
+System.out.println(ran.nextInt(100) + 1);           // 1 ~ 100
+{% endhighlight %}
 
 ### abs(숫자_자료형 a) 메소드
 
@@ -63,17 +63,17 @@ categories: Group&nbsp;:&nbsp;Java Java
 
 - 전달된 두 개의 double형 값을 가지고 제곱 연산을 수행합니다.
 - 사용 예시
-    {% highlight java %}
-    System.out.println((int)Math.pow(5, 2)); //출력 : 25
-    {% endhighlight %}
+{% highlight java %}
+System.out.println((int)Math.pow(5, 2)); //출력 : 25
+{% endhighlight %}
 
 ### sqrt(double a) 메소드
 
 - 전달된 double형 값의 제곱근 값을 반환합니다.
 - 사용 예시
-    {% highlight java %}
-    System.out.println((int)Math.sqrt(25)); //출력 : 5
-    {% endhighlight %}
+{% highlight java %}
+System.out.println((int)Math.sqrt(25)); //출력 : 5
+{% endhighlight %}
 
 ### 삼각함수 관련 메소드
 

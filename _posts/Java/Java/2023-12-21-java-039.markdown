@@ -46,20 +46,20 @@ categories: Group&nbsp;:&nbsp;Java Java
     - seek()
         - 파일 포인터의 위치를 변경
 - 사용 예시
-    {% highlight java %}
-    public static void main(String[] args){
-        try {
-            //"rw" 모드로 "data.txt" 파일 개방
-            RandomAccessFile file = new RandomAccessFile("data.txt", "rw");
-            System.out.println(file.getFilePointer()); //출력 : 0, 파일 포인터의 현재 위치를 반환
+{% highlight java %}
+public static void main(String[] args){
+    try {
+        //"rw" 모드로 "data.txt" 파일 개방
+        RandomAccessFile file = new RandomAccessFile("data.txt", "rw");
+        System.out.println(file.getFilePointer()); //출력 : 0, 파일 포인터의 현재 위치를 반환
 
-            file.writeInt(10);                         //정수 10을 저장
-            System.out.println(file.getFilePointer()); //출력 : 4
+        file.writeInt(10);                         //정수 10을 저장
+        System.out.println(file.getFilePointer()); //출력 : 4
 
-            file.seek(20);                             //파일 포인터의 위치를 20으로 이동
-            System.out.println(file.getFilePointer()); //출력 : 20
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        file.seek(20);                             //파일 포인터의 위치를 20으로 이동
+        System.out.println(file.getFilePointer()); //출력 : 20
+    } catch (IOException e) {
+        e.printStackTrace();
     }
-    {% endhighlight %}
+}
+{% endhighlight %}

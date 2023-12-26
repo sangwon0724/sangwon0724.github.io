@@ -45,17 +45,17 @@ tags: []
 
 - ```타입 변수이름;```
 - 사용 예시
-    {% highlight java %}
-    int count;
-    {% endhighlight %}
+{% highlight java %}
+int count;
+{% endhighlight %}
 
 ### 변수 초기화 방법
 
 - ```타입 변수이름 = 값;```
 - 사용 예시
-    {% highlight java %}
-    int count = 0;
-    {% endhighlight %}
+{% highlight java %}
+int count = 0;
+{% endhighlight %}
 
 ### 변수의 생성 및 소멸 시기, 저장되는 메모리 공간과 사용 방법
 

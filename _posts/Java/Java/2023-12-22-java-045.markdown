@@ -10,16 +10,16 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 개발자가 변수의 타입을 정확하게 명시하지 않아도 컴파일러가 알아서 이 변수의 타입을 대입된 리터럴로 추론하는 것
 - Java 10부터 제공
 - 사용 예시
-    {% highlight java %}
-    //기존
-    String name = "홍길동";
+{% highlight java %}
+//기존
+String name = "홍길동";
 
-    //타입 추론 사용 시
-    var name = "홍길동";
-    if(name instanceof String){
-        System.out.println("name 변수의 자료형은 String이다.");
-    }
-    {% endhighlight %}
+//타입 추론 사용 시
+var name = "홍길동";
+if(name instanceof String){
+    System.out.println("name 변수의 자료형은 String이다.");
+}
+{% endhighlight %}
 
 ### Java에서의 var의 특징
 

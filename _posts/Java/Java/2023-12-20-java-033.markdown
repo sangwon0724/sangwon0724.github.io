@@ -43,35 +43,35 @@ tags: [Set]
 - 만약 요소의 저장 순서를 유지해야 한다면 LinkedHashSet 클래스를 사용하면 된다.
     - JDK 1.4부터 제공
 - 사용 예시
-    {% highlight java %}
-    HashSet<String> hs01 = new HashSet<String>();
-    HashSet<String> hs02 = new HashSet<String>();
+{% highlight java %}
+HashSet<String> hs01 = new HashSet<String>();
+HashSet<String> hs02 = new HashSet<String>();
 
-    //add() 메소드를 이용한 요소의 저장
-    hs01.add("홍길동");
-    hs01.add("이순신");
-    System.out.println(hs01.add("임꺽정"));
-    System.out.println(hs01.add("임꺽정")); // 중복된 요소의 저장
+//add() 메소드를 이용한 요소의 저장
+hs01.add("홍길동");
+hs01.add("이순신");
+System.out.println(hs01.add("임꺽정"));
+System.out.println(hs01.add("임꺽정")); // 중복된 요소의 저장
 
-    //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
-    for (String e : hs01) {
-        System.out.print(e + " ");
-    }
+//Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+for (String e : hs01) {
+    System.out.print(e + " ");
+}
 
-    //add() 메소드를 이용한 요소의 저장
-    hs02.add("임꺽정");
-    hs02.add("홍길동");
-    hs02.add("이순신");
+//add() 메소드를 이용한 요소의 저장
+hs02.add("임꺽정");
+hs02.add("홍길동");
+hs02.add("이순신");
 
-    //iterator() 메소드를 이용한 요소의 출력
-    Iterator<String> iter02 = hs02.iterator();
-    while (iter02.hasNext()) {
-        System.out.print(iter02.next() + " ");
-    }
+//iterator() 메소드를 이용한 요소의 출력
+Iterator<String> iter02 = hs02.iterator();
+while (iter02.hasNext()) {
+    System.out.print(iter02.next() + " ");
+}
 
-    //size() 메소드를 이용한 요소의 총 개수
-    System.out.println("집합의 크기 : " + hs02.size());
-    {% endhighlight %}
+//size() 메소드를 이용한 요소의 총 개수
+System.out.println("집합의 크기 : " + hs02.size());
+{% endhighlight %}
 
 ### 해시 알고리즘(hash algorithm)
 
@@ -89,33 +89,33 @@ tags: [Set]
     - Set 인터페이스를 구현했기 때문에
 - JDK 1.2부터 제공된다.
 - 사용 예시
-    {% highlight java %}
-    TreeSet<Integer> ts = new TreeSet<Integer>();
+{% highlight java %}
+TreeSet<Integer> ts = new TreeSet<Integer>();
 
-    //add() 메소드를 이용한 요소의 저장
-    ts.add(30);
-    ts.add(40);
-    ts.add(20);
-    ts.add(10);
+//add() 메소드를 이용한 요소의 저장
+ts.add(30);
+ts.add(40);
+ts.add(20);
+ts.add(10);
 
-    //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
-    for (int e : ts) {
-        System.out.print(e + " ");
-    }
+//Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+for (int e : ts) {
+    System.out.print(e + " ");
+}
 
-    //remove() 메소드를 이용한 요소의 제거
-    ts.remove(40);
+//remove() 메소드를 이용한 요소의 제거
+ts.remove(40);
 
-    //iterator() 메소드를 이용한 요소의 출력
-    Iterator<Integer> iter = ts.iterator();
-    while (iter.hasNext()) {
-        System.out.print(iter.next() + " ");
-    }
+//iterator() 메소드를 이용한 요소의 출력
+Iterator<Integer> iter = ts.iterator();
+while (iter.hasNext()) {
+    System.out.print(iter.next() + " ");
+}
 
-    //size() 메소드를 이용한 요소의 총 개수
-    System.out.println("이진 검색 트리의 크기 : " + ts.size());
+//size() 메소드를 이용한 요소의 총 개수
+System.out.println("이진 검색 트리의 크기 : " + ts.size());
 
-    //subSet() 메소드를 이용한 부분 집합의 출력
-    System.out.println(ts.subSet(10, 20));
-    System.out.println(ts.subSet(10, true, 20, true));
-    {% endhighlight %}
+//subSet() 메소드를 이용한 부분 집합의 출력
+System.out.println(ts.subSet(10, 20));
+System.out.println(ts.subSet(10, true, 20, true));
+{% endhighlight %}

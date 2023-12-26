@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "배열 (array)"
-date:   2023-12-19 16:53:00 +0900
+date:   2023-12-19 16:29:00 +0900
 categories: Group&nbsp;:&nbsp;Java Java
 tags: [배열, 반복문]
 ---
@@ -20,47 +20,47 @@ tags: [배열, 반복문]
 ### 1차원 배열
 
 - 선언 방법
-    {% highlight java %}
-    //선언 - 방법 1
-    타입[] 배열이름;
+{% highlight java %}
+//선언 - 방법 1
+타입[] 배열이름;
 
-    //선언 - 방법 2
-    타입 배열이름[];
-    
-    //선언 및 인스턴스 생성 - 방법 1
-    배열이름 = new 타입[배열길이];
+//선언 - 방법 2
+타입 배열이름[];
 
-    //선언 및 인스턴스 생성 - 방법 2
-    타입[] 배열이름 = new 타입[배열길이];
-    
-    //선언 및 인스턴스 생성과 초기화 - 방법 1
-    타입[] 배열이름 = {배열요소1, 배열요소2, ...};
+//선언 및 인스턴스 생성 - 방법 1
+배열이름 = new 타입[배열길이];
 
-    //선언 및 인스턴스 생성과 초기화 - 방법 2
-    타입[] 배열이름 = new 타입[]{배열요소1, 배열요소2, ...};
-    {% endhighlight %}
+//선언 및 인스턴스 생성 - 방법 2
+타입[] 배열이름 = new 타입[배열길이];
+
+//선언 및 인스턴스 생성과 초기화 - 방법 1
+타입[] 배열이름 = {배열요소1, 배열요소2, ...};
+
+//선언 및 인스턴스 생성과 초기화 - 방법 2
+타입[] 배열이름 = new 타입[]{배열요소1, 배열요소2, ...};
+{% endhighlight %}
 
 ### 2차원 배열
 
 - 선언 방법
     {% highlight java %}
-    //선언 - 방법 1
-    타입[][] 배열이름;
+//선언 - 방법 1
+타입[][] 배열이름;
 
-    //선언 - 방법 2
-    타입 배열이름[][];
+//선언 - 방법 2
+타입 배열이름[][];
 
-    //선언 - 방법 3
-    타입[] 배열이름[];
+//선언 - 방법 3
+타입[] 배열이름[];
 
-    //선언 및 인스턴스 생성과 초기화
-    타입 배열이름[행의길이][열의길이] = {
-        {배열요소[0][0], 배열요소[0][1], ...},
-        {배열요소[1][0], 배열요소[1][1], ...},
-        {배열요소[2][0], 배열요소[2][1], ...},
-        ...
-    };
-    {% endhighlight %}
+//선언 및 인스턴스 생성과 초기화
+타입 배열이름[행의길이][열의길이] = {
+    {배열요소[0][0], 배열요소[0][1], ...},
+    {배열요소[1][0], 배열요소[1][1], ...},
+    {배열요소[2][0], 배열요소[2][1], ...},
+    ...
+};
+{% endhighlight %}
 
 ### 배열의 초깃값
 
@@ -87,39 +87,39 @@ tags: [배열, 반복문]
     - Object 클래스의 clone() 메소드
     - for 문과 인덱스를 이용한 복사
 - 사용 예시
-    {% highlight java %}
-    int[] arr1 = new int[]{1, 2, 3, 4, 5};
-    int newLen = 10;
+{% highlight java %}
+int[] arr1 = new int[]{1, 2, 3, 4, 5};
+int newLen = 10;
 
-    //System 클래스의 arraycopy() 메소드
-    int[] arr2 = new int[newLen];
-    System.arraycopy(arr1, 0, arr2, 0, arr1.length);
+//System 클래스의 arraycopy() 메소드
+int[] arr2 = new int[newLen];
+System.arraycopy(arr1, 0, arr2, 0, arr1.length);
 
-    //Arrays 클래스의 copyOf() 메소드
-    int[] arr3 = Arrays.copyOf(arr1, 10);
+//Arrays 클래스의 copyOf() 메소드
+int[] arr3 = Arrays.copyOf(arr1, 10);
 
-    //Object 클래스의 clone() 메소드
-    int[] arr4 = (int[])arr1.clone();
+//Object 클래스의 clone() 메소드
+int[] arr4 = (int[])arr1.clone();
 
-    //for 문과 인덱스를 이용한 복사
-    int[] arr5 = new int[newLen];
-    {% endhighlight %}
+//for 문과 인덱스를 이용한 복사
+int[] arr5 = new int[newLen];
+{% endhighlight %}
 
 ### Enhanced for 문
 
 - JDK 1.5부터 사용가능한 배열과 컬렉션의 모든 요소를 참조하기 위한 반복문
 - 배열과 컬렉션 프레임워크에서 유용하게 사용된다.
 - 사용 방법
-    {% highlight java %}
-     for (타입 변수이름 : 배열이나컬렉션이름) {
-        배열의 길이만큼 반복적으로 실행하고자 하는 명령문;
-    }
-    {% endhighlight %}
+{% highlight java %}
+    for (타입 변수이름 : 배열이나컬렉션이름) {
+    배열의 길이만큼 반복적으로 실행하고자 하는 명령문;
+}
+{% endhighlight %}
 - 사용 예시
-    {% highlight java %}
-    int[] arr = new int[]{1, 2, 3, 4, 5};
+{% highlight java %}
+int[] arr = new int[]{1, 2, 3, 4, 5};
 
-    for (int ele : arr) {
-        System.out.println("요소 : " + ele);
-    }
-    {% endhighlight %}
+for (int ele : arr) {
+    System.out.println("요소 : " + ele);
+}
+{% endhighlight %}

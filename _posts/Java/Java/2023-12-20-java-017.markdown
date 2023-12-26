@@ -11,16 +11,16 @@ categories: Group&nbsp;:&nbsp;Java Java
 - 부모 클래스 타입의 참조 변수로 자식 클래스 타입의 인스턴스를 참조할 수 있도록 하여 구현가능하다.
 - 객체 지향 프로그래밍을 구성하는 중요한 특징 중 하나
 - 사용 예시
-    {% highlight java %}
-    class Parent {}
-    class Child extends Parent {}
+{% highlight java %}
+class Parent {}
+class Child extends Parent {}
 
-    Parent pa = new Parent(); //가능
-    Child ch = new Child();   //가능
-    Parent pc = new Child();  //가능
+Parent pa = new Parent(); //가능
+Child ch = new Child();   //가능
+Parent pc = new Child();  //가능
 
-    Child cp = new Parent();  //오류
-    {% endhighlight %}
+Child cp = new Parent();  //오류
+{% endhighlight %}
 
 ### 참조 변수의 타입 변환
 
@@ -29,42 +29,42 @@ categories: Group&nbsp;:&nbsp;Java Java
     - 자식 클래스 타입에서 부모 클래스 타입으로의 타입 변환은 불가
     - 부모 클래스 타입에서 자식 클래스 타입으로의 타입 변환은 자료형을 반드시 명시
     - 사용 예시
-        {% highlight java %}
-        //원형
-        (변환할타입의클래스이름) 변환할참조변수;
+{% highlight java %}
+//원형
+(변환할타입의클래스이름) 변환할참조변수;
 
-        //s:예시
-            class Parent {}
-            class Child extends Parent {}
-            class Brother extends Parent {}
+//s:예시
+    class Parent {}
+    class Child extends Parent {}
+    class Brother extends Parent {}
 
-            Parent pa01 = null;
-            Child ch = new Child();
-            Parent pa02 = new Parent();
-            Brother br = null;
+    Parent pa01 = null;
+    Child ch = new Child();
+    Parent pa02 = new Parent();
+    Brother br = null;
 
-            pa01 = ch; // pa01 = (Parent)ch; 와 같으며, 자식 to 부모라서 명시 생략
-            br = (Brother)pa02; //부모 to 자식이라서 명시 필수
-            br = (Brother)ch; //부모가 같은 거지 자식끼리는 상속 관계가 아니라서 오류 발생
-        //e:예시
+    pa01 = ch; // pa01 = (Parent)ch; 와 같으며, 자식 to 부모라서 명시 생략
+    br = (Brother)pa02; //부모 to 자식이라서 명시 필수
+    br = (Brother)ch; //부모가 같은 거지 자식끼리는 상속 관계가 아니라서 오류 발생
+//e:예시
         {% endhighlight %}
 
 ### instanceof 연산자
 
 - 참조 변수가 참조하고 있는 인스턴스의 실제 타입을 확인할 수 있는 연산자
 - 사용 예시
-    {% highlight java %}
-    //원형
-    참조변수 instanceof 클래스이름
+{% highlight java %}
+//원형
+참조변수 instanceof 클래스이름
 
-    //s:예시
-        class Parent { }
-        class Child extends Parent { }
-        class Brother extends Parent { }
-        
-        Parent p = new Parent();
-        System.out.println(p instanceof Object); //출력 : true
-        System.out.println(p instanceof Parent); //출력 : true
-        System.out.println(p instanceof Child); //출력 : false
-    //e:예시
-    {% endhighlight %}
+//s:예시
+    class Parent { }
+    class Child extends Parent { }
+    class Brother extends Parent { }
+    
+    Parent p = new Parent();
+    System.out.println(p instanceof Object); //출력 : true
+    System.out.println(p instanceof Parent); //출력 : true
+    System.out.println(p instanceof Child); //출력 : false
+//e:예시
+{% endhighlight %}

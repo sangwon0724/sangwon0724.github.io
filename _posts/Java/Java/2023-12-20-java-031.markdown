@@ -20,45 +20,45 @@ tags: [List, ArrayList, LinkedList, 리스트]
     - 자동으로 수행되는 과정이지만 요소의 추가 및 삭제 작업에 걸리는 시간이 매우 길어진다.
 - JDK 1.2부터 제공
 - 사용 예시
-    {% highlight java %}
-    ArrayList<Integer> arrList = new ArrayList<Integer>();
+{% highlight java %}
+ArrayList<Integer> arrList = new ArrayList<Integer>();
 
-    //add() 메소드를 이용한 요소의 저장
-    arrList.add(20);
-    arrList.add(30);
-    arrList.add(10);
+//add() 메소드를 이용한 요소의 저장
+arrList.add(20);
+arrList.add(30);
+arrList.add(10);
 
-    //for 문과 get() 메소드를 이용한 요소의 출력
-    for (int i = 0; i < arrList.size(); i++) {
-        System.out.print(arrList.get(i) + " ");
-    }
+//for 문과 get() 메소드를 이용한 요소의 출력
+for (int i = 0; i < arrList.size(); i++) {
+    System.out.print(arrList.get(i) + " ");
+}
 
-    //remove() 메소드를 이용한 요소의 제거
-    arrList.remove(1);
+//remove() 메소드를 이용한 요소의 제거
+arrList.remove(1);
 
-    //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
-    for (int e : arrList) {
-        System.out.print(e + " ");
-    }
+//Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+for (int e : arrList) {
+    System.out.print(e + " ");
+}
 
-    //Collections.sort() 메소드를 이용한 요소의 정렬
-    Collections.sort(arrList);
+//Collections.sort() 메소드를 이용한 요소의 정렬
+Collections.sort(arrList);
 
-    //iterator() 메소드와 get() 메소드를 이용한 요소의 출력
-    Iterator<Integer> iter = arrList.iterator();
-    while (iter.hasNext()) {
-        System.out.print(iter.next() + " ");
-    }
+//iterator() 메소드와 get() 메소드를 이용한 요소의 출력
+Iterator<Integer> iter = arrList.iterator();
+while (iter.hasNext()) {
+    System.out.print(iter.next() + " ");
+}
 
-    //set() 메소드를 이용한 요소의 변경
-    arrList.set(0, 20);
-    for (int e : arrList) {
-        System.out.print(e + " ");
-    }
+//set() 메소드를 이용한 요소의 변경
+arrList.set(0, 20);
+for (int e : arrList) {
+    System.out.print(e + " ");
+}
 
-    //size() 메소드를 이용한 요소의 총 개수
-    System.out.println("리스트의 크기 : " + arrList.size());
-    {% endhighlight %}
+//size() 메소드를 이용한 요소의 총 개수
+System.out.println("리스트의 크기 : " + arrList.size());
+{% endhighlight %}
 
 ### LinkedList&lt;E> 클래스
 
@@ -74,37 +74,37 @@ tags: [List, ArrayList, LinkedList, 리스트]
         - 다음 요소를 가리키는 참조와 이전 요소를 가리키는 참조도 가지는 연결 리스트
 - JDK 1.2부터 제공
 - 사용 예시
-    {% highlight java %}
-    LinkedList<String> lnkList = new LinkedList<String>();
+{% highlight java %}
+LinkedList<String> lnkList = new LinkedList<String>();
 
-    //add() 메소드를 이용한 요소의 저장
-    lnkList.add("셋");
-    lnkList.add("넷");
-    lnkList.add("하나");
+//add() 메소드를 이용한 요소의 저장
+lnkList.add("셋");
+lnkList.add("넷");
+lnkList.add("하나");
 
-    //for 문과 get() 메소드를 이용한 요소의 출력
-    for (int i = 0; i < lnkList.size(); i++) {
-        System.out.print(lnkList.get(i) + " ");
-    }
+//for 문과 get() 메소드를 이용한 요소의 출력
+for (int i = 0; i < lnkList.size(); i++) {
+    System.out.print(lnkList.get(i) + " ");
+}
 
-    //remove() 메소드를 이용한 요소의 제거
-    lnkList.remove(1);
+//remove() 메소드를 이용한 요소의 제거
+lnkList.remove(1);
 
-    //Enhanced for 문과 get() 메소드를 이용한 요소의 출력
-    for (String e : lnkList) {
-        System.out.print(e + " ");
-    }
+//Enhanced for 문과 get() 메소드를 이용한 요소의 출력
+for (String e : lnkList) {
+    System.out.print(e + " ");
+}
 
-    // set() 메소드를 이용한 요소의 변경
+// set() 메소드를 이용한 요소의 변경
 
-    lnkList.set(1, "둘");
-    for (String e : lnkList) {
-        System.out.print(e + " ");
-    }
+lnkList.set(1, "둘");
+for (String e : lnkList) {
+    System.out.print(e + " ");
+}
 
-    //size() 메소드를 이용한 요소의 총 개수
-    System.out.println("리스트의 크기 : " + lnkList.size());
-    {% endhighlight %}
+//size() 메소드를 이용한 요소의 총 개수
+System.out.println("리스트의 크기 : " + lnkList.size());
+{% endhighlight %}
 
 ### Vector&lt;E> 클래스
 
