@@ -3,6 +3,7 @@
 -->
 
 <div class="post-navigation d-flex justify-content-between">
+  <!--
   {% if page.previous.url %}
   <a href="{{ site.url }}{{ page.previous.url }}" class="btn btn-outline-primary"
     prompt="{{ site.data.locales[site.lang].post.button.previous }}">
@@ -26,5 +27,30 @@
     <p>-</p>
   </div>
   {% endif %}
+  -->
 
+  
+  {% if page.next_in_category != nil %}
+  <a href="{{page.next_in_category.url}}" class="btn btn-outline-primary"
+    prompt="{{ site.data.locales[site.lang].post.button.previous }}">
+    <p>{{ page.next_in_category.title }}</p>
+  </a>
+  {% else %}
+  <div class="btn btn-outline-primary disabled"
+    prompt="{{ site.data.locales[site.lang].post.button.previous }}">
+    <p>-</p>
+  </div>
+  {% endif %}
+
+  {% if page.previous_in_category != nil %}
+  <a href="{{page.previous_in_category.url}}" class="btn btn-outline-primary"
+    prompt="{{ site.data.locales[site.lang].post.button.next }}">
+    <p>{{ page.previous_in_category.title }}</p>
+  </a>
+  {% else %}
+  <div class="btn btn-outline-primary disabled"
+    prompt="{{ site.data.locales[site.lang].post.button.next }}">
+    <p>-</p>
+  </div>
+  {% endif %}
 </div>
