@@ -101,7 +101,7 @@ categories: JSTL
 
   - 조건 연산자
     - and : && 연산자와 동일한 역할
-    - or : || 연산자와 동일한 역할
+    - or : \|\| 연산자와 동일한 역할
   {% highlight xml %}
     <c:if test="${a eq 1 and b eq 2}">...</c:if>
     <c:if test="${c eq 1 or d eq 2}">...</c:if>

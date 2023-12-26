@@ -55,4 +55,3 @@ VO 대신에 Map을 사용하여 불필요한 코드의 추가 작성을 줄이�
 <img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/12.JPG"/>
 <img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/13.JPG"/>
 <img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/14.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/15.JPG"/>
