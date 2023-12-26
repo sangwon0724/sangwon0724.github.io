@@ -2,7 +2,7 @@
 layout: post
 title:  "State Hooks"
 date:   2023-12-14 09:57:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Hooks
+categories: React&nbsp;Hooks
 ---
 
 ### useState

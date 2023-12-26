@@ -2,7 +2,7 @@
 layout: post
 title:  "함수 지향 - 클로저"
 date:   2023-04-28 10:07:33 +0900
-categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+categories: JavaScript
 tags: [클로저]
 ---
 

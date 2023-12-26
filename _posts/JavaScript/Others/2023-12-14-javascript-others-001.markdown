@@ -2,7 +2,7 @@
 layout: post
 title:  "토스트 알림"
 date:   2023-12-14 11:31:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript Others
+categories: Others
 ---
 
 <!-- toast alram -->

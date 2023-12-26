@@ -2,7 +2,7 @@
 layout: post
 title:  "타이밍 제어"
 date:   2023-05-02 00:45:33 +0900
-categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+categories: JavaScript
 tags: [타이머]
 ---
 

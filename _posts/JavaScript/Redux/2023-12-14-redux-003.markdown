@@ -2,7 +2,7 @@
 layout: post
 title:  "react-redux"
 date:   2023-12-14 10:51:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript Redux
+categories: Redux
 ---
 
 ### 설치 방법

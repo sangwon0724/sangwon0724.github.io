@@ -2,7 +2,7 @@
 layout: post
 title:  "Redux Toolkit"
 date:   2023-12-14 11:23:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript Redux
+categories: Redux
 ---
 
 ### Redux Toolkit이란?

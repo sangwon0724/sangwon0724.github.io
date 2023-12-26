@@ -2,7 +2,7 @@
 layout: post
 title:  "Firebase 연동하기"
 date:   2023-12-14 14:47:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React
+categories: React
 ---
 
 ### 연동 방법

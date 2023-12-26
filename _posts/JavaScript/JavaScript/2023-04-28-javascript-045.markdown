@@ -2,7 +2,7 @@
 layout: post
 title:  "Class"
 date:   2023-05-02 00:45:33 +0900
-categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+categories: JavaScript
 ---
 
 ### 클래스란?

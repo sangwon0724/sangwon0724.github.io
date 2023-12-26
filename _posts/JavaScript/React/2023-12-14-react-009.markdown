@@ -2,7 +2,7 @@
 layout: post
 title:  "fontAwesome 사용하기"
 date:   2023-12-14 00:43:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React
+categories: React
 ---
 
 ### 설치 방법

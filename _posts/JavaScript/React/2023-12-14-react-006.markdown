@@ -2,7 +2,7 @@
 layout: post
 title:  "router"
 date:   2023-12-14 00:34:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React
+categories: React
 ---
 
 ### 설치 방법

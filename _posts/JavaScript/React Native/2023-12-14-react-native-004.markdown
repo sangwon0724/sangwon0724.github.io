@@ -2,7 +2,7 @@
 layout: post
 title:  "알림 기능"
 date:   2023-12-14 00:56:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+categories: React&nbsp;Native
 ---
 
 ### 사용 방법

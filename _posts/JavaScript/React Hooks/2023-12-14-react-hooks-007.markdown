@@ -2,7 +2,7 @@
 layout: post
 title:  "Publishing to NPM"
 date:   2023-12-14 10:39:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Hooks
+categories: React&nbsp;Hooks
 ---
 
 ### NPM에 제작한 리액트 훅 등록하기

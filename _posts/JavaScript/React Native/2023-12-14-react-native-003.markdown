@@ -2,7 +2,7 @@
 layout: post
 title:  "style"
 date:   2023-12-14 00:53:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+categories: React&nbsp;Native
 ---
 
 ### 스타일 만들기

@@ -2,7 +2,7 @@
 layout: post
 title:  "컴포넌트"
 date:   2023-12-14 00:18:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React
+categories: React
 ---
 
 ### 컴포넌트의 특징

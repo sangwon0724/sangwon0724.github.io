@@ -2,7 +2,7 @@
 layout: post
 title:  "jQuery 이벤트"
 date:   2023-12-14 13:08:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript jQuery
+categories: jQuery
 ---
 
 ### on (이벤트 등록)

@@ -2,7 +2,7 @@
 layout: post
 title:  "Firebase Database 기능 사용하기 (Firestore Database)"
 date:   2023-12-14 14:58:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React
+categories: React
 ---
 
 ### 준비 과정

@@ -2,7 +2,7 @@
 layout: post
 title:  "애니메이션 제어"
 date:   2023-12-14 13:16:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript jQuery
+categories: jQuery
 ---
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <style>

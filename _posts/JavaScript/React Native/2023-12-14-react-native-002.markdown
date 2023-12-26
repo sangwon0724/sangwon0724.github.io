@@ -2,7 +2,7 @@
 layout: post
 title:  "리액트 네이티브의 구조"
 date:   2023-12-14 00:52:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript React&nbsp;Native
+categories: React&nbsp;Native
 ---
 
 ### View

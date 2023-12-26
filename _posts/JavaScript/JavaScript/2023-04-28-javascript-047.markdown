@@ -2,7 +2,7 @@
 layout: post
 title:  "제네레이터 (generator)"
 date:   2023-05-02 00:45:33 +0900
-categories: Group&nbsp;:&nbsp;JavaScript JavaScript
+categories: JavaScript
 tags: [Generator, 제네레이터, Proxy, 프록시]
 ---
 

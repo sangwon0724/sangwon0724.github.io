@@ -2,7 +2,7 @@
 layout: post
 title:  "다른 페이지 부르기"
 date:   2023-12-14 13:21:00 +0900
-categories: Group&nbsp;:&nbsp;JavaScript jQuery
+categories: jQuery
 ---
 
 ### 사용 예시
