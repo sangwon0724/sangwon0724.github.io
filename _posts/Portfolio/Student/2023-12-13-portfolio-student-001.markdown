@@ -53,7 +53,5 @@ categories:  Student
 
 ### 스크린샷
 
-{% capture path %}
-{{site.url}}{{site.portfolio_img_root}}/Student/Step/
-{% endcapture %}
+{% capture path %}{{site.url}}{{site.portfolio_img_root}}/Student/Step/{% endcapture %}
 {% include slider.html path=path extension="JPG" start="1" end="17" %}
