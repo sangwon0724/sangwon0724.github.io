@@ -1,0 +1,70 @@
+---
+layout: post
+title:  "슬라이드 적용하기"
+date:   2023-12-27 11:30:40 +0900
+categories: Jekyll
+---
+
+### 사용 방법
+
+{% highlight html %}
+<!-- Link Swiper's CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+        padding: 50px;
+    }
+
+    .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: 300px;
+        height: 300px;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div class="swiper">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+        <img src="파일 경로 1"/>
+    </div>
+    <div class="swiper-slide">
+        <img src="파일 경로 2"/>
+    </div>
+    <div class="swiper-slide">
+        <img src="파일 경로 3"/>
+    </div>
+  </div>
+
+  <div class="swiper-pagination"></div>
+
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    const swiper = new Swiper(".swiper", {
+        slidesPerView: 1,
+        grabCursor: true,
+        loop: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>
+{% endhighlight %}
