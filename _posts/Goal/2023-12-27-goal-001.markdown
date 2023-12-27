@@ -45,7 +45,7 @@ tags: [목표, 공부]
 
 - Python  (관련 프레임워크 : django)
 - GO (관련 프레임워크 : beego, gin, Martini 등등)
-- 웹 어쎔블리
+- Kotlin
 - Rust
 - Ruby
 
@@ -60,6 +60,7 @@ tags: [목표, 공부]
 - WebRTC
 - Serverless
 - CI/CD
+- 웹 어쎔블리
 
 ### 이론
 
