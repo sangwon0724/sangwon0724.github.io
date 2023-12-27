@@ -36,6 +36,7 @@ github:
 twitter:
   #username: twitter_username            # change to your twitter username
 
+### 변수 정의
 post_img_root: '/assets/img/posts'
 portfolio_img_root: '/assets/img/portfolio'
 excerpt_separator: \n\n,\\n\\n
@@ -77,6 +78,8 @@ category_depth:
     - Spring&nbsp;Framework
     - Spring&nbsp;Security
     - Spring&nbsp;Tip
+  목표:
+    - 목표
   이론:
     - 프로그래밍
 
