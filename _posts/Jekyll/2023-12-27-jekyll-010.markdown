@@ -33,15 +33,13 @@ categories: Jekyll
 
 <div class="swiper">
   <div class="swiper-wrapper">
+    {　% raw %　}
+    {% for i in (시작번호..종료번호) %}
     <div class="swiper-slide">
-        <img src="파일 경로 1"/>
+        <img src="{{경로}}{% if i < 10 %}{{ i | prepend: '0' }}{% else %}{{ i }}{% endif %}.{{확장자}}"/>
     </div>
-    <div class="swiper-slide">
-        <img src="파일 경로 2"/>
-    </div>
-    <div class="swiper-slide">
-        <img src="파일 경로 3"/>
-    </div>
+    {% endfor %}
+    {　% endraw %　}
   </div>
 
   <div class="swiper-pagination"></div>

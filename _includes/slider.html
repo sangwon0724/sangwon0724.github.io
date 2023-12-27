@@ -29,7 +29,7 @@
   <div class="swiper-wrapper">
     {% for i in (start..end) %}
     <div class="swiper-slide">
-        <img src="{{path}}{% if i < 10 %}0{% endif %}{{i}}.{{extension}}"/>
+        <img src="{{path}}{% if i < 10 %}{{ i | prepend: '0' }}{% else %}{{ i }}{% endif %}.{{extension}}"/>
     </div>
     {% endfor %}
   </div>
