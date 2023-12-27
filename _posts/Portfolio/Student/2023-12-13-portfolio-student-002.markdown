@@ -45,7 +45,5 @@ categories:  Student
 
 ### 스크린샷
 
-{% capture path %}
-{{site.url}}{{site.portfolio_img_root}}/Student/Healthtory/
-{% endcapture %}
+{% capture path %}{{site.url}}{{site.portfolio_img_root}}/Student/Healthtory/{% endcapture %}
 {% include slider.html path=path extension="JPG" start="1" end="18" %}

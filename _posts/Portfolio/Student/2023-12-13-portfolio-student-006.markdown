@@ -41,7 +41,5 @@ VO 대신에 Map을 사용하여 불필요한 코드의 추가 작성을 줄이�
 
 ### 스크린샷
 
-{% capture path %}
-{{site.url}}{{site.portfolio_img_root}}/Student/Natural_blog/
-{% endcapture %}
+{% capture path %}{{site.url}}{{site.portfolio_img_root}}/Student/Natural_blog/{% endcapture %}
 {% include slider.html path=path extension="JPG" start="1" end="14" %}

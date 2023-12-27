@@ -43,7 +43,5 @@ STEP 프로젝트 진행 당시 데이터의 관리를 좀 더 편하게 하고 
 
 ### 스크린샷
 
-{% capture path %}
-{{site.url}}{{site.portfolio_img_root}}/Student/Step_Manager/
-{% endcapture %}
+{% capture path %}{{site.url}}{{site.portfolio_img_root}}/Student/Step_Manager/{% endcapture %}
 {% include slider.html path=path extension="JPG" start="1" end="20" %}

@@ -52,7 +52,5 @@ Summer-note같은 외부 기능들을 사용하면서 역시 개발할때는 모
 
 ### 스크린샷
 
-{% capture path %}
-{{site.url}}{{site.portfolio_img_root}}/Student/Devlog/
-{% endcapture %}
+{% capture path %}{{site.url}}{{site.portfolio_img_root}}/Student/Devlog/{% endcapture %}
 {% include slider.html path=path extension="JPG" start="1" end="10" %}
