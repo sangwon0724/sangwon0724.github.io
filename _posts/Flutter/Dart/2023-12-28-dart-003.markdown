@@ -1,0 +1,27 @@
+---
+layout: post
+title:  "자료형"
+date:   2023-12-27 15:38:00 +0900
+categories:  Dart
+---
+
+- 종류
+    - 숫자형
+        - int
+        - double
+    - 문자형
+        - String
+    - 논리형
+        - bool
+    - 레코드 ((value1, value2))
+    - 컬렉션
+        - Array
+        - List
+        - Set
+        - Map
+    - Runes
+    - Symbol
+    - null 값 (Null)
+
+{% highlight dart %}
+{% endhighlight %}
