@@ -41,17 +41,7 @@ VO 대신에 Map을 사용하여 불필요한 코드의 추가 작성을 줄이�
 
 ### 스크린샷
 
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/01.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/02.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/03.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/04.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/05.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/06.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/07.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/08.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/09.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/10.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/11.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/12.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/13.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Natural_blog/14.JPG"/>
+{% capture path %}
+{{site.url}}{{site.portfolio_img_root}}/Student/Natural_blog/
+{% endcapture %}
+{% include slider.html path=path extension="JPG" start="1" end="14" %}

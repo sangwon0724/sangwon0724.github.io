@@ -43,23 +43,7 @@ STEP 프로젝트 진행 당시 데이터의 관리를 좀 더 편하게 하고 
 
 ### 스크린샷
 
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/01.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/02.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/03.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/04.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/05.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/06.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/07.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/08.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/09.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/10.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/11.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/12.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/13.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/14.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/15.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/16.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/17.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/18.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/19.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Step_Manager/20.JPG"/>
+{% capture path %}
+{{site.url}}{{site.portfolio_img_root}}/Student/Step_Manager/
+{% endcapture %}
+{% include slider.html path=path extension="JPG" start="1" end="20" %}

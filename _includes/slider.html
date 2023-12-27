@@ -1,0 +1,58 @@
+{% assign path = include.path %}
+{% assign extension = include.extension %}
+{% assign start = include.start %}
+{% assign end = include.end %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+        padding: 50px;
+    }
+
+    .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: 300px;
+        height: 300px;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div class="swiper">
+  <div class="swiper-wrapper">
+    {% for i in (start..end) %}
+    <div class="swiper-slide">
+        <img src="{{path}}{% if i < 10 %}0{% endif %}{{i}}.{{extension}}"/>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="swiper-pagination"></div>
+
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    const swiper = new Swiper(".swiper", {
+        slidesPerView: 1,
+        grabCursor: true,
+        loop: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+</script>

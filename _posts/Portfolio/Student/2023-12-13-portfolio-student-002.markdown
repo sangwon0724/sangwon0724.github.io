@@ -45,21 +45,7 @@ categories:  Student
 
 ### 스크린샷
 
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/01.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/02.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/03.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/04.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/05.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/06.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/07.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/08.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/09.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/10.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/11.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/12.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/13.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/14.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/15.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/16.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/17.JPG"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.portfolio_img_root}}/Student/Healthtory/18.JPG"/>
+{% capture path %}
+{{site.url}}{{site.portfolio_img_root}}/Student/Healthtory/
+{% endcapture %}
+{% include slider.html path=path extension="JPG" start="1" end="18" %}

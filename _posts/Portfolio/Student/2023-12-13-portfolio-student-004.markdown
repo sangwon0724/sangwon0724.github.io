@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Black Jack (1인 블랙잭 게임 앱)"
-date:   2023-12-13 10:44:00 +0900
+date:   2023-12-13 11:00:00 +0900
 categories:  Student
 ---
 
