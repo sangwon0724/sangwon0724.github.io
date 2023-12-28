@@ -1,9 +1,30 @@
 ---
 layout: post
 title:  "typedefs"
-date:   2023-12-28 10:07:00 +0900
+date:   2023-12-28 17:15:00 +0900
 categories:  Dart
 ---
 
+### typedefs란?
+
+- typedef 키워드를 통해서 개발자가 원하는 별칭의 자료형을 만드는 수단 
+
+### 사용 방법
+
 {% highlight dart %}
+//s:기본 형식
+    typedef 별칭 = 자료형_형식;
+    별칭 변수명 = 초기화_값;
+//e:기본 형식
+
+//s:사용 예시 1
+    typedef IntList = List<int>;
+    IntList il = [1, 2, 3];
+//e:사용 예시 1
+
+//s:사용 예시 2
+    typedef ListMapper<X> = Map<X, List<X>>;
+    Map<String, List<String>> m1 = {}; //typedef를 사용하지 않은 경우
+    ListMapper<String> m2 = {}; //typedef를 사용한 경우
+//e:사용 예시 2
 {% endhighlight %}
