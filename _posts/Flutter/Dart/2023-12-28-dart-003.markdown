@@ -1,27 +1,102 @@
 ---
 layout: post
 title:  "자료형"
-date:   2023-12-27 15:38:00 +0900
+date:   2023-12-28 09:02:00 +0900
 categories:  Dart
 ---
 
-- 종류
-    - 숫자형
-        - int
-        - double
-    - 문자형
-        - String
-    - 논리형
-        - bool
-    - 레코드 ((value1, value2))
-    - 컬렉션
-        - Array
-        - List
-        - Set
-        - Map
-    - Runes
-    - Symbol
-    - null 값 (Null)
+
+### 숫자 자료형
+
+- int
+    - 사용하는 플랫폼에 따라서 정수 값은 64비트 이하로 표현
+        - 네이티브 플랫폼
+            - -2<sup>63<sup> ~ 2<sup>63<sup> - 1
+        - 웹
+            - -2<sup>53<sup> ~ 2<sup>53<sup> - 1
+- double
+    - IEEE 754 standard를 따라 64-bit (배정도) 부동 소수점으로 표현
+
+### 문자 자료형
+
+- String
+    - 일련의 UTF-16 코드 단위를 보유한다.
+    - 작은따옴표나 큰따옴표를 사용하여 만들 수 있다.
+    - 표현식을 사용하여 값을 넣을 수 있다.
+{% highlight dart %}
+//s:단순한 사용
+    int age = 27;
+    print("I'm $age years old"); //출력 : I'm 27 years old
+//e:단순한 사용
+
+//s:복합적인 사용
+    int a = 3;
+    int b = 4;
+    print("$a + $b = ${a + b}"); //출력 : 3 + 4 = 7
+//e:복합적인 사용
+{% endhighlight %}
+
+### 논리 자료형
+
+- true
+- false
+
+### 레코드
+
+- 익명 객체
+- 괄호로 묶는다.
+- 여러 개체를 단일 개체로 묶을 수 있다.
+- 다른 컬렉션과 달리 크기가 고정되어 있다.
+- 다른 컬렉션과 달리 유형이 다양하다.
 
 {% highlight dart %}
+var record = ('first', a: 2, b: true, 'last');
+{% endhighlight %}
+
+### 컬렉션
+
+- Array
+- List
+- Set
+- Map
+
+### Runes
+
+- 문자열의 유니코드 코드 포인트
+- Dart의 문자열은 UTF-16 코드 단위의 시퀀스다.
+    - 문자열 내에서 유니코드를 표현하려면 특정 문법이 필요하다.
+
+{% highlight dart %}
+print("\u{1f606}"); //출력 : 웃는 이모지(😆)
+{% endhighlight %}
+
+### Symbol
+
+- Dart 프로그램에 선언된 연산자나 식별자
+- 필요한 경우는 거의 없긴 하다.
+- 코드 압축 후 식별자의 이름이 변경되더라도 심볼은 변경되지 않는다,
+    - 식별자를 통한 API 참조에 유용하다.
+
+{% highlight dart %}
+Symbol obj = new Symbol('Symbol Name');
+{% endhighlight %}
+
+### 형변환
+
+{% highlight dart %}
+// String -> int
+var one = int.parse('1');
+assert(one == 1);
+
+// String -> double
+var onePointOne = double.parse('1.1');
+assert(onePointOne == 1.1);
+
+// int -> String
+String oneAsString = 1.toString();
+assert(oneAsString == '1');
+
+// double -> String
+String piAsString = 3.14159.toStringAsFixed(2);
+assert(piAsString == '3.14');
 {% endhighlight %}

@@ -1,9 +1,137 @@
 ---
 layout: post
-title:  "반복문"
-date:   2023-12-27 10:07:00 +0900
+title:  "컬렉션 타입"
+date:   2023-12-28 10:23:00 +0900
 categories:  Dart
 ---
 
+### 컬렉션 타입이란?
+
+- 다수의 데이터를 처리할 수 있는 자료 구조
+- 종류
+    - List
+        - 데이터 순서 존재
+        - 중복 데이터 저장 가능
+    - Set
+        - 데이터 순서 부재
+        - 중복 데이터 저장 불가
+    - Map
+        - 키와 값으로 구성
+        - 키는 중복 불가
+        - 값을 중복 가능
+- Dart에서 인덱스는 언제나 0부터 시작하며, 0을 포함한 양의 정수만을 가질 수 있다.
+
 {% highlight dart %}
+{% endhighlight %}
+
+### List
+
+- 데이터 순서 존재
+- 중복 데이터 저장 가능
+- 관련 용어
+    - 요소 (element)
+        - 목록을 구성하는 각각의 값
+    - 인덱스 (index)
+        - 목록에서의 위치를 가리키는 숫자
+
+- 기본 문법
+{% highlight dart %}
+List<자료형> 변수명 = [];
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+List<int> arr = [];
+arr.add(1); //1이라는 요소 추가, 현재 목록 : [1]
+arr.add(2); //2라는 요소 추가, 현재 목록 : [1, 2]
+arr.remove(0); //0이라는 요소 삭제, 현재 목록 : [1, 2]
+arr.remove(1); //1이라는 요소 삭제, 현재 목록 : [2]
+arr.add(3); //3이라는 요소 추가, 현재 목록 : [2, 3]
+arr.removeAt(0); //인덱스가 0인 요소 삭제, 현재 목록 : [3]
+print(arr);
+{% endhighlight %}
+
+### Set
+
+- 데이터 순서 부재
+- 중복 데이터 저장 불가
+- 관련 용어
+    - 요소 (element)
+        - 목록을 구성하는 각각의 값
+    - 인덱스 (index)
+        - 목록에서의 위치를 가리키는 숫자
+
+- 기본 문법
+{% highlight dart %}
+Set<자료형> 변수명 = {};
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+Set<String> names = {};
+names.add("HongGilDong); //"HongGilDong"이라는 요소 추가, 현재 목록 : {HongGilDong}
+print(names);
+names.add("GoGilDong); //"GoGilDong"이라는 요소 추가, 현재 목록 : {HongGilDong, GoGilDong}
+print(names);
+names.add("HongGilDong); //"HongGilDong"이라는 요소 추가, 현재 목록 : {HongGilDong, GoGilDong}
+print(names);
+{% endhighlight %}
+
+### Map
+
+- 키와 값으로 구성
+- 키는 중복 불가
+- 값을 중복 가능
+
+- 기본 문법
+{% highlight dart %}
+Map<키 자료형, 값 자료형> 변수명 = {};
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+Map<String, String> user = {};
+user["name"] = "HongGilDong";
+user["gender"] = "male";
+print(user); //출력 : {name: HongGilDong, gender: male}
+{% endhighlight %}
+
+### 전개 연산자
+
+- List와 Set에서 사용할 수 있다.
+
+- 한 목록에 있는 모든 요소를 다른 리스트에 삽입할 때 사용한다.
+
+{% highlight dart %}
+List<int> temp = [1, 2, 3];
+List<int> arr = [0, ...temp];
+print(arr); //출력 : [0, 1, 2, 3]
+{% endhighlight %}
+
+- null일 경우에 대한 다른 연산자도 존재한다.
+
+{% highlight dart %}
+List<int>? temp = null;
+List<int> arr = [0, ...?temp];
+print(arr); //출력 : [0]
+{% endhighlight %}
+
+### 제어 연산자
+
+- collection if
+    - if문을 통한 요소 생성 방법
+    - List/Set/Map 모두 사용 가능
+{% highlight dart %}
+bool check = false;
+List<int> arr = [1, 2, 3, 4, 5, 6, 7, if(check) 10];
+print(arr); //출력 : [1, 2, 3, 4, 5, 6, 7]
+{% endhighlight %}
+
+- collection for
+    - for문을 통한 요소 생성 방법
+    - List와 Set에서 사용할 수 있다.
+{% highlight dart %}
+List<int> temp = [1, 2, 3];
+List<int> arr = [for(int t in temp) t];
+print(arr); //출력 : [1, 2, 3]
 {% endhighlight %}

@@ -1,9 +1,97 @@
 ---
 layout: post
 title:  "변수"
-date:   2023-12-27 10:07:00 +0900
+date:   2023-12-28 09:19:00 +0900
 categories:  Dart
 ---
 
+### 변수란?
+
+- 데이터(data)를 저장하기 위해 프로그램에 의해 이름을 할당받은 메모리 공간
+- 데이터를 저장할 수 있는 메모리 공간을 의미
+- 프로그램이 실행되는 동안 메모리에 저장된 데이터를 변경할 수 있다.
+
+### 자료형을 지정해주는 방법
+
+- 저장할 값과 동일한 타입의 자료형을 지정한다.
+- 데이터 타입이 일치해야지 값을 변경할 수 있다.
+
+#### 변수 선언 및 값 초기화
+
 {% highlight dart %}
+String name = "HongGilDong";
+{% endhighlight %}
+
+#### 변수에 저장된 값 갱신
+
+{% highlight dart %}
+//s:옳은 경우
+String name = "HongGilDong";
+name = "GoGilDong";
+//e:옳은 경우
+
+//s:잘못된 경우
+String name = "HongGilDong";
+name = 27; //오류 발생
+//e:잘못된 경우
+{% endhighlight %}
+
+#### 자료형 추정 방법 (var)
+
+- var를 통해 변수를 선언한다.
+- 저장된 값을 통해서 자료형을 추론한다.
+- 데이터 타입이 일치해야지 값을 변경할 수 있다.
+- 함수나 메소드 내부에서 지역 변수를 선언할 때 사용가능하다.
+    - class에서 변수나 property를 선언할 때는 타입을 지정해야 한다.
+
+#### 변수 선언 및 값 초기화
+
+{% highlight dart %}
+var name = "HongGilDong";
+print(name.runtimeType.toString()); //출력 : String
+{% endhighlight %}
+
+#### 변수에 저장된 값 갱신
+
+{% highlight dart %}
+//s:옳은 경우
+var name = "HongGilDong";
+name = "GoGilDong";
+//e:옳은 경우
+
+//s:잘못된 경우
+var name = "HongGilDong";
+name = 27; //오류 발생
+//e:잘못된 경우
+{% endhighlight %}
+
+### 자료형 추정 방법 (dynamic)
+
+- dynamic을 통해 변수를 선언한다.
+- 저장된 값을 통해서 자료형을 추론한다.
+- 데이터 타입이 일치하지 않아도 값을 변경할 수 있다.
+- 함수나 메소드 내부에서 지역 변수를 선언할 때 사용가능하다.
+    - class에서 변수나 property를 선언할 때는 타입을 지정해야 한다.
+
+#### 변수 선언 및 값 초기화
+
+{% highlight dart %}
+dynamic name = "HongGilDong";
+print(name.runtimeType.toString()); //출력 : String
+{% endhighlight %}
+
+### 저장된 값을 변경하는 방법
+
+{% highlight dart %}
+//s:저장된 값과 저장할 값의 자료형이 같은 경우
+dynamic name = "HongGilDong";
+name = "GoGilDong";
+print(name.runtimeType.toString()); //출력 : String
+//e:저장된 값과 저장할 값의 자료형이 같은 경우
+
+//s:저장된 값과 저장할 값의 자료형이 다른 경우
+var name = "HongGilDong";
+name = 27; //var와 달리 오류가 발생하지 않는다.
+print(name.runtimeType.toString()); //출력 : int
+//e:저장된 값과 저장할 값의 자료형이 다른 경우
 {% endhighlight %}

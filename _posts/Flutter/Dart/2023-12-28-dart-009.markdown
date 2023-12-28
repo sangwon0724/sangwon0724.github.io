@@ -1,9 +1,64 @@
 ---
 layout: post
-title:  "배열"
-date:   2023-12-27 10:07:00 +0900
+title:  "레코드 타입"
+date:   2023-12-28 10:43:00 +0900
 categories:  Dart
 ---
 
+### 레코드이란?
+
+- 익명 객체
+- 여러 개체를 단일 개체로 묶을 수 있다.
+- 다른 컬렉션과 달리 크기가 고정되어 있다.
+- 다른 컬렉션과 달리 유형이 다양하다.
+
+### 사용 방법
+
+- 기본 유형
 {% highlight dart %}
+//방법 1
+var 변수명 = (요소1, 요소2, ...);
+
+//방법 2
+(자료형1, 자료형2, ...) 변수명 = (요소1, 요소2, ...)
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+//예시 1
+var record = (a: 123, b: true);
+
+//예시 2
+(int a, bool b) record = (123, true);
+
+//예시 3
+({int a, bool b}) record = (a: 123, b: true);
+{% endhighlight %}
+
+### 레코드 필드
+
+- named parameter의 경우에는 "변수명.필드명"으로 접근 가능하다.
+- named parameter 이외의 파라미터들은 "변수명.$순번"으로 접근 가능하다.
+    - 번호는 1부터 시작한다.
+
+{% highlight dart %}
+var record = ('first', a: 2, b: true, 'last');
+
+print(record.$1); //출력 : first
+print(record.a); //출력 : 2
+print(record.b); //출력 : true
+print(record.$2); //출력 : last
+{% endhighlight %}
+
+
+### 동등성
+
+- 레코드의 형태가 동일 하고 해당 필드의 값이 동일한 경우 두 레코드는 동일하다고 취급한다.
+- 명명된 필드의 순서는 동등성에 영향을 주지 않는다.
+
+{% highlight dart %}
+(int x, int y, int z) point = (1, 2, 3);
+(int r, int g, int b) color = (1, 2, 3);
+
+print(point == color); //출력 : true
 {% endhighlight %}
