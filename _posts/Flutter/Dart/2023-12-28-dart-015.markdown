@@ -54,45 +54,78 @@ print("isDouble : $isDouble"); //출력 : false
     - hide 키워드 사용 시 extention 클래스 자체를 숨겨야한다
         - "hide 클래스명.확장메소드명"처럼 사용할 수는 없다.
 {% highlight dart %}
-//extention_api_1.dart
-extension ExtensionApi1 on String {
+//extention_sample_1.dart
+extension ExtensionSample1 on String {
     int parseInt(){
         return int.parse(this);
     }
 }
 
-//extention_api_2.dart
-extension ExtensionApi2 on String {
+//extention_sample_2.dart
+extension ExtensionSample2 on String {
     int parseInt(){
         return int.parse(this);
     }
 }
 
 //parseInt()가 충돌다는 경우에 대한 대처법
-import 'extention_api_1.dart';
-import 'extention_api_2.dart' hide ExtensionApi2; //hide 키워드를 통해서 ExtensionApi2의 확장 메소드를 숨긴다.
+import 'extention_sample_1.dart';
+import 'extention_sample_2.dart' hide ExtensionSample2; //hide 키워드를 통해서 ExtensionSample2의 확장 메소드를 숨긴다.
 {% endhighlight %}
 
 - 명시적인 확장 사용
 {% highlight dart %}
-//extention_api_1.dart
-extension ExtensionApi1 on String {
+//extention_sample_1.dart
+extension ExtensionSample1 on String {
     int parseInt(){
         return int.parse(this);
     }
 }
 
-//extention_api_2.dart
-extension ExtensionApi2 on String {
+//extention_sample_2.dart
+extension ExtensionSample2 on String {
     int parseInt(){
         return int.parse(this);
     }
 }
 
-print(ExtensionApi1("27").parseInt());
-print(ExtensionApi2("27").parseInt());
+import 'extention_sample_1.dart';
+import 'extention_sample_2.dart';
+print(ExtensionSample1("27").parseInt());
+print(ExtensionSample2("27").parseInt());
 {% endhighlight %}
 
 - 별칭을 지정하는 경우
 {% highlight dart %}
+//extention_sample_1.dart
+extension ExtensionSample on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+}
+
+//extention_sample_2.dart
+extension ExtensionSample on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+}
+
+//extension 클래스의 이름이 동일해도 사용할 수 있는 방법
+import 'extention_sample_1.dart';
+import 'extention_sample_2.dart' as ea;
+print(ExtensionSample("27").parseInt());
+print(ea.ExtensionSample("27").parseInt());
+{% endhighlight %}
+
+### 확장 메소드와 연산자
+
+- 연산자를 통해서 다양한 방식으로 구현할 수도 있다.
+
+{% highlight dart %}
+extention ExtensionSample on String {
+    String operator & (String other) => "$this $other";
+}
+
+print("오늘" & "아침에는" & "미역국에" & "밥 말아 먹었음!"); //출력 : 오늘 아침에는 미역국에 밥 말아 먹었음!
 {% endhighlight %}

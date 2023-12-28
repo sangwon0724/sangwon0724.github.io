@@ -1,9 +1,46 @@
 ---
 layout: post
 title:  "enum"
-date:   2023-12-27 10:07:00 +0900
+date:   2023-12-27 15:59:00 +0900
 categories:  Dart
 ---
+
+### enum이란?
+
+- 정해진 수의 상수 값을 가지는 특별한 종류의 클래스
+- 열거 타입이라고 부른다.
+- 자동적으로 Enum 클래스를 확장한다.
+
+### 사용 방법
+
+{% highlight dart %}
+//기본 형식
+enum 이름 { 값1, 값2, 값3 }
+
+//사용 예시
+enum Color { red, green, blue}
+{% endhighlight %}
+
+### enum을 class처럼 사용하기
+
+{% highlight dart %}
+enum Car implements Comparable<Car> {
+  car1(maxSpeed: 60),
+  car2(maxSpeed: 70),
+  car3(maxSpeed: 80);
+    
+  const Car({
+    required this.maxSpeed,
+  });
+
+  final int maxSpeed;
+
+  @override
+  int compareTo(Car other) => this.maxSpeed - other.maxSpeed;
+}
+
+print(Car.car1.compareTo(Car.car2)); //출력 : -10
+{% endhighlight %}
 
 {% highlight dart %}
 {% endhighlight %}
