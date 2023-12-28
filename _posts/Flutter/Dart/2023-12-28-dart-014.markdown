@@ -1,9 +1,128 @@
 ---
 layout: post
 title:  "mixins"
-date:   2023-12-27 10:07:00 +0900
+date:   2023-12-27 13:47:00 +0900
 categories:  Dart
 ---
 
+### Mixins란?
+
+- 다수의 클래스 계층에서 클래스의 코드를 재사용할수 있는 방법
+- mixin을 진행할 1개 이상의 mixin 클래스명과 with 키워드와 함께 명시하여 사용한다.
+
+### mixin 클래스란?
+
+- class 키워드 대신에 mixin 키워드로 작성한 클래스
+- 다수의 클래스에서 공통되는 부분을 모듈화하여 만든다.
+- 생성자를 가질 수 없다.
+- extends 키워드를 사용할 수 없다.
+
+- 사용 예시
 {% highlight dart %}
+mixin Sample {
+  sample(){
+    print("sample 메소드 호출");
+  }
+}
+{% endhighlight %}
+
+### 특징
+
+- mixin 받은 클래스는 동일한 이름의 작성되어 있을 때 조건에 맞는 메소드만 1번 실행된다.
+    - 순서 (전제 조건 : 부모 클래스, 자식 클래스, mixin 클래스 모두 동일한 이름의 메소드가 존재)
+        1. 자식 클래스
+        2. mixin 클래스
+            - 여러 개의 mixin 클래스가 있을 경우에는 명시된 순서의 역순으로 동작한다.
+                - 예시
+                    - ```mixin 클래스1, 클래스2, 클래스3```
+                    - 클래스3 → 클래스2 → 클래스1
+        3. 부모 클래스
+
+### 사용 방법
+
+- 기본 형식
+{% highlight dart %}
+class 상위 {
+
+}
+mixin 대상1 {
+
+}
+mixin 대상2 {
+
+}
+mixin 대상3 {
+
+}
+
+class 구현 extends 상위 with 대상1, 대상2, 대상3 {
+
+}
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+class Parent {
+  printP(){
+    print("Parent에서 호출");
+  }
+  printSample(){
+    print("Parent에서 호출");
+  }
+}
+mixin Mixin1 {
+  printMixin1(){
+    print("Mixin1에서 호출");
+  }
+  printSample(){
+    print("Mixin1에서 호출");
+  }
+}
+mixin Mixin2 {
+  printMixin2(){
+    print("Mixin2에서 호출");
+  }
+  printSample(){
+    print("Mixin2에서 호출");
+  }
+}
+mixin Mixin3 {
+  printMixin3(){
+    print("Mixin3에서 호출");
+  }
+  printSample(){
+    print("Mixin3에서 호출");
+  }
+}
+class Child extends Parent with Mixin1, Mixin2, Mixin3 {
+  printSample(){
+    print("Child에서 호출");
+  }
+}
+
+Child child = Child();
+child.printP(); //출력 : Parent에서 호출
+child.printMixin1(); //출력 : Mixin1에서 호출
+child.printMixin2(); //출력 : Mixin2에서 호출
+child.printMixin3(); //출력 : Mixin3에서 호출
+child.printSample(); //출력 : Child에서 호출
+{% endhighlight %}
+
+### Mixins 제한하기
+
+- mixin 클래스에 on 키워드와 해당 클래스를 Mixins를 할 수 있는 클래스 목록을 명시하여 그 목록을 제한할 수 있다.
+- 사용 예시
+{% highlight dart %}
+//s:기본 예시
+    class Parent {}
+    mixin M on Parent {}
+    class Child extends Parent with M {}
+//e:기본 예시
+
+//s:상속 관련 예시
+    class GrandParent {}
+    mixin M on GrandParent {}
+    class Parent extends GrandParent {}
+    class Child extends Parent with M {}
+//e:상속 관련 예시
 {% endhighlight %}

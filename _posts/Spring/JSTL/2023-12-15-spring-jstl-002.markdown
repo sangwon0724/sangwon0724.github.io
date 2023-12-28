@@ -67,7 +67,7 @@ categories: JSTL
 
 ### 변수 제거
 
-- 기본 형태
+- 기본 형식
 {% highlight xml %}
 <c:remove var="name" />
 {% endhighlight %}
@@ -204,7 +204,7 @@ categories: JSTL
 
 ### 예외 처리
 
-- 기본 형태
+- 기본 형식
   - 예외 발생 시 var에서 선언한 변수명에 에러 내용이 저장된다.
 {% highlight xml %}
 <c:catch var="변수명">

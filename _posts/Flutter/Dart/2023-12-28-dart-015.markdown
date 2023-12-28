@@ -1,9 +1,98 @@
 ---
 layout: post
 title:  "확장 메소드"
-date:   2023-12-27 10:07:00 +0900
+date:   2023-12-27 14:17:00 +0900
 categories:  Dart
 ---
 
+### 확장 메소드란?
+
+- 라이브러리의 API를 직접 수정하지 않고 특정 메소드를 구현하고 싶을 때 사용하는 기능
+- 기존의 자료 구조에 새로운 기능을 추가한 것처럼 동작한다.
+- dynamic 타입의 변수에는 사용할 수 없다.
+- var 타입의 변수에는 사용할 수 있다.
+- 확장 메소드는 Dart의 타입 추론을 사용한다.
+- 확장 메소드는 리시버의 정적 타입에 대해 생성된다.
+    - 정적으로 생성되기 때문에 static 함수를 호출하는 것만큼 빠르다.
+
+### 사용 방법
+
+- 기본 형식
+{% highlight dart %}
+extension 클래스명 on 기능을_구현할_클래스명 {
+    /* 기능 구현 */
+}
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+extension StringExtension on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+
+    bool get isDouble {
+        return this != null && double.tryParse(this) != null;
+    }
+}
+
+var i = "10".parseInt();
+print(i.runtimeType); //출력 : int
+  
+var isDouble = "10.0".isDouble;
+print("isDouble : $isDouble"); //출력 : true
+
+isDouble = "a".isDouble;
+print("isDouble : $isDouble"); //출력 : false
+{% endhighlight %}
+
+### 충돌 방지
+
+- 확장 메소드가 인터페이스나 다른 확장 메소드와 충돌하는 경우에 대한 대처 방법
+
+- show/hide 키워드를 통해서 사용하는 확장 메소드의 제한을 추가하기
+    - hide 키워드 사용 시 extention 클래스 자체를 숨겨야한다
+        - "hide 클래스명.확장메소드명"처럼 사용할 수는 없다.
+{% highlight dart %}
+//extention_api_1.dart
+extension ExtensionApi1 on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+}
+
+//extention_api_2.dart
+extension ExtensionApi2 on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+}
+
+//parseInt()가 충돌다는 경우에 대한 대처법
+import 'extention_api_1.dart';
+import 'extention_api_2.dart' hide ExtensionApi2; //hide 키워드를 통해서 ExtensionApi2의 확장 메소드를 숨긴다.
+{% endhighlight %}
+
+- 명시적인 확장 사용
+{% highlight dart %}
+//extention_api_1.dart
+extension ExtensionApi1 on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+}
+
+//extention_api_2.dart
+extension ExtensionApi2 on String {
+    int parseInt(){
+        return int.parse(this);
+    }
+}
+
+print(ExtensionApi1("27").parseInt());
+print(ExtensionApi2("27").parseInt());
+{% endhighlight %}
+
+- 별칭을 지정하는 경우
 {% highlight dart %}
 {% endhighlight %}

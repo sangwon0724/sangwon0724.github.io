@@ -170,7 +170,7 @@ public Map<String, Object> blogMainPostAjax(@RequestBody HashMap<String, Object>
 ### Rendering 인터페이스
 
 - Spring 5부터 지원
-- 기본 형태
+- 기본 형식
     {% highlight java %}
     @매핑_어노테이션("요청 url")
     public Rendering 메소드명() {

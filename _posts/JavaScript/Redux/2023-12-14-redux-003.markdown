@@ -25,7 +25,7 @@ categories: Redux
   {% endhighlight %}
 {:start="7"}
 7. 해당 파일명이 Home이라고 가정했을 때, 최하단에 export default connect(mapStateToProps)(Home);을 작성한다.
-  - 기본 형태 : export default (mapStateToProps?, mapDispatchToProps?, mergeProps?, options?)(컴포넌트명);
+  - 기본 형식 : export default (mapStateToProps?, mapDispatchToProps?, mergeProps?, options?)(컴포넌트명);
     - mapStateToProps : 값이 변경될때 실행될 함수 (불필요시 null)
     - mapDispatchToProps : dispatch가 진행됬을때 실행될 함수
 

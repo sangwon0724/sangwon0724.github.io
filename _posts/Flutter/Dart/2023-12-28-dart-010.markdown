@@ -83,6 +83,15 @@ Car myCar = new Car();
     });
 }
 
+//초기화 목록이 있는 생성자
+//초기화 목록은 생성자 바디가 실행되기 전에 인스턴스 변수를 설정한다.
+//예시
+Square.fromJson(Map<String, double> json)
+    : width = json['width']!,
+      height = json['height']! {
+  print('In Square.fromJson(): ($width, $height)');
+}
+
 //팩토리 생성자
 /*
     - 해당 클래스의 인스턴스를 매번 생성하지 않아도 된다.

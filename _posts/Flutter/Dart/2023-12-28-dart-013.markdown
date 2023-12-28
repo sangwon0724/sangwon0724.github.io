@@ -1,9 +1,80 @@
 ---
 layout: post
 title:  "상속"
-date:   2023-12-27 10:07:00 +0900
+date:   2023-12-27 13:11:00 +0900
 categories:  Dart
 ---
 
+### 상속이란?
+
+- 기존의 클래스에 기능을 추가하거나 재정의하여 새로운 클래스를 정의하는 것
+- 객체 지향 프로그래밍을 구성하는 중요한 특징 중 하나
+- 기존에 정의되어 있는 클래스의 모든 필드와 메소드를 물려받아 새로운 클래스를 생성할 수 있다.
+- 관련 용어
+    - 부모 클래스(parent class) or 슈퍼 클래스(super class)
+        - 기존에 정의되어 있던 클래스
+    - 자식 클래스(child class) or 서브 클래스(sub class)
+        - 상속을 통해 새롭게 작성되는 클래스
+
+### 상속의 장점
+
+- 기존에 작성된 클래스를 재활용 가능
+- 자식 클래스 설계 시 중복되는 멤버를 미리 부모 클래스에 작성해 놓으면  
+자식 클래스에서는 해당 멤버를 작성하지 않아도 된다.
+- 클래스 간의 계층적 관계를 구성함으로써 다형성의 문법적 토대를 마련
+
+### 사용 방법
+
 {% highlight dart %}
+class 부모 클래스명 {
+  멤버 변수;
+  멤버 함수(){}
+}
+
+class 자식 클래스명 extends 부모 클래스명 {
+  @override
+  멤버 함수(){}
+}
+{% endhighlight %}
+
+### super 참조 변수
+
+- 부모 클래스로부터 상속받은 필드나 메소드를 자식 클래스에서 참조하는 데 사용하는 참조 변수
+- 사용 예시
+{% highlight dart %}
+class A {
+    String name = "A";
+    A(){
+      print("A 클래스의 생성자 호출");
+    }
+    sample(){
+      print("A 클래스의 sample 메소드 호출");
+    }
+}
+
+class B extends A {
+    String name = "B";
+    B(){
+      super.sample();
+      print("B 클래스의 생성자 호출");
+    }
+    printName(){
+      print("name : ${name}");
+      print("this.name : ${this.name}");
+      print("super.name : ${super.name}");
+    }
+}
+
+B b = B();
+b.printName();
+
+//출력 결과
+/*
+    A 클래스의 생성자 호출
+    A 클래스의 sample 메소드 호출
+    B 클래스의 생성자 호출
+    name : B
+    this.name : B
+    super.name : A
+*/
 {% endhighlight %}

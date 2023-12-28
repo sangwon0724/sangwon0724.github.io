@@ -95,3 +95,27 @@ int sum({required int a, required int b, int c = 3}){
 print("sum : ${sum(a: 10, b: 20)}"); //출력 : 33
 print("sum : ${sum(a: 10, b: 20, c: 30)}"); //출력 : 60
 {% endhighlight %}
+
+### getter와 setter
+
+- getter
+    - 객체의 프로퍼티를 읽는 메소드
+- setter
+    - 객체의 프로퍼티를 쓰는 메소드
+- 사용 예시
+{% highlight dart %}
+class Square {
+    double _width = 0;
+    double _height = 0;
+
+    double get width => _width;
+    set width(double value) => _width = value;
+    double get height => _height; 
+    set height(double value) => _height = value;
+}
+
+Square square = Square();
+square.width = 200;
+square.height = 300;
+print("해당 사각형의 가로 길이는 ${square.width}, 세로 길이는 ${square.height}입니다."); //출력 : 해당 사각형의 가로 길이는 200, 세로 길이는 300입니다.
+{% endhighlight %}

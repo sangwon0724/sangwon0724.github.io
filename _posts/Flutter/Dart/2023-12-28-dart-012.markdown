@@ -1,9 +1,35 @@
 ---
 layout: post
-title:  "제어자"
-date:   2023-12-27 10:07:00 +0900
+title:  "접근 제어자"
+date:   2023-12-27 13:03:00 +0900
 categories:  Dart
 ---
 
+### 접근 제어자란?
+
+- 정보 은닉을 위해 제공하는 기능
+- 클래스 외부에서의 직접적인 접근을 허용하지 않는 멤버를 설정하여 정보 은닉을 구체화할 수 있게 해주는 제어자
+- 종류
+    - public
+    - private
+
+### public
+
+- 접근 범위에 제한이 없는 경우
+- 추가로 명시해야할 키워드가 없다.
+
+### private
+
+- 동일 라이브러리 내에서만 접근 가능하게 제한을 건다.
+    - ※ Java 기준 : 패키지
+- 클래스의 멤버 변수 또는 메서드 앞에 선언한다.
+- 변수나 메소드 앞에 "_"를 앞에 붙여서 private임을 명시한다.
+
 {% highlight dart %}
+class User {
+    String _name = "";
+    _updateName(String name){
+        this._name = name;
+    }
+}
 {% endhighlight %}
