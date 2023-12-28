@@ -1,9 +1,97 @@
 ---
 layout: post
 title:  "메소드"
-date:   2023-12-27 10:07:00 +0900
+date:   2023-12-27 11:26:00 +0900
 categories:  Dart
 ---
 
+### 메소드란?
+
+- 어떠한 특정 작업을 수행하기 위한 명령문의 집합
+
+### 메소드의 사용 목적
+
+- 중복되는 코드의 반복적인 프로그래밍 회피
+- 모듈화로 인한 코드의 가독성 증가
+- 유지보수의 난이도 보정
+
+>※ 메소드를 작성할 때는 되도록 하나의 메소드가 하나의 기능만을 수행하도록 작성하는 것이 좋다.
+
+### 메소드 정의
+
+- 기본 형식
 {% highlight dart %}
+반환타입 메소드이름(매개변수목록) { // 선언부
+    // 구현부
+}
+{% endhighlight %}
+
+- 사용 예시
+{% highlight dart %}
+String concatExample({required String front, required String back}){
+  return front + back;
+}
+{% endhighlight %}
+
+### 메소드 호출
+
+{% highlight dart %}
+//매개변수가 없는 메소드의 호출
+메소드이름();
+
+//// 매개변수가 있는 메소드의 호출
+메소드이름(인수1, 인수2, ...);
+{% endhighlight %}
+
+### 파라미터 종류 (★★★)
+
+- Dart에서는 사용하는 매개변수에 대해서 다양한 지정법을 가지고 있다.
+
+#### positional parameter 
+
+- 기본적인 지정 방식
+- 선언된 자료형의 순서대로 파라미터를 받는다.
+- 사용 예시
+{% highlight dart %}
+String concatExample(String front, String back){
+  return front + back;
+}
+print(concatExample("앞", "뒤")); //출력 : 앞뒤
+{% endhighlight %}
+
+#### optional parameter
+
+- 존재 유무가 상관 없는 파라미터들을 지정하는 방식
+- [] 안에 해당하는 파라미터들을 명시한다.
+- [] 안에 명시된 순서대로 파라미터를 받는다.
+- 기본 값을 지정할 수 있다.
+    - 예상치 못한 상황을 대비해서 기본 값을 지정하는 것이 좋다.
+
+- 사용 예시
+{% highlight dart %}
+int sum(int a, [int b = 2, int c = 3]){
+    return a + b + c;
+}
+print("sum : ${sum(1)}"); //출력 : 6
+print("sum : ${sum(10, 20)}"); //출력 : 33
+print("sum : ${sum(10, 20, 30)}"); //출력 : 60
+{% endhighlight %}
+
+#### named parameter
+
+- 항목명이 존재하는 파라미터
+- 항목명에 따라서 값을 넘겨준다.
+    - 순서가 존재하지 않는다.
+- 필수 값을 나타낼 수 있다.
+    - required 키워드를 붙이면 된다.
+    - 필수 값이 아닌 경우에는 required 키워드 없이 기본 값을 지정한다.
+- 기본 값을 지정할 수 있다.
+
+- 사용 예시
+{% highlight dart %}
+int sum({required int a, required int b, int c = 3}){
+    return a + b + c;
+}
+print("sum : ${sum(a: 10, b: 20)}"); //출력 : 33
+print("sum : ${sum(a: 10, b: 20, c: 30)}"); //출력 : 60
 {% endhighlight %}
