@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "데이터 언어"
-date:   2023-12-15 09:46:00 +0900
+date:   2023-12-29 18:51:00 +0900
 categories: 이론&nbsp;-&nbsp;데이터베이스
 ---
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "관계 데이터 모델"
+title:  "데이터베이스 응용  기술"
 date:   2023-12-29 19:07:00 +0900
 categories: 이론&nbsp;-&nbsp;데이터베이스
 ---
