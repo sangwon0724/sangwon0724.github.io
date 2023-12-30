@@ -16,7 +16,7 @@ tags: [출처, 참고]
 ### Java
 
 - 강의 사이트
-    - [TCP SCHOOL](https://www.tcpschool.com/java/intro)
+    - [TCP SCHOOL > JAVA](https://www.tcpschool.com/java/intro)
 
 ### JavaScript
 
