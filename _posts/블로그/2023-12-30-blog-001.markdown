@@ -2,7 +2,7 @@
 layout: post
 title:  "게시글 작성을 위한 출처 및 참고 문헌"
 date:   2023-12-30 23:57:00 +0900
-categories: 목표
+categories: 블로그
 tags: [출처, 참고]
 ---
 
