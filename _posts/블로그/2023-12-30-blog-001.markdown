@@ -64,5 +64,7 @@ tags: [출처, 참고]
 
 - 서적
     - 데이터베이스 개론 (김연희, 한빛아카데미)
+- 블로그 게시글
+    - [[Database System] 관계 데이터 연산](https://velog.io/@hylee/DB-%EA%B4%80%EA%B3%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%97%B0%EC%82%B0#%EC%9D%BC%EB%B0%98-%EC%A7%91%ED%95%9C-%EC%97%B0%EC%82%B0%EC%9E%90)
 
 ### Others
