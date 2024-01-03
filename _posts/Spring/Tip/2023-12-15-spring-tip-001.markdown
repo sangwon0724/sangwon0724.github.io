@@ -2,7 +2,7 @@
 layout: post
 title:  "작동 중인 포트 종료시키기"
 date:   2023-12-15 01:24:00 +0900
-categories: Spring&nbsp;Tip
+categories: Tip&nbsp;(Spring)
 tags: [포트 종료]
 ---
 
