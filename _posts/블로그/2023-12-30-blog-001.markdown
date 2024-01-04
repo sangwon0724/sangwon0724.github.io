@@ -63,6 +63,7 @@ tags: [출처, 참고]
     - [[Dart] Future 사용법(동기/비동기 작업 클래스)](https://jinhan38.com/151)
     - [Flutter/Dart 핵심만 쏙 - Stream](https://hack-up-busan.github.io/dart/Stream/)
     - [[Dart]Stream](https://velog.io/@steadygo247/FlutterStream)
+    - [[Dart] Isolate 배우기](https://lucky516.tistory.com/85)
 
 ### DataBase
 

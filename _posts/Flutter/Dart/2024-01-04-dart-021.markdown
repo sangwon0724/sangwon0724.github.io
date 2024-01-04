@@ -549,5 +549,28 @@ Stream<int> streamExample() async* {
 
 ### Isolate
 
+#### Isolate란?
+
+- 싱글스레드 언어인 Dart를 지원하기 위한 비동기 프로그래밍 기법
+- 다른 언어의 스레드 프로그래밍같은 역할을 한다.
+
+#### Isolate의 특징
+
+- Isolate는 스레드와 다르게 메모리를 공유하지 않는다.
+- 각 Isolate마다 고유의 메모리 공간을 가진다.
+- 각 Isolate 내부에 event loop가 있어서 이벤트가 들어올때 마다 이를 처리한다.
+- 하나의 작업을 여러개의 Isolate로 처리하고 싶을때 메세지를 이용하에 Isolate간 통신을 할 수 있다.
+
+#### 기본 형식
+
 {% highlight dart %}
+import 'dart:isolate';
+
+void main() async {
+  Isolate? isolate;
+
+  isolate = await Isolate.spawn<String>((message) { 
+    //실행할 내용
+  }, '전달할 메시지');
+}
 {% endhighlight %}
