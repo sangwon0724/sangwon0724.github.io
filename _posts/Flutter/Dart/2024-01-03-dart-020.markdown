@@ -1,0 +1,482 @@
+---
+layout: post
+title:  "List 컬렉션의 속성과 메소드"
+date:   2024-01-03 09:06:00 +0900
+categories:  Dart
+---
+
+### 요소 삽입
+
+#### add(E value)
+
+- 대상 리스트의 마지막에 요소를 추가한다.
+
+{% highlight dart %}
+List<int> arr = [];
+arr.add(1);
+print(arr); //출력 : [1]
+arr.add(2);
+print(arr); //출력 : [1, 2]
+arr.add(3);
+print(arr); //출력 : [1, 2, 3]
+{% endhighlight %}
+
+#### addAll(Iterable<E> iterable)
+
+- 대상 리스트의 마지막에 다른 리스트의 요소들을 모두 추가한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+List<int> others = [4, 5, 6];
+arr.addAll(others);
+print(arr); //출력 : [1, 2, 3, 4, 5, 6]
+{% endhighlight %}
+
+#### insert(int index, E element);
+
+- 대상 리스트의 특정 위치에 요소를 추가한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+arr.insert(1, 4);
+print(arr); //출력 : [1, 4, 2, 3]
+arr.insert(3, 5);
+print(arr); //출력 : [1, 4, 2, 5, 3]
+{% endhighlight %}
+
+#### insertAll(int index, Iterable<E> iterable);
+
+- 대상 리스트의 다른 리스트의 요소들을 모두 추가한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+List<int> others = [4, 5, 6];
+arr.insertAll(1, others);
+print(arr);
+{% endhighlight %}
+
+### 요소 삭제
+
+#### remove(Object? value)
+
+- 대상 리스트의 특정 요소를 삭제한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+arr.remove(2);
+print(arr); //출력 : [1, 3]
+{% endhighlight %}
+
+#### removeAt(int index)
+
+- 대상 리스트의 특정 인덱스의 요소를 삭제한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+arr.removeAt(1);
+print(arr); //출력 : [1, 3]
+{% endhighlight %}
+
+#### removeLast()
+
+- 대상 리스트의 마지막 요소를 삭제한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+arr.removeLast();
+print(arr); //출력 : [1, 2]
+{% endhighlight %}
+
+#### removeRange(int start, int end)
+
+- 지정한 인덱스 범위만큼 대상 리스트에서 삭제한다.
+- start는 처음으로 삭제하려는 요소의 인덱스를 입력한다.
+- end는 마지막으로 삭제하려는 요소의 인덱스 번호 + 1을 입력한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+arr.removeRange(1, 4);
+print(arr); //출력 : [1, 5]
+{% endhighlight %}
+
+#### removeWhere(bool test(E element))
+
+- 대상 리스트의 요소들 중에서 특정 조건을 만족하는 요소를 모두 삭제한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+arr.removeWhere((element){
+    return element.isEven;
+});
+print(arr); //출력 : [1, 3, 5]
+{% endhighlight %}
+
+#### retainWhere(bool test(E element))
+
+- 대상 리스트의 요소들 중에서 특정 조건을 만족하지 못하는 요소를 모두 삭제한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+arr.retainWhere((element){
+    return element.isEven;
+});
+print(arr); //출력 : [2, 4]
+{% endhighlight %}
+
+#### clear()
+
+- 대상 리스트의 모든 요소를 삭제한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+arr.clear();
+print(arr); //출력 : []
+{% endhighlight %}
+
+### 요소 정렬
+
+#### sort([int compare(E a, E b)?])
+
+- 대상 리스트의 모든 요소를 지정한 조건에 따라서 정렬한다.
+- 조건을 지정하지 않으면 오름차순으로 정렬된다.
+
+{% highlight dart %}
+List<int> arr = [1, 3, 5, 2, 4];
+
+arr.sort();
+print(arr); //출력 : [1, 2, 3, 4, 5]
+
+arr.sort((a, b) => b.compareTo(a));
+print(arr); //출력 : [5, 4, 3, 2, 1]
+{% endhighlight %}
+
+#### shuffle([Random? random])
+
+- 대상 리스트의 모든 요소를 임의로 섞는다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+
+arr.shuffle();
+print(arr); //출력 : [3, 4, 2, 5, 1]
+
+arr.shuffle();
+print(arr); //출력 : [2, 5, 4, 3, 1]
+
+arr.shuffle();
+print(arr); //출력 : [5, 2, 4, 1, 3]
+{% endhighlight %}
+
+
+### 변환
+
+#### sublist(int start, [int? end])
+
+- 지정한 인덱스 범위만큼 대상 리스트에서 복사하여 새로운 리스트를 생성한다.
+- start는 처음으로 복사하려는 요소의 인덱스를 입력한다.
+- end는 마지막으로 복사하려는 요소의 인덱스 번호 + 1을 입력한다.
+- end를 지정하지 않으면 start 인덱스부터 마지막 요소까지 복사한다.
+- 원본에 변화는 없다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+  
+List<int> sublist1 = arr.sublist(1);
+print(sublist1); //출력 : [2, 3, 4, 5]
+  
+List<int> sublist2 = arr.sublist(1, 4);
+print(sublist2); //출력 : [2, 3, 4]
+  
+print(arr); //출력 : [1, 2, 3, 4, 5]
+{% endhighlight %}
+
+#### asMap()
+
+- 대상 리스트를 복사하여 Map 컬렉션으로 캐스팅해서 반환한다.
+- Map의 각 key의 이름은 원본 리스트의 인덱스 번호가 된다.
+- 원본에 변화는 없다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+
+var arrAsMap = arr.asMap();
+print(arrAsMap); //출력 : {0: 1, 1: 2, 2: 3, 3: 4, 4: 5}
+
+print(arr); //출력 : [1, 2, 3, 4, 5]
+{% endhighlight %}
+
+### 요소 검색
+
+#### elementAt(int index)
+
+- 대상 리스트에서 지정한 인덱스 번호에 해당하는 요소를 반환한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.elementAt(2)); //출력 : 3
+{% endhighlight %}
+
+#### where(bool test(E element))
+
+- 특정 조건을 만족하는 요소의 목록을 반환한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.where((element) => element.isEven)); //출력 : (2, 4)
+{% endhighlight %}
+
+#### first(E value)
+
+- 대상 리스트의 첫번째 요소를 반환한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.first); //출력 : 1
+{% endhighlight %}
+
+#### last(E value)
+
+- 대상 리스트의 마지막 요소를 반환한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.last); //출력 : 5
+{% endhighlight %}
+
+#### firstWhere(bool test(E element), {E orElse()?})
+
+- 대상 리스트에서 특정 조건을 만족하는 첫번째 요소를 반환한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.firstWhere((element) => element > 2)); //출력 : 3
+{% endhighlight %}
+
+#### lastWhere(bool test(E element), {E orElse()?})
+
+- 대상 리스트에서 특정 조건을 만족하는 마지막 요소를 반환한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.lastWhere((element) => element > 2)); //출력 : 5
+{% endhighlight %}
+
+### 인덱스 검색
+
+#### indexOf(E element, [int start = 0])
+
+- 특정 값과 동일한 첫번째 요소의 인덱스를 반환한다.
+- start 지정 시 해당 인덱스부터 계산을 시작한다.
+
+{% highlight dart %}
+List<int> arr = [0, 1, 0];
+print(arr.indexOf(0)); //출력 : 0
+print(arr.indexOf(0, 1)); //출력 : 2
+{% endhighlight %}
+
+#### lastIndexOf(E element, [int? start])
+
+- 특정 값과 동일한 마지막 요소의 인덱스를 반환한다.
+- start 지정 시 해당 인덱스부터 계산을 시작한다.
+    - indexOf와 달리 뒤에서부터 인덱스를 계산한다.
+
+{% highlight dart %}
+List<int> arr = [0, 1, 0];
+print(arr.lastIndexOf(0)); //출력 : 2
+print(arr.lastIndexOf(0, 1)); //출력 : 0
+{% endhighlight %}
+
+#### indexWhere(bool test(E element), [int start = 0])
+
+- 특정 조건을 만족하는 요소들 중에서 첫번째 요소의 인덱스를 반환한다.
+- start 지정 시 해당 인덱스부터 계산을 시작한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.indexWhere((element) => element.isEven)); //출력 : 1
+print(arr.indexWhere((element) => element.isEven, 2)); //출력 : 3
+{% endhighlight %}
+
+#### lastIndexWhere(bool test(E element), [int? start])
+
+- 특정 조건을 만족하는 요소들 중에서 마지막 요소의 인덱스를 반환한다.
+- start 지정 시 해당 인덱스부터 계산을 시작한다.
+    - indexWhere와 달리 뒤에서부터 인덱스를 계산한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.lastIndexWhere((element) => element.isEven)); //출력 : 3
+print(arr.lastIndexWhere((element) => element.isEven, 2)); //출력 : 1
+{% endhighlight %}
+
+### 요소 변경
+
+#### setAll(int index, Iterable<E> iterable)
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+arr.setAll(1, [10, 10, 10]);
+print(arr); //출력 : [1, 10, 10, 10, 5]
+{% endhighlight %}
+
+#### replaceRange(int start, int end, Iterable<E> replacements)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### 조건 검사
+
+#### every(bool test(E element))
+
+- 모든 요소가 조건을 만족하는지 확인한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.every((element) => element > 0)); //출력 : true
+print(arr.every((element) => element <= 0)); //출력 : false
+{% endhighlight %}
+
+#### any(bool test(E element))
+
+- 조건을 만족하는 요소가 존재하는지 확인한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [-1, 0, 1];
+print(arr.any((element) => element > 0)); //출력 : true
+{% endhighlight %}
+
+#### contains(Object? element)
+
+- 조건을 만족하는 요소가 존재하는지 확인한다.
+- 대소문자를 구분한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<String> arr = ['A', 'B', 'C'];
+print(arr.contains('A')); //출력 : true
+{% endhighlight %}
+
+### 변환
+
+#### map<T>(T toElement(E e))
+
+- 대상 리스트 내부의 요소를 변환하여 새로운 리스트를 생성한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3];
+List<int> processedArr = arr.map((element) => element * 2).toList();
+print(processedArr); //출력 : [2, 4, 6]
+{% endhighlight %}
+
+### 반복
+
+#### reduce(E combine(E value, E element))
+
+- 대상 리스트 내부의 요소들을 결합하여 단일 값을 생성한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+int sum = arr.reduce((front, back) => front + back);
+print(sum); //출력 : 15
+{% endhighlight %}
+
+#### fold<T>(T initialValue, T combine(T previousValue, E element))
+
+- 초기 값 과 대상 리스트 내부의 요소들을 결합하여 단일 값을 생성한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+int sum = arr.fold(10, (front, back) => front + back);
+print(sum); //출력 : 25
+{% endhighlight %}
+
+#### forEach(void action(E element))
+
+- 대상 리스트 내부의 모든 요소들에 대해서 내부 로직을 실행한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+int sum = 0;
+List<int> arr = [1, 2, 3, 4, 5];
+arr.forEach((element){
+  sum += element;
+});
+print(sum); //출력 : 15
+{% endhighlight %}
+
+### 기타
+
+#### join([String separator = ""])
+
+- 대상 리스트 내부의 모든 요소들을 하나의 문자열로 결합한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.join("-")); //출력 : 1-2-3-4-5
+{% endhighlight %}
+
+#### length
+
+- 대상 리스트 내부의 요소의 개수를 반환한다.
+- length는 getter와 setter 모두 있기 때문에 2가지 방식을 사용할 수 있다.
+    - setter는 그 값이 0보다 크고, 기존 요소의 개수 이하의 값일 때 정상적으로 사용할 수 있다.
+
+{% highlight dart %}
+//getter
+List<int> arr = [1, 2, 3, 4, 5];
+print(arr.length); //출력 : 5
+
+//setter
+arr.length = 3;
+print(arr); //출력 : [1, 2, 3]
+{% endhighlight %}
+
+#### reversed
+
+- 대상 리스트 내부의 모든 요소들의 순서를 뒤집어서 반환한다.
+
+{% highlight dart %}
+List<int> arr = [1, 2, 3, 4, 5];
+List<int> arrReversed = arr.reversed.toList();
+print(arrReversed); //출력 : [5, 4, 3, 2, 1]
+{% endhighlight %}
+
+#### isEmpty
+
+- 대상 리스트가 비어있는지 확인한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr1 = [1, 2, 3, 4, 5];
+print(arr1.isEmpty); //출력 : false
+  
+List<int> arr2 = [];
+print(arr2.isEmpty); //출력 : true
+  
+List<int>? arr3 = null;
+print(arr3?.isEmpty); //출력 : null
+{% endhighlight %}
+
+#### isNotEmpty
+
+- 대상 리스트가 비어있지 않은지 확인한다.
+- Iterable의 메소드
+
+{% highlight dart %}
+List<int> arr1 = [1, 2, 3, 4, 5];
+print(arr1.isNotEmpty); //출력 : true
+  
+List<int> arr2 = [];
+print(arr2.isNotEmpty); //출력 : false
+  
+List<int>? arr3 = null;
+print(arr3?.isNotEmpty); //출력 : null
+{% endhighlight %}

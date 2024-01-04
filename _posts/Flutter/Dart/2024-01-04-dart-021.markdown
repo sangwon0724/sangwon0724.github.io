@@ -1,0 +1,576 @@
+---
+layout: post
+title:  "비동기"
+date:   2024-01-04 09:44:00 +0900
+categories:  Dart
+---
+
+### 동기 프로그래밍과 비동기 프로그래밍
+
+- 동기 프로그래밍
+    - 함수를 실행하면 다음 코드가 실행되기 전에 해당 함수의 결과 값이 먼저 반환
+    - 예시
+        - 요청1 → 응답1 → 요청2 → 응답2 → 요청3 → 응답3
+- 비동기 프로그래밍
+    - 요청한 결과를 기다리지 않으며 응답 순서 또한 요청한 순서와 다를 수 있다.
+    - 예시
+        - 요청1 → 요청2 → 응답1 → 응답2 → 요청3 → 응답3
+
+### Future
+
+- 시간이 오래걸리는 작업을 기다린 후 결과값을 받아와야하는  
+비동기 프로그래밍을 위해 만들어진 제네릭 클래스
+- 미래 어느 시점에서 사용할 수 있는 잠재적인 값 또는 에러
+- 최종 결과 값을 반환한다.
+
+{% highlight dart %}
+void main() {
+  futureExample();
+}
+
+void futureExample(){
+  print("메소드 시작!!!");
+  Future.delayed(const Duration(seconds: 3), (){
+    print("비동기 실행!!!");
+  });
+  print("메소드 종료!!!");
+}
+{% endhighlight %}
+
+>출력 결과
+>>메소드 시작!!!  
+>>메소드 종료!!!  
+>>비동기 실행!!!
+
+### async와 await
+
+#### async
+
+- await 처리한 비동기 메소드를 실행하기 위해 필요한 키워드
+- 비동기 메소드가 실행될 메소드의 파라미터와 몸체 사이에 선언한다.
+- 내부에 await 키워드가 존재하지 않아도 사용할 수 있다.
+- 해당 키워드가 있어야지 Future<T>를 반환형으로 사용할 수 있다.
+
+#### await
+
+- 비동기 메소드를 동기 처리 하기 위한 키워드
+- 동기 처리할 비동기 메소드 앞에 선언한다.
+- Future 타입에만 사용할 수 있다.
+- Future<T> 타입의 값을 T 타입으로 반환한다.
+
+#### 예시 (async와 await)
+
+{% highlight dart %}
+void main() async {
+  await futureExample();
+  var result = await futureExample2();
+  print(result.runtimeType);
+}
+
+Future<void> futureExample() async {
+  print("메소드 시작!!!");
+  await Future.delayed(const Duration(seconds: 3), (){
+    print("비동기 실행!!!");
+  });
+  print("메소드 종료!!!");
+}
+
+Future<int> futureExample2() async {
+  return 3;
+}
+{% endhighlight %}
+
+>출력 결과
+>>메소드 시작!!!  
+>>비동기 실행!!!  
+>>메소드 종료!!!  
+>>int
+
+### Future 관련 메소드
+
+#### then
+
+- Future 객체를 반환하는 메소드의 결과에 대해서 처리하는 메소드
+- Future 객체의 제네럴 타입이 반환되는 값의 자료형이 된다.
+
+{% highlight dart %}
+void main() {
+  futureExample().then((value){
+    print(value.runtimeType); //출력 : int
+  });
+}
+
+Future<int> futureExample() async {
+  return 7;
+}
+{% endhighlight %}
+
+#### Future.delayed
+
+- 지연 시간을 생성할 때 사용한다.
+- 지연 시간이 완료될 후 실행될 함수를 인자로 넣을 수 있다.
+
+{% highlight dart %}
+void main() {
+  Future.delayed(const Duration(seconds: 3), () {
+    print("3초 지남!!!");
+  },);
+}
+{% endhighlight %}
+
+#### Future.any
+
+- Future 메소드들을 배열로 받는다.
+- 가장 먼저 완료된 Future의 결과만 반환한다.
+- Future.any의 결과와 별개로 내부의 Future 메소드들은 멈추지 않고 계속 실행된다.
+
+{% highlight dart %}
+void main() {
+  Future.any([
+    Future.delayed(const Duration(seconds: 1), (){ return 1;}),
+    Future.delayed(const Duration(seconds: 2), (){ return 2;}),
+    Future.delayed(const Duration(seconds: 3), (){ return 3;}),
+  ]).then((value) {
+    print("반환된 값 : $value");
+  },);
+}
+{% endhighlight %}
+
+>출력 결과
+>>반환된 값 : 1
+
+#### Future.wait
+
+- Future 메소드들을 배열로 받는다.
+- 각 Future들의 결과값을 배열로 반환한다.
+- 선언한 순서와 배열에 저장되는 결과값 요소의 순서는 동일하다.
+
+{% highlight dart %}
+void main() {
+  Future.wait([
+    Future.delayed(const Duration(seconds: 1), (){ return 1;}),
+    Future.delayed(const Duration(seconds: 2), (){ return 2;}),
+    Future.delayed(const Duration(seconds: 3), (){ return 3;}),
+  ]).then((value) {
+    print("반환된 값 : $value");
+  },);
+}
+{% endhighlight %}
+
+>출력 결과
+>>반환된 값 : [1, 2, 3]
+
+{% highlight dart %}
+{% endhighlight %}
+
+{% highlight dart %}
+{% endhighlight %}
+
+
+### Stream
+
+- 시간이 오래걸리는 작업을 기다린 후 결과값을 받아와야하는  
+비동기 프로그래밍을 위해 만들어진 제네릭 클래스
+- 미래 어느 시점에서 사용할 수 있는 잠재적인 값 또는 에러
+- 데이터나 이벤트가 들어오는 통로
+- 한 개 이상의 Future들의 조합
+- 메소드 처리 과정 중간중간에 여러 번의 반응이 가능하다.
+- 종류
+    - 단일 구독 스트림 (Single Subscription Streams)
+        - stream에 최대 1개의 listener를 생성할 수 있다.
+    - 방송 스트림 (Broadcast Streams)
+        - stream에 여러 개의 listener를 생성할 수 있다.
+
+#### 단일 구독 스트림
+
+- 하나의 stream에 최대 1개의 listener를 생성할 수 있다.
+- 하나의 stream에 2개 이상의 listener 생성 시 오류가 발생한다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream;
+
+  //listener 생성
+  final streamListener = stream.listen((value){
+    print("listen value : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.sink.add(4);
+  controller.sink.add([5, 6, 7]);
+  controller.sink.add(()=>[8, 9, 10]);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listen value : 1  
+>>listen value : 2  
+>>listen value : 3  
+>>listen value : 4  
+>>listen value : [5, 6, 7]  
+>>listen value : Closure 'main_closure0'
+
+
+#### 방송 스트림
+
+- 한 번에 하나씩 처리할 수 있는 개별 메시지를 위한 것
+- stream에서 asBroadcastStream() 메소드를 통해 얻어낸다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너1 생성
+  final streamListener1 = stream.listen((value){
+    print("listener1 : $value");
+  });
+
+  //리스너2 생성
+  final streamListener2 = stream.listen((value){
+    print("listener2 : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener1 : 1  
+>>listener2 : 1  
+>>listener1 : 2  
+>>listener2 : 2  
+>>listener1 : 3  
+>>listener2 : 3
+
+### Stream 관련 메소드
+
+#### 조건 추가하기
+
+- where 메소드를 통해 리스너가 받을 수 있는 값에 제한을 둘 수 있다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너1 생성, 홀수만 출력
+  final streamListener1 = stream.where((value) => value % 2 == 0).listen((value){
+    print("listener1 : $value");
+  });
+
+  //리스너2 생성, 짝수만 출력
+  final streamListener2 = stream.where((value) => value % 2 == 1).listen((value){
+    print("listener2 : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener2 : 1  
+>>listener1 : 2  
+>>listener2 : 3
+
+#### 지정한 개수만 받기
+
+- take 메소드를 통해 지정한 횟수만큼만 값을 받을 수 있게할 수 있다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너 생성
+  final streamListener = stream.take(3).listen((value){
+    print("listener : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.sink.add(4);
+  controller.sink.add(5);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener : 1  
+>>listener : 2  
+>>listener : 3
+
+#### 스킵하기
+
+- skip 메소드를 통해 지정한 횟수만큼 스킵할 수 있다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너 생성
+  final streamListener = stream.skip(3).listen((value){
+    print("listener : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.sink.add(4);
+  controller.sink.add(5);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener : 4  
+>>listener : 5
+
+#### 조건을 만족하는 값만 받기
+
+- takeWhile 메소드를 통해 지정한 조건에 맞는 값만 받을 수 있다.
+- 지정한 조건에 대해서 한 번이라도 false가 나오는 경우에는 반복문이 종료된다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너 생성
+  final streamListener = stream.takeWhile((element) => element % 2 == 0).listen((value){
+    print("listener : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(0);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.sink.add(4);
+  controller.sink.add(5);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener : 0  
+>>listener : 2
+
+#### 조건을 만족하는 값 스킵하기
+
+- skipWhile 메소드를 통해 지정한 조건에 맞는 값은 스킵할 수 있다.
+- takeWhile과 달리 지정한 조건에 대해서 한 번이라도 false가 나오는 경우에도 반복문이 종료되지는 않는다.
+- 지정한 조건에 대해서 false가 나오면 그 값부터 마지막 값까지 스킵없이 전부 받아들이게 된다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너 생성
+  final streamListener = stream.skipWhile((element) => element % 2 == 0).listen((value){
+    print("listener : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(0);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.sink.add(4);
+  controller.sink.add(5);
+}
+{% endhighlight %}
+
+#### 시간 제한 추가하기
+
+- timeout를 통해서 값을 받아들이기까지의 시간 제한을 추가한다.
+- 리스너가 지정한 시간 안에 데이터를 받지 못하면 에러를 발생시킨다.
+    - 에러가 발생하기 하지만 리스너 자체가 종료되지는 않는다.
+
+{% highlight dart %}
+import 'dart:async';
+
+void main() async {
+  final controller = StreamController(); 
+  final stream = controller.stream.asBroadcastStream();
+
+  //리스너 생성
+  final streamListener = stream.timeout(const Duration(seconds: 1) ,onTimeout: (sink) {
+    print("timeout 발생 / $sink");
+  },).listen((value){
+    print("listener : $value");
+  });
+  
+  //값 전달
+  controller.sink.add(0);
+  await Future.delayed(const Duration(seconds: 2));
+  controller.sink.add(2);
+  await Future.delayed(const Duration(seconds: 2));
+  controller.sink.add(3);
+  await Future.delayed(const Duration(seconds: 2));
+  controller.sink.add(4);
+  await Future.delayed(const Duration(seconds: 2));
+  controller.sink.add(5);
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener : 0
+>>timeout 발생 / Instance of '_ControllerEventSinkWrapper<dynamic>'  
+>>listener : 2  
+>>timeout 발생 / Instance of '_ControllerEventSinkWrapper<dynamic>'  
+>>listener : 3  
+>>timeout 발생 / Instance of '_ControllerEventSinkWrapper<dynamic>'  
+>>listener : 4  
+>>timeout 발생 / Instance of '_ControllerEventSinkWrapper<dynamic>'  
+>>listener : 5  
+>>timeout 발생 / Instance of '_ControllerEventSinkWrapper<dynamic>'
+
+#### Stream.periodic
+
+- 지정한 시간마다 한 번씩 실행되는 스트림을 생성한다.
+- take 메소드가 없으면 종료되지 않고 계속 반복된다.
+
+{% highlight dart %}
+void main() {
+  Stream.periodic(const Duration(seconds: 1)).take(5).listen((value){
+    print("listener : $value");
+  });
+}
+{% endhighlight %}
+
+#### Stream.fromIterable
+
+- 지정한 컬렉션을 통해서Fu 스트림을 생성한다.
+
+{% highlight dart %}
+void main() {
+  Stream.fromIterable([1, 2, 3, 4, 5]).listen((value){
+    print("listener : $value");
+  });
+}
+{% endhighlight %}
+
+#### Stream.fromFuture
+
+- 지정한 Future 객체에서 스트림을 생성한다.
+
+{% highlight dart %}
+void main() {
+  Stream.fromFuture(Future((){
+    return [1, 2, 3];
+  })).listen((value){
+    print("listener : $value");
+  });
+}
+{% endhighlight %}
+
+### async*와 yield
+
+#### async*
+
+- Stream 객체를 반환하게 하는 키워드
+- 메소드의 파라미터 부분과 몸체 부분 사이에 선언한다.
+
+#### yield
+
+- stream에 listener에 지속적으로 값을 반환해주는 키워드
+- 일반적인 메소드에서 값을 반환하는 경우의 return 대신에 사용한다.
+
+#### 예시 (async*와 yield)
+
+{% highlight dart %}
+void main() {
+  streamExample().listen((value) {
+    print("listener : $value");
+  },);
+}
+
+Stream<int> streamExample() async* {
+  for(int i=0; i<5; i++){
+    yield i;
+  }
+}
+{% endhighlight %}
+
+>출력 결과
+>>listener : 0  
+>>listener : 1  
+>>listener : 2  
+>>listener : 3  
+>>listener : 4
+
+#### yield*
+
+- Stream을 통한 재귀 생성 함수 사용하는 키워드
+
+#### 예시 (yield*)
+
+{% highlight dart %}
+int num = 5;
+
+void main() {
+  streamExample().listen((value) {
+    print("listener : $value");
+  },);
+}
+
+Stream<int> streamExample() async* {
+  yield num--;
+  if(num > 0){
+    yield* streamExample();
+  }
+}
+{% endhighlight %}
+
+### Isolate
+
+#### Isolate란?
+
+- 싱글스레드 언어인 Dart를 지원하기 위한 비동기 프로그래밍 기법
+- 다른 언어의 스레드 프로그래밍같은 역할을 한다.
+
+#### Isolate의 특징
+
+- Isolate는 스레드와 다르게 메모리를 공유하지 않는다.
+- 각 Isolate마다 고유의 메모리 공간을 가진다.
+- 각 Isolate 내부에 event loop가 있어서 이벤트가 들어올때 마다 이를 처리한다.
+- 하나의 작업을 여러개의 Isolate로 처리하고 싶을때 메세지를 이용하에 Isolate간 통신을 할 수 있다.
+
+#### 기본 형식
+
+{% highlight dart %}
+import 'dart:isolate';
+
+void main() async {
+  Isolate? isolate;
+
+  isolate = await Isolate.spawn<String>((message) { 
+    //실행할 내용
+  }, '전달할 메시지');
+}
+{% endhighlight %}
