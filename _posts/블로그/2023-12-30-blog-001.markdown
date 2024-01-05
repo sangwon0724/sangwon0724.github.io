@@ -73,7 +73,9 @@ tags: [출처, 참고]
     - [[Flutter] StatelessWidget, StatefulWidget](https://velog.io/@dosilv/Flutter-StatelessWidget-StatefulWidget)
     - [Flutter 개발 시 StatefulWidget의 생명주기를 알아야하는 이유?](https://devocean.sk.com/blog/techBoardDetail.do?ID=165205&boardType=techBlog)
     - [[Flutter]  Widget Tree / Tree 란 무엇인가?](https://jutole.tistory.com/70#Widget%20Tree-1)
-    - [https://fronquarry.tistory.com/19](https://fronquarry.tistory.com/19)
+    - [[flutter] 플러터 Widget 트리, Element 트리, RenderObject 트리](https://fronquarry.tistory.com/19)
+    - [[플러터] Stateful 생명주기](https://landroid.tistory.com/9)
+    - [[Flutter] LifeCycle(생명주기)](https://velog.io/@realryankim/Flutter-LifeCycle%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0#stateful-widget)
 
 ### DataBase
 
@@ -86,4 +88,5 @@ tags: [출처, 참고]
 - 블로그 게시글
     - [[Database System] 관계 데이터 연산](https://velog.io/@hylee/DB-%EA%B4%80%EA%B3%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%97%B0%EC%82%B0#%EC%9D%BC%EB%B0%98-%EC%A7%91%ED%95%9C-%EC%97%B0%EC%82%B0%EC%9E%90)
     - [데이터베이스 함수 종속성(Functional Dependency)](https://velog.io/@busybean3/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%ED%95%A8%EC%88%98-%EC%A2%85%EC%86%8D%EC%84%B1Functional-Dependency#5-%EB%8B%A4%EC%A4%91%EA%B0%92-%EC%A2%85%EC%86%8D-multi-valued-dependency-5)
+    
 ### Others

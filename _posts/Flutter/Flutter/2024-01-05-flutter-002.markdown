@@ -83,7 +83,145 @@ flowchart TD
 
 ### StatefulWidget의 생명주기
 
-<!-- https://devocean.sk.com/blog/techBoardDetail.do?ID=165205&boardType=techBlog 마저 작성하기-->
+![StatefulWidget의 생명주기](https://blog.kakaocdn.net/dn/bVcPtw/btqP6nLbumV/Ab0XOra07riBknrSTxjerK/img.png)
+
+#### createState()
+
+- State 객체를 생성한다.
+
+#### mounted(true)
+
+- State 객체를 생성하면, Flutter가 mounted라는 속성을 true로 설정한다.
+- mounted 속성이 true라는 건 해당 State 객체가 BuildContext와 연결됬다는 걸 의미한다.
+- mounted 속성은 해당 State 객체가 위젯 트리에 존재하는지의 여부를 판단하는 값으로 쓰인다.
+- 생명 주기의 실제 단계로 표시되지는 않지만, 백그라운드에서 진행되는 작업이다.
+
+#### initState()
+
+- State 객체가 위젯 트리에 주입되면 Class 생성자 다음에 자동으로 실행되는 메소드
+- State 객체가 처음 생성될 때 한 번만 호출된다.
+- initState()에서는 BuildContext를 사용할 수 없다.
+- 주 사용처
+  - 변수 초기화
+  - HTTP Request 관리
+  - Stream 구독
+  - 다른 객체의 핸들링
+
+#### didChangeDependencies()
+
+- initState() 다음에 호출되는 함수
+- 부모 위젯이 변경되면 호출된다.
+
+#### build()
+
+- 위젯의 상태가 변경되었을 때마다 화면에 위젯을 그린다.
+- 주로 setState에 의해 호출된다.
+  - didChangeDependencies나 didUpdateWidget에 의해 호출되기도 한다.
+
+#### setState()
+
+- 현재 위젯 내부의 상태가 dirty라는 것을 Flutter에 알려준다.
+  - UI에 영향을 줄 수도 있다는 것을 알리는 역할을 한다.
+- 위젯의 상태가 변경되었다는 것을 알린다.
+- setState() 호출 시 Flutter는 build() 메소드를 호출하여 위젯을 업데이트 후 재빌드한다.
+
+>위젯에서 무언가 값을 노출시키기 위한 데이터의 값이 변경되었을 때 호출한다.
+
+>`setState()`는 개발자가 호출하는 유일한 메소드다.
+
+#### didUpdateWidget()
+
+- 부모 위젯이 재빌드되어 위젯이 갱신될 때 호출된다.
+- Flutter는 didUpdateWidget() 이후에 build() method를 호출한다.
+
+#### deactivate()
+
+- 위젯 트리에서 위젯이 제거될 때 호출된다.
+- State가 위젯 트리의 한 지점에서 다른 지점으로 이동할 때,  
+현재 프레임 변경이 완료되기 전에 다시 주입될 수 있다.
+- 거의 사용되지 않는다.
+
+#### dispose()
+
+- 위젯 트리에서 State 객체가 영구적으로 제거될 때 호출된다.
+
+#### mounted(false)
+
+- dispose()가 실행되고 나면 State 객체는 mounted 속성의 값은 false로 변경된다.
+- mounted 속성의 값이 false가 되고 나면  
+State 객체는 다시 mount될 수 없고,  
+또한 setState() 호출 시 에러를 발생시킨다.
+
+#### reassemble()
+
+- hot reload를 실행할 때마다 호출된다.
+- reassemble()이 실행되면 생명주기가 처음부터 다시 실행된다.
+
+#### 예시 코드
 
 {% highlight dart %}
+import 'dart:developer';
+import 'package:flutter/material.dart';
+
+class Example extends StatefulWidget {
+  // @override
+  // _ExampleState createState() => _ExampleState();
+  
+  @override
+  State<StatefulWidget> createState() {
+    log('createState');
+    return _ExampleState();
+  }
+}
+
+class _ExampleState extends State<Example> {
+  @override
+  void initState() {
+    super.initState();
+    log('initState');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    log('didChangeDependencies');
+  }
+
+  @override
+  void setState(fn) {
+    super.setState(fn);
+    log('setState');
+  }
+
+  @override
+  void didUpdateWidget(covariant Example oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    log('didUpdateWidget');
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    log('build');
+    return Container();
+  }
+
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    log('deactivate');
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    log('dispose');
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    log('reassemble');
+  }
+}
 {% endhighlight %}
