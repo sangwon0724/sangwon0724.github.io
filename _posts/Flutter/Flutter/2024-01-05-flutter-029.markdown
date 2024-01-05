@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "효과 적용하기"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### FadeTransition (페이드 효과)
+### Hero (애니메이션)
+### PositionedTransition (위치 변경)
+### RotatedBox (회전 효과)
+### RotationTransition (회전 효과)
+### ScaleTransition (크기 변경 효과)
+### SizeTransition (크기 변경 효과)
+### SlideTransition (좌우 위치 이동 효과)
+### Transform (모양)
+### SharedAxisTransition (효과 공유)
+
+{% highlight dart %}
+{% endhighlight %}

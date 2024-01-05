@@ -1,0 +1,26 @@
+---
+layout: post
+title:  "앱 구성 위젯"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### AppBar (앱 상단 메뉴)
+### BottomAppBar (앱 하단 메뉴)
+### BottomNavigationBar (앱 하단 메뉴, Material 2)
+### BottomSheet (앱 하단 메뉴)
+### Drawer (좌우 메뉴)
+### MaterialApp (화면)
+### Menu (PopupMenuButton)
+### NavigationBar (하단 메뉴, Material 3)
+### NavigationDrawer (메뉴)
+### NavigationRail (사이드 쪽에 지정하는 네비게이션 메뉴)
+### PopupMenuButton (메뉴)
+### Scaffold (앱)
+### TabBar (탭바)
+### TabBarView (탭바뷰)
+### TabController (탭 컨트롤러)
+### TabPageSelector (점 모양 탭 바)
+
+{% highlight dart %}
+{% endhighlight %}

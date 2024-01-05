@@ -1,0 +1,21 @@
+---
+layout: post
+title:  "화면 구성 위젯 (영역 생성 및 배치하기)"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### Container (영역)
+### SizedBox (영역)
+### Row (배치)
+### Column (배치)
+### Expanded (영역 잡기)
+### Flexible (영역 잡기)
+### Align (정렬)
+### Baseline (정렬)
+### Center (정렬)
+### Stack (스택)
+### Padding (레이아웃)
+
+{% highlight dart %}
+{% endhighlight %}

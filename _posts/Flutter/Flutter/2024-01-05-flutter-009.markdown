@@ -1,0 +1,21 @@
+---
+layout: post
+title:  "화면 구성 위젯 (목록)"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### CustomScrollView (목록)
+### DataTable (테이블)
+### GridView (목록)
+### ListBody (목록)
+### ListTile (목록)
+### ListView (목록)
+### NestedScrollView (중첩 스크롤 뷰)
+### PageView (페이지뷰)
+### SingleChildScrollView (스크롤뷰)
+### Table (테이블)
+### Wrap (목록)
+
+{% highlight dart %}
+{% endhighlight %}

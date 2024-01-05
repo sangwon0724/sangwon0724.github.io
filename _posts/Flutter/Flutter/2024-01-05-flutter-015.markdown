@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "위젯을 숨기는 방법"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### Visibility (숨김 T/F)
+### Opacity (투명도 지정)
+
+{% highlight dart %}
+{% endhighlight %}

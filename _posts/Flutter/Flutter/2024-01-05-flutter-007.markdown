@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "화면 구성 위젯 (입력)"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### Autocomplete (자동완성)
+### Checkbox (체크박스)
+### DatePicker (날짜 선택)
+### Form (입력)
+### FormField (입력)
+### Radio (라디오 버튼)
+### Slider (슬라이더)
+### Switch (스위치)
+### TextField (입력)
+### TimePicker (시간)
+
+{% highlight dart %}
+{% endhighlight %}

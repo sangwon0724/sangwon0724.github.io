@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "밀어서 삭제하는 요소"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### Dismissible (밀어서 잠금해제)
+
+{% highlight dart %}
+{% endhighlight %}

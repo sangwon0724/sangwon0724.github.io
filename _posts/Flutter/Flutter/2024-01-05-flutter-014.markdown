@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "상호작용"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### DragTarget (드래그 상호작용)
+### Draggable (드래그 상호작용)
+### GestureDetector (동작)
+### LongPressDraggable (드래그 이벤트)
+### RawKeyboardListener (사용자가 키보드의 키를 누르거나 놓을 때마다 콜백을 호출하는 위젯)
+### RefreshIndicator (페이지 새로고침)
+
+{% highlight dart %}
+{% endhighlight %}

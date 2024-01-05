@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "위젯 (Widget)"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### 위젯(Widget)이란?
+### 계층 구조
+### Stateless
+### Stateful
+
+{% highlight dart %}
+{% endhighlight %}

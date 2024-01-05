@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "진행 중 표시하기"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### CircularProgressIndicator (원형 대기바)
+### LinearProgressIndicator (가로 직선의 대기바)
+
+{% highlight dart %}
+{% endhighlight %}

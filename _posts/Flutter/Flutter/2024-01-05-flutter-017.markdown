@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "알림"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### AlertDialog (다이얼로그)
+### SimpleDialog (다이얼로그)
+### SnackBar
+
+{% highlight dart %}
+{% endhighlight %}

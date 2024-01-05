@@ -1,0 +1,31 @@
+---
+layout: post
+title:  "화면 구성 위젯 (버튼)"
+date:   2024-01-05 14:09:00 +0900
+categories:  Flutter
+---
+
+### Chip (버튼)
+### Common buttons
+### Elevated
+### ElevatedButton
+### Filled
+### FilledButton
+### Filled Tonal
+### FilledButton.tonal
+### Outlined
+### OutlinedButton
+### Text
+### TextButton
+### DropdownButton (드롭다운 버튼)
+### ElevatedButton (버튼)
+### FloatingActionButton (플로팅 버튼)
+### FloatingActionButton.extended (플로팅 버튼)
+### IconButton (버튼)
+### OutlinedButton (버튼)
+### SegmentedButton (카세트 버튼같이 생긴 거)
+### TextButton (버튼)
+### InputChip (칩)
+
+{% highlight dart %}
+{% endhighlight %}
