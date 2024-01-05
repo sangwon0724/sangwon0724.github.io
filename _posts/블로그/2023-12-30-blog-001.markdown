@@ -65,6 +65,12 @@ tags: [출처, 참고]
     - [[Dart]Stream](https://velog.io/@steadygo247/FlutterStream)
     - [[Dart] Isolate 배우기](https://lucky516.tistory.com/85)
 
+### Flutter
+
+- 블로그 게시글
+    - [Flutter란 ?(by 신재원님)](https://medium.com/twolinecode/flutter%EB%9E%80-by-%EC%8B%A0%EC%9E%AC%EC%9B%90%EB%8B%98-888a4c472753)
+    - [Flutter를 쓰는 이유와 동작 원리](https://velog.io/@okko8522/Flutter%EB%A5%BC-%EC%93%B0%EB%8A%94-%EC%9D%B4%EC%9C%A0%EC%99%80-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC#flutter%EA%B0%80-%EC%8B%A4%ED%96%89%EB%90%98%EB%8A%94-%EA%B3%BC%EC%A0%95)
+
 ### DataBase
 
 ### 이론

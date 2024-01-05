@@ -5,12 +5,75 @@ date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 ---
 
-### 정의
-### 특징
-### 동작 원리 (생명주기)
-### 설치 방법
-### 프로젝트 생성
-### 프로젝트 구조 (필요 시)
+### Flutter란?
 
-{% highlight dart %}
-{% endhighlight %}
+- 구글에서 개발한 크로스 플랫폼 모바일 앱 개발 프레임워크
+
+### Flutter의 장점
+
+- 빠르다.
+    - Flutter 코드는 ARM 또는 Intel 기계어 코드와 JavaScript로 컴파일되어  
+    모든 장치에서 빠른 성능을 제공한다.
+- 생산적이다.
+    - Hot Reload 기능을 통해 빠르게 빌드할 수 있다.
+    - 상태 손실 없이 코드를 업데이트하고 변경 사항을 거의 즉시 확인할 수 있다.
+- 유연하다.
+    - 모든 유형의 화면에서 동작하는 맞춤 적응형 디자인을 만들 수 있다.
+- 다중 플랫폼 지원
+    - 모바일, 웹, 데스크톱, 임베디드 장치 등 하나의 코드를 바탕으로 다양한 장치에 배포할 수 있다.
+- 개발자 경험
+    - 개발자의 편의를 의해 다양한 기능들이 제공된다.
+- Material Design과 Cupertino Design을 모두 사용할 수 있다.
+- Dart 코드를 주로 사용하긴 하지만 Native 코드(Kotlin/Swift)도 사용할 수 있다.
+- 다른 프로그래밍 언어를 익혔다면 배우는게 쉬운 편이다.
+- 구조 상 네이티브의 성능을 넘기기는 힘들지만  
+크로스플랫폼 프레임워크의 작동방식을 생각해보면 성능이 좋다.
+
+### Flutter의 단점
+
+- Native API를 직접 호출할 수 없다.
+- Flutter 앱은 코드랑 그래픽 엔진 코드를 함께 패키징해서 배포해야 하기 때문에  
+네이티브 앱에 비해서비교적 무겁다. 
+- 아직 네이티브 앱보다는 성능이 약하다.
+- IOT나 웨어러블 디바이스 등 특정 기술에 대해서는 네이티브 코드로 작성해야 한다.
+
+### 동작 원리
+
+![아키텍처 레이어](https://docs.flutter.dev/assets/images/docs/arch-overview/archdiagram.png)
+
+1. 사용자가 운영체제를 통해 앱을 실행시킨다.
+2. Flutter를 기반으로 Dart로 작성된 코드를 가져온다.
+3. 운영체제는 Flutter 엔진을 실행시켜 Dart/Flutter 코드를 해석한다.
+4. Flutter 엔진은 Dart.Flutter 코드를 렌더링하기 위한 중간 표현(Flutter 엔진만의 코드)으로 변환한다.
+    - Flutter 엔진은 코드를 해석하는 번역기 역할을 한다.
+5. 변환한 코드는 Embedder를 통해 운영체제에 전달되어 랜더링된다.
+    - Embedder는 Flutter 엔진이 변환한 코드를 특정 플랫폼에 맞게 알아서 적용하여 랜더링해준다.
+
+### 설치 방법 (Windows OS & 안드로이드 스튜디오 기준)
+
+1. [안드로이드 스튜디오](https://developer.android.com/studio?hl=ko)를 설치한다.
+2. [Flutter SDK](https://docs.flutter.dev/release/archive?tab=windows)를 다운로드 받는다.
+3. 다운로드 받은 Flutter SDK의 압축을 해제한다.
+4. 압축을 해제한 Flutter SDK 폴더 내부의 bin 폴더까지의 경로를 복사한다.
+    - 예시
+        - `C:\sdk\flutter\flutter_windows_3.16.3-stable\flutter\bin`
+5. cmd를 실행 후 flutter doctor를 실행하여 정상 설치 여부를 확인한다.
+    - Android toolchain 부분에 느낌표가 생긴다면  
+    `flutter doctor --android licenses`를 실행하여 각 라이센스에 동의하면 된다.
+    - 동의하고도 에러가 생긴다면 안드로이드 스튜디오에서 Android SKD Command-line Tools를 다운받아야 한다.
+6. 안드로이드 스튜디오에서 Dart 플러그인과 Flutter 플러그인을 설치한다.
+
+### 프로젝트 생성
+
+1. 프로젝트 생성 메뉴를 선택한다.
+    A. Welcome 화면에서 "New Flutter Project" 메뉴를 선택한다.
+    B. 프로젝트 화면에서 "File" → "New" → "New Flutter Project" 메뉴를 선택한다.
+2. 필요한 항목을 입력한다. (이외에도 설정 가능한 추가 항목들이 있다.)
+    - 프로젝트명
+    - 프로젝트 폴더 위치
+    - 프로젝트 설명
+    - 프로젝트 유형
+    - 패키지명
+    - Android Language
+    - iOS Language
+    - 지원할 플랫폼
