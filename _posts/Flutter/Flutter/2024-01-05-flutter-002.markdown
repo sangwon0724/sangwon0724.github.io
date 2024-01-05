@@ -6,10 +6,84 @@ categories:  Flutter
 ---
 
 ### 위젯(Widget)이란?
-### 계층 구조
-### 생명 주기
-### Stateless
-### Stateful
+
+- UI를 구성하는 기본 단위
+- 사용자 인터페이스의 모든 요소는 위젯으로 표현된다.
+- 종류
+    - Stateless Widget
+    - Stateful Widget
+
+#### Stateless Widget
+
+- 앱이 동작하면서 변하지 않는 위젯
+- 가장 기본적인 위젯의 형태
+- 기본 위젯들은 Stateless Widget인 경우가 많다.
+- 처음 할당받은 모습대로 UI가 그려진다.
+- 앱 생명주기동안 변경되지 않는다.
+    - 리빌드가 안 되는건 아니다.
+- 위젯을 언제 트리에서 제거해야 할지, 언제 리빌드해야 할지는 외부로부터 결정된다.
+
+#### Stateful Widget
+
+- State라는 변경사항을 통해 생명주기를 갖는 위젯
+- 동적으로 변하는 값에 따라 UI가 변경된다.
+- State 객체의 setState 메소드를 실행하면,  
+위젯의 Flutter가 상태 변화를 인지하고 위젯을 다시 그린다.
+
+### Flutter의 Tree 구조
+
+- 위젯 트리 (Widget Tree)
+     - 코드를 작성하여 화면에 그려지는 객체의 구조
+     - Flutter 앱의 사용자 인터페이스를 나타내는 위젯의 계층 구조
+     - 위젯 간의 부모-자식 관계 계층을 정의하여 동작한다.
+     - 불변성을 가진 객체들로 구성되어 있다.
+     - 생성 및 파기 비용이 매우 작도록 설계되어 있다.
+- 엘리먼트 트리 (Element Tree)
+    - 퍼포먼스 최적화용
+    - build() 메소드가 실행되면 Flutter는 위젯 트리를 바탕으로 적절한 요소 객체를 생성하여  
+    트리 구조로 메모리에 저장한다.
+    - 어떤 UI가 화면에 렌더링될지 결정한다.
+    - 기변성을 가진 객체들로 구성되어 있다.
+    - 위젯 트리의 상태를 관리한다.
+    - 렌더 트리의 라이프사이클을 관리한다.
+    - 위젯 트리와 렌더 트리의 중재 역할을 한다.
+- 렌더 트리 (Render Tree)
+    - 실제로 화면을 렌더링하는 트리
+    - 기변성을 가진 객체들로 구성되어 있다.
+
+#### 소스 코드 예시
+
+{% highlight dart %}
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: SafeArea(
+      child: Row(
+        children: [
+          Text(),
+          Text(),
+          Text(),
+        ],
+      ),
+    ),
+  );
+}
+{% endhighlight %}
+
+#### 위젯 트리 예시
+
+```mermaid
+flowchart TD
+    Scaffold --> SafeArea
+    SafeArea --> Row
+    Row --> D1("Text")
+    Row --> D2("Text")
+    Row --> D3("Text")
+```
+
+### StatefulWidget의 생명주기
+
+<!-- https://devocean.sk.com/blog/techBoardDetail.do?ID=165205&boardType=techBlog 마저 작성하기-->
 
 {% highlight dart %}
 {% endhighlight %}
