@@ -19,13 +19,168 @@ categories:  Flutter
 3. 환경설정
   - main.dart
   - puspec.yaml
-4. 자주 사용되는 위젯
-5. 기본 영역 잡기
-6. 기본 구성
-
-provider
-
-
+4. 화면 구성 위젯 (영역 생성 및 배치하기)
+  - Container (영역)
+  - SizedBox (영역)
+  - Row (배치)
+  - Column (배치)
+  - Expanded (영역 잡기)
+  - Flexible (영역 잡기)
+  - Align (정렬)
+  - Baseline (정렬)
+  - Center (정렬)
+  - Stack (스택)
+  - Padding (레이아웃)
+6. 화면 구성 위젯 (텍스트)
+  - RichText (텍스트)
+  - Text (텍스트)
+7. 화면 구성 위젯 (버튼)
+  - Chip (버튼)
+  - Common buttons
+    - Elevated
+      - ElevatedButton
+    - Filled
+      - FilledButton
+    - Filled Tonal
+      - FilledButton.tonal
+    - Outlined
+      - OutlinedButton
+    - Text
+      - TextButton
+  - DropdownButton (드롭다운 버튼)
+  - ElevatedButton (버튼)
+  - FloatingActionButton (플로팅 버튼)
+  - FloatingActionButton.extended (플로팅 버튼)
+  - IconButton (버튼)
+  - OutlinedButton (버튼)
+  - SegmentedButton (카세트 버튼같이 생긴 거)
+  - TextButton (버튼)
+  - InputChip (칩)
+8. 화면 구성 위젯 (입력)
+  - Autocomplete (자동완성)
+  - Checkbox (체크박스)
+  - DatePicker (날짜 선택)
+  - Form (입력)
+  - FormField (입력)
+  - Radio (라디오 버튼)
+  - Slider (슬라이더)
+  - Switch (스위치)
+  - TextField (입력)
+  - TimePicker (시간)
+9. 화면 구성 위젯 (이미지)
+  - BackdropFilter (이미지 관련)
+  - Image (이미지)
+10. 화면 구성 위젯 (목록)
+  - CustomScrollView (목록)
+  - DataTable (테이블)
+  - GridView (목록)
+  - ListBody (목록)
+  - ListTile (목록)
+  - ListView (목록)
+  - NestedScrollView (중첩 스크롤 뷰)
+  - PageView (페이지뷰)
+  - SingleChildScrollView (스크롤뷰)
+  - Table (테이블)
+  - Wrap (목록)
+11. 앱 구성 위젯
+  - AppBar (앱 상단 메뉴)
+  - BottomAppBar (앱 하단 메뉴)
+  - BottomNavigationBar (앱 하단 메뉴, Material 2)
+  - BottomSheet (앱 하단 메뉴)
+  - Drawer (좌우 메뉴)
+  - MaterialApp (화면)
+  - Menu (PopupMenuButton)
+  - NavigationBar (하단 메뉴, Material 3)
+  - NavigationDrawer (메뉴)
+  - NavigationRail (사이드 쪽에 지정하는 네비게이션 메뉴)
+  - PopupMenuButton (메뉴)
+  - Scaffold (앱)
+  - TabBar (탭바)
+  - TabBarView (탭바뷰)
+  - TabController (탭 컨트롤러)
+  - TabPageSelector (점 모양 탭 바)
+12. provider
+13. 모양 잡기
+  - ClipOval (모양잡기)
+  - ClipPath (모양잡기)
+  - ClipRect (모양잡기)
+14. 진행 중 표시하기
+  - CircularProgressIndicator (원형 대기바)
+  - LinearProgressIndicator (가로 직선의 대기바)
+15. 상호작용
+  - DragTarget (드래그 상호작용)
+  - Draggable (드래그 상호작용)
+  - GestureDetector (동작)
+  - LongPressDraggable (드래그 이벤트)
+  - RawKeyboardListener (사용자가 키보드의 키를 누르거나 놓을 때마다 콜백을 호출하는 위젯)
+  - RefreshIndicator (페이지 새로고침)
+16. 위젯을 숨기는 방법
+  - Visibility (숨김 T/F)
+  - Opacity (투명도 지정)
+17. 구분선
+  - Divider (구분선)
+18. 알림
+  - AlertDialog (다이얼로그)
+  - SimpleDialog (다이얼로그)
+19. 터치를 무시하는 방법
+  - AbsorbPointer (클릭 방지)
+  - IgnorePointer (터치 무시)
+20. 윗첨자 표시하기
+  - Badge (카톡 몇 개 덜 읽었나)
+21. 밀어서 잠금 해제
+  - Dismissible (밀어서 잠금해제)
+22. 이미지 뷰어
+  - InteractiveViewer (확장/축소 가능한 이미지 뷰어)
+23. 크기 값 가져오기
+  - Offstage (크기 값 가져오기)
+24. 드래그를 통해서 정렬하기
+  - ReorderableListView (드래그를 통한 요소 재정렬하는 목록)
+25. 순서대로 처리하기
+  - Stepper (순번대로 처리하기)
+26. 배너 사용하기
+  - MaterialBanner (배너)
+27. 폴더블 호환
+  - TwoPane (폴더블)
+28. 플로우
+  - Flow (FlowDelegate 의 로직에 따라 하위 요소의 크기와 위치를 효율적으로 지정하는 위젯)
+29. 비동기
+  - FutureBuilder (비동기)
+  - StreamBuilder (비동기)
+30. 효과 주기
+  - FadeTransition (페이드 효과)
+  - Hero (애니메이션)
+  - PositionedTransition (위치 변경)
+  - RotatedBox (회전 효과)
+  - RotationTransition (회전 효과)
+  - ScaleTransition (크기 변경 효과)
+  - SizeTransition (크기 변경 효과)
+  - SlideTransition (좌우 위치 이동 효과)
+  - Transform (모양)
+  - SharedAxisTransition (효과 공유)
+31. 애니메이션 효과
+  - AnimatedAlign
+  - AnimatedBuilder
+  - AnimatedContainer
+  - AnimatedCrossFade
+  - AnimatedDefaultTextStyle
+  - AnimatedList
+  - AnimatedListState
+  - AnimatedModalBarrier
+  - AnimatedOpacity
+  - AnimatedPhysicalModel
+  - AnimatedPositioned
+  - AnimatedSize
+  - AnimatedWidget
+32. Sliver
+  - SliverAppBar (동적인 앱바)
+  - SliverChildBuilderDelegate (동적인 영역)
+  - SliverChildListDelegate (동적인 목록)
+  - SliverFixedExtentList (동적인 목록)
+  - SliverGrid (동적인 목록)
+  - SliverList (동적인 목록)
+  - SliverPadding (동적인 영역)
+  - SliverPersistentHeader (동적인 영역)
+  - SliverToBoxAdapter (동적인 영역)
 
 {% highlight dart %}
 {% endhighlight %}
