@@ -76,6 +76,8 @@ tags: [출처, 참고]
     - [[flutter] 플러터 Widget 트리, Element 트리, RenderObject 트리](https://fronquarry.tistory.com/19)
     - [[플러터] Stateful 생명주기](https://landroid.tistory.com/9)
     - [[Flutter] LifeCycle(생명주기)](https://velog.io/@realryankim/Flutter-LifeCycle%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0#stateful-widget)
+    - [[플러터] pubspec.yaml 정리](https://landroid.tistory.com/11)
+    - [플러터(Flutter)의 pubspec.yaml](https://changjoopark.medium.com/%ED%94%8C%EB%9F%AC%ED%84%B0-flutter-%EC%9D%98-pubspec-yaml-ffa40b26296a)
 
 ### DataBase
 
