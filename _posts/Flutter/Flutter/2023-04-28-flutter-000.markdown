@@ -199,5 +199,11 @@ categories:  Flutter
 - SliverPersistentHeader (동적인 영역)
 - SliverToBoxAdapter (동적인 영역)
 
+32. 상태 값 유지
+
+33. 메소드 채널
+
+34. API 통신
+
 {% highlight dart %}
 {% endhighlight %}
