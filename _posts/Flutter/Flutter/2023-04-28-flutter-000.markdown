@@ -5,35 +5,16 @@ date:   2023-04-28 10:07:33 +0900
 categories:  Flutter
 ---
 
-4. 화면 구성 위젯 (영역 생성 및 배치하기)
-- Container (영역)
-- SizedBox (영역)
-- Row (배치)
-- Column (배치)
-- Expanded (영역 잡기)
-- Flexible (영역 잡기)
-- Align (정렬)
-- Baseline (정렬)
-- Center (정렬)
-- Stack (스택)
-- Padding (레이아웃)
-
 5. 화면 구성 위젯 (텍스트)
 - RichText (텍스트)
 - Text (텍스트)
 
 6. 화면 구성 위젯 (버튼)
 - Chip (버튼)
-- Common buttons
-- Elevated
 - ElevatedButton
-- Filled
 - FilledButton
-- Filled Tonal
 - FilledButton.tonal
-- Outlined
 - OutlinedButton
-- Text
 - TextButton
 - DropdownButton (드롭다운 버튼)
 - ElevatedButton (버튼)

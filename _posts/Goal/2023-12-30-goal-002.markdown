@@ -12,15 +12,15 @@ tags: [목표]
 
 - 기술
     - Spring Boot
-        - 4월 ~ 6월
-    - Spring Security
-        - 4월 ~ 6월
+        - 1월 ~ 3월
     - JPA
         - 1월 ~ 3월
+    - Spring Security
+        - 4월 ~ 6월
     - Flutter
-        - 1월 ~ 3월
+        - 7월 ~ 9월
     - React.js
-        - 7월 ~
+        - 10월 ~ 12월
 - 이론
     - 데이터베이스 이론
         - 1월
