@@ -9,48 +9,6 @@ categories:  Flutter
 
 - 단일 스타일의 문자열을 표시한다.
 - "\n" 문자열을 포함하여 여러 줄로 나누어질 수도 있다.
-- 주로 사용되는 속성
-    - TextStyle? style
-        - 위젯의 스타일을 지정하는 속성
-    - TextAlign? textAlign
-        - 정렬 위치를 지정하는 속성
-        - 종류
-            - TextAlign.left
-                - 컨테이너의 좌측 가장자리에 정렬시킨다.
-            - TextAlign.right
-                - 컨테이너의 우측 가장자리에 정렬시킨다.
-            - TextAlign.center
-                - 컨테이너의 중앙에 정렬시킨다.
-            - TextAlign.justify
-                - 컨테이너의 전체 너비에 맞춰서 균등하게 정렬한다.
-            - TextAlign.start
-                - textDirection : TextDirection.ltr 상태일 때
-                    - 컨테이너의 좌측 가장자리에 정렬시킨다.
-                - textDirection : TextDirection.rtl 상태일 때
-                    - 컨테이너의 우측 가장자리에 정렬시킨다.
-            - TextAlign.end
-                - textDirection : TextDirection.ltr 상태일 때
-                    - 컨테이너의 우측 가장자리에 정렬시킨다.
-                - textDirection : TextDirection.rtl 상태일 때
-                    - 컨테이너의 좌측 가장자리에 정렬시킨다.
-    - TextDirection? textDirection
-        - 배치 시작 위치를 지정하는 속성
-        - 종류
-            - TextDirection.ltr
-                - 좌측부터 배치 시작
-                - [A, B, C]가 있으면 합쳐져서 ABC라는 문자열이 좌측에 배치된다.
-            - TextDirection.rtl
-                - 우측부터 배치 시작
-                - [A, B, C]가 있으면 합쳐져서 ABC라는 문자열이 우측에 배치된다.
-                - 우측부터 배치한다고 CBA가 되는 건 아니고, 단순히 합쳐진 문자열이 우측에 배치되는 것뿐이다.
-    - bool? softWrap
-        - 자연스러운 줄바꿈에 대한 속성
-        - true일 경우에는 자연스럽게 줄바꿈이 진행된다.
-        - false일 경우에는 줄바꿈 없이 하나의 라인에 계속 문자열이 추가된다.
-    - TextOverflow? overflow
-        - 글자가 지정된 범위를 넘어간 경우에 대한 처리
-    - int? maxLines
-        - 최대 라인 수를 지정한다.
 - [참고](https://api.flutter.dev/flutter/widgets/Text-class.html)
 
 {% highlight dart %}
@@ -93,6 +51,50 @@ RichText(
     ]),
 )
 {% endhighlight %}
+
+### Text 유형 위젯들의 주요 속성
+
+- TextStyle? style
+    - 위젯의 스타일을 지정하는 속성
+- TextAlign? textAlign
+    - 정렬 위치를 지정하는 속성
+    - 종류
+        - TextAlign.left
+            - 컨테이너의 좌측 가장자리에 정렬시킨다.
+        - TextAlign.right
+            - 컨테이너의 우측 가장자리에 정렬시킨다.
+        - TextAlign.center
+            - 컨테이너의 중앙에 정렬시킨다.
+        - TextAlign.justify
+            - 컨테이너의 전체 너비에 맞춰서 균등하게 정렬한다.
+        - TextAlign.start
+            - textDirection : TextDirection.ltr 상태일 때
+                - 컨테이너의 좌측 가장자리에 정렬시킨다.
+            - textDirection : TextDirection.rtl 상태일 때
+                - 컨테이너의 우측 가장자리에 정렬시킨다.
+        - TextAlign.end
+            - textDirection : TextDirection.ltr 상태일 때
+                - 컨테이너의 우측 가장자리에 정렬시킨다.
+            - textDirection : TextDirection.rtl 상태일 때
+                - 컨테이너의 좌측 가장자리에 정렬시킨다.
+- TextDirection? textDirection
+    - 배치 시작 위치를 지정하는 속성
+    - 종류
+        - TextDirection.ltr
+            - 좌측부터 배치 시작
+            - [A, B, C]가 있으면 합쳐져서 ABC라는 문자열이 좌측에 배치된다.
+        - TextDirection.rtl
+            - 우측부터 배치 시작
+            - [A, B, C]가 있으면 합쳐져서 ABC라는 문자열이 우측에 배치된다.
+            - 우측부터 배치한다고 CBA가 되는 건 아니고, 단순히 합쳐진 문자열이 우측에 배치되는 것뿐이다.
+- bool? softWrap
+    - 자연스러운 줄바꿈에 대한 속성
+    - true일 경우에는 자연스럽게 줄바꿈이 진행된다.
+    - false일 경우에는 줄바꿈 없이 하나의 라인에 계속 문자열이 추가된다.
+- TextOverflow? overflow
+    - 글자가 지정된 범위를 넘어간 경우에 대한 처리
+- int? maxLines
+    - 최대 라인 수를 지정한다.
 
 ### TextStyle
 

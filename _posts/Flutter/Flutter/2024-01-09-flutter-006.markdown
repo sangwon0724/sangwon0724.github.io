@@ -5,27 +5,607 @@ date:   2024-01-09 14:26:00 +0900
 categories:  Flutter
 ---
 
-### Chip (버튼)
-### Common buttons
-### Elevated
 ### ElevatedButton
-### Filled
-### FilledButton
-### Filled Tonal
-### FilledButton.tonal
-### Outlined
+
+- 자체적인 그림자 효과를 통해 입체적인 느낌을 주는 버튼
+- 주로 사용하는 속성
+    - Widget? child
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+        - 기본 값 : false
+- [참고](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
+
+{% highlight dart %}
+Center(
+    child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            //기능이 없는 버튼
+            ElevatedButton(
+                onPressed: null,
+                child: const Text('Disabled'),
+            ),
+
+            const SizedBox(height: 30),
+
+            //기능이 있는 버튼
+            ElevatedButton(
+                onPressed: () {},
+                child: const Text('Enabled'),
+            ),
+        ],
+    ),
+)
+{% endhighlight %}
+
+### ElevatedButton.icon
+
+- ElevatedButton 내부에 아이콘을 추가하고 싶을 때 사용한다.
+- 아이콘은 왼쪽에 추가된다.
+    - 오른쪽에 추가하고 싶다면 ElevatedButton.icon이 아닌,  
+    ElevatedButton의 child에 Row를 사용하는 방식을 써야 한다.
+- 주로 사용하는 속성
+    - required Widget icon
+        - 필수
+        - 표시할 아이콘을 지정한다.
+    - required Widget label
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool? autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+- [참고](https://api.flutter.dev/flutter/material/ElevatedButton/ElevatedButton.icon.html)
+
+{% highlight dart %}
+Center(
+    child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            ElevatedButton.icon(
+                icon: Icon(Icons.favorite),
+                label: Text("좋아요"),
+                onPressed: (){},
+            ),
+        ],
+    ),
+)
+{% endhighlight %}
+
 ### OutlinedButton
-### Text
+
+- 기본적인 윤곽선이 표시되는 TextButton
+- 중간 강조 버튼
+- 주로 사용하는 속성
+    - Widget? child
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+        - 기본 값 : false
+- [참고](https://api.flutter.dev/flutter/material/OutlinedButton-class.html)
+
+{% highlight dart %}
+OutlinedButton(
+    onPressed: () {
+        debugPrint('Received click');
+    },
+    child: const Text('Click Me'),
+)
+{% endhighlight %}
+
+### OutlinedButton.icon
+
+- OutlinedButton 내부에 아이콘을 추가하고 싶을 때 사용한다.
+- 아이콘은 왼쪽에 추가된다.
+    - 오른쪽에 추가하고 싶다면 OutlinedButton.icon이 아닌,  
+    OutlinedButton의 child에 Row를 사용하는 방식을 써야 한다.
+- 주로 사용하는 속성
+    - required Widget icon
+        - 필수
+        - 표시할 아이콘을 지정한다.
+    - required Widget label
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool? autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+- [참고](https://api.flutter.dev/flutter/material/OutlinedButton/OutlinedButton.icon.html)
+
+{% highlight dart %}
+Center(
+    child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            OutlinedButton.icon(
+                icon: Icon(Icons.favorite),
+                label: Text("좋아요"),
+                onPressed: () {},
+            ),
+        ],
+    ),
+)
+{% endhighlight %}
+
+### FilledButton
+
+- 색상이 채워져 있는 버튼
+- FloatingActionButton 다음으로 시각적으로 큰 영향을 미친다.
+- 저장, 가입, 완료 등 흐름을 완료하는 중요한 최종 작업에 사용해야 한다.
+- 주로 사용하는 속성
+    - Widget? child
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+        - 기본 값 : false
+- [참고](https://api.flutter.dev/flutter/material/FilledButton-class.html)
+
+{% highlight dart %}
+Center(
+    child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            Column(children: <Widget>[
+                const SizedBox(height: 30),
+                const Text('Filled'),
+                const SizedBox(height: 15),
+                FilledButton(
+                    onPressed: () {},
+                    child: const Text('Enabled'),
+                ),
+                const SizedBox(height: 30),
+                const FilledButton(
+                    onPressed: null,
+                    child: Text('Disabled'),
+                ),
+            ]),
+        ],
+    ),
+)
+{% endhighlight %}
+
+### FilledButton.tonal
+
+- FilledButton에 비해 옅은 색이 채워진 버튼
+- 주로 사용하는 속성
+    - Widget? child
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+        - 기본 값 : false
+- [참고](https://api.flutter.dev/flutter/material/FilledButton/FilledButton.tonal.html)
+
+{% highlight dart %}
+Center(
+    child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            Column(children: <Widget>[
+                const SizedBox(height: 30),
+                const Text('Filled tonal'),
+                const SizedBox(height: 15),
+                FilledButton.tonal(
+                    onPressed: () {},
+                    child: const Text('Enabled'),
+                ),
+                const SizedBox(height: 30),
+                const FilledButton.tonal(
+                    onPressed: null,
+                    child: Text('Disabled'),
+                ),
+            ])
+        ],
+    ),
+)
+{% endhighlight %}
+
 ### TextButton
-### DropdownButton (드롭다운 버튼)
-### ElevatedButton (버튼)
-### FloatingActionButton (플로팅 버튼)
-### FloatingActionButton.extended (플로팅 버튼)
-### IconButton (버튼)
-### OutlinedButton (버튼)
-### SegmentedButton (카세트 버튼같이 생긴 거)
-### TextButton (버튼)
-### InputChip (칩)
+
+- 채우기나 강조 효과가 없는 단순한 버튼
+- 주로 사용하는 속성
+    - Widget? child
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+        - 기본 값 : false
+- [참고](https://api.flutter.dev/flutter/material/TextButton-class.html)
+
+{% highlight dart %}
+Center(
+    child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            TextButton(
+                style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: null,
+                child: const Text('Disabled'),
+            ),
+            const SizedBox(height: 30),
+            TextButton(
+                style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {},
+                child: const Text('Enabled'),
+            ),
+            const SizedBox(height: 30),
+            ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Stack(
+                    children: <Widget>[
+                        Positioned.fill(
+                            child: Container(
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: <Color>[
+                                            Color(0xFF0D47A1),
+                                            Color(0xFF1976D2),
+                                            Color(0xFF42A5F5),
+                                        ],
+                                    ),
+                                ),
+                            ),
+                        ),
+                        TextButton(
+                            style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.all(16.0),
+                                textStyle: const TextStyle(fontSize: 20),
+                            ),
+                            onPressed: () {},
+                            child: const Text('Gradient'),
+                        ),
+                    ],
+                ),
+            ),
+        ],
+    ),
+)
+{% endhighlight %}
+
+### TextButton.icon
+
+- TextButton 내부에 아이콘을 추가하고 싶을 때 사용한다.
+- 아이콘은 왼쪽에 추가된다.
+    - 오른쪽에 추가하고 싶다면 TextButton.icon이 아닌,  
+    TextButton의 child에 Row를 사용하는 방식을 써야 한다.
+- 주로 사용하는 속성
+    - required Widget icon
+        - 필수
+        - 표시할 아이콘을 지정한다.
+    - required Widget label
+        - 필수
+        - 자식 위젯을 지정한다.
+    - Function()? onPressed
+        - 필수
+        - 버튼을 눌렀을 때 동작할 기능을 지정한다.
+    - Function()? onLongPress
+        - 버튼을 오래 눌렀을 때 동작할 기능을 지정한다.
+    - Function(bool)? onHover
+        - 포인터가 버튼 영역 위에 출입할 때 동작할 기능을 지정한다.
+    - Function(bool)? onFocusChange
+        - 해당 버튼에 대한 포커싱의 변경점이 생겼을 때 동작할 기능을 지정한다.
+    - ButtonStyle? style
+        - 버튼의 스타일을 지정한다.
+    - FocusNode? focusNode
+        - 해당 버튼과 연결된 포커스 노드를 지정한다.
+    - bool? autofocus
+        - 페이지가 빌드됬을 때 해당 버튼에 자동으로 포커싱을 줄 것인지에 대한 여부를 지정한다.
+- [참고](https://api.flutter.dev/flutter/material/TextButton/TextButton.icon.html)
+
+{% highlight dart %}
+Center(
+    child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+            TextButton.icon(
+                icon: Icon(Icons.favorite),
+                label: Text("좋아요"),
+                onPressed: () {},
+            ),
+        ],
+    ),
+)
+{% endhighlight %}
+
+### IconButton
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### ToggleButtons
+
+- 토글이 가능한 버튼 목록 위젯
+- 주로 사용하는 속성
+    - List<Widget> children
+        - 필수
+        - 버튼으로 쓰일 위젯 목록
+        - 보통 Icon이나 Text가 쓰인다.
+        - isSelected의 길이와 동일해야 한다.
+    - List<bool> isSelected
+        - 필수
+        - 각 버튼의 선택 여부
+        - children의 길이와 동일해야 한다.
+    - void Function(int)? onPressed
+        - 버튼 선택 시 동작할 기능
+        - 각 버튼의 인덱스 번호를 반환한다.
+        - null로 지정 시 모든 토글 버튼이 비활성화 된다.
+    - MouseCursor? mouseCursor
+        - xxx
+    - MaterialTapTargetSize? tapTargetSize
+        - xxx
+    - TextStyle? textStyle
+        - xxx
+    - BoxConstraints? constraints
+        - xxx
+    - Color? color
+        - xxx
+    - Color? selectedColor
+        - xxx
+    - Color? disabledColor
+        - xxx
+    - Color? fillColor
+        - xxx
+    - Color? focusColor
+        - xxx
+    - Color? highlightColor
+        - xxx
+    - Color? hoverColor
+        - xxx
+    - Color? splashColor
+        - xxx
+    - List<FocusNode>? focusNodes
+        - xxx
+    - bool renderBorder
+        - 기본 값 : true
+    - Color? borderColor
+        - xxx
+    - Color? selectedBorderColor
+        - xxx
+    - Color? disabledBorderColor
+        - xxx
+    - BorderRadius? borderRadius
+        - xxx
+    - double? borderWidth
+        - xxx
+    - Axis direction = Axis.horizontal
+        - xxx
+    - VerticalDirection verticalDirection
+        - 기본 값 : VerticalDirection.down
+- [참고](https://api.flutter.dev/flutter/material/ToggleButtons-class.html)
+
+{% highlight dart %}
+final List<bool> isSelected = [false, false, false];
+
+Center(
+    child: Column(children: [
+        const Text('ToggleButtons'),
+        const SizedBox(height: 10),
+        ToggleButtons(
+            children: const <Widget>[
+                Icon(Icons.ac_unit),
+                Icon(Icons.call),
+                Icon(Icons.cake),
+            ],
+            onPressed: (int index) {
+                setState(() {
+                    isSelected[index] = !isSelected[index];
+                });
+            },
+            isSelected: isSelected,
+        )
+    ]),
+)
+{% endhighlight %}
+
+### SegmentedButton
+
+- ToggleButtons의 Material 3 버전
+- 주로 사용하는 속성
+    - required List<ButtonSegment<T>> segments
+        - 필수
+        - ButtonSegment를 통해 만드는 하위 버튼 목록
+        - 각 요소를 세그먼트라고 부른다.
+        - 최소 1개의 세그먼트가 있어야 한다.
+        - 세그먼트는 2 ~ 5개가 좋다.
+            - 세그먼트가 1개일 경우에는 CheckBox나 Radio의 사용을 고려해봐야 한다.
+            - 세그먼트가 5개 이상일 경우에는 FilterChip이나 ChoiceChip의 사용을 고려해봐야 한다.
+    - required Set<T> selected
+        - 필수
+        - 현재 선택되어 있는 값들의 목록
+    - Function(Set<T>)? onSelectionChanged
+        - 버튼 선택 및 해제 시 동작할 기능
+    - bool multiSelectionEnabled
+        - 다중 선택 가능 여부
+        - 기본 값 : false
+    - bool emptySelectionAllowed
+        - 선택된 세그먼트가 없는 경우에 대한 허용 여부
+        - 기본 값 : false
+    - ButtonStyle? style
+        - 버튼에 대한 스타일
+    - bool showSelectedIcon
+        - selectedIcon 사용 여부
+        - 기본 값 : true
+    - Widget? selectedIcon
+        - 선택된 세그먼트의 아이콘 대신에 보여줄 위젯
+        - 보통 Icon(Icons.check)같은 위젯을 많이 쓴다.
+- [참고](https://api.flutter.dev/flutter/material/SegmentedButton-class.html)
+
+{% highlight dart %}
+enum Calendar { day, week, month, year }
+
+Set<Calendar> isSelected = { Calendar.day, Calendar.month};
+List<(Calendar, String, IconData)> segments = [
+    (Calendar.day, "day", Icons.calendar_view_day),
+    (Calendar.week, "week", Icons.calendar_view_week),
+    (Calendar.month, "month", Icons.calendar_view_month),
+    (Calendar.year, "year", Icons.calendar_today),
+];
+
+Center(
+    child: Column(children: [
+        const Text('SegmentedButton'),
+        const SizedBox(height: 10),
+        SegmentedButton<Calendar>(
+            segments: segments.map<ButtonSegment<Calendar>>(((Calendar, String, IconData) data) {
+                return ButtonSegment<Calendar>(value: data.$1, label: Text(data.$2), icon: Icon(data.$3));
+            }).toList(),
+            selected: isSelected,
+            onSelectionChanged: (Set<Calendar> newSelection) {
+                setState(() {
+                    isSelected = newSelection;
+                });
+            },
+            multiSelectionEnabled: true,
+            emptySelectionAllowed: true,
+            showSelectedIcon: false,
+        )
+    ]),
+)
+{% endhighlight %}
+
+### DropdownButton
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### FloatingActionButton
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### FloatingActionButton.extended
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Chip
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### InputChip
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### FilterChip
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### ChoiceChip
+
+- [참고]()
 
 {% highlight dart %}
 {% endhighlight %}
