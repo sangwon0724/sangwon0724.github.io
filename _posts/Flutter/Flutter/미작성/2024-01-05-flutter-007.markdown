@@ -5,16 +5,193 @@ date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 ---
 
-### Autocomplete (자동완성)
-### Checkbox (체크박스)
-### DatePicker (날짜 선택)
-### Form (입력)
-### FormField (입력)
-### Radio (라디오 버튼)
-### Slider (슬라이더)
-### Switch (스위치)
-### TextField (입력)
-### TimePicker (시간)
+
+### TextField
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Form
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### FormField
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Radio
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Checkbox
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Switch
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### DropdownButton
+
+- 사용자가 여러 항목 중에서 선택할 수 있게 하는 유형의 버튼
+- 속성 목록
+    - List&lt;DropdownMenuItem<dynamic>>? items
+        - 사용자가 선택할 수 있는 항목 목록
+        - null 경우 해당 드롭다운 버튼은 비활성화 된다.
+        - 필수
+    - Function(BuildContext)? selectedItemBuilder
+        - DropdownMenuItem
+    - dynamic value
+        - 현재 선택된 값
+        - value가 null이고 버튼이 활성화된 경우는 hint가 표시된다.
+        - value가 null이고 버튼이 비활성화된 경우는 disabledHint가 표시된다.
+    - Widget? hint
+        - placeholder 유형 위젯
+        - value가 null이고 버튼이 활성화된 경우에 표시된다.
+        - value가 null이고 버튼이 비활성화되고 disabledHint가 null인 경우에 표시된다.
+    - Widget? disabledHint
+        - placeholder 유형 위젯
+        - value가 null이고 버튼이 비활성화된 경우에 표시된다.
+    - Function(dynamic)? onChanged
+        - 항목을 선택한 경우에 동작할 기능
+        - null 경우 해당 드롭다운 버튼은 비활성화 된다.
+        - 필수
+    - Function()? onTap
+        - 드롭다운 버튼을 선택한 경우에 동작할 기능
+        - 드롭다운 버튼이 비활성화된 경우에는 호출되지 않는다.
+    - int elevation
+        - 드롭다운 버튼 선택 시 나올 항목 목록을 배치할 z 좌료
+        - 기본 값 : 8
+    - TextStyle? style
+        - 드롭다운 버튼 및 드롭다운의 텍스트에 사용할 스타일
+    - Widget? underline
+        - 드롭다운 버튼의 밑줄을 그리는 데 사용할 위젯
+    - Widget? icon
+        - 드롭다운 버튼 아이콘에 사용할 위젯
+    - Color? iconDisabledColor
+        - 버튼이 비활성화 된 경우의 icon 색상
+    - Color? iconEnabledColor
+        - 버튼이 활성화 된 경우의 icon 색상
+    - double iconSize
+        - icon의 크기
+        - 기본 값 : 24.0
+    - bool isDense
+        - 드롭다운 버튼의 높이를 내부 위젯에 맞추는 것에 대한 여부
+        - 기본적으로 드롭다운 버튼의 높이는 항목의 높이와 같다.
+        - 기본 값 : false
+    - bool isExpanded
+        - 드롭다운 버튼의 내부 컨텐츠가 상위 항목을 가로로 채우도록 설정한다.
+        - 기본적으로 드롭다운 버튼의 내부 너비는 해당 컨텐츠의 최소 크기이다.
+        - Row에서 사용되는 Expanded 위젯의 역할과 동일하다.
+        - 기본 값 : false
+    - double? itemHeight
+        - 각 메뉴 항목의 높이
+        - 기본 값 : kMinInteractiveDimension
+    - Color? focusColor
+        - 항목이 선택된 경우의 드롭다운 버튼의 배경 색상
+    - FocusNode? focusNode
+        - 해당 드롭다운 버튼에 대해 사용될 포커스 노드
+    - bool autofocus
+        - 자동 포커스 여부
+        - 기본 값 : false
+    - Color? dropdownColor
+        - 드롭다운 버튼의 배경색
+    - double? menuMaxHeight
+        - 메뉴의 최대 높이
+        - 해당 값 설정 시 랜더링된 실제 메뉴 목록의 높이가 지정 값 보다 크다면  
+        설정한 값만큼의 범위 안에서 스크롤하게 한다.
+    - bool? enableFeedback
+        - 감지된 제스처에 대한 음향/촉각 피드백
+    - AlignmentGeometry alignment
+        - 힌트 또는 선택한 항목이 버튼 내에 배치되는 방식
+        - 기본 값 : AlignmentDirectional.centerStart
+    - BorderRadius? borderRadius
+        - border의 둥근 정도
+    - EdgeInsetsGeometry? padding
+        - 주변 여백
+- [참고](https://api.flutter.dev/flutter/material/DropdownButton-class.html)
+
+{% highlight dart %}
+List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
+String dropdownValue = list.first;
+
+DropdownButton<String>(
+    value: dropdownValue,
+    icon: const Icon(Icons.arrow_downward),
+    elevation: 16,
+    style: const TextStyle(color: Colors.deepPurple),
+    underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+    ),
+    onChanged: (String? value) {
+        setState(() {
+            dropdownValue = value!;
+        });
+    },
+    items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+        );
+    }).toList(),
+)
+{% endhighlight %}
+
+### DropdownMenu
+
+- DropdownButton Material 3 버전
+
+- [참고](https://api.flutter.dev/flutter/material/DropdownMenu-class.html)
+
+- TextField 에서 열 수 있는 드롭다운 메뉴
+- 선택한 메뉴 항목이 해당 필드에 표시된다.
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Slider
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### DatePicker
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### TimePicker
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Autocomplete
+
+- [참고]()
 
 {% highlight dart %}
 {% endhighlight %}
