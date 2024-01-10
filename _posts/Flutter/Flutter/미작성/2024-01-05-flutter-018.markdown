@@ -3,6 +3,7 @@ layout: post
 title:  "잘못된 터치를 방지하는 방법"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
+published: false
 ---
 
 - AbsorbPointer (클릭 방지)

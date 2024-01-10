@@ -1,15 +1,10 @@
 ---
 layout: post
-title:  "데이터 검색"
+title:  "ROWID?"
 date:   2023-12-27 10:07:00 +0900
 categories:  DML
+published: false
 ---
-
-단순 SELECT 문법
-WHERE
-연산자
-정렬
-GROUP BY + HAVING
 
 {% highlight sql %}
 {% endhighlight %}

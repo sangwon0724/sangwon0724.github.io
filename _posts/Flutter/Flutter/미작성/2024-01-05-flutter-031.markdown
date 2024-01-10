@@ -3,6 +3,7 @@ layout: post
 title:  "Sliver 시리즈"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
+published: false
 ---
 
 ### SliverAppBar (동적인 앱바)
