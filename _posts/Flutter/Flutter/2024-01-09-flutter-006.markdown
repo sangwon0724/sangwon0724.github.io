@@ -418,7 +418,6 @@ Center(
         - 필수
         - 버튼으로 쓰일 위젯 목록
         - 보통 Icon이나 Text가 쓰인다.
-        - isSelected의 길이와 동일해야 한다.
     - List<bool> isSelected
         - 필수
         - 각 버튼의 선택 여부
@@ -428,46 +427,64 @@ Center(
         - 각 버튼의 인덱스 번호를 반환한다.
         - null로 지정 시 모든 토글 버튼이 비활성화 된다.
     - MouseCursor? mouseCursor
-        - xxx
+        - 포인터의 모양을 설정한다.
+        - 종류
+            - MaterialStateMouseCursor.clickable
+            - MaterialStateMouseCursor.textable
     - MaterialTapTargetSize? tapTargetSize
-        - xxx
+        - 버튼이 들어갈 수 있는 영역의 최소 크기
+        - tpaTargetGize가 constraints보다 크면 탭에 반응하는 투명한 여백이 추가된다.
     - TextStyle? textStyle
-        - xxx
+        - Text 유형 위젯에 적용될 스타일
     - BoxConstraints? constraints
-        - xxx
+        - 버튼의 크기에 대한 제약 조건
     - Color? color
-        - xxx
+        - Text나 Icon의 색상
     - Color? selectedColor
-        - xxx
+        - 각 버튼이 선택된 경우의 Text나 Icon의 색상
     - Color? disabledColor
-        - xxx
+        - 버튼이 disabled된 경우의 Text나 Icon의 색상
     - Color? fillColor
-        - xxx
+        - 각 버튼이 선택된 경우의 배경색
     - Color? focusColor
-        - xxx
+        - 각 버튼에 포커스가 있는 경우의 배경색
     - Color? highlightColor
-        - xxx
-    - Color? hoverColor
-        - xxx
+        - 각 버튼의 InkWell에 대한 강조 색상
     - Color? splashColor
-        - xxx
-    - List<FocusNode>? focusNodes
-        - xxx
+        - 각 버튼을 길게 눌렀을 경우의 배경색
+    - Color? hoverColor
+        - 포인터가 버튼 영역에 있을 경우의 배경색
+    - List&lt;FocusNode>? focusNodes
+        - 각 버튼에 해당하는 FocusNode 목록
+        - children의 길이와 동일해야 한다.
     - bool renderBorder
+        - border 사용 여부
         - 기본 값 : true
     - Color? borderColor
-        - xxx
+        - 각 버튼의 기본 border의 색상
     - Color? selectedBorderColor
-        - xxx
+        - 각 버튼이 선택된 경우의 border의 색상
     - Color? disabledBorderColor
-        - xxx
-    - BorderRadius? borderRadius
-        - xxx
+        - 각 버튼이 disabled된 경우의 border 색상
     - double? borderWidth
-        - xxx
-    - Axis direction = Axis.horizontal
-        - xxx
+        - border의 두께
+    - BorderRadius? borderRadius
+        - border의 둥근 정도
+    - Axis direction
+        - 버튼의 정렬 방향
+        - 종류
+            - Axis.horizontal
+                - 가로 정렬
+            - Axis.vertical
+                - 세로 정렬
+        - 기본 값 : Axis.horizontal
     - VerticalDirection verticalDirection
+        - direction의 값이 Axis.horizontal인 경우의 정렬 방향
+        - 종류
+             - VerticalDirection.down
+                - children의 정순으로 배치
+             - VerticalDirection.up
+                - children의 역순으로 배치
         - 기본 값 : VerticalDirection.down
 - [참고](https://api.flutter.dev/flutter/material/ToggleButtons-class.html)
 
@@ -561,51 +578,59 @@ Center(
 )
 {% endhighlight %}
 
-### DropdownButton
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
 ### FloatingActionButton
 
-- [참고]()
+- 페이지의 구성과 별개로 플로팅되어 있는 버튼
+- 업로드나 공유하기 같은 기능을 사용할 때 많이 사용된다.
+- FloatingActionButton의 크기는 FloatingActionButton.small → FloatingActionButton → FloatingActionButton.large 순으로 커진다.
+- 좌우로 확장된 FloatingActionButton을 사용하고 싶을 때에는 FloatingActionButton.extended를 사용한다.
+- 주로 사용하는 속성
+    - Widget? child
+        - 버튼 내부에 표시할 자식 위젯
+    - String? tooltip
+        - 버튼을 눌렀을 떄 발생할 동작을 설명하는 텍스트
+        - 버튼을 길게 눌렀을 때 나타난다.
+    - Color? foregroundColor
+        - 버튼 내 아이콘과 텍스트의 색상
+    - Color? backgroundColor
+        - 버튼의 배경색
+    - Color? focusColor
+        - 버튼에 입력 포커스가 있는 경우의 배경색
+    - Color? hoverColor
+        - 버튼 위에 포인터가 있는 경우의 배경색
+    - Color? splashColor
+        - 버튼을 길게 눌렀을 때의 배경색
+    - Object? heroTag
+        - 버튼의 Hero 위젯에 적용할 태그
+        - 기본 값 : const _DefaultHeroTag()
+    - double? elevation
+        - 부모 위젯을 기준으로 버튼을 배치할 z 좌표
+    - FocusNode? focusNode
+        - 해당 버튼에 대한 포커스 노드
+    - bool? enableFeedback
+        - 감지된 제스처에 대한 음향/촉각 피드백
+- [참고](https://api.flutter.dev/flutter/material/FloatingActionButton-class.html)
 
 {% highlight dart %}
+FloatingActionButton(
+    foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+    onPressed: () {},
+    child: const Icon(Icons.edit_outlined),
+)
 {% endhighlight %}
 
-### FloatingActionButton.extended
-
-- [참고]()
+#### 커스텀
 
 {% highlight dart %}
-{% endhighlight %}
-
-### Chip
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### InputChip
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### FilterChip
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### ChoiceChip
-
-- [참고]()
-
-{% highlight dart %}
+SizedBox(
+    width: 150,
+    height: 150,
+    child: FittedBox(
+        child: FloatingActionButton(
+            onPressed: (){},
+            child: Icon(Icons.thumb_up_alt),
+        ),
+    ),
+)
 {% endhighlight %}
