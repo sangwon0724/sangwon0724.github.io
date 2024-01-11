@@ -6,17 +6,15 @@ categories:  Flutter
 ---
 
 9. 화면 구성 위젯 (목록)
-- CustomScrollView (목록)
-- DataTable (테이블)
 - GridView (목록)
 - ListBody (목록)
 - ListTile (목록)
 - ListView (목록)
-- NestedScrollView (중첩 스크롤 뷰)
-- PageView (페이지뷰)
 - SingleChildScrollView (스크롤뷰)
-- Table (테이블)
+- PageView (페이지뷰)
 - Wrap (목록)
+- Table (테이블)
+- DataTable (테이블)
 
 10. 앱 구성 위젯
 - AppBar (앱 상단 메뉴)
@@ -128,28 +126,17 @@ categories:  Flutter
 - AnimatedSize
 - AnimatedWidget
 
-31. Sliver
-- SliverAppBar (동적인 앱바)
-- SliverChildBuilderDelegate (동적인 영역)
-- SliverChildListDelegate (동적인 목록)
-- SliverFixedExtentList (동적인 목록)
-- SliverGrid (동적인 목록)
-- SliverList (동적인 목록)
-- SliverPadding (동적인 영역)
-- SliverPersistentHeader (동적인 영역)
-- SliverToBoxAdapter (동적인 영역)
+31. 상태 값 유지
 
-32. 상태 값 유지
+32. 메소드 채널
 
-33. 메소드 채널
+33. API 통신
 
-34. API 통신
+34. showDatePicker 메소드
 
-35. showDatePicker 메소드
+35. showTimePicker 메소드
 
-36. showTimePicker 메소드
-
-37. File 클래스
+36. File 클래스
 
 {% highlight dart %}
 {% endhighlight %}
