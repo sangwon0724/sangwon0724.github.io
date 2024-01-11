@@ -6,16 +6,239 @@ categories:  Flutter
 published: false
 ---
 
-### DataTable (테이블)
-### ListView (목록)
-### ListTile (목록)
-### ListBody (목록)
-### GridView (목록)
+### ListView
 
-### PageView (페이지뷰)
-### SingleChildScrollView (스크롤뷰)
-### Table (테이블)
-### Wrap (목록)
+- 선형으로 배열된 위젯 목목을 담고 있는 스크롤 가능한 위젯
+- 주로 사용하는 속성
+    - List&lt;Widget> children
+        - ListView 내부에 담길 위젯 목록
+        - 기본 값 : const &lt;Widget>[]
+    - Axis scrollDirection
+        - 스크롤 방향
+        - 종류
+            - Axis.horizontal
+                - 수평 스크롤
+            - Axis.vertical
+                - 수직 스크롤
+        - 기본 값 : Axis.vertical
+    - bool reverse
+        - 역순 정렬 여부
+        - true일 경우 ListView 내부에서 A → B → C 순으로 배치되던 위젯 목록은  
+        C → B → A 순으로 배치된다.
+        - 기본 값 : false
+    - ScrollController? controller
+        - 스크롤을 제어하기 위한 컨트롤러
+        - primary의 값이 true일 경우 controller은 null이어야 한다.
+    - bool? primary
+        - 해당 위젯이 상위 PrimaryScrollController와 연관된 기본 스크롤 뷰인지의 여부
+        - true일 경우 Ios에서 상태 표시줄을 탭하면 맨위로 스크롤된다.
+    - ScrollPhysics? physics
+        - 스크롤 뷰가 사용자 입력에 반응하는 방법
+    - bool shrinkWrap
+        - true일 경우 ListView는 부모 위젯의 전체 영역을 차지하는 것이 아닌  
+            필요한 공간만 차지하도록 변경된다.
+        - 기본 값 : false
+    - EdgeInsetsGeometry? padding
+        - 내부 여백
+    - double? itemExtent
+        - null이 아닐 경우 스크롤 방향으로 지정한 크기를 갖도록 강제한다.
+    - double? cacheExtent
+        - null이 아닐 경우 각 항목이 화면 밖에 있어도 지정한 크기에 맞게 미리 빌드된다.
+    - Widget? prototypeItem
+        - 지정한 위젯의 크기만큼 자식 위젯의 크기를 강제한다.
+    - Function(int, SliverLayoutDimensions)? itemExtentBuilder
+        - null이 아닌 경우 빌더가 반환한 해당 범위를 하위 항목에 강제로 적용한다.
+    - DragStartBehavior dragStartBehavior
+        - 드래그 시작 동작이 처리되는 방식
+        - 종류
+            - DragStartBehavior.start
+            - DragStartBehavior.down
+        - 기본 값 : DragStartBehavior.start
+    - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+        - 키보드를 자동으로 닫는 방법
+        - 종류
+            - ScrollViewKeyboardDismissBehavior.manual
+                - 키보드가 자동으로 해제되지 않는다.
+            - ScrollViewKeyboardDismissBehavior.onDrag
+                - 드래그가 시작될 때 자동으로 키보드가 닫힌다.
+        - 기본 값 : ScrollViewKeyboardDismissBehavior.manual
+- [참고](https://api.flutter.dev/flutter/widgets/ListView-class.html)
+
+{% highlight dart %}
+ListView(
+    children: [
+        Text("신"),
+        Text("호"),
+        Text("등"),
+    ]
+,)
+{% endhighlight %}
+
+### ListView.builder
+
+- 하위 항목에 대해서만 빌더가 호출되므로 하위 위젯 수가 많거나 무한한 목록 보기에 적합한 ListView의 생성자 유형
+- ListView.builder는 랜더링되는 하위 위젯의 개수를 알 수 있어서  
+ListView에 비해서 랜더림이 빠르다.
+- 주로 사용하는 속성
+    - Function(BuildContext, int) itemBuilder
+        - 하위 위젯 목록을 생성하는 빌더 메소드
+        - 필수
+    - int? itemCount
+        - 자식 위젯의 개수
+    - [ListView 생성자 설명 참고](#listview)
+        - Axis scrollDirection
+        - bool reverse
+        - ScrollController? controller
+        - bool? primary
+        - ScrollPhysics? physics
+        - bool shrinkWrap
+        - EdgeInsetsGeometry? padding
+        - double? itemExtent
+        - double? cacheExtent
+        - Widget? prototypeItem
+        - Function(int, SliverLayoutDimensions)? itemExtentBuilder
+        - DragStartBehavior dragStartBehavior
+        - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+- [참고](https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html)
+
+### ListView.separated
+
+- 하위 항목에 대해서만 빌더가 호출되므로 하위 위젯 수가 많거나 무한한 목록 보기에 적합한 ListView의 생성자 유형
+    - 하위 위젯 사이에 구분자 위젯이 추가된다.
+- ListView.separated는 랜더링되는 하위 위젯의 개수를 알 수 있어서  
+ListView에 비해서 랜더림이 빠르다.
+- 주로 사용하는 속성
+    - Function(BuildContext, int) itemBuilder
+        - 하위 위젯 목록을 생성하는 빌더 메소드
+        - 필수
+    - int? itemCount
+        - 자식 위젯의 개수
+    - Widget? Function(BuildContext, int) itemBuilder
+        - 하위 위젯 목록을 생성하는 빌더 메소드
+        - 필수
+    - Widget Function(BuildContext, int) separatorBuilder
+        - 구분자 위젯을 생성하는 빌더 메소드
+        - 필수
+    - int itemCount
+        - 자식 위젯의 개수
+        - 필수
+    - [ListView 생성자 설명 참고](#listview)
+        - Axis scrollDirection
+        - bool reverse
+        - ScrollController? controller
+        - bool? primary
+        - ScrollPhysics? physics
+        - bool shrinkWrap
+        - EdgeInsetsGeometry? padding
+        - double? itemExtent
+        - double? cacheExtent
+        - Widget? prototypeItem
+        - Function(int, SliverLayoutDimensions)? itemExtentBuilder
+        - DragStartBehavior dragStartBehavior
+        - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+- [참고](https://api.flutter.dev/flutter/widgets/ListView/ListView.separated.html)
+
+### SingleChildScrollView
+
+- 자식 위젯이 랜더링 가능한 범위를 넘어갈 경우 내부적으로 스크롤할 수 있게 하는 위젯
+- 주로 사용하는 속성
+    - Widget? child
+        - 내부에 배치될 자식 위젯
+        - Row나 Column같은 위젯을 많이 사용한다.
+    - [ListView 생성자 설명 참고](#listview)
+        - Axis scrollDirection
+        - bool reverse
+        - ScrollController? controller
+        - bool? primary
+        - ScrollPhysics? physics
+        - EdgeInsetsGeometry? padding
+        - DragStartBehavior dragStartBehavior
+        - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+- [참고](https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html)
+
+{% highlight dart %}
+SingleChildScrollView(
+    child: Column(
+    children: [
+        Container(height: 1000, color: Colors.red,),
+        Container(height: 1000, color: Colors.yellow,),
+        Container(height: 1000, color: Colors.green,),
+    ],),
+)
+{% endhighlight %}
+
+### Wrap
+
+- 내부의 하위 위젯 목록을 가로 또는 세로 방향으로 표시하는 위젯
+- 주로 사용하는 속성
+    - List<Widget> children
+        - 내부에 배치될 위젯 목록
+        - 기본 값 : const <Widget>[],
+    - Axis direction
+        - 정렬 방향
+        - 종류
+            - Axis.horizontal
+                - 가로 정렬
+            - Axis.vertical
+                - 세로 정렬
+        - 기본 값 : Axis.horizontal
+    - WrapAlignment alignment
+        - 내부 요소을 주 축에 배치하는 방법
+        - 기본 값 : WrapAlignment.start
+    - WrapCrossAlignment crossAxisAlignment
+        - 내부 요소을 교차 축에 배치하는 방법
+        - 기본 값 : WrapCrossAlignment.start
+    - double spacing
+        - 주축을 기준으로 한 내부 위젯 간의 간격
+            - Axis.horizontal 기준
+                - 좌우 간격
+            - Axis.vertical 기준
+                - 상하 간격
+        - 기본 값 : 0.0
+    - WrapAlignment runAlignment
+        - 내부 요소을 교차 축에 배치하는 방법
+        - 기본 값 : WrapAlignment.start
+    - double runSpacing
+        - 교차축을 기준으로 한 내부 위젯 간의 간격
+            - Axis.horizontal 기준
+                - 상하 간격
+            - Axis.vertical 기준
+                - 좌우 간격
+        - 기본 값 : 0.0
+    - VerticalDirection verticalDirection
+        - 세로 기준으로 내부 위젯들을 배치하는 방향
+        - 종류
+            - VerticalDirection.down
+                - 상단에서 하단으로 순서대로 배치
+            - VerticalDirection.up
+                - 하단에서 상단으로 순서대로 배치
+        - 기본 값 : VerticalDirection.down
+- [참고](https://api.flutter.dev/flutter/widgets/Wrap-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### GridView
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Table
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### DataTable
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
 
 {% highlight dart %}
 {% endhighlight %}

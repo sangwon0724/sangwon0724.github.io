@@ -7,11 +7,8 @@ categories:  Flutter
 
 9. 화면 구성 위젯 (목록)
 - GridView (목록)
-- ListBody (목록)
-- ListTile (목록)
 - ListView (목록)
 - SingleChildScrollView (스크롤뷰)
-- PageView (페이지뷰)
 - Wrap (목록)
 - Table (테이블)
 - DataTable (테이블)
@@ -137,6 +134,8 @@ categories:  Flutter
 35. showTimePicker 메소드
 
 36. File 클래스
+
+37. PageView (페이지뷰)
 
 {% highlight dart %}
 {% endhighlight %}
