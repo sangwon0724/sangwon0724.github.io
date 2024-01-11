@@ -81,6 +81,7 @@ tags: [출처, 참고]
     - [[Flutter] Widget 소개 - SizedBox](https://origogi.github.io/flutter/SizedBox/)
     - [[Flutter] Container Class](https://ahang.tistory.com/10)
     - [[Flutter] Row - 사용법](https://jinhan38.com/129)
+    - [[Flutter] Image 이미지 box.fit 옵션 정리](https://devmg.tistory.com/181)
 
 ### DataBase
 
