@@ -406,7 +406,8 @@ Column(
         - true일 때 활성화된다.
         - 필수
     - bool tristate
-        - true일 경우 해당 체크박스에 대시 아이콘 표시된다. => 좀 더 확인 https://api.flutter.dev/flutter/material/Checkbox/tristate.html
+        - true일 경우 해당 체크박스에 대시 아이콘 표시된다.
+        - 해당 값이 true일 경우 value의 값은 true → null → false 순으로 변경된다.
         - 기본 값 : false
     - Function(bool?)? onChanged
         - value의 값이 변경되었을 때 동작할 기능
@@ -454,9 +455,93 @@ Checkbox(
 
 ### Switch
 
+- 스위치를 만드는 위젯
+- 단일 설정의 켜기/끄기 상태를 전환하는 데 사용된다.
+- ThemeData.useMaterial3의 값을 true로 설정하면  
+    사용자는 Switch.thumbIcon을 사용하여  
+    Switch의 다양한 MaterialState를 기반으로  
+    토글 버튼에 아이콘을 추가 할 수 있다.
+    - theme 속성에 ThemeData(useMaterial3: true)를 적용해야 한다.
+- 주로 사용하는 속성
+    - bool value
+        - 해당 스위치의 값
+        - true일 때 활성화된다.
+        - 필수
+    - Function(bool)? onChanged
+        - value의 값이 변경되었을 때 동작할 기능
+        - 필수
+    - Color? activeColor
+        - 스위치가 활성화된 경우의 토글 버튼의 색상
+    - Color? activeTrackColor
+        - 스위치가 활성화된 경우의 트랙의 색상
+    - Color? inactiveThumbColor
+        - 스위치가 비활성화된 경우의 토글 버튼의 색상
+        - Switch.adaptive로 생성되면 해당 속성을 무시한다.
+    - Color? inactiveTrackColor
+        - 스위치가 비활성화된 경우의 트랙의 색상
+    - ImageProvider&lt;Object>? activeThumbImage
+        - 스위치가 활성화된 경우의 토글 버튼에 적용할 이미지
+        - Switch.adaptive로 생성되면 해당 속성을 무시한다.
+    - Function(Object, StackTrace?)? onActiveThumbImageError
+        - activeThumbImage 로드 시 오류가 발생한 경우에 동작할 기능
+    - ImageProvider&lt;Object>? inactiveThumbImage
+        - 스위치가 비활성화된 경우의 토글 버튼에 적용할 이미지
+    - Function(Object, StackTrace?)? onInactiveThumbImageError
+        - inactiveThumbImage 로드 시 오류가 발생한 경우에 동작할 기능
+    - DragStartBehavior dragStartBehavior
+        - 기본 값 : DragStartBehavior.start
+    - Color? focusColor
+        - 토글 버튼에 입력 포커스가 있는 경우의 배경색
+    - Color? hoverColor
+        - 토글 버튼 위에 포인터가 있는 경우의 배경색
+    - MaterialStateProperty&lt;Color?>? overlayColor
+    - double? splashRadius
+        - 스플래시 범위
+    - FocusNode? focusNode
+        - 해당 스위치에 대해 사용될 포커스 노드
+    - bool autofocus
+        - 자동 포커스 여부
+        - 기본 값 : false
 - [참고](https://api.flutter.dev/flutter/material/Switch-class.html)
 
 {% highlight dart %}
+bool _isChecked = false;
+
+Switch(
+    value: _isChecked,
+    activeColor: Colors.red,
+    activeTrackColor: Colors.blue,
+    inactiveThumbColor: Colors.yellow,
+    inactiveTrackColor: Colors.green,
+    onChanged: (bool value) {
+        setState(() {
+            _isChecked = value;
+        });
+    },
+)
+{% endhighlight %}
+
+{% highlight dart %}
+bool _isChecked = false;
+final MaterialStateProperty<Icon?> thumbIcon =
+MaterialStateProperty.resolveWith<Icon?>(
+    (Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+            return const Icon(Icons.check);
+        }
+        return const Icon(Icons.close);
+    },
+);
+
+Switch(
+    thumbIcon: thumbIcon,
+    value: _isChecked,
+    onChanged: (bool value) {
+        setState(() {
+            _isChecked = value;
+        });
+    },
+)
 {% endhighlight %}
 
 ### DropdownButton
@@ -569,40 +654,217 @@ DropdownButton<String>(
 
 ### DropdownMenu
 
-- DropdownButton Material 3 버전
-
-- [참고](https://api.flutter.dev/flutter/material/DropdownMenu-class.html)
-
 - TextField 에서 열 수 있는 드롭다운 메뉴
 - 선택한 메뉴 항목이 해당 필드에 표시된다.
+- DropdownButton의 Material 3 버전
+- 주로 사용하는 속성
+    - bool enabled
+        - 사용 가능 여부
+        - 기본 값 : true
+    - double? width
+        - 드롭다운 메뉴의 가로 길이
+    - double? menuHeight
+        - 각 메뉴 항목마다의 세로 길이
+    - Widget? leadingIcon
+        - 드롭다운 메뉴 좌측에 추가될 아이콘
+    - Widget? trailingIcon
+        - 드롭다운 메뉴 우측에 추가될 아이콘
+        - 드롭다운 메뉴에 포커스가 없을 때 노출된다.
+    - Widget? label
+        - 안내를 위한 위젯
+    - String? hintText
+        - 해당 드롭다운 메뉴에 대한 placeholder
+    - String? helperText
+        - 해당 드롭다운 메뉴에 대한 안내 문구
+    - String? errorText
+        - 오류가 발생한 경우에 대한 안내 문구
+        - errorText가 null이 아니면 helperText 대신에 노출된다.
+    - Widget? selectedTrailingIcon
+        - 드롭다운 메뉴 우측에 추가될 아이콘
+        - 드롭다운 메뉴에 포커스가 있을 때 노출된다.
+    - bool enableFilter
+        - 텍스트 입력으로 메뉴 목록을 필터링할 수 있는지에 대한 여부
+        - 기본 값 : false
+    - bool enableSearch
+        - 텍스트 입력과 일치하는 첫 번째 항목을 강조할 것인지에 대한 여부
+        - 기본 값 : true
+    - TextStyle? textStyle
+            - 드롭다운 메뉴 및 드롭다운의 텍스트에 사용할 스타일
+    - InputDecorationTheme? inputDecorationTheme
+        - 입력란의 스타일을 지정
+    - MenuStyle? MenuStyle
+        - 각 메뉴 항목의 스타일을 지정
+    - TextEditingController? controller
+            - 편집 중인 텍스트를 제어하기 위한 컨트롤러
+            - null일 경우 DropdownMenu에서 자체적으로 생성한다.
+    - dynamic initialSelection
+        - 초기 값
+    - Function(dynamic)? onSelected
+        - 각 메뉴 항목을 선택했을 때 동작할 기능
+    - bool? requestFocusOnTap
+        - 가상 키보드 노출 여부
+    - List&lt;DropdownMenuEntry&lt;dynamic>> dropdownMenuEntries
+        - 드롭다운 메뉴의 항목 목록
+        - 필수
+- [참고](https://api.flutter.dev/flutter/material/DropdownMenu-class.html)
 
 {% highlight dart %}
+enum ColorLabel {
+    blue('Blue', Colors.blue),
+    pink('Pink', Colors.pink),
+    green('Green', Colors.green),
+    yellow('Orange', Colors.orange),
+    grey('Grey', Colors.grey);
+
+    const ColorLabel(this.label, this.color);
+    final String label;
+    final Color color;
+}
+
+final TextEditingController colorController = TextEditingController();
+ColorLabel? selectedColor;
+
+DropdownMenu<ColorLabel>(
+initialSelection: ColorLabel.green,
+controller: colorController,
+requestFocusOnTap: true,
+label: const Text('Color'),
+onSelected: (ColorLabel? color) {
+    setState(() {
+        selectedColor = color;
+    });
+},
+dropdownMenuEntries: ColorLabel.values
+    .map<DropdownMenuEntry<ColorLabel>>(
+        (ColorLabel color) {
+            return DropdownMenuEntry<ColorLabel>(
+                value: color,
+                label: color.label,
+                enabled: color.label != 'Grey',
+                style: MenuItemButton.styleFrom(
+                foregroundColor: color.color,
+                ),
+            );
+        }).toList(),
+)
 {% endhighlight %}
 
 ### Slider
 
+- 지정한 범위 내에서 특정한 값을 선택하는 위젯
+- 주로 사용하는 속성
+    - double value
+        - 슬라이더의 메인 트랙 값
+        - 필수
+    - double? secondaryTrackValue
+        - 슬라이더의 보조 트랙 값
+        - value 속성의 값보다 작으면 보조 트랙은 표시되지 않는다.
+        - 재생 진행율과 버퍼링을 함께 표시하는 경우에 사용하면 좋다.
+    - Function(double)? onChanged
+        - 슬라이드가 움직이는 도중에 동작할 기능
+        - 필수
+    - Function(double)? onChangeStart
+        - 슬라이드의 이동이 시작했을 때 동작할 기능
+    - Function(double)? onChangeEnd
+        - 슬라이드의 이동이 끝났을 때 동작할 기능
+    - double min
+        - 최솟값
+        - 기본 값 : 0.0
+    - double max
+        - 최댓값
+        - 기본 값 : 1.0
+    - int? divisions
+        - 전체 범위를 나눌 단위 수
+        - 만약 min이 0이고 max가 100이며 divisions가 5일 경우 슬라이더의 범위는 20씩 나눠진다.
+    - String? label
+        - onChanged 진행 중에 보여질 문구
+    - Color? activeColor
+        - 메인 트랙의 색상
+        - thumbColor가 null일 경우에는 슬라이드 버튼의 색상이 된다.
+    - Color? inactiveColor
+        - 슬라이더가 비활성화된 경우의 색상
+    - Color? secondaryActiveColor
+        - 보조 트랙의 색상
+    - Color? thumbColor
+        - 슬라이드 버튼의 색상
+    - FocusNode? focusNode
+        - 해당 슬라이더에 대해 사용될 포커스 노드
+    - bool autofocus
+        - 자동 포커스 여부
+        - 기본 값 : false
+    - SliderInteraction? allowedInteraction
+        - 슬라이더와 상호작용하는 방법을 지정한다.
 - [참고](https://api.flutter.dev/flutter/material/Slider-class.html)
 
 {% highlight dart %}
-{% endhighlight %}
+double _currentSliderValue = 20;
 
-### DatePicker
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### TimePicker
-
-- [참고]()
-
-{% highlight dart %}
+Slider(
+    value: _currentSliderValue,
+    secondaryTrackValue: 50,
+    max: 100,
+    divisions: 5,
+    label: _currentSliderValue.round().toString(),
+    activeColor: Colors.orange,
+    inactiveColor: Colors.grey,
+    secondaryActiveColor: Colors.orange.withOpacity(0.5),
+    onChanged: (double value) {
+        print("onChanged : $value");
+        setState(() {
+        _currentSliderValue = value;
+        });
+    },
+    onChangeStart: (value) {
+        print("onChangeStart : $value");
+    },
+    onChangeEnd: (value) {
+        print("onChangeEnd : $value");
+    },
+)
 {% endhighlight %}
 
 ### Autocomplete
 
+- 텍스트를 입력하고 옵션 목록 중에서 선택하여 사용자의 선택을 돕는 위젯
+- 주로 사용하는 속성
+    - FutureOr&lt;Iterable&lt;Object>> Function(TextEditingValue) optionsBuilder
+        - 입력된 텍스트 존재 시 현재 선택가능한 옵션 개체 목록을 반환하는 메소드
+        - 필수
+    - Widget Function(BuildContext, TextEditingController, FocusNode, void Function()) fieldViewBuilder
+        - 기본 값 : _defaultFieldViewBuilder
+    - void Function(Object)? onSelected
+        - 항목 선택 시 동작할 기능
+    - double optionsMaxHeight
+        - 각 항목의 최대 세로 길이
+        - 기본 값 : 200.0
+    - Function(BuildContext, void Function(Object), Iterable&lt;Object>)? optionsViewBuilder
+        - Autocomplete 위젯의 형태를 만드는 메소드
+    - OptionsViewOpenDirection optionsViewOpenDirection
+        - 기본 값 : OptionsViewOpenDirection.down
+    - TextEditingValue? initialValue
+        - 항목 목록이 열리는 방향
+        - 종류
+            - OptionsViewOpenDirection.down
+                - 하단 방향으로 열린다.
+            - OptionsViewOpenDirection.up
+                - 상단 방향으로 열린다.
+        - 기본 값 : OptionsViewOpenDirection.down
 - [참고](https://api.flutter.dev/flutter/material/Autocomplete-class.html)
 
 {% highlight dart %}
+List<String> _wordList = <String>[ 'Lion', 'Tiger', 'Cat', ];
+
+Autocomplete<String>(
+    optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+            return const Iterable<String>.empty();
+        }
+        return _wordList.where((String option) {
+            return option.contains(textEditingValue.text.toLowerCase());
+        });
+    },
+    onSelected: (String selection) {
+        debugPrint('You just selected $selection');
+    },
+)
 {% endhighlight %}
