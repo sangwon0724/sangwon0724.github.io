@@ -3,7 +3,7 @@ layout: post
 title:  "화면 구성 위젯 (목록)"
 date:   2024-01-11 15:43:00 +0900
 categories:  Flutter
-published: false
+# published: false
 ---
 
 ### ListView
@@ -216,29 +216,99 @@ SingleChildScrollView(
 - [참고](https://api.flutter.dev/flutter/widgets/Wrap-class.html)
 
 {% highlight dart %}
+Container(
+    width: 500,
+    child: SingleChildScrollView(
+        child: Wrap(
+            spacing: 50,
+            runSpacing: 100, 
+            children: [
+                Container(width: 150, height: 300, color: Colors.red,),
+                Container(width: 250, height: 300, color: Colors.yellow,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.green,),
+                Container(width: 350, height: 300, color: Colors.blue,),
+            ],
+        ),
+    ),
+)
 {% endhighlight %}
 
 ### GridView
 
-- [참고]()
+- 스크롤 가능한 2차원 위젯 배열
+- 주로 사용하는 속성
+    - SliverGridDelegate gridDelegate
+        - GridView 내에서 자식의 레이아웃을 제어하는 ​​대리자
+        - 필수
+    - List<Widget> children
+        - 내부에 배열될 위젯 목록
+        - 기본 값 : const <Widget>[]
+    - [ListView 생성자 설명 참고](#listview)
+        - Axis scrollDirection
+        - bool reverse
+        - ScrollController? controller
+        - bool? primary
+        - ScrollPhysics? physics
+        - bool shrinkWrap
+        - EdgeInsetsGeometry? padding
+        - double? cacheExtent
+        - DragStartBehavior dragStartBehavior
+        - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+- [참고](https://api.flutter.dev/flutter/widgets/GridView-class.html)
+
+### GridView.builder
+
+- 하위 항목에 대해서만 빌더가 호출되므로 하위 위젯 수가 많거나 무한한 목록 보기에 적합한 GridView의 생성자 유형
+- GridView.builder는 랜더링되는 하위 위젯의 개수를 알 수 있어서  
+GridView에 비해서 랜더림이 빠르다.
+- 주로 사용하는 속성
+    - SliverGridDelegate gridDelegate
+        - GridView 내에서 자식의 레이아웃을 제어하는 ​​대리자
+        - 필수
+    - Widget? Function(BuildContext, int) itemBuilder
+        - 하위 위젯 목록을 생성하는 빌더 메소드
+        - 필수
+    - int? itemCount
+        - GridView 내부에 배치될 위젯의 개수
+    - [ListView 생성자 설명 참고](#listview)
+        - Axis scrollDirection
+        - bool reverse
+        - ScrollController? controller
+        - bool? primary
+        - ScrollPhysics? physics
+        - bool shrinkWrap
+        - EdgeInsetsGeometry? padding
+        - double? cacheExtent
+        - DragStartBehavior dragStartBehavior
+        - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+- [참고](https://api.flutter.dev/flutter/widgets/GridView/GridView.builder.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### GridView.count
+
+- [참고](https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html)
 
 {% highlight dart %}
 {% endhighlight %}
 
 ### Table
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/widgets/Table-class.html)
 
 {% highlight dart %}
 {% endhighlight %}
 
 ### DataTable
 
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
+- [참고](https://api.flutter.dev/flutter/material/DataTable-class.html)
 
 {% highlight dart %}
 {% endhighlight %}
