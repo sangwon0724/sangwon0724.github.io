@@ -267,6 +267,7 @@ Container(
 - 하위 항목에 대해서만 빌더가 호출되므로 하위 위젯 수가 많거나 무한한 목록 보기에 적합한 GridView의 생성자 유형
 - GridView.builder는 랜더링되는 하위 위젯의 개수를 알 수 있어서  
 GridView에 비해서 랜더림이 빠르다.
+- 위젯 수가 많은 경우에 GridView.count보다 성능이 좋다.
 - 주로 사용하는 속성
     - SliverGridDelegate gridDelegate
         - GridView 내에서 자식의 레이아웃을 제어하는 ​​대리자
@@ -294,6 +295,32 @@ GridView에 비해서 랜더림이 빠르다.
 
 ### GridView.count
 
+- 하위 항목에 대해서만 빌더가 호출되므로 하위 위젯 수가 많거나 무한한 목록 보기에 적합한 GridView의 생성자 유형
+- GridView.builder는 랜더링되는 하위 위젯의 개수를 알 수 있어서  
+GridView에 비해서 랜더림이 빠르다.
+- 단일 행의 항목을 계산하는 데 직접 사용할 수 있다.
+- 주로 사용하는 속성
+    - int crossAxisCount
+        - 필수
+    - double mainAxisSpacing
+        - 기본 값 : 0.0
+    - double crossAxisSpacing
+        - 기본 값 : 0.0
+    - double childAspectRatio
+        - 기본 값 : 1.0
+    - List<Widget> children
+        - 기본 값 : const <Widget>[]
+    - [ListView 생성자 설명 참고](#listview)
+        - Axis scrollDirection
+        - bool reverse
+        - ScrollController? controller
+        - bool? primary
+        - ScrollPhysics? physics
+        - bool shrinkWrap
+        - EdgeInsetsGeometry? padding
+        - double? cacheExtent
+        - DragStartBehavior dragStartBehavior
+        - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
 - [참고](https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html)
 
 {% highlight dart %}
