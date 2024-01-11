@@ -82,6 +82,7 @@ tags: [출처, 참고]
     - [[Flutter] Container Class](https://ahang.tistory.com/10)
     - [[Flutter] Row - 사용법](https://jinhan38.com/129)
     - [[Flutter] Image 이미지 box.fit 옵션 정리](https://devmg.tistory.com/181)
+    - [네트워크 이미지 렌더링을 최적화하여 메모리 사용량 절감하기](https://velog.io/@ximya_hf/optimizing-network-image-rendering-in-flutter)
 
 ### DataBase
 

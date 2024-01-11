@@ -5,39 +5,6 @@ date:   2023-04-28 10:07:33 +0900
 categories:  Flutter
 ---
 
-6. 화면 구성 위젯 (버튼)
-- Chip (버튼)
-- ElevatedButton
-- FilledButton
-- FilledButton.tonal
-- OutlinedButton
-- TextButton
-- DropdownButton (드롭다운 버튼)
-- ElevatedButton (버튼)
-- FloatingActionButton (플로팅 버튼)
-- FloatingActionButton.extended (플로팅 버튼)
-- IconButton (버튼)
-- OutlinedButton (버튼)
-- SegmentedButton (카세트 버튼같이 생긴 거)
-- TextButton (버튼)
-- InputChip (칩)
-
-7. 화면 구성 위젯 (입력)
-- Autocomplete (자동완성)
-- Checkbox (체크박스)
-- DatePicker (날짜 선택)
-- Form (입력)
-- FormField (입력)
-- Radio (라디오 버튼)
-- Slider (슬라이더)
-- Switch (스위치)
-- TextField (입력)
-- TimePicker (시간)
-
-8. 화면 구성 위젯 (이미지)
-- BackdropFilter (이미지 관련)
-- Image (이미지)
-
 9. 화면 구성 위젯 (목록)
 - CustomScrollView (목록)
 - DataTable (테이블)
@@ -181,6 +148,8 @@ categories:  Flutter
 35. showDatePicker 메소드
 
 36. showTimePicker 메소드
+
+37. File 클래스
 
 {% highlight dart %}
 {% endhighlight %}
