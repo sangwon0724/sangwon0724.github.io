@@ -6,9 +6,23 @@ categories:  Flutter
 published: false
 ---
 
-### ClipOval (모양잡기)
-### ClipPath (모양잡기)
-### ClipRect (모양잡기)
+### ClipPath
+
+{% highlight dart %}
+{% endhighlight %}
+
+### ClipRect
+
+{% highlight dart %}
+{% endhighlight %}
+
+### ClipOval
+
+{% highlight dart %}
+{% endhighlight %}
+
+
+### CircleAvatar
 
 {% highlight dart %}
 {% endhighlight %}

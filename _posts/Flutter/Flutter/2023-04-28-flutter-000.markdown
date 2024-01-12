@@ -5,14 +5,6 @@ date:   2023-04-28 10:07:33 +0900
 categories:  Flutter
 ---
 
-9. 화면 구성 위젯 (목록)
-- GridView (목록)
-- ListView (목록)
-- SingleChildScrollView (스크롤뷰)
-- Wrap (목록)
-- Table (테이블)
-- DataTable (테이블)
-
 10. 앱 구성 위젯
 - AppBar (앱 상단 메뉴)
 - BottomAppBar (앱 하단 메뉴)
@@ -37,6 +29,7 @@ categories:  Flutter
 - ClipOval (모양잡기)
 - ClipPath (모양잡기)
 - ClipRect (모양잡기)
+- CircleAvatar
 
 13. 진행 중 표시하기
 - CircularProgressIndicator (원형 대기바)
