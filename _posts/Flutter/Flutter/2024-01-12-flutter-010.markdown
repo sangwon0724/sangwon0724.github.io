@@ -283,32 +283,44 @@ BottomAppBar(
 - 주로 사용하는 속성
     - List<BottomNavigationBarItem> items
         - 필수
-    - void Function(int)? onTap
     - int currentIndex
+        - items의 항목 중에서 현재 사용 중인 위젯의 인덱스
         - 기본 값 : 0
-    - double? elevation
-    - BottomNavigationBarType? type
-    - Color? fixedColor
-    - Color? backgroundColor
+    - void Function(int)? onTap
+        - items의 항목 선택 시 동작할 기능
     - double iconSize
+        - 아이콘의 크기
         - 기본 값 : 24.0
+    - Color? backgroundColor
+        - 배경색
     - Color? selectedItemColor
+        - items의 항목 중에서 선택된 항목의 색상
     - Color? unselectedItemColor
+        - items의 항목 중에서 선택되지 않은 항목의 색상
     - IconThemeData? selectedIconTheme
+        - items의 항목 중에서 선택된 항목의 스타일
     - IconThemeData? unselectedIconTheme
+        - items의 항목 중에서 선택되지 않은 항목의 스타일
     - double selectedFontSize
+        - items의 항목 중에서 선택된 항목의 글자 크기
         - 기본 값 : 14.0
     - double unselectedFontSize
+        - items의 항목 중에서 선택되지 않은 항목의 글자 크기
         - 기본 값 : 12.0
-    - TextStyle? selectedLabelStyle
-    - TextStyle? unselectedLabelStyle
     - bool? showSelectedLabels
+        - items의 항목 중에서 선택된 항목에 대한 문구의 노출 여부
     - bool? showUnselectedLabels
-    - MouseCursor? mouseCursor
+        - items의 항목 중에서 선택되지 않은 항목에 대한 문구의 노출 여부
+    - TextStyle? selectedLabelStyle
+        - items의 항목 중에서 선택된 항목의 TextStyle
+    - TextStyle? unselectedLabelStyle
+        - items의 항목 중에서 선택되지 않은 항목의 TextStyle
+    - Color? fixedColor
+        - selectedItemColor의 값
+    - double? elevation
+        - BottomNavigationBar의 z 좌표
     - bool? enableFeedback
-    - BottomNavigationBarLandscapeLayout? landscapeLayout
-    - bool useLegacyColorScheme
-        - 기본 값 : true
+        - 감지된 제스처가 음향/촉각 피드백을 제공해야 하는지에 대한 여부
 - [참고](https://api.flutter.dev/flutter/material/BottomNavigationBar-class.html)
 
 {% highlight dart %}
@@ -370,24 +382,104 @@ Scaffold(
 
 ### BottomSheet
 
+- 주로 사용하는 속성
+    - AnimationController? animationController
+    - bool enableDrag
+        - 기본 값 : true
+    - bool? showDragHandle
+    - Color? dragHandleColor
+    - Size? dragHandleSize
+    - Function(DragStartDetails)? onDragStart
+    - Function(DragEndDetails, {required bool isClosing})? onDragEnd
+    - Color? backgroundColor
+    - Color? shadowColor
+    - double? elevation
+    - ShapeBorder? shape
+    - Clip? clipBehavior
+    - BoxConstraints? constraints
+    - Function() onClosing
+        - 필수
+    - Function(BuildContext) builder
+        - 필수
 - [참고](https://api.flutter.dev/flutter/material/BottomSheet-class.html)
+
+
+### Drawer
+
+- 주로 사용하는 속성
+    - Color? backgroundColor
+    - double? elevation
+    - Color? shadowColor
+    - Color? surfaceTintColor
+    - ShapeBorder? shape
+    - double? width
+    - Widget? child
+    - String? semanticLabel
+    - Clip? clipBehavior
+- [참고](https://api.flutter.dev/flutter/material/Drawer-class.html)
 
 
 ### NavigationBar
 
+- BottomNavigationBar의 Material 3 버전
+- 주로 사용하는 속성
+    - Duration? animationDuration
+    - int selectedIndex
+        - 기본 값 : 0
+    - List&lt;Widget> destinations
+        - 필수
+    - void Function(int)? onDestinationSelected
+    - Color? backgroundColor
+    - double? elevation
+    - Color? shadowColor
+    - Color? surfaceTintColor
+    - Color? indicatorColor
+    - ShapeBorder? indicatorShape
+    - double? height
+    - NavigationDestinationLabelBehavior? labelBehavior
 - [참고](https://api.flutter.dev/flutter/material/NavigationBar-class.html)
 
 
 ### NavigationDrawer
 
+- 주로 사용하는 속성
+    - List&lt;Widget> children
+        - 필수
+    - Color? backgroundColor
+    - Color? shadowColor
+    - Color? surfaceTintColor
+    - double? elevation
+    - Color? indicatorColor
+    - ShapeBorder? indicatorShape
+    - void Function(int)? onDestinationSelected
+    - int? selectedIndex
+        - 기본 값 : 0
+    - EdgeInsetsGeometry tilePadding
+        - 기본 값 : const EdgeInsets.symmetric(horizontal: 12.0)
 - [참고](https://api.flutter.dev/flutter/material/NavigationDrawer-class.html)
 
 
 ### NavigationRail
 
+- 주로 사용하는 속성
+    - Color? backgroundColor
+    - bool extended
+        - 기본 값 : false
+    - Widget? leading
+    - Widget? trailing
+    - required List&lt;NavigationRailDestination> destinations
+    - required int? selectedIndex
+    - void Function(int)? onDestinationSelected
+    - double? elevation
+    - double? groupAlignment
+    - NavigationRailLabelType? labelType
+    - TextStyle? unselectedLabelTextStyle
+    - TextStyle? selectedLabelTextStyle
+    - IconThemeData? unselectedIconTheme
+    - IconThemeData? selectedIconTheme
+    - double? minWidth
+    - double? minExtendedWidth
+    - bool? useIndicator
+    - Color? indicatorColor
+    - ShapeBorder? indicatorShape
 - [참고](https://api.flutter.dev/flutter/material/NavigationRail-class.html)
-
-
-### Drawer
-
-- [참고](https://api.flutter.dev/flutter/material/Drawer-class.html)
