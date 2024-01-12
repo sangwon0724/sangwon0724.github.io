@@ -689,7 +689,7 @@ SizedBox(
     - double? splashRadius
         - 스플래시 범위
     - Color? surfaceTintColor
-        - elevation을 나타내기 위해 color 위에 오버레이될 색상
+        - elevation을 나타내기 위한 color 위에 오버레이될 색상
     - String? tooltip
         - 버튼을 눌렀을 때 발생하는 동작을 설명하는 텍스트
 - [참고](https://api.flutter.dev/flutter/material/PopupMenuButton-class.html)

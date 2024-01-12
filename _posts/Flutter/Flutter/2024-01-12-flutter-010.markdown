@@ -200,7 +200,7 @@ published: false
     - ShapeBorder? shape
         - AppBar의 모양
     - Color? surfaceTintColor
-        - elevation을 나타내기 위해 color 위에 오버레이될 색상
+        - elevation을 나타내기 위한 color 위에 오버레이될 색상
     - SystemUiOverlayStyle? systemOverlayStyle
         - 시스템 오버레이에 사용할 스타일
             예시
@@ -237,7 +237,7 @@ published: false
     - EdgeInsetsGeometry? padding
         - 내부 여백
     - Color? surfaceTintColor
-        - elevation을 나타내기 위해 color 위에 오버레이될 색상
+        - elevation을 나타내기 위한 color 위에 오버레이될 색상
     - Color? shadowColor
         - 그림자 색상
 - [참고](https://api.flutter.dev/flutter/material/BottomAppBar-class.html)
@@ -380,44 +380,26 @@ Scaffold(
 //e:build
 {% endhighlight %}
 
-### BottomSheet
-
-- 주로 사용하는 속성
-    - AnimationController? animationController
-    - bool enableDrag
-        - 기본 값 : true
-    - bool? showDragHandle
-    - Color? dragHandleColor
-    - Size? dragHandleSize
-    - Function(DragStartDetails)? onDragStart
-    - Function(DragEndDetails, {required bool isClosing})? onDragEnd
-    - Color? backgroundColor
-    - Color? shadowColor
-    - double? elevation
-    - ShapeBorder? shape
-    - Clip? clipBehavior
-    - BoxConstraints? constraints
-    - Function() onClosing
-        - 필수
-    - Function(BuildContext) builder
-        - 필수
-- [참고](https://api.flutter.dev/flutter/material/BottomSheet-class.html)
-
-
 ### Drawer
 
+- Scaffold의 측면에서 나오는 메뉴 패널
 - 주로 사용하는 속성
-    - Color? backgroundColor
-    - double? elevation
-    - Color? shadowColor
-    - Color? surfaceTintColor
-    - ShapeBorder? shape
-    - double? width
     - Widget? child
-    - String? semanticLabel
-    - Clip? clipBehavior
+        - 내부에 배치할 위젯을 지정한다.
+        - Column/ListView/Wrap 등을 사용한다.
+    - double? width
+        - 메뉴 패널의 너비
+    - Color? backgroundColor
+        - 배경색
+    - double? elevation
+        - 상위 Drawer를 기준으로 해당 Drawer를 배치할 z 좌표
+    - Color? shadowColor
+        - elevation에 대한 그림자 색상
+    - Color? surfaceTintColor
+        - elevation을 나타내기 위한 color 위에 오버레이될 색상
+    - ShapeBorder? shape
+        - Drawer의 모양
 - [참고](https://api.flutter.dev/flutter/material/Drawer-class.html)
-
 
 ### NavigationBar
 
@@ -439,6 +421,9 @@ Scaffold(
     - NavigationDestinationLabelBehavior? labelBehavior
 - [참고](https://api.flutter.dev/flutter/material/NavigationBar-class.html)
 
+{% highlight dart %}
+{% endhighlight %}
+
 
 ### NavigationDrawer
 
@@ -457,6 +442,9 @@ Scaffold(
     - EdgeInsetsGeometry tilePadding
         - 기본 값 : const EdgeInsets.symmetric(horizontal: 12.0)
 - [참고](https://api.flutter.dev/flutter/material/NavigationDrawer-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
 
 
 ### NavigationRail
@@ -483,3 +471,6 @@ Scaffold(
     - Color? indicatorColor
     - ShapeBorder? indicatorShape
 - [참고](https://api.flutter.dev/flutter/material/NavigationRail-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
