@@ -640,34 +640,58 @@ SizedBox(
 
 - 사용자가 여러 항목 중에서 실행하고 싶은 기능을 선택하는 버튼
 - 주로 사용하는 속성
-    - List&lt;PopupMenuEntry<dynamic>> Function(BuildContext) itemBuilder
-        - 필수
     - dynamic initialValue
-    - void Function()? onOpened
-    - void Function(dynamic)? onSelected
-    - void Function()? onCanceled
-    - String? tooltip
-    - double? elevation
-    - Color? shadowColor
-    - Color? surfaceTintColor
-    - EdgeInsetsGeometry padding
-        - 기본 값 : const EdgeInsets.all(8.0)
-    - Widget? child
-    - double? splashRadius
+        - 초기화 값
+        - 해당 값과 하위 메뉴의 값이 같으면 강조 표시가 된다.
+    - List&lt;PopupMenuEntry<dynamic>> Function(BuildContext) itemBuilder
+        - 하위 메뉴 목록을 만드는 빌더 메소드
+        - 필수
     - Widget? icon
+        - 하위 메뉴 목록을 열기 위해 눌러야 할 아이콘 지정
+        - child와 함께 사용할 수 없다.
     - double? iconSize
-    - Offset offset
-        - 기본 값 : Offset.zero
-    - bool enabled
-        - 기본 값 : true
-    - ShapeBorder? shape
-    - Color? color
+        - 아이콘의 크기
     - Color? iconColor
-    - bool? enableFeedback
+        - 아이콘의 크기
+    - Widget? child
+        - 하위 메뉴 목록을 열기 위해 눌러야 할 위젯 지정
+        - icon과 함께 사용할 수 없다.
+    - Color? color
+        - 하위 메뉴 목록의 배경색
     - BoxConstraints? constraints
+        - 팝업 메뉴의 크기에 대한 제약 조건
+    - double? elevation
+        - 메뉴가 열릴 때 메뉴를 배치할 z 좌표
+        - 메뉴 아래 그림자의 크기를 제어한다.
+    - bool enabled
+        - 활성화 여부
+        - 기본 값 : true
+    - bool? enableFeedback
+        - 감지된 제스처가 음향/촉각 피드백을 제공해야 하는지에 대한 여부
+    - Offset offset
+        - PopupMenuButton의 위치
+        - 기본 값 : Offset.zero
+    - void Function()? onOpened
+        - 팝업 메뉴 패널이 노출 처리될 때 동작할 기능
+    - void Function()? onCanceled
+        - 팝업 메뉴 패널이 비노출 처리될 때 동작할 기능
+    - void Function(dynamic)? onSelected
+        - 팝업 메뉴 패널에서 메뉴를 선택했을 때 동작할 기능
+    - EdgeInsetsGeometry padding
+        - 여백
+        - 기본 값 : const EdgeInsets.all(8.0)
     - PopupMenuPosition? position
-    - Clip clipBehavior
-        - 기본 값 : Clip.none
+        - 팝업 메뉴 패널이 버튼의 위/아래 중 어디에 위치하는 지에 대해 지정ㄴ
+    - Color? shadowColor
+         -그림자 색상
+    - ShapeBorder? shape
+        - 메뉴의 모양
+    - double? splashRadius
+        - 스플래시 범위
+    - Color? surfaceTintColor
+        - elevation을 나타내기 위해 color 위에 오버레이될 색상
+    - String? tooltip
+        - 버튼을 눌렀을 때 발생하는 동작을 설명하는 텍스트
 - [참고](https://api.flutter.dev/flutter/material/PopupMenuButton-class.html)
 
 {% highlight dart %}
@@ -699,31 +723,44 @@ PopupMenuButton<SampleItem>(
 )
 {% endhighlight %}
 
-
-
 ### MenuAnchor
 
 - 사용자가 여러 항목 중에서 실행하고 싶은 기능을 선택하는 버튼
 - 주로 사용하는 속성
-    - MenuController? controller
+    - List&lt;Widget> menuChildren
+        - 하위 메뉴 목록을 작성하는 빌드 메소드
+        - MenuItemButton은 단일 메뉴 위젯이다.
+        - SubmenuButton은 MenuItemButton 목록을 가질 수 있는 상위 메뉴 위젯이다.
+        - 필수
+    - Widget Function(BuildContext, MenuController, Widget?)? builder
+        - 선택했을 때 팝업 메뉴 패널을 노출/비노출시킬 위젯을 만드는 빌더 메소드
+    - Widget? child
+        - 선택했을 때 팝업 메뉴 패널을 노출/비노출시킬 위젯
+        - 이것저것 추가로 설정해야할 것이 많아서 builder를 쓰는 게 편하다.
     - FocusNode? childFocusNode
+        - 자식 위젯에서 사용될 FocusNode
+    - MenuController? controller
+        - 다른 위젯에서 메뉴를 열고 닫을 수 있는 선택적 컨트롤러
     - MenuStyle? style
+        - 메뉴에 대한 스타일
     - Offset? alignmentOffset
+        - MenuAnchor와 팝업 메뉴 패널 간의 간격
         - 기본 값 : Offset.zero
-    - Clip clipBehavior
-        - 기본 값 : Clip.hardEdge
     - bool anchorTapClosesMenu
         - 기본 값 : false
     - void Function()? onOpen
+        - 팝업 메뉴 패널이 노출 처리될 때 동작할 기능
     - void Function()? onClose
+        - 팝업 메뉴 패널이 비노출 처리될 때 동작할 기능
     - bool crossAxisUnconstrained
+        - 팝업 메뉴 패널이 자연스러운 크기로 렌더링될 수 있도록 하는  
+        UnconstrainedBox로 팝업 메뉴 패널을 래핑할 것인지에 대한 여부
         - 기본 값 : true
-    - required List&lt;Widget> menuChildren
-    - Widget Function(BuildContext, MenuController, Widget?)? builder
-    - Widget? child
 - [참고](https://api.flutter.dev/flutter/material/MenuAnchor-class.html)
 
 {% highlight dart %}
+import 'package:flutter/services.dart';
+
 //s:enum 선언
 enum MenuEntry {
     about('About'),
@@ -760,7 +797,7 @@ bool _showingMessage = false;
 set showingMessage(bool value) {
     if (_showingMessage != value) {
         setState(() {
-        _   showingMessage = value;
+            _showingMessage = value;
         });
     }
 }
