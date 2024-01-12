@@ -151,7 +151,7 @@ published: false
 - 앱 상단에 위치하는 영역
 - 페이지의 제목이나 관련된 추가 기능 등을 포함한다.
 - 주로 사용하는 속성
-    - List<Widget>? actions
+    - List&lt;Widget>? actions
         - AppBar 상단 우측에 들어갈 위젯 목록
         - 알림 버튼이나 설정 버튼 등 기능이 들어간 위젯을 사용한다.
     - IconThemeData? actionsIconTheme
@@ -281,7 +281,8 @@ BottomAppBar(
 - 앱 하단에 위치하는 영역
 - 특정 페이지로 이동하는 경우에 사용한다.
 - 주로 사용하는 속성
-    - List<BottomNavigationBarItem> items
+    - List&lt;BottomNavigationBarItem> items
+        - 각 페이지를 나타내는 위젯 목록
         - 필수
     - int currentIndex
         - items의 항목 중에서 현재 사용 중인 위젯의 인덱스
@@ -405,47 +406,33 @@ Scaffold(
 
 - BottomNavigationBar의 Material 3 버전
 - 주로 사용하는 속성
-    - Duration? animationDuration
-    - int selectedIndex
-        - 기본 값 : 0
     - List&lt;Widget> destinations
+        - 각 페이지를 나타내는 위젯 목록
         - 필수
-    - void Function(int)? onDestinationSelected
-    - Color? backgroundColor
-    - double? elevation
-    - Color? shadowColor
-    - Color? surfaceTintColor
-    - Color? indicatorColor
-    - ShapeBorder? indicatorShape
+    - int selectedIndex
+        - destinations의 항목 중에서 현재 사용 중인 위젯의 인덱스
+        - 기본 값 : 0
     - double? height
+        - NavigationBar의 높이
+    - Function(int)? onDestinationSelected
+        - destinations의 항목 선택 시 동작할 기능
+    - Color? backgroundColor
+        - 배경색
+    - double? elevation
+        - 상위 NavigationBar를 기준으로 해당 NavigationBar를 배치할 z 좌표
+    - Color? shadowColor
+        - elevation에 대한 그림자 색상
+    - Color? surfaceTintColor
+        - elevation을 나타내기 위한 color 위에 오버레이될 색상
+    - Color? indicatorColor
+        - destinations의 항목 선택 시 나타나는 주변 영역의 색상
+    - ShapeBorder? indicatorShape
+        - destinations의 항목 선택 시 나타나는 주변 영역의 모양
+    - Duration? animationDuration
+        - 애니메이션 전환되는 기간
+        - shape, elevation, shadowColor, surfaceTintColor 및 고도 오버레이가 적용된 경우에 동작한다.
     - NavigationDestinationLabelBehavior? labelBehavior
 - [참고](https://api.flutter.dev/flutter/material/NavigationBar-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
-
-
-### NavigationDrawer
-
-- 주로 사용하는 속성
-    - List&lt;Widget> children
-        - 필수
-    - Color? backgroundColor
-    - Color? shadowColor
-    - Color? surfaceTintColor
-    - double? elevation
-    - Color? indicatorColor
-    - ShapeBorder? indicatorShape
-    - void Function(int)? onDestinationSelected
-    - int? selectedIndex
-        - 기본 값 : 0
-    - EdgeInsetsGeometry tilePadding
-        - 기본 값 : const EdgeInsets.symmetric(horizontal: 12.0)
-- [참고](https://api.flutter.dev/flutter/material/NavigationDrawer-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
-
 
 ### NavigationRail
 
@@ -471,6 +458,29 @@ Scaffold(
     - Color? indicatorColor
     - ShapeBorder? indicatorShape
 - [참고](https://api.flutter.dev/flutter/material/NavigationRail-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+
+### NavigationDrawer
+
+- Drawer의 Material 3 버전
+- 주로 사용하는 속성
+    - List&lt;Widget> children
+        - 필수
+    - Color? backgroundColor
+    - Color? shadowColor
+    - Color? surfaceTintColor
+    - double? elevation
+    - Color? indicatorColor
+    - ShapeBorder? indicatorShape
+    - void Function(int)? onDestinationSelected
+    - int? selectedIndex
+        - 기본 값 : 0
+    - EdgeInsetsGeometry tilePadding
+        - 기본 값 : const EdgeInsets.symmetric(horizontal: 12.0)
+- [참고](https://api.flutter.dev/flutter/material/NavigationDrawer-class.html)
 
 {% highlight dart %}
 {% endhighlight %}
