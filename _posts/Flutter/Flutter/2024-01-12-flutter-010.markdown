@@ -148,15 +148,225 @@ published: false
 
 ### AppBar
 
+- 앱 상단에 위치하는 영역
+- 페이지의 제목이나 관련된 추가 기능 등을 포함한다.
+- 주로 사용하는 속성
+    - List<Widget>? actions
+        - AppBar 상단 우측에 들어갈 위젯 목록
+        - 알림 버튼이나 설정 버튼 등 기능이 들어간 위젯을 사용한다.
+    - IconThemeData? actionsIconTheme
+        - actions에 사용된 아이콘에 대한 스타일
+    - Widget? title
+        - AppBar 상단 좌측에 들어갈 위젯
+        - 해당 페이지의 제목을 나타낼 때 사용한다.
+    - double? titleSpacing
+        - title의 주변 간격
+        - 0.0일 경우 title이 사용 가능한 모든 공간을 차지하게 된다.
+    - TextStyle? titleTextStyle
+        - title에 사용된 Text의 스타일
+    - bool? centerTitle
+        - title을 중앙에 배치할지에 대한 여부
+        - true일 경우 상단 좌측이 아닌 중앙에 배치된다.
+    - Widget? leading
+        - AppBar 상단 좌측에 들어갈 위젯 목록
+        - title의 왼쪽에 표시된다.
+        - 주로 앱의 아이콘을 표시한다.
+    - double? leadingWidth
+        - leading에 명시된 위젯의 너비
+    - bool automaticallyImplyLeading
+        - leading의 값이 null일 경우 암시적으로 위젯을 추가할 것인지에 대한 여부
+        - false일 경우 뒤로가기 버튼이나 메뉴 버튼같은 것들이 자동으로 생기지 않는다.
+        - 기본 값 : true
+    - Color? backgroundColor
+        - 배경색
+    - Color? foregroundColor
+        - AppBar의 Text 위젯이나 Icon 위젯의 색상
+    - PreferredSizeWidget? bottom
+        - AppBar 하단에 들어갈 위젯
+        - PreferredSizeWidget을 구현한 위젯만 사용할 수 있다.
+        - 일반적으로는 TabBar 위젯을 사용한다.
+    - double bottomOpacity
+        - bottom 영역의 불투명도
+        - 기본 값 : 1.0
+    - double? elevation
+        - 상위 AppBar를 기준으로 해당 AppBar를 배치할 z 좌표
+    - IconThemeData? iconTheme
+        - ToolBar에 사용된 아이콘에 대한 스타일
+    - bool primary
+        - 해당 AppBar가 화면 상단에 표시되는지에 대한 여부
+        - 기본 값 : true
+    - Color? shadowColor
+        - AppBar 아래의 그림자 색상
+    - ShapeBorder? shape
+        - AppBar의 모양
+    - Color? surfaceTintColor
+        - elevation을 나타내기 위해 color 위에 오버레이될 색상
+    - SystemUiOverlayStyle? systemOverlayStyle
+        - 시스템 오버레이에 사용할 스타일
+            예시
+                - Android/iOS의 상태 표시줄
+                - Android의 시스템 탐색 표시줄
+    - double? toolbarHeight
+        - ToolBar의 높이
+    - double toolbarOpacity
+        - ToolBar의 불투명도
+        - 기본 값 : 1.0
+    - TextStyle? toolbarTextStyle
+        - ToolBar에 사용된 Text의 스타일
 - [참고](https://api.flutter.dev/flutter/material/AppBar-class.html)
 
 ### BottomAppBar
 
+- 앱 하단에 위치하는 영역
+- 특정 페이지에서 관련 기능들을 실행할 때 사용한다.
+- 주로 사용하는 속성
+    - Widget? child
+        - BottomAppBar 내부에 배치할 위젯
+        - 주로 Row 위젯을 많이 사용한다.
+    - Color? color
+        - 배경색
+    - double? elevation
+        - 상위 BottomAppBar를 기준으로 해당 AppBar를 배치할 z 좌표
+    - NotchedShape? shape
+        - BottomAppBar의 모양
+    - double? height    
+        - BottomAppBar의 높이
+    - double notchMargin
+        - BottomAppBar의 노치와 FloatingActionButton 사이의 여백
+        - 기본 값 : 4.0
+    - EdgeInsetsGeometry? padding
+        - 내부 여백
+    - Color? surfaceTintColor
+        - elevation을 나타내기 위해 color 위에 오버레이될 색상
+    - Color? shadowColor
+        - 그림자 색상
 - [참고](https://api.flutter.dev/flutter/material/BottomAppBar-class.html)
+
+{% highlight dart %}
+BottomAppBar(
+      color: Colors.blue,
+      child: IconTheme(
+        data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              tooltip: 'Open navigation menu',
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                print("메뉴");
+              },
+            ),
+            IconButton(
+              tooltip: 'Search',
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                print("검색");
+              },
+            ),
+            IconButton(
+              tooltip: 'Favorite',
+              icon: const Icon(Icons.favorite),
+              onPressed: () {
+                print("좋아요");
+              },
+            ),
+          ],
+        ),
+      ),
+    )
+{% endhighlight %}
 
 ### BottomNavigationBar
 
+- 앱 하단에 위치하는 영역
+- 특정 페이지로 이동하는 경우에 사용한다.
+- 주로 사용하는 속성
+    - List<BottomNavigationBarItem> items
+        - 필수
+    - void Function(int)? onTap
+    - int currentIndex
+        - 기본 값 : 0
+    - double? elevation
+    - BottomNavigationBarType? type
+    - Color? fixedColor
+    - Color? backgroundColor
+    - double iconSize
+        - 기본 값 : 24.0
+    - Color? selectedItemColor
+    - Color? unselectedItemColor
+    - IconThemeData? selectedIconTheme
+    - IconThemeData? unselectedIconTheme
+    - double selectedFontSize
+        - 기본 값 : 14.0
+    - double unselectedFontSize
+        - 기본 값 : 12.0
+    - TextStyle? selectedLabelStyle
+    - TextStyle? unselectedLabelStyle
+    - bool? showSelectedLabels
+    - bool? showUnselectedLabels
+    - MouseCursor? mouseCursor
+    - bool? enableFeedback
+    - BottomNavigationBarLandscapeLayout? landscapeLayout
+    - bool useLegacyColorScheme
+        - 기본 값 : true
 - [참고](https://api.flutter.dev/flutter/material/BottomNavigationBar-class.html)
+
+{% highlight dart %}
+//s:선언부
+int _selectedIndex = 0;
+static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+        'Index 0: Home',
+        style: optionStyle,
+    ),
+    Text(
+        'Index 1: Business',
+        style: optionStyle,
+    ),
+    Text(
+        'Index 2: School',
+        style: optionStyle,
+    ),
+];
+
+void _onItemTapped(int index) {
+    setState(() {
+        _selectedIndex = index;
+    });
+}
+//e:선언부
+
+//s:build
+Scaffold(
+    appBar: AppBar(
+        title: const Text('BottomNavigationBar Sample'),
+    ),
+    body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+    ),
+    bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.business),
+                label: 'Business',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.school),
+                label: 'School',
+            ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+    ),
+)
+//e:build
+{% endhighlight %}
 
 ### BottomSheet
 
@@ -181,8 +391,3 @@ published: false
 ### Drawer
 
 - [참고](https://api.flutter.dev/flutter/material/Drawer-class.html)
-
-
-### Menu
-
-- [참고](https://api.flutter.dev/flutter/material/MenuBar-class.html)
