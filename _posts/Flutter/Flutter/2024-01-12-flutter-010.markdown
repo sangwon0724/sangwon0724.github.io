@@ -6,22 +6,148 @@ categories:  Flutter
 published: false
 ---
 
-### AppBar (앱 상단 메뉴)
-### BottomAppBar (앱 하단 메뉴)
-### BottomNavigationBar (앱 하단 메뉴, Material 2)
-### BottomSheet (앱 하단 메뉴)
-### Drawer (좌우 메뉴)
-### MaterialApp (화면)
-### Menu (PopupMenuButton)
-### NavigationBar (하단 메뉴, Material 3)
-### NavigationDrawer (메뉴)
-### NavigationRail (사이드 쪽에 지정하는 네비게이션 메뉴)
-### PopupMenuButton (메뉴)
-### Scaffold (앱)
-### TabBar (탭바)
-### TabBarView (탭바뷰)
-### TabController (탭 컨트롤러)
-### TabPageSelector (점 모양 탭 바)
+### MaterialApp
+
+- 머티리얼 디자인 애플리케이션에 일반적으로 필요한 여러 위젯을 래핑하는 위젯
+- 하위 페이지나 구성요소들을 최상단에서 담는 역할을 한다.
+- 주로 사용하는 속성
+    - GlobalKey&lt;NavigatorState>? navigatorKey
+        - Navigator를 구축할 때 사용할 키
+    - GlobalKey&lt;ScaffoldMessengerState>? scaffoldMessengerKey
+        - ScaffoldMessenger 를 빌드할 때 사용할 키
+    - Widget? home
+        - 앱의 기본 경로에 대한 위젯
+    - Map&lt;String, Widget Function(BuildContext)> routes
+        - 지정한 경로명과 각 페이지를 연결하는 역할을 한다.
+        - 지정한 경로명에 해당하는 페이지의 클래스를 반환하는 형태로 사용된다.
+        - 기본 값 : const &lt;String, WidgetBuilder>{}
+    - String? initialRoute
+        - Navigator가 빌드된 경우 표시할 첫번째 경로명
+    - Route&lt;dynamic>? Function(RouteSettings)? onGenerateRoute
+        - 앱이 명명된 경로로 탐색될 때 사용되는 경로 생성기 콜백
+    - List&lt;Route&lt;dynamic>> Function(String)? onGenerateInitialRoutes
+        - initialRoute가 제공되는 경우 초기 경로를 생성하는 데 사용되는 경로 생성기 콜백
+    - Route&lt;dynamic>? Function(RouteSettings)? onUnknownRoute
+        - onGenerateRoute가 initalRoute를 제외하고 경로 생성에 실패할 떄 호출하는 메소드
+        - 앱이 오류나 Android 인텐트 등의 이유로 없는 페이지를 호출할 때  
+        오류 페이지를 반환하는 형태로 사용된다.
+    - bool Function(NavigationNotification)? onNavigationNotification
+        - NavigationNotification을 수신할 때 사용할 콜백
+        - 기본적으로 탐색 상태로 엔진을 업데이트한다.
+    - List&lt;NavigatorObserver> navigatorObservers
+        - 해당 애플리케이션을 위해 생성된 NavigatorObserver 목록
+        - navigatorKey가 변경되면 navigatorObservers는 새로 생성된 NavigatorObserver 목록으로 대체되어야 한다.
+        - 기본 값 : const &lt;NavigatorObserver>[]
+    - String title
+        - 애플리케이션의 제목에 사용될 문자열
+        - 기본 값 : ''
+    - Function(BuildContext)? onGenerateTitle
+        - 애플리케이션의 제목에 사용될 문자열을 생성하는 메소드
+    - Color? color
+        - 기본 색상
+    - ThemeData? theme
+        - 시스템에서 사용할 사용할 시각적 속성 데이터
+    - ThemeData? darkTheme
+        - 시스템에서 다크 모드를 요청할 때 사용할 시각적 속성 데이터
+    - ThemeMode? themeMode
+        -  애플리케이션에서 사용할 테마 선택
+        - 기본 값 : ThemeMode.system
+    - Locale? locale
+        - 해당 앱의 지역 설정
+        - 한국은 Locale('ko', 'KR') 사용
+    - Iterable&lt;Locale> supportedLocales
+        - 해당 앱이 서비스되는 지역 목록
+        - 기본 값 : const &lt;Locale>[Locale('en', 'US')]
+    - bool showPerformanceOverlay
+        - 성능 오버레이 실행 여부
+        - 기본 값 : false
+    - bool debugShowCheckedModeBanner
+        - 디버그 모드 표시 여부
+        - 기본 값 : true
+    - ScrollBehavior? scrollBehavior
+        - 스크롤 동작 방식
+- [참고](https://api.flutter.dev/flutter/material/MaterialApp-class.html)
+
+### Scaffold
+
+- [참고](https://api.flutter.dev/flutter/material/Scaffold-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### AppBar
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### BottomAppBar
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### BottomNavigationBar
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### BottomSheet
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### NavigationBar
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### NavigationDrawer
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### NavigationRail
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### TabPageSelector
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Drawer
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Menu
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### PopupMenuButton
+
+- [참고]()
 
 {% highlight dart %}
 {% endhighlight %}

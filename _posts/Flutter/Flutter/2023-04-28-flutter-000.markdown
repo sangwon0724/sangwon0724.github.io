@@ -18,9 +18,6 @@ categories:  Flutter
 - NavigationRail (사이드 쪽에 지정하는 네비게이션 메뉴)
 - PopupMenuButton (메뉴)
 - Scaffold (앱)
-- TabBar (탭바)
-- TabBarView (탭바뷰)
-- TabController (탭 컨트롤러)
 - TabPageSelector (점 모양 탭 바)
 
 11. provider
@@ -128,7 +125,9 @@ categories:  Flutter
 
 36. File 클래스
 
-37. PageView (페이지뷰)
+37. PageView
+
+38. TabBar & TabBarView & TabController
 
 {% highlight dart %}
 {% endhighlight %}
