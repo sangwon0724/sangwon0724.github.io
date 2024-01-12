@@ -70,84 +70,119 @@ published: false
 
 ### Scaffold
 
+- 기본 머티리얼 디자인 시각적 레이아웃 구조를 구현한다.
+- 일반적으로 하나의 페이지를 구현할 때 많이 쓰인다.
+- 주로 사용하는 속성
+    - PreferredSizeWidget? appBar
+        - Scaffold 상단에 표시할 AppBar 위젯 작성
+    - Color? backgroundColor
+        - 배경색 지정
+    - Widget? body
+        - 본문이 될 위젯 작성
+    - Widget? bottomNavigationBar
+        - Scaffold 하단에 표시될 탐색 기능 모음
+    - Widget? bottomSheet
+        - Scaffold 하단에 표시될 위젯
+        - bottomNavigationBar와 함께 쓸 경우 그 위쪽 영역에 그려진다.
+    - Widget? drawer
+        - body의 측면에 표시되는 패널
+        - 모바일 기기에서는 숨겨져 있는 경우가 많다.
+        - "좌 → 우" 또는 "우 → 좌"의 방향으로 살짝 드래그하면 나온다.
+        - 열려있는 동안 약간 불투명한 색상의 스크림이 나타나서 기본 컨텐츠를 가린다.
+    - double? drawerEdgeDragWidth
+        - 가로로 드래그하면 열리는 영역의 너비
+    - bool drawerEnableOpenDragGesture
+        - 모바일에서 드래그하면 drawer를 열 수 있는지에 대한 여부
+        - 기본 값 : true
+    - void Function(bool)? onDrawerChanged
+        - drawer가 열리가나 닫힐 때 동작할 기능
+    - Widget? endDrawer
+        - body의 측면에 표시되는 패널
+        - 모바일 기기에서는 숨겨져 있는 경우가 많다.
+        - "우 → 좌" 또는 "좌 → 우"의 방향으로 살짝 드래그하면 나온다.
+        - 열려있는 동안 약간 불투명한 색상의 스크림이 나타나서 기본 컨텐츠를 가린다.
+    - bool endDrawerEnableOpenDragGesture
+        - 모바일에서 드래그하면 endDrawer를 열 수 있는지에 대한 여부
+        - 기본 값 : true
+    - void Function(bool)? onEndDrawerChanged
+        - endDrawer가 열리가나 닫힐 때 동작할 기능
+    - DragStartBehavior drawerDragStartBehavior
+        - 드래그 시작 동작이 처리되는 방식
+        - 기본 값 : DragStartBehavior.start
+    - Color? drawerScrimColor
+        - drawer가 열려있는 동안 표시되는 스크림 영역의 색상
+    - bool extendBody
+        - 해당 값이 true이고, BottomNavigationBar 또는 persistFooterButtons가 지정된 경우
+        - 기본 값 : false
+    - bool extendBodyBehindAppBar
+        - Scaffold의 body가 appBar의 영역까지 사용할 수 있는지의 여부
+        - true일 경우 body의 일부가 appBar 뒤에 가려진다.
+            - 만약에 appBar의 height가 30, body의 height가 100일 경우에는  
+            실제 화면에서 보이는 건 70만 보인다. 
+        - 기본 값 : false
+    - Widget? floatingActionButton
+        - body 오른쪽 하단에 떠 있는 버튼
+        - 업로드나 공유하기 같은 기능을 사용할 때 많이 사용된다.
+    - FloatingActionButtonAnimator? floatingActionButtonAnimator
+        - floatingActionButton을 새로운 floatingActionButtonLocation으로 이동하게 하는 애니메이터
+    - FloatingActionButtonLocation? floatingActionButtonLocation
+        - floatingActionButton이 어디 위치로 가야할지 지정
+    - bool primary
+        - 해당 Scaffold가 화면 상단에 표시되는지에 대한 여부
+        - true일 경우 appBar의 높이에 디바이스의 상태바 높이가 추가된다.
+        - false일 경우 appBar 자체의 높이만큼만 그려진다.
+        - 기본 값 : true
+    - List&lt;Widget>? persistentFooterButtons
+        - Scaffold 하단에 표시될 탐색 기능 모음
+    - AlignmentDirectional persistentFooterAlignment
+        - OverflowBar 내부의 persistFooterButton 정렬
+        - 기본 값 : AlignmentDirectional.centerEnd
+    - bool? resizeToAvoidBottomInset
+        - true
+            - 입력 영역을 선택하여 키보드가 올라올 때 해당 화면의 높이가 달라진다.
+            - 오버플로우가 발생할 수도 있다.
+        - false
+            - 입력 영역을 선택하여 키보드가 올라올 때 해당 화면 위에 얹어져서  
+            기존 화면에 있는 일부 영역을 키보드 영역의 넓이만큼 가린다.
 - [참고](https://api.flutter.dev/flutter/material/Scaffold-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
 
 ### AppBar
 
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
+- [참고](https://api.flutter.dev/flutter/material/AppBar-class.html)
 
 ### BottomAppBar
 
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
+- [참고](https://api.flutter.dev/flutter/material/BottomAppBar-class.html)
 
 ### BottomNavigationBar
 
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
+- [참고](https://api.flutter.dev/flutter/material/BottomNavigationBar-class.html)
 
 ### BottomSheet
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/material/BottomSheet-class.html)
 
-{% highlight dart %}
-{% endhighlight %}
 
 ### NavigationBar
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/material/NavigationBar-class.html)
 
-{% highlight dart %}
-{% endhighlight %}
 
 ### NavigationDrawer
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/material/NavigationDrawer-class.html)
 
-{% highlight dart %}
-{% endhighlight %}
 
 ### NavigationRail
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/material/NavigationRail-class.html)
 
-{% highlight dart %}
-{% endhighlight %}
-
-### TabPageSelector
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
 
 ### Drawer
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/material/Drawer-class.html)
 
-{% highlight dart %}
-{% endhighlight %}
 
 ### Menu
 
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### PopupMenuButton
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
+- [참고](https://api.flutter.dev/flutter/material/MenuBar-class.html)
