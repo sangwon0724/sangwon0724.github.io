@@ -1,13 +1,106 @@
 ---
 layout: post
 title:  "진행 중 표시하기"
-date:   2024-01-05 14:09:00 +0900
+date:   2024-01-15 13:00:00 +0900
 categories:  Flutter
 published: false
 ---
 
 ### CircularProgressIndicator (원형 대기바)
-### LinearProgressIndicator (가로 직선의 대기바)
+
+- 애플리케이션이 사용 중임을 나타내기 위해 회전하는 순환 진행률 표시기
+- 주로 사용하는 속성
+    - double? value
+        - 표시기가 나타내는 값
+        - 범위 : 0.0 ~ 1.0
+        - null일 경우에는 0.0에서 1.0까지 반복해서 단조롭게 증가한다.
+    - Color? color
+        - 진행된 부분의 색상
+    - Color? backgroundColor
+        - 진행되지 않은 부분의 색상
+    - double strokeWidth
+        - 선 두께
+        - 기본 값 : 4.0
+    - double strokeAlign
+        - CircularProgressIndicator에서 선의 상대적 위치
+        - 범위 : -1.0 (strokeAlignInside, 내부 위치) ~ 0 (strokeAlignCenter, 중앙 위치) ~ 1.0 (strokeAlignOutside, 스트로크 외부 위치)
+        - 기본 값 : strokeAlignCenter
+        - 숫자가 작아질 수록 위젯의 크기도 작아진다고 생각하면 편한다.
+    - StrokeCap? strokeCap
+        - 진행선의 끝을 표현할 도형의 모양
+        - 종류
+            - StrokeCap.butt
+                - 모양 없음
+            - StrokeCap.round
+                - 원형
+            - StrokeCap.square
+                - 정사각형
+- [참고](https://api.flutter.dev/flutter/material/CircularProgressIndicator-class.html)
 
 {% highlight dart %}
+CircularProgressIndicator(
+    strokeWidth: 50, color: Colors.lightBlue, backgroundColor: Colors.blueGrey,
+)
+{% endhighlight %}
+
+### LinearProgressIndicator (가로 직선의 대기바)
+
+- 선을 따라 진행 상황을 표시하는 선형 진행률 표시기
+- 주로 사용하는 속성
+    - double? value
+        - 표시기가 나타내는 값
+        - 범위 : 0.0 ~ 1.0
+        - null일 경우에는 0.0에서 1.0까지 반복해서 단조롭게 증가한다.
+    - Color? color
+        - 진행된 부분의 색상
+    - Color? backgroundColor
+        - 진행되지 않은 부분의 색상
+    - double? minHeight
+        - 최소 높이
+    - BorderRadiusGeometry borderRadius
+        - 외곽선의 둥근 정도
+        - 기본 값 : BorderRadius.zero
+- [참고](https://api.flutter.dev/flutter/material/LinearProgressIndicator-class.html)
+
+{% highlight dart %}
+Column(
+    children: [
+        LinearProgressIndicator(
+            color: Colors.blue,
+            backgroundColor: Colors.blueGrey,
+        ),
+    ],
+)
+{% endhighlight %}
+
+### AnimationController
+
+- AnimationController를 통해 값을 유동적으로 나타낼 수도 있다.
+- [참고](https://api.flutter.dev/flutter/animation/AnimationController-class.html)
+
+#### mixin 진행
+
+{% highlight dart %}
+class _State클래스명 extends State<대상_클래스명> with TickerProviderStateMixin {
+    ...
+}
+{% endhighlight %}
+
+#### initState에서 초기화
+
+{% highlight dart %}
+controller = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 5),
+)..addListener(() {
+    setState(() {});
+});
+{% endhighlight %}
+
+#### 사용
+
+{% highlight dart %}
+LinearProgressIndicator(
+    value: controller.value,
+)
 {% endhighlight %}
