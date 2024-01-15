@@ -1,0 +1,42 @@
+---
+layout: post
+title:  "쉬운 프로필 이미지 만들기 (CircleAvatar)"
+date:   2024-01-15 11:39:00 +0900
+categories:  Flutter
+---
+
+### CircleAvatar
+
+- 원형의 영역을 잡아주는 위젯
+- 주로 사용하는 속성
+    - Widget? child
+        - 내부에 표시할 위젯
+    - Color? backgroundColor
+        - 배경색
+    - Color? foregroundColor
+        - 전경색
+    - ImageProvider<Object>? backgroundImage
+        - 배경 이미지
+    - ImageProvider<Object>? foregroundImage
+        - 전경 이미지
+    - Function(Object, StackTrace?)? onBackgroundImageError
+        - 배경 이미지 로드 중 에러난 경우에 대한 처리
+    - Function(Object, StackTrace?)? onForegroundImageError
+        - 전경 이미지 로드 중 에러난 경우에 대한 처리
+    - double? radius
+        - 반지름
+    - double? minRadius
+        - 반지름의 최솟값
+    - double? maxRadius
+        - 반지름의 최댓값
+- [참고](https://api.flutter.dev/flutter/material/CircleAvatar-class.html)
+
+{% highlight dart %}
+Container(
+    width: 250,
+    height: 250,
+    child: CircleAvatar(
+        backgroundImage: Image.network("https://sangwon0724.github.io/assets/img/portfolio/Student/Step/01.JPG", fit: BoxFit.fill,).image,
+    ),
+)
+{% endhighlight %}

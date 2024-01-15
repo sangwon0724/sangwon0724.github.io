@@ -5,29 +5,6 @@ date:   2023-04-28 10:07:33 +0900
 categories:  Flutter
 ---
 
-10. 앱 구성 위젯
-- AppBar (앱 상단 메뉴)
-- BottomAppBar (앱 하단 메뉴)
-- BottomNavigationBar (앱 하단 메뉴, Material 2)
-- BottomSheet (앱 하단 메뉴)
-- Drawer (좌우 메뉴)
-- MaterialApp (화면)
-- Menu (PopupMenuButton)
-- NavigationBar (하단 메뉴, Material 3)
-- NavigationDrawer (메뉴)
-- NavigationRail (사이드 쪽에 지정하는 네비게이션 메뉴)
-- PopupMenuButton (메뉴)
-- Scaffold (앱)
-- TabPageSelector (점 모양 탭 바)
-
-11. provider
-
-12. 모양 잡기
-- ClipOval (모양잡기)
-- ClipPath (모양잡기)
-- ClipRect (모양잡기)
-- CircleAvatar
-
 13. 진행 중 표시하기
 - CircularProgressIndicator (원형 대기바)
 - LinearProgressIndicator (가로 직선의 대기바)
