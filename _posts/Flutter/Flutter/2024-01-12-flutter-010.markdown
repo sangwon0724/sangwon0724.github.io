@@ -3,7 +3,6 @@ layout: post
 title:  "앱 구성 위젯"
 date:   2024-01-12 10:06:00 +0900
 categories:  Flutter
-published: false
 ---
 
 ### MaterialApp
@@ -436,51 +435,128 @@ Scaffold(
 
 ### NavigationRail
 
+- 사이드 네비게이션 메뉴
+- BottomNavigationBar나 NavigationBar는  
+화면이 넓을 경우 각 항목이 필요 이상의 영역을 차지하기 떄문데
+그런 경우에는 NavigationRail을 사용하는 것이 좋다.
 - 주로 사용하는 속성
+    - List&lt;NavigationRailDestination> destinations
+        - 내부에 배치될 NavigationRailDestination 위젯 목록
+        - 필수
+    - int? selectedIndex
+        - destinations 중에서 현재 선택된 NavigationRailDestination 위젯의 인덱스 번호
+        - 필수
+    - Function(int)? onDestinationSelected
+        - destinations의 위젯 선택 시 동작할 기능
     - Color? backgroundColor
-    - bool extended
-        - 기본 값 : false
+        - 배경색
     - Widget? leading
+        - destinations 상단에 배치될 위젯
     - Widget? trailing
-    - required List&lt;NavigationRailDestination> destinations
-    - required int? selectedIndex
-    - void Function(int)? onDestinationSelected
+        - destinations 하단에 배치될 위젯
     - double? elevation
+        - 상위 NavigationRail를 기준으로 해당 NavigationRail를 배치할 z 좌표
     - double? groupAlignment
+        - destinations이 NavigationRail 내에서 정렬되는 위치
+        - 허용 범위
+            - -1.0 ~ 1.0
+        - -1.0일 경우 항목이 위쪽에 정렬된다.
+        - 0.0일 경우 항목이 중앙에 정렬된다.
+        - 1.0일 경우 아래쪽에 정렬된다.
     - NavigationRailLabelType? labelType
-    - TextStyle? unselectedLabelTextStyle
+        - 각 항목의 라벨을 표시하는 유형
+        - 종류
+            - NavigationRailLabelType.all
+                - 모든 라벨이 항상 표시되어 있다.
+            - NavigationRailLabelType.selected
+                - 선택된 항목만 라벨이 표시되어 있다.
+            - NavigationRailLabelType.none
+                - 모든 라벨이 항상 표시되어 있지 않다.
+        - 기본 값 : NavigationRailLabelType.none
     - TextStyle? selectedLabelTextStyle
-    - IconThemeData? unselectedIconTheme
+        - 선택된 항목의 라벨의 Text 스타일
+    - TextStyle? unselectedLabelTextStyle
+        - 선택되지 않은 항목의 라벨의 Text 스타일
     - IconThemeData? selectedIconTheme
+        - 선택된 항목의 라벨의 Icon 스타일
+    - IconThemeData? unselectedIconTheme
+        - 선택되지 않은 항목의 라벨의 Icon 스타일
     - double? minWidth
+        - 최소 너비
     - double? minExtendedWidth
+        - extended가 true일 경우 애니메이션이 완료될 때까지의 너비
+    - bool extended
+        - 남는 여백을 NavigationRail이 차지할 것인지에 대한 여부
+        - labelType이 NavigationRailLabelType.none일 때만 사용가능하다.
+        - true일 경우 NavigationRail이 남는 여백을 차지하며, 각 항목의 라벨이 사이드에 배치된다.
+        - 기본 값 : false
     - bool? useIndicator
+        - true일 경우 선택한 항목의 아이콘 뒤에 둥근 NavigationIndicator를 추가한다. (둥근 모양의 강조 영역)
+        - 기본 값 : true
     - Color? indicatorColor
+        - NavigationIndicator의 색상
     - ShapeBorder? indicatorShape
+        - NavigationIndicator의 모양
 - [참고](https://api.flutter.dev/flutter/material/NavigationRail-class.html)
 
 {% highlight dart %}
-{% endhighlight %}
+int _selectedIndex = 0;
+NavigationRailLabelType labelType = NavigationRailLabelType.none;
+bool showLeading = false;
+bool showTrailing = false;
+double groupAlignment = -1.0;
 
-
-### NavigationDrawer
-
-- Drawer의 Material 3 버전
-- 주로 사용하는 속성
-    - List&lt;Widget> children
-        - 필수
-    - Color? backgroundColor
-    - Color? shadowColor
-    - Color? surfaceTintColor
-    - double? elevation
-    - Color? indicatorColor
-    - ShapeBorder? indicatorShape
-    - void Function(int)? onDestinationSelected
-    - int? selectedIndex
-        - 기본 값 : 0
-    - EdgeInsetsGeometry tilePadding
-        - 기본 값 : const EdgeInsets.symmetric(horizontal: 12.0)
-- [참고](https://api.flutter.dev/flutter/material/NavigationDrawer-class.html)
-
-{% highlight dart %}
+Row(
+    children: [
+        NavigationRail(
+            extended: true,
+            selectedIndex: _selectedIndex,
+            groupAlignment: groupAlignment,
+            onDestinationSelected: (int index) {
+                setState(() {
+                    _selectedIndex = index;
+                });
+            },
+            labelType: labelType,
+            leading: showLeading
+                ? FloatingActionButton(
+                    elevation: 0,
+                    onPressed: () {},
+                    child: const Icon(Icons.add),
+                )
+                : const SizedBox(),
+            trailing: showTrailing
+                ? IconButton(
+                onPressed: () {},
+                    icon: const Icon(Icons.more_horiz_rounded),
+                )
+                : const SizedBox(),
+            destinations: const <NavigationRailDestination>[
+                NavigationRailDestination(
+                    icon: Icon(Icons.favorite_border),
+                    selectedIcon: Icon(Icons.favorite),
+                    label: Text('First'),
+                ),
+                NavigationRailDestination(
+                    icon: Badge(child: Icon(Icons.bookmark_border)),
+                    selectedIcon: Badge(child: Icon(Icons.book)),
+                    label: Text('Second'),
+                ),
+                NavigationRailDestination(
+                    icon: Badge(
+                        label: Text('7'),
+                        child: Icon(Icons.star_border),
+                    ),
+                    selectedIcon: Badge(
+                        label: Text('7'),
+                        child: Icon(Icons.star),
+                    ),
+                    label: Text('Third'),
+                ),
+            ],
+        ),
+        const VerticalDivider(thickness: 1, width: 1),
+        Container(color: Colors.blue, width: 200,)
+    ],
+)
 {% endhighlight %}
