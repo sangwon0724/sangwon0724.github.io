@@ -13,75 +13,91 @@ published: false
 - GestureDetector가 부모 위젯과 자식 위젯으로 있을 경우  
 위젯 트리 특성 상 자식 위젯의 메소드가 호출되고  
 부모 위젯의 메소드는 호출되지 않는다.
+- 사용자의 동작을 감지 시 별도의 애니메이션 효과가 없다.
 - 주로 사용하는 속성
     - Widget? child
         - 내부에 배치할 자식 위젯
-    - Tap 관련
+    - Tap 관련 (1번 누르기)
         - Function(TapDownDetails)? onTapDown
-            - 내부 영역을 포인터가 선택한 상태
+            - 터치 후 포인터가 영역이랑 맞닿아 있는 상태일 때 동작할 기능
         - Function(TapUpDetails)? onTapUp
-            - 내부 영역을 포인터가 선택했다가 동일 영역에서 취소한 상태
+            - 터치 후 동일 영역에서 취소했을 때 동작할 기능
         - Function()? onTap
-            - 영역을 선택했다가 완전히 뗀 상태
+            - 터치 후 완전히 뗀 상태일 때 동작할 기능
         - Function()? onTapCancel
-            - 내부 영역을 포인터가 선택했다가 외부 영역에서 취소한 상태
-    - DoubleTap 관련
+            - 터치 후 외부 영역에서 취소했을 때 동작할 기능
+    - DoubleTap 관련 (2번 연속 누르기)
         - Function(TapDownDetails)? onDoubleTapDown
-            - 내부 영역을 포인터가 두 번 연속으로 선택한 상태
+            - 터치 후 포인터가 영역이랑 맞닿아 있는 상태일 때 동작할 기능
         - Function()? onDoubleTap
-            - 내부 영역을 포인터가 두 번 연속으로 선택했다가 완전히 뗀 상태
+            - 터치 후 완전히 뗀 상태일 때 동작할 기능
         - Function()? onDoubleTapCancel
-            - 내부 영역을 포인터가 두 번 연속으로 선택했다가 외부 영역에서 취소한 상태
+            - 터치 후 외부 영역에서 취소했을 때 동작할 기능
+    - LongPress 관련 (길게 누르기)
         - Function(LongPressDownDetails)? onLongPressDown
-            - 내부 영역을 포인터가 길게 선택한 상태
-    - LongPress 관련
-        - Function()? onLongPressCancel
-        - Function()? onLongPress
+            - GestureDetector가 시도하려는 동작이 LongPress인지 인식하려는 상태일 때 동작할 기능
         - Function(LongPressStartDetails)? onLongPressStart
-        - Function(LongPressMoveUpdateDetails)? onLongPressMoveUpdate
-        - Function()? onLongPressUp
+            - GestureDetector가 시도하려는 동작이 LongPress라고 인식하기 시작한 상태일 때 동작할 기능
+        - Function()? onLongPress
+            - LongPress 중인 상태일 때 동작할 기능
         - Function(LongPressEndDetails)? onLongPressEnd
-    - VerticalDrag 관련
+            - GestureDetector가 LongPress 동작이 끝났다고 인식한 상태일 때 동작할 기능
+        - Function()? onLongPressUp
+            - LongPress가 완전히 종료된 상태일 때 동작할 기능
+        - Function(LongPressMoveUpdateDetails)? onLongPressMoveUpdate
+            - LongPress 중에 포인트를 이동하는 상태일 때 동작할 기능
+        - Function()? onLongPressCancel
+            - 시도하려는 동작이 LongPress라고 인식하기 전에 제스처를 취소한 상태일 때 동작할 기능
+    - VerticalDrag 관련 (수직 스크롤)
         - Function(DragDownDetails)? onVerticalDragDown
+            - GestureDetector가 시도하려는 동작이 VerticalDrag인지 인식하려는 상태일 때 동작할 기능
         - Function(DragStartDetails)? onVerticalDragStart
+            - GestureDetector가 시도하려는 동작이 VerticalDrag라고 인식하기 시작한 상태일 때 동작할 기능
         - Function(DragUpdateDetails)? onVerticalDragUpdate
+            - VerticalDrag 중에 포인트를 이동하는 상태일 때 동작할 기능
         - Function(DragEndDetails)? onVerticalDragEnd
+            - GestureDetector가 VerticalDrag 동작이 끝났다고 인식한 상태일 때 동작할 기능
         - Function()? onVerticalDragCancel
-    - VerticalDrag 관련
+            - 시도하려는 동작이 VerticalDrag라고 인식하기 전에 제스처를 취소한 상태일 때 동작할 기능
+    - HorizontalDrag 관련 (수평 스크롤)
         - Function(DragDownDetails)? onHorizontalDragDown
+            - GestureDetector가 시도하려는 동작이 HorizontalDrag인지 인식하려는 상태일 때 동작할 기능
         - Function(DragStartDetails)? onHorizontalDragStart
+            - GestureDetector가 시도하려는 동작이 HorizontalDrag라고 인식하기 시작한 상태일 때 동작할 기능
         - Function(DragUpdateDetails)? onHorizontalDragUpdate
+            - HorizontalDrag 중에 포인트를 이동하는 상태일 때 동작할 기능
         - Function(DragEndDetails)? onHorizontalDragEnd
+            - GestureDetector가 HorizontalDrag 동작이 끝났다고 인식한 상태일 때 동작할 기능
         - Function()? onHorizontalDragCancel
-    - ForcePress 관련
-        - Function(ForcePressDetails)? onForcePressStart
-        - Function(ForcePressDetails)? onForcePressPeak
-        - Function(ForcePressDetails)? onForcePressUpdate
-        - Function(ForcePressDetails)? onForcePressEnd
-    - Pan 관련
+            - 시도하려는 동작이 HorizontalDrag라고 인식하기 전에 제스처를 취소한 상태일 때 동작할 기능
+    - Pan 관련 (위치 이동)
         - Function(DragDownDetails)? onPanDown
+            - GestureDetector가 시도하려는 동작이 Pan인지 인식하려는 상태일 때 동작할 기능
         - Function(DragStartDetails)? onPanStart
+            - GestureDetector가 시도하려는 동작이 Pan이라고 인식하기 시작한 상태일 때 동작할 기능
         - Function(DragUpdateDetails)? onPanUpdate
+            - Pan 중에 포인트를 이동하는 상태일 때 동작할 기능
         - Function(DragEndDetails)? onPanEnd
+            - GestureDetector가 Pan 동작이 끝났다고 인식한 상태일 때 동작할 기능
         - Function()? onPanCancel
-    - Scale 관련
+            - 시도하려는 동작이 Pan이라고 인식하기 전에 제스처를 취소한 상태일 때 동작할 기능
+    - Scale 관련 (비율 변경)
         - Function(ScaleStartDetails)? onScaleStart
+            - GestureDetector가 시도하려는 동작이 Scale이라고 인식하기 시작한 상태일 때 동작할 기능
         - Function(ScaleUpdateDetails)? onScaleUpdate
+            - Scale 동작을 진행 중인 상태일 때 동작할 기능
         - Function(ScaleEndDetails)? onScaleEnd
-    - HitTestBehavior? behavior
-    - bool excludeFromSemantics
-        - 기본 값 : false
+            - GestureDetector가 Scale 동작이 끝났다고 인식한 상태일 때 동작할 기능
     - DragStartBehavior dragStartBehavior
+        - 드래그 시작 동작이 처리되는 방식
+        - 종류
+            - DragStartBehavior.start
+            - DragStartBehavior.down
         - 기본 값 : DragStartBehavior.start
-    - bool trackpadScrollCausesScale
-        - 기본 값 : false
-    - Offset trackpadScrollToScaleFactor
-        - 기본 값 : kDefaultTrackpadScrollToScaleFactor
     - Set&lt;PointerDeviceKind>? supportedDevices
+        - 인식이 허용되는 장치의 종류
+        - [참고](https://api.flutter.dev/flutter/dart-ui/PointerDeviceKind.html)
 - [참고](https://api.flutter.dev/flutter/widgets/GestureDetector-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
 
 ### InkWell
 
