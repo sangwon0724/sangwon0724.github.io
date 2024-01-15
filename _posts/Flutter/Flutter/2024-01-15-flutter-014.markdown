@@ -1,17 +1,135 @@
 ---
 layout: post
 title:  "상호작용"
-date:   2024-01-05 14:09:00 +0900
+date:   2024-01-15 14:09:00 +0900
 categories:  Flutter
 published: false
 ---
 
-### DragTarget (드래그 상호작용)
-### Draggable (드래그 상호작용)
-### GestureDetector (동작)
-### LongPressDraggable (드래그 이벤트)
-### RawKeyboardListener (사용자가 키보드의 키를 누르거나 놓을 때마다 콜백을 호출하는 위젯)
-### RefreshIndicator (페이지 새로고침)
+### GestureDetector
+
+- 사용자의 제스처를 감지하는 위젯
+- null이 아닌 콜백에 해당하는 동작을 인식한다.
+- GestureDetector가 부모 위젯과 자식 위젯으로 있을 경우  
+위젯 트리 특성 상 자식 위젯의 메소드가 호출되고  
+부모 위젯의 메소드는 호출되지 않는다.
+- 주로 사용하는 속성
+    - Widget? child
+        - 내부에 배치할 자식 위젯
+    - Tap 관련
+        - Function(TapDownDetails)? onTapDown
+            - 내부 영역을 포인터가 선택한 상태
+        - Function(TapUpDetails)? onTapUp
+            - 내부 영역을 포인터가 선택했다가 동일 영역에서 취소한 상태
+        - Function()? onTap
+            - 영역을 선택했다가 완전히 뗀 상태
+        - Function()? onTapCancel
+            - 내부 영역을 포인터가 선택했다가 외부 영역에서 취소한 상태
+    - DoubleTap 관련
+        - Function(TapDownDetails)? onDoubleTapDown
+            - 내부 영역을 포인터가 두 번 연속으로 선택한 상태
+        - Function()? onDoubleTap
+            - 내부 영역을 포인터가 두 번 연속으로 선택했다가 완전히 뗀 상태
+        - Function()? onDoubleTapCancel
+            - 내부 영역을 포인터가 두 번 연속으로 선택했다가 외부 영역에서 취소한 상태
+        - Function(LongPressDownDetails)? onLongPressDown
+            - 내부 영역을 포인터가 길게 선택한 상태
+    - LongPress 관련
+        - Function()? onLongPressCancel
+        - Function()? onLongPress
+        - Function(LongPressStartDetails)? onLongPressStart
+        - Function(LongPressMoveUpdateDetails)? onLongPressMoveUpdate
+        - Function()? onLongPressUp
+        - Function(LongPressEndDetails)? onLongPressEnd
+    - VerticalDrag 관련
+        - Function(DragDownDetails)? onVerticalDragDown
+        - Function(DragStartDetails)? onVerticalDragStart
+        - Function(DragUpdateDetails)? onVerticalDragUpdate
+        - Function(DragEndDetails)? onVerticalDragEnd
+        - Function()? onVerticalDragCancel
+    - VerticalDrag 관련
+        - Function(DragDownDetails)? onHorizontalDragDown
+        - Function(DragStartDetails)? onHorizontalDragStart
+        - Function(DragUpdateDetails)? onHorizontalDragUpdate
+        - Function(DragEndDetails)? onHorizontalDragEnd
+        - Function()? onHorizontalDragCancel
+    - ForcePress 관련
+        - Function(ForcePressDetails)? onForcePressStart
+        - Function(ForcePressDetails)? onForcePressPeak
+        - Function(ForcePressDetails)? onForcePressUpdate
+        - Function(ForcePressDetails)? onForcePressEnd
+    - Pan 관련
+        - Function(DragDownDetails)? onPanDown
+        - Function(DragStartDetails)? onPanStart
+        - Function(DragUpdateDetails)? onPanUpdate
+        - Function(DragEndDetails)? onPanEnd
+        - Function()? onPanCancel
+    - Scale 관련
+        - Function(ScaleStartDetails)? onScaleStart
+        - Function(ScaleUpdateDetails)? onScaleUpdate
+        - Function(ScaleEndDetails)? onScaleEnd
+    - HitTestBehavior? behavior
+    - bool excludeFromSemantics
+        - 기본 값 : false
+    - DragStartBehavior dragStartBehavior
+        - 기본 값 : DragStartBehavior.start
+    - bool trackpadScrollCausesScale
+        - 기본 값 : false
+    - Offset trackpadScrollToScaleFactor
+        - 기본 값 : kDefaultTrackpadScrollToScaleFactor
+    - Set&lt;PointerDeviceKind>? supportedDevices
+- [참고](https://api.flutter.dev/flutter/widgets/GestureDetector-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### InkWell
+
+- 터치에 반응하는 영역으로 감싸는 위젯
+- 직사각형 형태의 영역만 사용할 수 있다.
+- null이 아닌 콜백에 해당하는 동작을 인식한다.
+
+- [참고](https://api.flutter.dev/flutter/material/InkWell-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### InkResponse
+
+- 터치에 반응하는 영역으로 감싸는 위젯
+- 다양한 형태의 영역을 사용할 수 있다.
+- null이 아닌 콜백에 해당하는 동작을 인식한다.
+
+- [참고](https://api.flutter.dev/flutter/material/InkResponse-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### RefreshIndicator
+
+- [참고](https://api.flutter.dev/flutter/material/RefreshIndicator-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### LongPressDraggable
+
+- [참고](https://api.flutter.dev/flutter/widgets/LongPressDraggable-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### RawKeyboardListener
+
+- [참고](https://api.flutter.dev/flutter/widgets/RawKeyboardListener-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### Draggable & DragTarget
+
+- [참고 - Draggable](https://api.flutter.dev/flutter/widgets/Draggable-class.html)
+- [참고 - DragTarget](https://api.flutter.dev/flutter/widgets/DragTarget-class.html)
 
 {% highlight dart %}
 {% endhighlight %}

@@ -3,11 +3,8 @@ layout: post
 title:  "flutter 공부할 목록"
 date:   2023-04-28 10:07:33 +0900
 categories:  Flutter
+published: false
 ---
-
-13. 진행 중 표시하기
-- CircularProgressIndicator (원형 대기바)
-- LinearProgressIndicator (가로 직선의 대기바)
 
 14. 상호작용
 - DragTarget (드래그 상호작용)
