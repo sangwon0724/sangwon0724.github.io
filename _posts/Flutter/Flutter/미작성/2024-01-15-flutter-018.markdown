@@ -6,8 +6,16 @@ categories:  Flutter
 published: false
 ---
 
-- AbsorbPointer (클릭 방지)
-- IgnorePointer (터치 무시)
+### AbsorbPointer (클릭 방지)
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
+### IgnorePointer (터치 무시)
+
+- [참고]()
 
 {% highlight dart %}
 {% endhighlight %}

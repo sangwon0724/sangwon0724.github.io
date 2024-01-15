@@ -7,8 +7,22 @@ published: false
 ---
 
 ### AlertDialog (다이얼로그)
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
 ### SimpleDialog (다이얼로그)
+
+- [참고]()
+
+{% highlight dart %}
+{% endhighlight %}
+
 ### SnackBar
+
+- [참고]()
 
 {% highlight dart %}
 {% endhighlight %}
