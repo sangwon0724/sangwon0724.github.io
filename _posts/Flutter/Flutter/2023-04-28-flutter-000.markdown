@@ -6,14 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-14. 상호작용
-- DragTarget (드래그 상호작용)
-- Draggable (드래그 상호작용)
-- GestureDetector (동작)
-- LongPressDraggable (드래그 이벤트)
-- RawKeyboardListener (사용자가 키보드의 키를 누르거나 놓을 때마다 콜백을 호출하는 위젯)
-- RefreshIndicator (페이지 새로고침)
-
 15. 위젯을 숨기는 방법
 - Visibility (숨김 T/F)
 - Opacity (투명도 지정)
