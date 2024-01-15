@@ -3,7 +3,6 @@ layout: post
 title:  "상호작용"
 date:   2024-01-15 14:09:00 +0900
 categories:  Flutter
-published: false
 ---
 
 ### GestureDetector
@@ -20,10 +19,10 @@ published: false
     - Tap 관련 (1번 누르기)
         - Function(TapDownDetails)? onTapDown
             - 터치 후 포인터가 영역이랑 맞닿아 있는 상태일 때 동작할 기능
-        - Function(TapUpDetails)? onTapUp
-            - 터치 후 동일 영역에서 취소했을 때 동작할 기능
         - Function()? onTap
             - 터치 후 완전히 뗀 상태일 때 동작할 기능
+        - Function(TapUpDetails)? onTapUp
+            - 터치 후 동일 영역에서 취소했을 때 동작할 기능
         - Function()? onTapCancel
             - 터치 후 외부 영역에서 취소했을 때 동작할 기능
     - DoubleTap 관련 (2번 연속 누르기)
@@ -104,48 +103,203 @@ published: false
 - 터치에 반응하는 영역으로 감싸는 위젯
 - 직사각형 형태의 영역만 사용할 수 있다.
 - null이 아닌 콜백에 해당하는 동작을 인식한다.
-
+- 주로 사용하는 속성
+    - Widget? child
+    - 내부에 배치할 자식 위젯
+    - Function(TapDownDetails)? onTapDown
+    - 터치 후 포인터가 영역이랑 맞닿아 있는 상태일 때 동작할 기능
+    - Function()? onTap
+    - 터치 후 완전히 뗀 상태일 때 동작할 기능
+    - Function(TapUpDetails)? onTapUp
+    - 터치 후 동일 영역에서 취소했을 때 동작할 기능
+    - Function()? onTapCancel
+    - 터치 후 외부 영역에서 취소했을 때 동작할 기능
+    - Function()? onDoubleTap
+    - 2번 연속 터치 했을 때 동작할 기능
+    - Function()? onLongPress
+    - 길게 눌렀을 때 동작할 기능
+    - Function(bool)? onHighlightChanged
+    - 동작을 시작하거나 
+    - Function(bool)? onHover
+    - 포인터가 영역 위에 올라가있을 때 동작할 기능
+    - Color? focusColor
+    - focus 상태의 배경색
+    - Color? hoverColor
+    - hover 상태의 배경색
+    - Color? highlightColor
+    - highlight 상태의 배경색
+    - 모든 영역에 splash 영역이 가득차면 highlight 처리된다.
+    - Color? splashColor
+    - 스플래시 색상
+    - double? radius
+    - 스플래시 범위
+    - BorderRadius? borderRadius
+    - InkWell의 윤곽선의 둥근 정도
+    - bool? enableFeedback
+    - 감지된 제스처에 대한 음향/촉각 피드백
+    - 기본 깂 : true
+    - FocusNode? focusNode
+    - 해당 InkWell에 대해 사용될 포커스 노드
+    - Function(bool)? onFocusChange
+    - Focus가 변경될 경우 동작할 기능
+    - bool autofocus
+    - 자동 포커스 여부
+    - 기본 깂 : false
 - [참고](https://api.flutter.dev/flutter/material/InkWell-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
-
-### InkResponse
-
-- 터치에 반응하는 영역으로 감싸는 위젯
-- 다양한 형태의 영역을 사용할 수 있다.
-- null이 아닌 콜백에 해당하는 동작을 인식한다.
-
-- [참고](https://api.flutter.dev/flutter/material/InkResponse-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
 
 ### RefreshIndicator
 
+- 페이지 새로고침같이 컨텐츠를 새로 불러올 때 사용하는 진행률 표시기 위젯
+- 주로 사용하는 속성
+    - Widget child
+        - 내부에 표시할 위젯 (예시 : 게시글 목록)
+        - 필수
+    - double displacement
+        - 진행률 표시기가 가장자리로부터 그려지는 거리
+        - 기본 값 : 40.0
+    - double edgeOffset
+        - 드래그 시작 시 진행률 표시기가 나타나기 시작하는 위치
+        - 기본 값 : 0.0
+    - Future&lt;void> Function() onRefresh
+        - 새로고침 시 동작할 기능
+        - 필수
+    - Color? backgroundColor
+        - 배경색
+    - Color? color
+        - 진행률 표시기의 선 색상
+    - double strokeWidth
+        - 진행률 표시기의 선 두께
+        - 기본 값 : RefreshProgressIndicator.defaultStrokeWidth
 - [참고](https://api.flutter.dev/flutter/material/RefreshIndicator-class.html)
 
-{% highlight dart %}
-{% endhighlight %}
-
-### LongPressDraggable
-
-- [참고](https://api.flutter.dev/flutter/widgets/LongPressDraggable-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
-
-### RawKeyboardListener
-
-- [참고](https://api.flutter.dev/flutter/widgets/RawKeyboardListener-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
 
 ### Draggable & DragTarget
 
-- [참고 - Draggable](https://api.flutter.dev/flutter/widgets/Draggable-class.html)
-- [참고 - DragTarget](https://api.flutter.dev/flutter/widgets/DragTarget-class.html)
+#### Draggable
+
+- 드래그 가능한 요소를 감싸는 위젯
+- 주로 사용하는 속성
+    - Widget child
+        - 내부에 배치할 위젯
+        - 필수
+    - Widget feedback
+        - 드래그가 진행 중일 때 포인터 아래에 표시되는 위젯
+        - 필수
+    - Object? data
+        - Draggable 위젯에게 전달할 값
+    - Axis? axis
+        - 지정된 값이 존재할 경우 드래그 가능한 방향을 제한한다.
+    - Widget? childWhenDragging
+        - 하나 이상의 드래그가 진행 중인 경우에 child 대신 표시할 위젯
+    - Offset feedbackOffset
+        - feedback이 DragTarget을 찾기 위해 사용하는 영역
+        - DragTarget이 Draggable을 인식하는 범위를 변경한다.
+        - 기본 값 : Offset.zero
+    - Axis? affinity
+        - 드래그를 시작하기 위해 이 위젯이 다른 동작과 경쟁하는 방식
+        - 예시
+            - 수직 스크롤 영역에 배치되고 affinity가 Axis.horizontal인 경우
+                - 수직 이동 시 스크롤 발생
+                - 수평 이동 시 드래그 발생
+            - 수직 스크롤 영역에 배치되고 affinity가 null 또는 Axis.vertical인 경우
+                - 어떠한 경우에도 드래그 발생
+                    - 이유 : 드래그의 우선순위가 더 높기 때문이다.
+    - int? maxSimultaneousDrags
+        - 동시에 드래그할 수 있는 위젯의 수
+    - Function()? onDragStarted
+        - 드래그 가능 항목이 드래그되기 시작할 때 동작할 기능
+    - Function(DragUpdateDetails)? onDragUpdate
+        - 드래그 가능 항목이 드래그 중일 때 동작할 기능
+    - Function(DraggableDetails)? onDragEnd
+        - 드래그 가능 항목을 내려놓을 때 동작할 기능
+    - Function(Velocity, Offset)? onDraggableCanceled
+        - 드래그 가능 항목을 내려놓을 때 DragTarget이 승인하지 않은 경우에 동작할 기능
+    - Function()? onDragCompleted
+        - 드래그 가능 항목을 내려놓을 때 DragTarget이 승인한 경우에 동작할 기능
+- [참고](https://api.flutter.dev/flutter/widgets/Draggable-class.html)
+- Draggable은 선택하자 마자 드래그하지만  
+    LongPressDraggable로 대체해서 사용하면  
+    길게 눌렀을 때 드래그 가능하다.
+    - [참고](https://api.flutter.dev/flutter/widgets/LongPressDraggable-class.html)
+
+#### DragTarget
+
+- Draggable 또는 LongPressDraggable와 상호작용하는 위젯
+- 주로 사용하는 속성
+    - Function(BuildContext, List&lt;Object?>, List&lt;dynamic>) builder
+        - 내부에 배치할 위젯
+        - 승인한 데이터 목록과 거절한 데이터 목록을 사용할 수 있다.
+        - 필수
+    - Function(Object)? onAccept
+        - 허용 가능한 데이터 조각이 해당 DragTarget 위에 드래그 됬을 때 동작할 기능
+        - 데이터만 포함된다.
+    - Function(DragTargetDetails&lt;Object>)? onAcceptWithDetails
+        - 허용 가능한 데이터 조각이 해당 DragTarget 위에 드래그 됬을 때 동작할 기능
+        - 데이터를 포함할 다양한 정보들이 포함되어 있다.
+    - Function(Object?)? onWillAccept
+        - onAccept에서 주어진 데이터가 허용 가능한 지에 대한 조건을 설정한다.
+    - Function(DragTargetDetails&lt;Object>)? onWillAcceptWithDetails
+        - onAcceptWithDetails에서 주어진 데이터가 허용 가능한 지에 대한 조건을 설정한다.
+    - Function(DragTargetDetails&lt;Object>)? onMove
+        - 해당 DragTarget 내에서 Draggable이 이동할 떄 동작할 기능
+    - Function(Object?)? onLeave
+        - 해당 DragTarget 위로 드래그되는 특정 데이터 조각이 영역을 벗어날 때 동작할 기능
+- [참고](https://api.flutter.dev/flutter/widgets/DragTarget-class.html)
+
+#### 예시
 
 {% highlight dart %}
+int acceptedData = 0;
+
+Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: <Widget>[
+        Draggable<int>(
+            data: 10,
+            feedback: Container(
+                width: 100,
+                height: 100,
+                color: Colors.deepOrange,
+                child: const Icon(Icons.directions_run),
+            ),
+            childWhenDragging: Container(
+                width: 100.0,
+                height: 100.0,
+                color: Colors.pinkAccent,
+                child: const Center(
+                    child: Text('Child When Dragging', style: TextStyle(fontSize: 20),),
+                ),
+            ),
+            child: Container(
+                width: 100.0,
+                height: 100.0,
+                color: Colors.lightGreenAccent,
+                child: const Center(
+                    child: Text('Draggable', style: TextStyle(fontSize: 20),),
+                ),
+            ),
+        ),
+        DragTarget<int>(
+            builder: (
+                BuildContext context,
+                List<dynamic> accepted,
+                List<dynamic> rejected,
+            ) {
+            return Container(
+                    width: 100.0,
+                    height: 100.0,
+                    color: Colors.cyan,
+                    child: Center(
+                        child: Text('Value is updated to: $acceptedData', style: TextStyle(fontSize: 20),),
+                    ),
+                );
+            },
+            onAccept: (int data) {
+                setState(() {
+                    acceptedData += data;
+                });
+            },
+        ),
+    ],
+)
 {% endhighlight %}
