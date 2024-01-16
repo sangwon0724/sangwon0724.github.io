@@ -10,7 +10,7 @@ categories:  Flutter
 - 수평 공간을 구분하는 구분선
 - 주로 사용하는 속성
     - double? height
-        - 구분선의 높이
+        - Divider가 가지는 영역의 높이
     - double? thickness
         - 구분선 내에 그려지는 선의 두께
     - double? indent
@@ -49,7 +49,7 @@ Center(
 - 수직 공간을 구분하는 구분선
 - 주로 사용하는 속성
     - double? width
-        - 구분선의 너비
+        - VerticalDivider가 가지는 영역의 너비
     - double? thickness
         - 구분선 내에 그려지는 선의 두께
     - double? indent
