@@ -1,0 +1,84 @@
+---
+layout: post
+title:  "구분선"
+date:   2024-01-16 14:31:00 +0900
+categories:  Flutter
+---
+
+### Divider
+
+- 수평 공간을 구분하는 구분선
+- 주로 사용하는 속성
+    - double? height
+        - 구분선의 높이
+    - double? thickness
+        - 구분선 내에 그려지는 선의 두께
+    - double? indent
+        - 구분선의 앞쪽 가장자리까지의 빈 공간의 크기
+    - double? endIndent
+        - 구분선의 뒤쪽 가장자리까지의 빈 공간의 크기
+    - Color? color
+        - 구분선의 색상
+- [참고](https://api.flutter.dev/flutter/material/Divider-class.html)
+
+{% highlight dart %}
+Center(
+    child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+            children: <Widget>[
+                Expanded(
+                    child: Card(
+                    child: SizedBox.expand(),
+                    ),
+                ),
+                Divider(),
+                Expanded(
+                    child: Card(
+                    child: SizedBox.expand(),
+                    ),
+                ),
+            ],
+        ),
+    ),
+)
+{% endhighlight %}
+
+### VerticalDivider
+
+- 수직 공간을 구분하는 구분선
+- 주로 사용하는 속성
+    - double? width
+        - 구분선의 너비
+    - double? thickness
+        - 구분선 내에 그려지는 선의 두께
+    - double? indent
+        - 구분선의 위쪽 가장자리까지의 빈 공간의 크기
+    - double? endIndent
+        - 구분선의 아래쪽 가장자리까지의 빈 공간의 크기
+    - Color? color
+        - 구분선의 색상
+- [참고](https://api.flutter.dev/flutter/material/VerticalDivider-class.html)
+
+{% highlight dart %}
+Center(
+    child: Padding(
+    padding: EdgeInsets.all(16.0),
+        child: Row(
+            children: <Widget>[
+                Expanded(
+                    child: Card(
+                        child: SizedBox.expand(),
+                    ),
+                ),
+                VerticalDivider(),
+                Expanded(
+                    child: Card(
+                        child: SizedBox.expand(),
+                    ),
+                ),
+            ],
+        ),
+    ),
+)
+{% endhighlight %}

@@ -6,13 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-15. 위젯을 숨기는 방법
-- Visibility (숨김 T/F)
-- Opacity (투명도 지정)
-
-16. 구분선
-- Divider (구분선)
-
 17. 알림
 - AlertDialog (다이얼로그)
 - SimpleDialog (다이얼로그)
