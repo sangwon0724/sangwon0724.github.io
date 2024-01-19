@@ -6,32 +6,26 @@ categories:  Flutter
 published: false
 ---
 
-21. 이미지 뷰어
-- InteractiveViewer (확장/축소 가능한 이미지 뷰어)
-
-22. 크기 값 가져오기
-- Offstage (크기 값 가져오기)
-
-23. 드래그를 통해서 정렬하기
+22. 드래그를 통해서 정렬하기
 - ReorderableListView (드래그를 통한 요소 재정렬하는 목록)
 
-24. 순서대로 처리하기
+23. 순서대로 처리하기
 - Stepper (순번대로 처리하기)
 
-25. 배너 사용하기
+24. 배너 사용하기
 - MaterialBanner (배너)
 
-26. 폴더블 호환
+25. 폴더블 호환
 - TwoPane (폴더블)
 
-27. 플로우
+26. 플로우
 - Flow (FlowDelegate 의 로직에 따라 하위 요소의 크기와 위치를 효율적으로 지정하는 위젯)
 
-28. 비동기
+27. 비동기
 - FutureBuilder (비동기)
 - StreamBuilder (비동기)
 
-29. 효과 주기
+28. 효과 주기
 - FadeTransition (페이드 효과)
 - Hero (애니메이션)
 - PositionedTransition (위치 변경)
@@ -43,7 +37,7 @@ published: false
 - Transform (모양)
 - SharedAxisTransition (효과 공유)
 
-30. 애니메이션 효과
+29. 애니메이션 효과
 - AnimatedAlign
 - AnimatedBuilder
 - AnimatedContainer
@@ -58,21 +52,21 @@ published: false
 - AnimatedSize
 - AnimatedWidget
 
-31. 상태 값 유지
+30. 상태 값 유지
 
-32. 메소드 채널
+31. 메소드 채널
 
-33. API 통신
+32. API 통신
 
-34. showDatePicker 메소드
+33. showDatePicker 메소드
 
-35. showTimePicker 메소드
+34. showTimePicker 메소드
 
-36. File 클래스
+35. File 클래스
 
-37. PageView
+36. PageView
 
-38. TabBar & TabBarView & TabController & TabPageSelector
+37. TabBar & TabBarView & TabController & TabPageSelector
 
 - [참고]()
 
