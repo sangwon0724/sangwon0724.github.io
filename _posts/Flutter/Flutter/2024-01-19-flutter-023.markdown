@@ -1,0 +1,114 @@
+---
+layout: post
+title:  "순서대로 처리하기"
+date:   2024-01-19 15:17:00 +0900
+categories:  Flutter
+published: false
+---
+
+### Stepper
+
+- 지정된 순서대로 동작할 수 있도록 목록을 배치하여,  
+동작을 진행하면서 이전/이후 단계에 대한 위젯을 노출시키거나 숨기는 위젯
+- 주로 사용하는 속성
+    - List<Step> steps
+        - 단계마다 진행할 Step 목록
+        - 필수
+    - int currentStep
+        - 현재 진행 중인 단계의 인덱스
+        - 기본 값 : 0
+    - StepperType type
+        - 진행 방향
+        - 종류
+            - StepperType.vertical
+            - StepperType.horizontal
+        - 기본 값 : StepperType.vertical
+    - Function(int)? onStepTapped
+        - 각 Step을 선택했을 때 동작할 기능
+    - Function()? onStepContinue
+        - 각 Step에서 진행을 선택했을 때 동작할 기능
+    - Function()? onStepCancel
+        - 각 Step에서 취소를 선택했을 때 동작할 기능
+    - Function(BuildContext, ControlsDetails)? controlsBuilder
+        - 동작 관련 위젯을 생성하는 빌더 메소드
+    - Function(int, StepState)? stepIconBuilder
+        - 각 스텝에 대한 아이콘을 생성하는 빌더 메소드
+    - double? elevation
+        - type이 StepperType.horizontal일 경우에 대한 Stepper의 고도
+    - EdgeInsetsGeometry? margin
+        - 외부 여백
+    - ScrollController? controller
+        - 스크롤을 제어하기 위한 컨트롤러
+    - ScrollPhysics? physics
+        - 스크롤 뷰가 사용자 입력에 반응하는 방법
+    - MaterialStateProperty<Color>? connectorColor
+        - stepIcon들을 연결시켜주는 연결선의 색상
+    - double? connectorThickness
+        - stepIcon들을 연결시켜주는 연결선의 두께
+- [참고](https://api.flutter.dev/flutter/material/Stepper-class.html)
+
+{% highlight dart %}
+int _index = 0;
+
+Stepper(
+    currentStep: _index,
+    onStepCancel: () {
+        if (_index > 0) {
+            setState(() {
+                _index -= 1;
+            });
+        }
+    },
+    onStepContinue: () {
+        if (_index <= 0) {
+            setState(() {
+                _index += 1;
+            });
+        }
+    },
+    onStepTapped: (int index) {
+        setState(() {
+            _index = index;
+        });
+    },
+    steps: <Step>[
+        Step(
+            title: const Text('Step 1 title'),
+            content: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text('Content for Step 1'),
+            ),
+        ),
+        const Step(
+            title: Text('Step 2 title'),
+            content: Text('Content for Step 2'),
+        ),
+    ],
+)
+{% endhighlight %}
+
+### Step
+
+- Stepper의 각 단계를 나타내는 위젯
+- 주로 사용하는 속성
+    - Widget title
+        - 주 제목을 나타내기 위한 위젯
+        - 필수
+    - Widget? subtitle
+        - 부 제목을 나타내기 위한 위젯
+        - title 아래에 비교적 작은 글씨로 표시된다.
+        - 일반적으로 제목을 보완하는 추가 세부정보를 제공한다.
+    - Widget content
+        - 내용을 나타내기 위한 위젯
+        - 필수
+    - StepState state
+        - 해당 구성 요소의 스타일과 단계가 대화형인지 여부를 결정하는 단계의 상태입니다.
+        - 기본 값 : StepState.indexed
+    - bool isActive
+        - 활성화 여부
+        - 스타일에만 영향이 있다.
+        - 기본 값 : false
+    - Widget? label
+        - stepIcon 아래에 나타나는 위젯
+        - Stepper.type이 StepperType.horizontal일 때만 동작한다.
+- [참고](https://api.flutter.dev/flutter/material/Step-class.html)

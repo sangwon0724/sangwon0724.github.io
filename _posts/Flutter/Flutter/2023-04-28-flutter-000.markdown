@@ -6,9 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-23. 순서대로 처리하기
-- Stepper (순번대로 처리하기)
-
 24. 배너 사용하기
 - MaterialBanner (배너)
 
