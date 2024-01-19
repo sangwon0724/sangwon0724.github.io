@@ -6,10 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-17. 알림
-- AlertDialog (다이얼로그)
-- SimpleDialog (다이얼로그)
-
 18. 터치를 무시하는 방법
 - AbsorbPointer (클릭 방지)
 - IgnorePointer (터치 무시)
