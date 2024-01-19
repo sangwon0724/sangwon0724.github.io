@@ -1,14 +1,47 @@
 ---
 layout: post
 title:  "배지 표시하기"
-date:   2024-01-05 14:09:00 +0900
+date:   2024-01-19 14:00:00 +0900
 categories:  Flutter
-published: false
 ---
 
-### Badge (카톡 몇 개 덜 읽었나)
+### Badge
 
-- [참고]()
+- 아직 읽지 않은 메일이 남은 것을 메일 아이콘에 표시하거나,  
+    읽지 않은 메시지의 개수를 메시지 아이콘에 표시하는 등  
+    잔여 작업에 대한 표시를 하는 위젯
+- 주로 사용하는 속성
+    - Widget? child
+        - 배지가 위에 쌓이는 위젯
+    - AlignmentGeometry? alignment
+        - 배지가 표시되는 정렬 위치
+    - Offset? offset
+        - 배지가 표시되는 좌표
+    - Color? backgroundColor
+        - 배경색
+    - Widget? label
+        - 잔여 개수나 특정 메시지를 표시하는 용도의 위젯
+    - bool isLabelVisible
+        - label 사용 여부
+        - 기본 값 : true
+    - Color? textColor
+        - label에서 사용하는 Text 계열 위젯의 색상
+    - TextStyle? textStyle
+        - label에서 사용하는 Text 계열 위젯의 스타일
+    - EdgeInsetsGeometry? padding
+        - label에 대한 여백
+    - double? smallSize
+        - label이 null인 경우에 대한 배지의 높이
+    - double? largeSize
+        레이블이 null이 아닌 경우에 대한 배지의 높이
+- [참고](https://api.flutter.dev/flutter/material/Badge-class.html)
 
 {% highlight dart %}
+Badge(
+    child: Icon(Icons.email, size: 100),
+    backgroundColor: Colors.red,
+    label: Text("3"),
+    textColor: Colors.blue,
+    offset: Offset(30, 70),
+)
 {% endhighlight %}
