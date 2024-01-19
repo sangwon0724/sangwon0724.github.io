@@ -6,9 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-22. 드래그를 통해서 정렬하기
-- ReorderableListView (드래그를 통한 요소 재정렬하는 목록)
-
 23. 순서대로 처리하기
 - Stepper (순번대로 처리하기)
 
