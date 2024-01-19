@@ -1,0 +1,89 @@
+---
+layout: post
+title:  "잘못된 터치를 방지하는 방법"
+date:   2024-01-19 13:37:00 +0900
+categories:  Flutter
+---
+
+### AbsorbPointer
+
+- 포인터를 흡수하는 위젯
+- absorbing 속성의 값이 true일 경우 하위 위젯 트리가 포인터 이벤트를 수신하지 못 하게 한다.
+- RenderBox.hitTest 에서 true를 반환한다.
+- 주로 사용하는 속성
+    - bool absorbing
+        - 하위 위젯 트리에 대한 포인터를 흡수하는 지에 대한 여부
+        - 기본 값 : true
+    - Widget? child
+        - 내부에 배치할 위젯
+- [참고](https://api.flutter.dev/flutter/widgets/AbsorbPointer-class.html)
+
+{% highlight dart %}
+Stack(
+    alignment: AlignmentDirectional.center,
+    children: <Widget>[
+        SizedBox(
+            width: 200.0,
+            height: 100.0,
+            child: ElevatedButton(
+                onPressed: () {},
+                child: null,
+            ),
+        ),
+        SizedBox(
+            width: 100.0,
+            height: 200.0,
+            child: AbsorbPointer(
+                child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade200,
+                ),
+                onPressed: () {},
+                    child: null,
+                ),
+            ),
+        ),
+    ],
+)
+{% endhighlight %}
+
+### IgnorePointer (터치 무시)
+
+- 자식 위젯에 대한 터치 이벤트 자체를 무시한다.
+- RenderBox.hitTest 에서 false를 반환한다.
+- 주로 사용하는 속성
+    - bool ignoring
+        - 하위 위젯 트리에 대한 포인터를 흡수하는 지에 대한 여부
+        - 기본 값 : true
+    - Widget? child
+        - 내부에 배치할 위젯
+- [참고](https://api.flutter.dev/flutter/widgets/IgnorePointer-class.html)
+
+{% highlight dart %}
+Stack(
+    alignment: AlignmentDirectional.center,
+    children: <Widget>[
+        SizedBox(
+            width: 200.0,
+            height: 100.0,
+            child: ElevatedButton(
+                onPressed: () {},
+                child: null,
+            ),
+        ),
+        SizedBox(
+            width: 100.0,
+            height: 200.0,
+            child: IgnorePointer(
+                child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue.shade200,
+                ),
+                onPressed: () {},
+                    child: null,
+                ),
+            ),
+        ),
+    ],
+)
+{% endhighlight %}

@@ -6,10 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-18. 터치를 무시하는 방법
-- AbsorbPointer (클릭 방지)
-- IgnorePointer (터치 무시)
-
 19. 윗첨자 표시하기
 - Badge (카톡 몇 개 덜 읽었나)
 
