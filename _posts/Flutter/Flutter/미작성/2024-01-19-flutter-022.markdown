@@ -3,47 +3,79 @@ layout: post
 title:  "드래그를 통한 정렬"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
-published: false
 ---
 
 ### ReorderableListView (드래그를 통한 요소 재정렬하는 목록)
 
 - 주로 사용하는 속성
     - List&lt;Widget> children
+        - 내부에 배치될 위젯 목록
         - 필수
-    - void Function(int, int) onReorder
+    - Function(int, int) onReorder
+        - 포인터로 선택한 위젯을 재정렬하기 위한 드래그를 하고 있는 동안에 동작할 기능
         - 필수
-    - void Function(int)? onReorderStart
-    - void Function(int)? onReorderEnd
-    - double? itemExtent
-    - double Function(int, SliverLayoutDimensions)? itemExtentBuilder
-    - Widget? prototypeItem
-    - Widget Function(Widget, int, Animation&lt;double>)? proxyDecorator
-    - bool buildDefaultDragHandles
-        - 기본 값 : true
-    - EdgeInsets? padding
-    - Widget? header
-    - Widget? footer
+    - Function(int)? onReorderStart
+        - 포인터로 선택한 위젯을 재정렬하기 위한 드래그를 시작할 때 동작할 기능
+    - Function(int)? onReorderEnd
+        - 포인터로 선택한 위젯을 재정렬하기 위한 드래그를 종료할 때 동작할 기능
     - Axis scrollDirection
+        - 스크롤 방향
+        - 종류
+            - Axis.horizontal
+                - 수평 스크롤
+            - Axis.vertical
+                - 수직 스크롤
         - 기본 값 : Axis.vertical
     - bool reverse
+        - 역순 정렬 여부
+        - true일 경우 ListView 내부에서 A → B → C 순으로 배치되던 위젯 목록은  
+        C → B → A 순으로 배치된다.
         - 기본 값 : false
     - ScrollController? scrollController
+        - 스크롤을 제어하기 위한 컨트롤러
+        - primary의 값이 true일 경우 controller은 null이어야 한다.
     - bool? primary
+        - 해당 위젯이 상위 PrimaryScrollController와 연관된 기본 스크롤 뷰인지의 여부
+        - true일 경우 Ios에서 상태 표시줄을 탭하면 맨위로 스크롤된다.
     - ScrollPhysics? physics
+        - 스크롤 뷰가 사용자 입력에 반응하는 방법
     - bool shrinkWrap
+        - true일 경우 ListView는 부모 위젯의 전체 영역을 차지하는 것이 아닌  
+            필요한 공간만 차지하도록 변경된다.
         - 기본 값 : false
-    - double anchor
-        - 기본 값 : 0.0
+    - double? itemExtent
+        - null이 아닐 경우 스크롤 방향으로 지정한 크기를 갖도록 강제한다.
     - double? cacheExtent
+        - null이 아닐 경우 각 항목이 화면 밖에 있어도 지정한 크기에 맞게 미리 빌드된다.
+    - Widget? prototypeItem
+        - 지정한 위젯의 크기만큼 자식 위젯의 크기를 강제한다.
+    - double Function(int, SliverLayoutDimensions)? itemExtentBuilder
+        - null이 아닌 경우 빌더가 반환한 해당 범위를 하위 항목에 강제로 적용한다.
+    - EdgeInsets? padding
+        - ReorderableListView 내부에 적용할 여백
+    - Widget? header
+        - 목록 항목 앞에 표시되는 재정렬이 불가능한 헤더 항목
+    - Widget? footer
+        - 목록 항목 뒤에 표시되는 재정렬이 불가능한 바닥글 항목
+    - bool buildDefaultDragHandles
+        - 드래그 핸들링 설정
+        - true인 경우
+            - 데스크탑 플랫폼
+                - 각 항목의 후행 가장자리 중앙에 배치된 위젯을 통해서 드래그
+            - 모바일 플랫폼
+                - 각 항목의 아무 곳이나 길게 눌러서 드래그
+        - 기본 값 : true
     - DragStartBehavior dragStartBehavior
+        - 드래그 시작 동작이 처리되는 방식
+        - 종류
+            -  DragStartBehavior.start
+            -  DragStartBehavior.down
         - 기본 값 : DragStartBehavior.start
     - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+        - ScrollView가 키보드를 자동으로 닫는 방법
         - 기본 값 : ScrollViewKeyboardDismissBehavior.manual
-    - String? restorationId
-    - Clip clipBehavior
-        - 기본 값 : Clip.hardEdge
     - double? autoScrollerVelocityScalar
+        - 스크롤에 따른 픽셀당 속도 스칼라
 - [참고](https://api.flutter.dev/flutter/material/ReorderableListView-class.html)
 
 {% highlight dart %}
