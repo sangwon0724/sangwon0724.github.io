@@ -6,9 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-24. 배너 사용하기
-- MaterialBanner (배너)
-
 25. 폴더블 호환
 - TwoPane (폴더블)
 
