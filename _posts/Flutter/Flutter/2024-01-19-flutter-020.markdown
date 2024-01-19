@@ -1,14 +1,78 @@
 ---
 layout: post
-title:  "밀어서 삭제하는 요소"
-date:   2024-01-05 14:09:00 +0900
+title:  "밀어서 항목 없애기"
+date:   2024-01-19 14:12:00 +0900
 categories:  Flutter
-published: false
 ---
 
-### Dismissible (밀어서 잠금해제)
+### Dismissible
 
-- [참고]()
+- 표시된 방향 으로 드래그하여 닫을 수 있는 위젯
+- 주로 사용하는 속성
+    - Key key
+        - 
+        - 필수
+    - Widget child
+        - 내부에 배치할 위젯
+        - 필수
+    - Widget? background
+        - 해당 위젯을 드래그하였을 때 나올 배경 위젯
+        - secondBackground도 지정시 하위 항목을 아래 또는 오른쪽으로 드래그할 때 노출되는 위젯
+    - Widget? secondaryBackground
+        - 해당 위젯을 위나 왼쪽으로 드래그할 때 노출되는 위젯
+        - background가 지정된 경우에만 사용할 수 있다.
+    - DismissDirection direction
+        - 위젯을 닫을 수 있는 방향
+        - 종류
+            - DismissDirection.horizontal
+            - DismissDirection.vertical
+        - 기본 값 : DismissDirection.horizontal
+    - Function(DismissUpdateDetails)? onUpdate
+        - 위젯을 드래그하고 있는 동안에 동작할 기능
+    - Function()? onResize
+        - 위젯이 닫히면서 축소되는 동안에 동작할 기능
+    - Function(DismissDirection)? onDismissed
+        - 위젯이 완전히 닫혔을 때 동작할 기능
+    - Function(DismissDirection)? confirmDismiss
+        - 위젯이 닫히는 것을 확정하거나 방지하는 로직
+        - onResize 전에 호출된다.
+    - Duration movementDuration
+        - 드래그 도중 포인터를 놓았을 때 위젯이 한 쪽 끝으로 진행하거나 돌아가는데 걸리는 기간
+        - 기본 값 : const Duration(milliseconds: 200)
+    - Duration? resizeDuration
+        - onResize가 동작하면서 위젯의 크기가 변하는 기간
+        - 기본 값 : const Duration(milliseconds: 300)
+    - DragStartBehavior dragStartBehavior
+        - 드래그 시작 동작이 처리되는 방식
+        - 종류
+            -  DragStartBehavior.start
+            -  DragStartBehavior.down
+        - 기본 값 : DragStartBehavior.start
+- [참고](https://api.flutter.dev/flutter/widgets/Dismissible-class.html)
 
 {% highlight dart %}
+List<int> items = List<int>.generate(100, (int index) => index);
+
+ListView.builder(
+    itemCount: items.length,
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    itemBuilder: (BuildContext context, int index) {
+        return Dismissible(
+            background: Container(
+                color: Colors.green,
+            ),
+            key: ValueKey<int>(items[index]),
+            onDismissed: (DismissDirection direction) {
+                setState(() {
+                    items.removeAt(index);
+                });
+            },
+            child: ListTile(
+                title: Text(
+                    'Item ${items[index]}',
+                ),
+            ),
+        );
+    },
+)
 {% endhighlight %}

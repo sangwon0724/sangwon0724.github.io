@@ -6,12 +6,6 @@ categories:  Flutter
 published: false
 ---
 
-19. 윗첨자 표시하기
-- Badge (카톡 몇 개 덜 읽었나)
-
-20. 밀어서 잠금 해제
-- Dismissible (밀어서 잠금해제)
-
 21. 이미지 뷰어
 - InteractiveViewer (확장/축소 가능한 이미지 뷰어)
 
