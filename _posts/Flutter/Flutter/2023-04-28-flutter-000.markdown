@@ -28,15 +28,13 @@ published: false
 
 30. API 통신
 
-31. showDatePicker 메소드
+31. 날짜 선택하기
 
-32. showTimePicker 메소드
+32. File 클래스
 
-33. File 클래스
+33. PageView
 
-34. PageView
-
-35. TabBar & TabBarView & TabController & TabPageSelector
+34. TabBar & TabBarView & TabController & TabPageSelector
 
 - [참고]()
 

@@ -6,8 +6,7 @@ categories:  Flutter
 published: false
 ---
 
-26. 
-### TwoPane (폴더블)
+### TwoPane (폴더블, 플러터갤러리 참고)
 
 - [참고]()
 

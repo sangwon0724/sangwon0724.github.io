@@ -8,7 +8,7 @@ published: false
 
 ### MaterialBanner (배너)
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/material/MaterialBanner-class.html)
 
 {% highlight dart %}
 {% endhighlight %}

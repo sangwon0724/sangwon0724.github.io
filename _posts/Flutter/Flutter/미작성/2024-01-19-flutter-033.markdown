@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  "File 클래스"
+title:  "PageView"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 published: false
 ---
 
-- [참고]()
+- [참고](https://api.flutter.dev/flutter/widgets/PageView-class.html)
 
 {% highlight dart %}
 {% endhighlight %}
