@@ -1,14 +1,20 @@
 ---
 layout: post
-title:  "폴더블 화면 호환하기"
-date:   2024-01-05 14:09:00 +0900
+title:  "플로우"
+date:   2024-01-19 17:01:00 +0900
 categories:  Flutter
 published: false
 ---
 
-### TwoPane (폴더블, 플러터갤러리 참고)
+### Flow
 
-- [참고]()
+- FlowDelegate 의 로직에 따라 하위 요소의 크기와 위치를 효율적으로 지정하는 위젯
+- 주로 사용하는 속성
+    - FlowDelegate delegate
+        - 필수
+    - List<Widget> children
+        - 기본 값 : const <Widget>[]
+- [참고](https://api.flutter.dev/flutter/widgets/Flow-class.html)
 
 {% highlight dart %}
 {% endhighlight %}

@@ -1,14 +1,21 @@
 ---
 layout: post
-title:  "플로우"
+title:  "비동기 데이터 처리하기"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 published: false
 ---
 
-### Flow (FlowDelegate 의 로직에 따라 하위 요소의 크기와 위치를 효율적으로 지정하는 위젯)
+### FutureBuilder (비동기)
 
-- [참고](https://api.flutter.dev/flutter/widgets/Flow-class.html)
+- [참고](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)
+
+{% highlight dart %}
+{% endhighlight %}
+
+### StreamBuilder (비동기)
+
+- [참고](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html)
 
 {% highlight dart %}
 {% endhighlight %}

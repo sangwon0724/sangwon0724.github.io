@@ -6,31 +6,32 @@ categories:  Flutter
 published: false
 ---
 
-25. 폴더블 호환
-- TwoPane (폴더블)
-
-26. 플로우
+25. 플로우
 - Flow (FlowDelegate 의 로직에 따라 하위 요소의 크기와 위치를 효율적으로 지정하는 위젯)
 
-27. 비동기
+26. 비동기
 - FutureBuilder (비동기)
 - StreamBuilder (비동기)
 
-28. 상태 값 유지 (어떻게 앱을 닫아도 값을 가지고 있는가)
+27. 상태 값 유지 (어떻게 앱을 닫아도 값을 가지고 있는가)
 
-29. 메소드 채널
+28. 메소드 채널
 
-30. API 통신
+29. API 통신
 
-31. 날짜 선택하기
+30. 날짜 선택하기
 
-32. File 클래스
+31. File 클래스
 
-33. PageView
+32. PageView
 
-34. TabBar & TabBarView & TabController & TabPageSelector
+33. TabBar & TabBarView & TabController & TabPageSelector
 
-- [참고]()
+
+### 참고
+
+- [반응형 레이아웃](https://flutter-gallery-archive.web.app/#/demo/two-pane)
+- [모션](https://flutter-gallery-archive.web.app/#/demo/motion)
 
 {% highlight dart %}
 {% endhighlight %}

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "어떻게 앱을 종료해도 값이 유지되는가"
+title:  "메소드 채널"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 published: false

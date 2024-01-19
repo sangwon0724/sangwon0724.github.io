@@ -1,21 +1,10 @@
 ---
 layout: post
-title:  "비동기 데이터 처리하기"
+title:  "어떻게 앱을 종료해도 값이 유지되는가"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 published: false
 ---
-
-### FutureBuilder (비동기)
-
-- [참고](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)
-
-{% highlight dart %}
-{% endhighlight %}
-
-### StreamBuilder (비동기)
-
-- [참고](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html)
 
 {% highlight dart %}
 {% endhighlight %}
