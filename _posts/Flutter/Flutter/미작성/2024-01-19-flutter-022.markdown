@@ -8,7 +8,67 @@ published: false
 
 ### ReorderableListView (드래그를 통한 요소 재정렬하는 목록)
 
-- [참고]()
+- 주로 사용하는 속성
+    - List&lt;Widget> children
+        - 필수
+    - void Function(int, int) onReorder
+        - 필수
+    - void Function(int)? onReorderStart
+    - void Function(int)? onReorderEnd
+    - double? itemExtent
+    - double Function(int, SliverLayoutDimensions)? itemExtentBuilder
+    - Widget? prototypeItem
+    - Widget Function(Widget, int, Animation&lt;double>)? proxyDecorator
+    - bool buildDefaultDragHandles
+        - 기본 값 : true
+    - EdgeInsets? padding
+    - Widget? header
+    - Widget? footer
+    - Axis scrollDirection
+        - 기본 값 : Axis.vertical
+    - bool reverse
+        - 기본 값 : false
+    - ScrollController? scrollController
+    - bool? primary
+    - ScrollPhysics? physics
+    - bool shrinkWrap
+        - 기본 값 : false
+    - double anchor
+        - 기본 값 : 0.0
+    - double? cacheExtent
+    - DragStartBehavior dragStartBehavior
+        - 기본 값 : DragStartBehavior.start
+    - ScrollViewKeyboardDismissBehavior keyboardDismissBehavior
+        - 기본 값 : ScrollViewKeyboardDismissBehavior.manual
+    - String? restorationId
+    - Clip clipBehavior
+        - 기본 값 : Clip.hardEdge
+    - double? autoScrollerVelocityScalar
+- [참고](https://api.flutter.dev/flutter/material/ReorderableListView-class.html)
 
 {% highlight dart %}
+final List<int> _items = List<int>.generate(50, (int index) => index);
+final Color oddItemColor = Colors.blue;
+final Color evenItemColor = Colors.lightBlue;
+
+ReorderableListView(
+    padding: const EdgeInsets.symmetric(horizontal: 40),
+    children: <Widget>[
+        for (int index = 0; index < _items.length; index += 1)
+            ListTile(
+                key: Key('$index'),
+                tileColor: _items[index].isOdd ? oddItemColor : evenItemColor,
+                title: Text('Item ${_items[index]}'),
+            ),
+    ],
+    onReorder: (int oldIndex, int newIndex) {
+        setState(() {
+            if (oldIndex < newIndex) {
+                newIndex -= 1;
+            }
+            final int item = _items.removeAt(oldIndex);
+            _items.insert(newIndex, item);
+        });
+    },
+)
 {% endhighlight %}

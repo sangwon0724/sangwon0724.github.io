@@ -25,48 +25,21 @@ published: false
 - FutureBuilder (비동기)
 - StreamBuilder (비동기)
 
-28. 효과 주기
-- FadeTransition (페이드 효과)
-- Hero (애니메이션)
-- PositionedTransition (위치 변경)
-- RotatedBox (회전 효과)
-- RotationTransition (회전 효과)
-- ScaleTransition (크기 변경 효과)
-- SizeTransition (크기 변경 효과)
-- SlideTransition (좌우 위치 이동 효과)
-- Transform (모양)
-- SharedAxisTransition (효과 공유)
+28. 상태 값 유지 (어떻게 앱을 닫아도 값을 가지고 있는가)
 
-29. 애니메이션 효과
-- AnimatedAlign
-- AnimatedBuilder
-- AnimatedContainer
-- AnimatedCrossFade
-- AnimatedDefaultTextStyle
-- AnimatedList
-- AnimatedListState
-- AnimatedModalBarrier
-- AnimatedOpacity
-- AnimatedPhysicalModel
-- AnimatedPositioned
-- AnimatedSize
-- AnimatedWidget
+29. 메소드 채널
 
-30. 상태 값 유지
+30. API 통신
 
-31. 메소드 채널
+31. showDatePicker 메소드
 
-32. API 통신
+32. showTimePicker 메소드
 
-33. showDatePicker 메소드
+33. File 클래스
 
-34. showTimePicker 메소드
+34. PageView
 
-35. File 클래스
-
-36. PageView
-
-37. TabBar & TabBarView & TabController & TabPageSelector
+35. TabBar & TabBarView & TabController & TabPageSelector
 
 - [참고]()
 

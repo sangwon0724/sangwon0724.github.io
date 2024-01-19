@@ -1,77 +1,10 @@
 ---
 layout: post
-title:  "효과 적용하기"
+title:  "어떻게 앱을 종료해도 값이 유지되는가"
 date:   2024-01-05 14:09:00 +0900
 categories:  Flutter
 published: false
 ---
-
-### FadeTransition (페이드 효과)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### Hero (애니메이션)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### PositionedTransition (위치 변경)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### RotatedBox (회전 효과)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### RotationTransition (회전 효과)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### ScaleTransition (크기 변경 효과)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### SizeTransition (크기 변경 효과)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### SlideTransition (좌우 위치 이동 효과)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### Transform (모양)
-
-- [참고]()
-
-{% highlight dart %}
-{% endhighlight %}
-
-### SharedAxisTransition (효과 공유)
-
-- [참고]()
 
 {% highlight dart %}
 {% endhighlight %}
