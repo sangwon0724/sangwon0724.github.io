@@ -1,8 +1,9 @@
 ---
 layout: post
-title:  "TCL"
+title:  "트랜잭션 관리"
 date:   2023-12-27 13:46:00 +0900
 categories:  SQL
+published: false
 ---
 
 

@@ -1,12 +1,376 @@
 ---
 layout: post
-title:  "테이블 생성"
+title:  "DDL - 테이블 생성"
 date:   2023-12-27 13:46:00 +0900
 categories:  SQL
-published: false
 ---
 
+### 테이블 생성
 
+- 테이블을 구성하는 속성들의 이름과 데이터 타입과 제약 사항에 대한 정의,  
+기본키·대체키·외래키의 정의, 데이터 무결성을 위한 제약조건의 정의 등을 포함한다.
+- []로 표시한 함목은 생략 가능
+- 대소문자를 구분하지 않는다.
+
+### 기본 형식
 
 {% highlight sql %}
+CREATE TABLE 테이블_이름 (
+    속성_이름 데이터_타입 [ NOT NULL ] [ DEFAULT 기본_값 ] /* (1) */
+    [ PRIMARY KEY (속성_리스트) ]/* (2) */
+    [ UNIQUE (속성_리스트) ]/* (3) */
+    [ 
+        FOREIGN KEY (속성_리스트) REFERENCES 테이블_이름 (속성_리스트)
+        [ON DELETE 옵션]
+        [ON UPDATE 옵션]
+    ] /* (4) */
+    [ CONSTRAINT 제약조건_이름 ] [ CHECK (조건) ] /* (5) */
+)
 {% endhighlight %}
+
+- (1) 테이블을 구성하는 속성에 대하여 정의한다.
+    - 각 속성의 이름, 데이터 타입, 기본적인 제약 사항을 정의한다.
+- (2) 기본 키를 나타낸다.
+    - 테이블에 하나만 존재할 수 있다.
+- (3) 대체 키를 나타낸다.
+    - 테이블에 여러 개 존재할 수 있다.
+- (4) 외래 키를 나타낸다.
+    - 테이블에 여러 개 존재할 수 있다.
+- (5) 데이터 무결성을 위한 제약 조건을 나타낸다.
+    - 테이블에 여러 개 존재할 수 있다.
+
+#### 속성 정의
+
+- 현실 세계의 개체를 표현하기 위해 필요한 속성 목록에 대하여 작성한다.
+- 각 속성에 알맞는 [데이터 타입](#속성의-데이터-타입)을 선택한다.
+- 해당 속성에 NULL을 허용하고 싶지 않을 때는 `NOT NULL`을 작성한다.
+    - 예시 : `고객아이디 VARCHAR(30) NOT NULL`
+- 해당 속성에 기본 값을 명시하고 싶을 때는 `DEFAULT 기본_값`을 작성한다.
+    - 숫자 데이터는 그대로 표현한다.
+    - 문자열이나 날짜 데이터는 작은 따옴표로 묶어주어야 한다.
+        - 작음 따옴표로 묶인 문자열은 대소문자를 구분한다.
+    - 예시 : `적립금 INT DEFAULT 0`
+
+#### 기본 키 정의
+
+- `PRIMARY KEY` 키워드를 사용해 지정한다.
+    - 예시 : `PRIMARY KEY (고객아이디)`
+- 테이블마다 하나씩만 정의할 수 있다.
+- 단일 또는 복수의 속성으로 구성된다.
+    - 예시 : `PRIMARY KEY (주문고객, 주문제품)`
+- 기본 키가 없어도 테이블은 정의할 수 있지만 왠만하면 정의하는 것이 좋다.
+
+#### 대체 키 정의
+
+- `UNIQUE` 키워드를 사용해 지정한다.
+    - 예시 : `PRIMARY KEY (연락처)`
+- 하나의 테이블에 여러 개 존재할 수 있다.
+
+#### 외래 키 정의
+
+- `FOREIGN KEY` 키워드를 사용해 지정한다.
+- `REFERENCES`를 통해 어떤 테이블의 어떤 속성을 참조할지 지정한다.
+- 하나의 테이블에 여러 개 존재할 수 있다.
+- `ON DELETE` 키워드를 통해 참조되는 테이블에서 투플의 값이 변경된 경우에 대한 처리를 지정한다.
+    - <b>ON DELETE NO ACTION</b>
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플을 삭제하지 못하게 함
+        - 기본 값
+    - ON DELETE CASCADE
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플을 함께 삭제함
+    - ON DELETE SET NULL
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플의 값을 NULL로 초기화함
+    - ON DELETE SET DEFAULT
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플의 값을 기본 값으로 초기화함
+- `ON UPDATE` 키워드를 통해 참조되는 테이블에서 투플이 삭제된 경우에 대한 처리를 지정한다.
+    - <b>ON UPDATE NO ACTION</b>
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플을 갱신하지 못하게 함
+        - 기본 값
+    - ON UPDATE CASCADE
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플을 함께 갱신함
+    - ON UPDATE SET NULL
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플의 값을 NULL로 초기화함
+    - ON UPDATE SET DEFAULT
+        - 참조하는 테이블이 있는 경우 참조되는 테이블의 투플의 값을 기본 값으로 초기화함
+
+#### 제약 조건 정의
+
+- `CHECK` 키워드를 통해 특정 속성에 대한 제약 조건을 지정할 수 있다.
+    - 예시 : `CHECK(결제금액 >= 0)`
+- `CONSTRAINT` 키워드와 함께 사용하여 고유한 제약 조건의 이름을 부여할 수도 있다.
+    - 예시 : `CONSTRAINT 결제금액조건 CHECK(결제금액 >= 0)`
+- 하나의 테이블에 여러 개 존재할 수 있다.
+
+### 속성의 데이터 타입
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>유형</th>
+                <th>데이터 타입</th>
+                <th>바이트 수</th>
+                <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">정수</td>
+                <td>TINYINT</td>
+                <td>1</td>
+                <td>-128 ~ 127 사이의 정수</td>
+            </tr>
+            <tr>
+                <td>SMALLINT</td>
+                <td>2</td>
+                <td>-32,768 ~ 32,767 사이의 정수</td>
+            </tr>
+            <tr>
+                <td>MEDIUMINT</td>
+                <td>3</td>
+                <td>-8,388,608 ~ 8,388,607 사이의 정수</td>
+            </tr>
+            <tr>
+                <td>INT</td>
+                <td>4</td>
+                <td>약 -21억 ~ +21억 사이의 정수</td>
+            </tr>
+            <tr>
+                <td>BIGINT</td>
+                <td>8</td>
+                <td>약 -900경 ~ +900경 사이의 정수</td>
+            </tr>
+            <tr>
+                <td>BIT</td>
+                <td>N/8</td>
+                <td>
+                    1 ~ 64bit를 표현한다.<br/>
+                    b'0000' 과 같이 표현한다.
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">실수</td>
+                <td>FLOAT</td>
+                <td>4</td>
+                <td>
+                    -3.40E+38 ~ -1.17E-38 사이의 실수<br/>
+                    소수점 아래 7자리까지 표현한다.
+                </td>
+            </tr>
+            <tr>
+                <td>DOUBLE</td>
+                <td>8</td>
+                <td>
+                    1.22E-308 ~ 1.79E+308<br/>
+                    소수점 아래 15자리까지 표현한다.
+                </td>
+            </tr>
+            <tr>
+                <td>DEMICAL</td>
+                <td>5 ~ 17</td>
+                <td>
+                    전체 자리 수와 소수점 이하 자리수를 표현한다.<br/>
+                    범위 : -1038+1 ~ +1038-1<br/>
+                    예시 : DEMICAL(5, 2) => 673.21
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">텍스트</td>
+                <td>VARCHAR</td>
+                <td>1 ~ 65535</td>
+                <td>
+                    가변 길이 문자형<br/>
+                    사용하는 만큼의 공간만 차지한다.
+                </td>
+            </tr>
+            <tr>
+                <td>CHAR</td>
+                <td>1 ~ 255</td>
+                <td>
+                    고정길이 문자형<br/>
+                    사용하는 만큼이 아닌 정의한 만큼의 공간을 차지한다.<br/>
+                    VARCHAR보다 성능이 좋다.
+                </td>
+            </tr>
+            <tr>
+                <td>TINTTEXT</td>
+                <td>1 ~ 255</td>
+                <td>255 크기의 TEXT 데이터 값</td>
+            </tr>
+            <tr>
+                <td>TEXT</td>
+                <td>1 ~ 65,535</td>
+                <td>N 크기의 TEXT 데이터 값</td>
+            </tr>
+            <tr>
+                <td>MEDIUMTEXT</td>
+                <td>1 ~ 16,777,215</td>
+                <td>16,777,215 크기의 TEXT 데이터 값</td>
+            </tr>
+            <tr>
+                <td>LONGTEXT</td>
+                <td>1 ~ 4,294,967,295</td>
+                <td>최대 4GB 크기의 TEXT 데이터 값</td>
+            </tr>
+            <tr>
+                <td>JSON</td>
+                <td>8</td>
+                <td>
+                    JSON 문서를 저장한다.<br/>
+                    MySQL 5.7.8 부터 지원한다.<br/>
+                    배열 타입도 지원한다.
+                </td>
+            </tr>
+            <tr>
+                <td>UUID</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td rowspan="3">바이너리</td>
+                <td>BINARY</td>
+                <td>1 ~ 255</td>
+                <td>고정길이 이진 데이터 값</td>
+            </tr>
+            <tr>
+                <td>VARBINARY</td>
+                <td>1 ~ 255</td>
+                <td>가변길이 이진 데이터 값</td>
+            </tr>
+            <tr>
+                <td>TINYBLOB</td>
+                <td>1 ~ 255</td>
+                <td>255 크기의 BLOB 데이터 값</td>
+            </tr>
+            <tr>
+                <td>BLOB</td>
+                <td>1 ~ 65,535</td>
+                <td>N 크기의 BLOB 데이터 값</td>
+            </tr>
+            <tr>
+                <td>MEDIUMBLOB</td>
+                <td>1 ~ 16,777,215</td>
+                <td>16,777,215 크기의 BLOB 데이터 값</td>
+            </tr>
+            <tr>
+                <td>LONGBLOB</td>
+                <td>1 ~ 4,294,967,295</td>
+                <td>최대 4GB 크기의 BLOB 데이터 값</td>
+            </tr>
+            <tr>
+                <td rowspan="3">시간</td>
+                <td>DATE</td>
+                <td>3</td>
+                <td>
+                    'YYYY-MM-DD' 형식<br/>
+                    범위 : 1001-01-01 ~ 9999-12-31
+                </td>
+            </tr>
+            <tr>
+                <td>TIME</td>
+                <td>3</td>
+                <td>
+                    'HH:MM:SS' 형식<br/>
+                    범위 : -838:59:59.000000 ~ 838:59:59.000000
+                </td>
+            </tr>
+            <tr>
+                <td>YEAR</td>
+                <td>1</td>
+                <td>
+                    'YYYY' 형식<br/>
+                    범위 : 1901 ~ 2155
+                </td>
+            </tr>
+            <tr>
+                <td>DATETIME</td>
+                <td>8</td>
+                <td>
+                    'YYYY-MM-DD HH:MM:SS 형식<br/>
+                    범위 : 1001-01-01 00:00:00 ~ 9999-12-31 23:59:59
+                </td>
+            </tr>
+            <tr>
+                <td>TIMESTAMP</td>
+                <td>4</td>
+                <td>
+                    'YYYY-MM-DD HH:MM:SS 형식<br/>
+                    범위 : 1001-01-01 00:00:00 ~ 9999-12-31 23:59:59<br/>
+                    time_zone 시스템 변수와 관련이 있다.<br/>
+                    UTC 시간대로 변환하여 저장한다.
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">공간 (기하학)</td>
+                <td>POINT</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td>LINESTRING</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td>POLYGON</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td>GEOMETRY</td>
+                <td>N/A</td>
+                <td>공간 데이터 형식으로 선, 점 및 다각형 같은 공간 데이터 개체를 저장한다.</td>
+            </tr>
+            <tr>
+                <td>MULTIPOINT</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td>MULTILINESTRING</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td>MULTIPOLYGON</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td>GEOMETRYCOLLECTION</td>
+                <td>바이트수</td>
+                <td>설명</td>
+            </tr>
+            <tr>
+                <td rowspan="3">기타</td>
+                <td>ENUM</td>
+                <td>1 또는 2</td>
+                <td>최대 65535개의 열거형 데이터 값</td>
+            </tr>
+            <tr>
+                <td>ENUM</td>
+                <td>1 또는 2</td>
+                <td>최대 65535개의 열거형 데이터 값</td>
+            </tr>
+            <tr>
+                <td>SET</td>
+                <td>1, 2, 3, 4, 8</td>
+                <td>최대 64개의 중복되지 않는 데이터 값</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+#### 숫자 데이터 형식
+
+- 사용하는 자료형의 종류에 따라 값을 저장하는 방식이 다르다.
+    - DECIMAL은 정확한 수치를 저장한다.
+    - FLOAT는 근사치 값을 저장한다.
+- 부호없는 숫자를 저장할 때에는 UNSIGNED 예약어를 같이 사용한다.
+    - 음수 영역이 사용하는 영역을 양수 영역이 추가로 사용할 수 있다.
+
+#### 문자 데이터 형식
+
+- VARCHAR은 UTF-8의 형태를 지니므로 입력한 글자의 언어에 따라 내부적으로 크기가 달라진다.
+- CHAR는 언어에 관계 없이 지정한 크기의 글자 수를 입력할 수 있다.
+- BLOB(Binary Large Object)은 대용량 이진 데이터를 저장하는데 사용하는 자료형이다.
+    - 예시 : 사진, 동영상, 문서 파일 등
