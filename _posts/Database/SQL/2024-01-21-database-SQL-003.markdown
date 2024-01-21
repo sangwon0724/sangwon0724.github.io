@@ -3,7 +3,6 @@ layout: post
 title:  "테이블 삭제"
 date:   2024-01-21 16:57:00 +0900
 categories:  SQL
-published: false
 ---
 
 ### 테이블 삭제
