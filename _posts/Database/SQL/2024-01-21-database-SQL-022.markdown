@@ -2,7 +2,7 @@
 layout: post
 title:  "권한 해제"
 date:   2023-12-27 10:07:33 +0900
-categories:  DCL
+categories:  SQL
 published: false
 ---
 
