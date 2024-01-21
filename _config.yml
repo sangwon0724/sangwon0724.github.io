@@ -42,10 +42,7 @@ portfolio_img_root: '/assets/img/portfolio'
 excerpt_separator: \n\n,\\n\\n
 category_depth:
   Database:
-    - DCL
-    - DDL
-    - DML
-    - TCL
+    - SQL
     - Firebase
   Flutter:
     - Dart
