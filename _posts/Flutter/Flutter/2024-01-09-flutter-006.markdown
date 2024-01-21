@@ -437,7 +437,7 @@ Center(
     - TextStyle? textStyle
         - Text 유형 위젯에 적용될 스타일
     - BoxConstraints? constraints
-        - 버튼의 크기에 대한 제약 조건
+        - 버튼의 크기에 대한 제약조건
     - Color? color
         - Text나 Icon의 색상
     - Color? selectedColor
@@ -659,7 +659,7 @@ SizedBox(
     - Color? color
         - 하위 메뉴 목록의 배경색
     - BoxConstraints? constraints
-        - 팝업 메뉴의 크기에 대한 제약 조건
+        - 팝업 메뉴의 크기에 대한 제약조건
     - double? elevation
         - 메뉴가 열릴 때 메뉴를 배치할 z 좌표
         - 메뉴 아래 그림자의 크기를 제어한다.

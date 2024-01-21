@@ -89,6 +89,7 @@ tags: [출처, 참고]
 
 - 블로그 게시글
     - [[MYSQL] 📚 자료형 타입 종류 정리](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%EC%9E%90%EB%A3%8C%ED%98%95-%ED%83%80%EC%9E%85-%EC%A2%85%EB%A5%98-%EC%A0%95%EB%A6%AC)
+    - [MySQL 컬럼명 변경, 컬럼 타입 변경, 컬럼 추가, 컬럼 삭제](https://juyoung-1008.tistory.com/17)
 
 ### 이론
 

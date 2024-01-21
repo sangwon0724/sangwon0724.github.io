@@ -1,12 +1,43 @@
 ---
 layout: post
 title:  "테이블 변경"
-date:   2023-12-27 13:46:00 +0900
+date:   2024-01-21 16:02:00 +0900
 categories:  SQL
-published: false
 ---
 
+### 테이블 변경
 
+- 속성 및 제약조건에 대한 추가/변경/삭제를 실행한다.
 
-{% highlight sql %}
-{% endhighlight %}
+### 신규 속성 추가
+
+`ALTER TABLE 테이블명 ADD [ COLUMN ] 속성명 데이터_타입 [ NOT NULL ] [ DEFAULT 기본_값 ];`
+
+### 속성명 변경
+
+`ALTER TABLE 테이블명 CHANGE 기존_속성명 데이터_타입;`
+
+### 데이터 타입 변경
+
+`ALTER TABLE 테이블명 MODIFY [ COLUMN ] 속성명 데이터_타입;`
+
+### 기본 값 변경
+
+`ALTER TABLE 테이블명 ALTER [ COLUMN ] 속성명 SET DEFAULT 기본_값;`
+
+### 기존 속성 삭제
+
+`ALTER TABLE 테이블명 DROP [ COLUMN ] 속성명 [ CASCADE | RESTRICT ];`
+
+- CASCADE
+    - 관련된 제약조건이나 참조하는 다른 속성을 함께 삭제한다.
+- RESTRICT
+    - 관련된 제약조건이나 참조하는 다른 속성이 존재하면 삭제가 수행되지 않도록 한다.
+
+### 신규 제약조건 추가
+
+`ALTER TABLE 테이블명 ADD CONSTRAINT 제약조건_이름 제약조건_내용;`
+
+### 기존 제약조건 삭제
+
+`ALTER TABLE 테이블명 DROP CONSTRAINT 제약조건_이름;`
