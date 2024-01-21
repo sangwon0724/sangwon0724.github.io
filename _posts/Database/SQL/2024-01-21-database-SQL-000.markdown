@@ -1,0 +1,68 @@
+---
+layout: post
+title:  "나중에 추가할 게시글 목록"
+date:   2024-01-21 15:14:00 +0900
+categories:  SQL
+----
+
+- MERGE
+- CALL
+- 실행계획
+- LOCK 테이블
+- 뷰
+- 인덱스
+- 커서
+- 트리거
+- stored procedure
+- stored function
+- 옵티마이저​
+- 쿼리 힌트
+- LOOP JOIN
+- sql collate (데이터 정렬 방법)
+- SQL OFFSET
+- upsert (insert + update)
+- count(*)와 count(1)의 차이
+- sql stuff (https://gent.tistory.com/344)
+- ON DUPLICATE KEY 
+- MYSQL BTREE 
+- mysql explain 
+
+
+sql 조회시 같지 않다를 조회할때
+값이 null인 항목들은 조회되지 않는다.
+값이 null인 항목들도 조회하고 싶다면 AND (항목_YN != '값' OR 항목_YN IS NULL)처럼 검색하면 된다. 
+
+
+mysql에서 varchar 칼럼에 이모티콘 등록시 오류가 발생한다면 이모티콘이 들어가는 칼럼의 조합 방식을 utf8_general_ci에서 utf8mb4_unicode_ci로 변경하면 된다. 
+
+
+
+
+mysql fulltext indexing
+문제점 : 어절 단위로 인식이됨
+예시 :
+※ 조건 : c++에서 ++을 검색
+(1) LIKE '%++%' => 검색 가능
+(2) MATCH(칼럼명) AGAINST('++') => 검색 불가
+
+
+
+
+BINARY 검색 (LIKE의 속도 개선)
+https://taegon.kim/archives/5
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sdfzl_ar&logNo=221288783413
+
+
+JOIN 진행시 ON 절과 WHERE 절에서의 차이
+https://developyo.tistory.com/12
+
+STRAIGHT_JOIN
+https://marobiana.tistory.com/35
+https://blog.leocat.kr/notes/2017/08/18/sql-straight-join
+
+sql INT(11) 불가능한 이유
+https://dung-beetle.tistory.com/136
+
+mysql 정렬할때 null 또는 공백을 맨 뒤로 보내기
+https://codingcoding.tistory.com/1134
+https://ponyozzang.tistory.com/700
