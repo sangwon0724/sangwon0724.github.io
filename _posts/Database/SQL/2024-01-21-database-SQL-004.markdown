@@ -11,6 +11,7 @@ WHERE
 연산자
 정렬
 GROUP BY + HAVING
+와일드카드
 
 {% highlight sql %}
 {% endhighlight %}
