@@ -17,8 +17,8 @@ categories:  SQL
 {% highlight sql %}
 CREATE TABLE 테이블_이름 (
     속성_이름 데이터_타입 [ NOT NULL ] [ DEFAULT 기본_값 ] /* (1) */
-    [ PRIMARY KEY (속성_리스트) ]/* (2) */
-    [ UNIQUE (속성_리스트) ]/* (3) */
+    [ PRIMARY KEY (속성_리스트) ] /* (2) */
+    [ UNIQUE (속성_리스트) ] /* (3) */
     [ 
         FOREIGN KEY (속성_리스트) REFERENCES 테이블_이름 (속성_리스트)
         [ON DELETE 옵션]
@@ -114,7 +114,7 @@ CREATE TABLE 테이블_이름 (
         </thead>
         <tbody>
             <tr>
-                <td rowspan="3">정수</td>
+                <td rowspan="6">정수</td>
                 <td>TINYINT</td>
                 <td>1</td>
                 <td>-128 ~ 127 사이의 정수</td>
@@ -174,7 +174,7 @@ CREATE TABLE 테이블_이름 (
                 </td>
             </tr>
             <tr>
-                <td rowspan="3">텍스트</td>
+                <td rowspan="6">텍스트</td>
                 <td>VARCHAR</td>
                 <td>1 ~ 65535</td>
                 <td>
@@ -212,21 +212,7 @@ CREATE TABLE 테이블_이름 (
                 <td>최대 4GB 크기의 TEXT 데이터 값</td>
             </tr>
             <tr>
-                <td>JSON</td>
-                <td>8</td>
-                <td>
-                    JSON 문서를 저장한다.<br/>
-                    MySQL 5.7.8 부터 지원한다.<br/>
-                    배열 타입도 지원한다.
-                </td>
-            </tr>
-            <tr>
-                <td>UUID</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td rowspan="3">바이너리</td>
+                <td rowspan="6">바이너리</td>
                 <td>BINARY</td>
                 <td>1 ~ 255</td>
                 <td>고정길이 이진 데이터 값</td>
@@ -257,7 +243,7 @@ CREATE TABLE 테이블_이름 (
                 <td>최대 4GB 크기의 BLOB 데이터 값</td>
             </tr>
             <tr>
-                <td rowspan="3">시간</td>
+                <td rowspan="5">시간</td>
                 <td>DATE</td>
                 <td>3</td>
                 <td>
@@ -298,63 +284,6 @@ CREATE TABLE 테이블_이름 (
                     time_zone 시스템 변수와 관련이 있다.<br/>
                     UTC 시간대로 변환하여 저장한다.
                 </td>
-            </tr>
-            <tr>
-                <td rowspan="3">공간 (기하학)</td>
-                <td>POINT</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td>LINESTRING</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td>POLYGON</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td>GEOMETRY</td>
-                <td>N/A</td>
-                <td>공간 데이터 형식으로 선, 점 및 다각형 같은 공간 데이터 개체를 저장한다.</td>
-            </tr>
-            <tr>
-                <td>MULTIPOINT</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td>MULTILINESTRING</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td>MULTIPOLYGON</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td>GEOMETRYCOLLECTION</td>
-                <td>바이트수</td>
-                <td>설명</td>
-            </tr>
-            <tr>
-                <td rowspan="3">기타</td>
-                <td>ENUM</td>
-                <td>1 또는 2</td>
-                <td>최대 65535개의 열거형 데이터 값</td>
-            </tr>
-            <tr>
-                <td>ENUM</td>
-                <td>1 또는 2</td>
-                <td>최대 65535개의 열거형 데이터 값</td>
-            </tr>
-            <tr>
-                <td>SET</td>
-                <td>1, 2, 3, 4, 8</td>
-                <td>최대 64개의 중복되지 않는 데이터 값</td>
             </tr>
         </tbody>
     </table>
