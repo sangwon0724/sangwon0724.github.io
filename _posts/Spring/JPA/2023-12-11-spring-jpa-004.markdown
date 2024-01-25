@@ -37,7 +37,7 @@ tags: [영속성, 영속성 관리, 영속성 컨텍스트]
     - 삭제된 상태
     - 실제 DB 삭제를 요청하는 상태
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/001.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_001.png"/>
 
 {% highlight java %}
     Member member = new Member(); //객체를 생성한 상태 (비영속)

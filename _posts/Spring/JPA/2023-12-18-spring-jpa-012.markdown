@@ -3,6 +3,7 @@ layout: post
 title:  "객체지향 쿼리 언어2 - 중급 문법"
 date:   2024-01-25 23:51:00 +0900
 categories: JPA
+published: false
 ---
 
 ### 
