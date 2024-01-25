@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "프록시와 연간관계 매핑"
-date:   2023-12-11 22:46:00 +0900
+date:   2024-01-25 23:51:00 +0900
 categories: JPA
 tags: [연관관계, JPA 연관관계, 프록시]
 ---
