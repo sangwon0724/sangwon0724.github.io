@@ -1,12 +1,144 @@
 ---
 layout: post
-title:  "조인"
-date:   2024-01-21 10:07:00 +0900
+title:  "조인 검색"
+date:   2024-01-28 16:08:00 +0900
 categories:  SQL
 published: false
 ---
 
-https://opentutorials.org/course/3884
+### 조인(join) 검색이란?
 
+- 여러 개의 테이블을 연결하여 데이터를 검색하는 것
+- FROM 절에 검색에 필요한 모든 테이블을 나열하고,  
+WHERE 절에는 조인 속성의 값이 같아야 함을 의미하는 조인 조건을 제시한다.
+- 테이블은 다르지만 속성명이 같은 경우가 많으니 속성명 앞에 테이블명을 지정해준다.
+- 테이블 지정 시 약칭도 같이 지정해준 것이 좋다.
+    - 쿼리가 길어지는 것을 방지할 수 있다.
+    - 같은 테이블을 조인할 떄 쉽게 구분하기 위한 용도도 있다.
+- FROM 절에 해당하는 테이블을 지정하는 역할이라서  
+WHERE, GROUP BY, HAVING, ORDER BY같은 키워드도 모두 사용할 수 있다.
+- 종류
+    - INNER JOIN (내부 조인)
+    - OUTER JOIN (외부 조인)
+    - CROSS JOIN (상호 조인)
+    - SELF JOIN (자체 조인)
+
+### 조인의 종류
+
+- ANSI-SQL 기준으로 작성
+
+#### INNER JOIN (내부 조인)
+
+- 테이블 A와 테이블 B의 교집합에 해당하는 결과를 검색한다.
+- A ∩ B
+- 기본 형식
+{% highlight sql %}
+SELECT
+    속성명_목록
+FROM
+    테이블A AS A
+    [INNER] JOIN
+        테이블B AS B
+        ON A.조인할_속성명 = B.조인할_속성명
+{% endhighlight %}
+
+#### OUTER JOIN (외부 조인)
+
+##### LEFT OUTER JOIN
+
+- 테이블 A와 테이블 B의 교집합과 차집합을 합친 것에 해당하는 결과를 검색한다.
+- 이 떄에 해당하는 차집합은 A - B다.
+- (A ∩ B) ∪ (A - B)
+- 기본 형식
+{% highlight sql %}
+SELECT
+    속성명_목록
+FROM
+    테이블A AS A
+    LEFT OUTER JOIN
+        테이블B AS B
+        ON A.조인할_속성명 = B.조인할_속성명
+{% endhighlight %}
+
+##### RIGHT OUTER JOIN
+
+- 테이블 A와 테이블 B의 교집합과 차집합을 합친 것에 해당하는 결과를 검색한다.
+- 이 떄에 해당하는 차집합은 B - A다.
+- (A ∩ B) ∪ (B - A) 
+- 기본 형식
+{% highlight sql %}
+SELECT
+    속성명_목록
+FROM
+    테이블A AS A
+    RIGHT OUTER JOIN
+        테이블B AS B
+        ON A.조인할_속성명 = B.조인할_속성명
+{% endhighlight %}
+
+##### FULL OUTER JOIN
+
+- 테이블 A와 테이블 B의 합집합에 해당하는 결과를 검색한다.
+- A ∪ B
+- 기본 형식
+{% highlight sql %}
+SELECT
+    속성명_목록
+FROM
+    테이블A AS A
+    FULL OUTER JOIN
+        테이블B AS B
+        ON A.조인할_속성명 = B.조인할_속성명
+{% endhighlight %}
+
+#### CROSS JOIN (상호 조인)
+
+- 테이블 A의 모든 투플과 테이블 B의 모든 투플을 조인한 결과를 검색한다.
+- 카티션 프로덕트라고도 부른다.
+- 결과 투플의 개수는 각 테이블의 행 개수를 곱한 값이 된다.
+- 기본 형식
+{% highlight sql %}
+SELECT
+    속성명_목록
+FROM
+    테이블A AS A
+    CROSS JOIN
+        테이블B AS B
+        ON A.조인할_속성명 = B.조인할_속성명
+{% endhighlight %}
+
+#### SELF JOIN (자체조인)
+
+- 같은 테이블로 조인하는 방식
+- 별도의 문법이 있는 것은 아니다.
+    - 같은 테이블끼리 조인하면 자체 조인으로 취급한다.
+- 기본 형식
+{% highlight sql %}
+SELECT
+    속성명_목록
+FROM
+    테이블A AS A
+    INNER JOIN JOIN
+        테이블A AS B
+        ON A.조인할_속성명 = B.조인할_속성명
+{% endhighlight %}
+
+### 조인 방식
+
+- 종류
+    - NL(Nested Loops) 조인
+    - 해시(Hash) 조인 
+    - 소트 머지(Sort Merge) 조인
+
+https://sparkdia.tistory.com/18
+
+### STRAIGHT_JOIN이란?
+
+옵티마이저에 의해서 드라이빙 테이블과 드리븐 테이블에 순서가 바뀌지 않게끔 STRAIGHT_JOIN으로 힌트를 유도한다.
+FROM 절에 명시된 테이블 순서대로가 아닌 옵티마이저가 판단하에 순서가 뒤바뀌고 해당 옵티마이저에 판단으로 속도가 느려졌을 때 사용하면 좋다.
+
+- 기본 형식
 {% highlight sql %}
 {% endhighlight %}
+
+https://development-crow.tistory.com/33
