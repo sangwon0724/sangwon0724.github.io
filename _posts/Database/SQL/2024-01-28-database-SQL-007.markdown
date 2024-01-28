@@ -1,10 +1,22 @@
 ---
 layout: post
 title:  "데이터 삭제"
-date:   2024-01-21 10:07:00 +0900
+date:   2024-01-28 15:44:00 +0900
 categories:  SQL
-published: false
 ---
 
+### 데이터 삭제
+
+- 기본 형식
 {% highlight sql %}
+DELETE
+FROM
+    테이블명
+[WHERE 조건]
+{% endhighlight %}
+- WHERE 생략 시 해당 테이블의 모든 투플을 삭제한다.
+- WHERE 지정 시 조건을 만족하는 투플만 삭제한다.
+- 사용 예시
+{% highlight sql %}
+DELETE FROM MEMBER; /* 회원 테이블의 모든 데이터를 삭제한다. */
 {% endhighlight %}
