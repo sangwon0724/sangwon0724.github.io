@@ -34,7 +34,7 @@ sql 조회시 같지 않다를 조회할때
 
 mysql에서 varchar 칼럼에 이모티콘 등록시 오류가 발생한다면 이모티콘이 들어가는 칼럼의 조합 방식을 utf8_general_ci에서 utf8mb4_unicode_ci로 변경하면 된다. 
 
-
+내장함수 목록 보고 추가하기
 
 
 mysql fulltext indexing
@@ -44,7 +44,7 @@ mysql fulltext indexing
 (1) LIKE '%++%' => 검색 가능
 (2) MATCH(칼럼명) AGAINST('++') => 검색 불가
 
-
+ROWID
 
 
 BINARY 검색 (LIKE의 속도 개선)
@@ -65,3 +65,5 @@ https://dung-beetle.tistory.com/136
 mysql 정렬할때 null 또는 공백을 맨 뒤로 보내기
 https://codingcoding.tistory.com/1134
 https://ponyozzang.tistory.com/700
+
+계층형 테이블 조회

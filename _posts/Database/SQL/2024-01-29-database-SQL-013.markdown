@@ -1,10 +1,17 @@
 ---
 layout: post
-title:  "페이징 관련 (ROWNUM, ROW_NUMBER)"
-date:   2024-01-21 10:07:00 +0900
+title:  "페이징 관련"
+date:   2024-01-29 00:33:00 +0900
 categories:  SQL
 published: false
 ---
+
+### ROWNUM, ROW_NUMBER
+
+{% highlight sql %}
+{% endhighlight %}
+
+### LIMIT
 
 {% highlight sql %}
 {% endhighlight %}

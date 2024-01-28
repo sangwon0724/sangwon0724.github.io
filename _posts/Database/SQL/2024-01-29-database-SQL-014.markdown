@@ -1,10 +1,12 @@
 ---
 layout: post
-title:  "RANK와 DENSERANK"
+title:  "순위 구하기"
 date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false
 ---
+
+RANK와 DENSERANK
 
 {% highlight sql %}
 {% endhighlight %}
