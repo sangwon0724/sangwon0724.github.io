@@ -67,3 +67,5 @@ https://codingcoding.tistory.com/1134
 https://ponyozzang.tistory.com/700
 
 계층형 테이블 조회
+
+파티션

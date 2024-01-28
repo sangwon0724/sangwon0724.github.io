@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "권한 부여"
+title:  "트랜잭션 관리"
 date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false
 ---
+
 
 
 {% highlight sql %}

@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "파티션"
-date:   2024-01-29 00:33:00 +0900
+title:  "권한 해제"
+date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false
 ---
+
 
 {% highlight sql %}
 {% endhighlight %}
