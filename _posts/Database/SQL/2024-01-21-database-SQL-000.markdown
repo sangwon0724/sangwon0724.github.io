@@ -18,7 +18,6 @@ published: false
 - stored function
 - 옵티마이저​
 - 쿼리 힌트
-- LOOP JOIN
 - sql collate (데이터 정렬 방법)
 - SQL OFFSET
 - upsert (insert + update)
@@ -26,7 +25,6 @@ published: false
 - sql stuff (https://gent.tistory.com/344)
 - ON DUPLICATE KEY 
 - MYSQL BTREE 
-- mysql explain 
 
 
 sql 조회시 같지 않다를 조회할때
