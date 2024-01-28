@@ -1,10 +1,47 @@
 ---
 layout: post
 title:  "데이터 추가"
-date:   2024-01-21 10:07:00 +0900
+date:   2024-01-28 15:30:00 +0900
 categories:  SQL
-published: false
 ---
 
+### 데이터 직접 삽입
+
 {% highlight sql %}
+INSERT
+INTO
+테이블명[(속성명_목록)]
+VALUES(속성값_목록);
+{% endhighlight %}
+
+- 속성명 목록과 속성값 목록은 각각의 요소를 쉼표로 구분한다.
+- 속성명 목록을 생략할 수 있다.
+    - 단, 생략할 경우 속성값 목록의 순서는 테이블 정의 시 작성한 속성명 목록의 순서와 동일해야 한다.
+- 속성값이 문자나 날짜 타입의 데이터일 경우에는 쉼표로 묶어야 한다.
+- 사용 예시
+{% highlight sql %}
+INSERT
+INTO
+MEMBER(USER_ID, NAME, AGE)
+VALUES('test', '홍길동', 19);
+{% endhighlight %}
+
+### 검색을 통한 데이터 삽입
+
+- SELECT 문의 결과를 통해서 데이터 삽입을 할 수도 있다.
+- 기본 형식
+{% highlight sql %}
+INSERT
+INTO 테이블명[(속성명_목록)]
+SELECT문;
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+INSERT
+INTO
+MEMBER_COPY(USER_ID, NAME, AGE)
+SELECT
+    USER_ID, NAME, AGE
+FROM
+    MEMBER;
 {% endhighlight %}
