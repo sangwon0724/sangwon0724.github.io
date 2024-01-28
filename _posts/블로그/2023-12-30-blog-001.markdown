@@ -97,6 +97,8 @@ tags: [출처, 참고]
     - [Programming-[Backend]/SQL[SQLD]10. SQL 기본 6 - ...](https://whitepro.tistory.com/580)
     - [[ Database ] Dual 테이블이란?](https://dadmi97.tistory.com/37)
     - [MySQL 에서 DUAL 같은 테이블의 존재](https://yangyag.tistory.com/271)
+    - [[Mysql] Mysql 조건문 - IF 문, CASE 문](https://redcow77.tistory.com/260)
+    - [MySQL - 조건문 정리 (IF, IFNULL, ISNULL, CASE WHEN, NVL)](https://velog.io/@pm1100tm/MySQL-%EC%A1%B0%EA%B1%B4%EB%AC%B8-%EC%A0%95%EB%A6%AC)
 
 ### 이론
 
