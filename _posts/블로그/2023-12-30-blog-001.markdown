@@ -95,6 +95,8 @@ tags: [출처, 참고]
     - [[DB] Mysql STRAIGHT_JOIN으로 튜닝하기](https://development-crow.tistory.com/33)
     - [[Oracle SQL] UNION 과 UNION ALL 차이](https://mimah.tistory.com/entry/Oracle-SQL-UNION-%EA%B3%BC-UNION-ALL-%EC%B0%A8%EC%9D%B4)
     - [Programming-[Backend]/SQL[SQLD]10. SQL 기본 6 - ...](https://whitepro.tistory.com/580)
+    - [[ Database ] Dual 테이블이란?](https://dadmi97.tistory.com/37)
+    - [MySQL 에서 DUAL 같은 테이블의 존재](https://yangyag.tistory.com/271)
 
 ### 이론
 

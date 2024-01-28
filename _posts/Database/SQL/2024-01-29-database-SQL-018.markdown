@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "ROWID?"
+title:  "내장함수 살펴보고 추가하기"
 date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "계층형 테이블 조회"
+title:  "파티션"
 date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false

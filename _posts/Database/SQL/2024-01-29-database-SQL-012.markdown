@@ -1,10 +1,71 @@
 ---
 layout: post
-title:  "IF"
-date:   2024-01-21 10:07:00 +0900
+title:  "IF문과 CASE 문"
+date:   2024-01-29 00:23:00 +0900
 categories:  SQL
-published: false
 ---
 
+### IF문
+
+- 지정한 조건의 만족 여부에 따라 값을 반환한다.
+- 기본 형식
+    - `IF(조건문, 참일 때의 값, 거짓일 때의 값)`
+- 사용 예시
 {% highlight sql %}
+SELECT
+	IF(1=1, 'TRUE', 'FALSE') AS RESULT
+FROM
+	DUAL;
+{% endhighlight %}
+
+### CASE문
+
+#### 방법 1
+
+- WHEN 절에서 지정하는 조건에 따라서 값을 반환한다.
+- 기본 형식
+{% highlight sql %}
+CASE
+    WHEN 조건식1 THEN 결과값1
+    WHEN 조건식2 THEN 결과값2
+    WHEN 조건식3 THEN 결과값3 /* 추가 조건 존재 시 추가 반복 */
+    ELSE 모든_조건을_만족하지_않은_경우의_결과값
+END
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+SELECT
+	CASE
+        WHEN MEMBER_ID = 1 THEN 'MEMBER_ID : 1'
+        WHEN MEMBER_ID = 2 THEN 'MEMBER_ID : 2'
+        WHEN MEMBER_ID = 3 THEN 'MEMBER_ID : 3'
+        ELSE '해당하는 조건 없음'
+	END AS RESULT
+FROM
+	MEMBER
+{% endhighlight %}
+
+#### 방법 2
+
+- 지정한 조건이 반환하는 값에 따라서 값을 반환한다.
+- 기본 형식
+{% highlight sql %}
+CASE 조건식
+    WHEN 조건값1 THEN 결과값1
+    WHEN 조건값2 THEN 결과값2
+    WHEN 조건값3 THEN 결과값3 /* 추가 조건 존재 시 추가 반복 */
+    ELSE 모든_조건을_만족하지_않은_경우의_결과값
+END
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+SELECT
+	CASE MEMBER_ID
+			WHEN 1 THEN 'MEMBER_ID : 1'
+			WHEN 2 THEN 'MEMBER_ID : 2'
+			WHEN 3 THEN 'MEMBER_ID : 3'
+			ELSE '해당하는 조건 없음'
+	END AS RESULT
+FROM
+	MEMBER
 {% endhighlight %}

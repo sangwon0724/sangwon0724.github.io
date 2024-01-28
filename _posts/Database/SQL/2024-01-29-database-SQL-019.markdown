@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "내장함수 살펴보고 추가하기"
+title:  "권한 부여"
 date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false
 ---
+
 
 {% highlight sql %}
 {% endhighlight %}

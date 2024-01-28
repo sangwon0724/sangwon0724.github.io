@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CASE"
+title:  "페이징 관련 (ROWNUM, ROW_NUMBER)"
 date:   2024-01-21 10:07:00 +0900
 categories:  SQL
 published: false
