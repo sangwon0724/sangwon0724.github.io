@@ -1,10 +1,33 @@
 ---
 layout: post
-title:  "UNION ALL과 UNION"
-date:   2024-01-21 10:07:00 +0900
+title:  "UNION 연산과 MINUS 연산"
+date:   2024-01-29 00:04:00 +0900
 categories:  SQL
-published: false
 ---
 
+### UNION 연산
+
+- 복수의 SELECT 문의 결과값끼리 합집합을 계산하는 연산
+- 종류
+    - UNION
+        - 중복을 제거한 연산 결과를 반환한다.
+        - 중복을 제거하기 위하여 데이터를 모두 검사하기 때문에 속도가 느리다.
+        - 중복을 제거하면서 정렬을 발생시킨다.
+    - UNION ALL
+        - 중복을 포함한 연산 결과를 반환한다.
+- 사용 예시
 {% highlight sql %}
+SELECT NAME, MOBILE_NO FROM MEMBER_M
+UNION ALL
+SELECT NAME, MOBILE_NO FROM MEMBER_F;
+{% endhighlight %}
+
+### MINUS 연산
+
+- 복수의 SELECT 문의 결과값끼리의 차집합을 계산하는 연산
+- 사용 예시
+{% highlight sql %}
+SELECT MOBILE_NO FROM EVENT_HISTORY_A
+MINUS
+SELECT MOBILE_NO FROM EVENT_HISTORY_B;
 {% endhighlight %}
