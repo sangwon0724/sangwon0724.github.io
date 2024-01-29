@@ -101,6 +101,7 @@ tags: [출처, 참고]
     - [MySQL - 조건문 정리 (IF, IFNULL, ISNULL, CASE WHEN, NVL)](https://velog.io/@pm1100tm/MySQL-%EC%A1%B0%EA%B1%B4%EB%AC%B8-%EC%A0%95%EB%A6%AC)
     - [[Mysql, Oracle, teradata] row_number() over (partition by) 활용](https://dong-guri.tistory.com/5)
     - [MySQL - Limit와 Offset 사용법](https://chunggaeguri.tistory.com/entry/MySQL-Limit%EC%99%80-Offset-%EC%82%AC%EC%9A%A9%EB%B2%95)
+    - [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
 
 ### 이론
 

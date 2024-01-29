@@ -3,13 +3,13 @@ layout: post
 title:  "순위 구하기"
 date:   2024-01-29 10:07:00 +0900
 categories:  SQL
-published: false
 ---
 
 ### RANK
 
-RANK() OVER([PARTITION BY COL_NAME_1] ORDER BY COL_NAME_2 [DESC])
-
+- 지정한 조건에 따라 순위를 지정한다.
+- 순위가 동일할 경우 그 수만큼 다음 순위를 건너뛴다.
+    - 예시 : 1 → 2 → 2 → 2 → 5
 - 기본 형식
 {% highlight sql %}
 SELECT
@@ -19,10 +19,19 @@ FROM
 {% endhighlight %}
 - 사용 예시
 {% highlight sql %}
+SELECT
+    RANK() OVER(ORDER BY AGE DESC) AS AGE_RANK
+FROM
+    MEMBER
+ORDER BY
+    AGE DESC;
 {% endhighlight %}
 
 ### DENSE_RANK
 
+- 지정한 조건에 따라 순위를 지정한다.
+- 순위가 동일할 경우 그 수만큼 해당 순위를 반복한다.
+    - 예시 : 1 → 2 → 2 → 2  → 3
 - 기본 형식
 {% highlight sql %}
 SELECT
@@ -32,6 +41,10 @@ FROM
 {% endhighlight %}
 - 사용 예시
 {% highlight sql %}
+SELECT
+    DENSE_RANK() OVER(ORDER BY AGE DESC) AS AGE_RANK
+FROM
+    MEMBER
+ORDER BY
+    AGE DESC;
 {% endhighlight %}
-
-- [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
