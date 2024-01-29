@@ -33,21 +33,21 @@ categories: React
 2. 상황을 설정할 값 선언
 3. 아래와 같은 틀의 코드 작성하기
 {% highlight javascript %}
-&lt;Router>
-    &lt;Switch>
+<Router>
+    <Switch>
     {isLoggedIn ? (
-        &lt;>
-        &lt;<Route exact path="/">
-            &lt;Home />
-        &lt;/Route>
-        &lt;/>
+        <>
+        <<Route exact path="/">
+            <Home />
+        </Route>
+        </>
     ) : (
-        &lt;Route exact path="/">
-            &lt;Auth />
-        &lt;/Route>
+        <Route exact path="/">
+            <Auth />
+        </Route>
     )}
-    &lt;/Switch>
-&lt;/Router>
+    </Switch>
+</Router>
 {% endhighlight %}
 
 ### 리다이렉트 시키기

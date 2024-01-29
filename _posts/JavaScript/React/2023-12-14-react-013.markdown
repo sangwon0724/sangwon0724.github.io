@@ -15,7 +15,7 @@ categories: React
 
 - 기본 틀
 {% highlight javascript %}
-&lt;input type="file" accept="image/*" onChange={onFileChange} />
+<input type="file" accept="image/*" onChange={onFileChange} />
 
 const [attachment, setAttachment] = useState();
 
@@ -35,10 +35,10 @@ const onFileChange = (event) => {
 };
 
 {attachment && (
-    &lt;div>
-        &lt;img src={attachment} width="50px" height="50px" />
-        &lt;button onClick={onClearAttachment}>Clear</button>
-    &lt;/div>
+    <div>
+        <img src={attachment} width="50px" height="50px" />
+        <button onClick={onClearAttachment}>Clear</button>
+    </div>
 )}
 {% endhighlight %}
 - 추가 정보
