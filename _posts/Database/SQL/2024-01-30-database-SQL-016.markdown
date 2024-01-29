@@ -1,17 +1,40 @@
 ---
 layout: post
 title:  "트랜잭션 관리"
-date:   2024-01-30 00:14:00 +0900
+date:   2024-01-30 00:23:00 +0900
 categories:  SQL
-published: false
 ---
 
 ### COMMIT
 
+- 트랜잭션 처리가 정상적으로 종료됬음을 DBMS에 알리고,  
+트랜잭션이 수행한 변경 내용을 데이터베이스에 반영하는 연산
+- 트랜잭션이 완료 시 해당 트랜잭션에 의해 데이터베이스는 새롭게 일관된 상태로 변경된다.
+- COMMIT 연산이 완료되면 시스템 오류가 발생하더라도 취소되지 않는다.
+
 {% highlight sql %}
+COMMIT;
 {% endhighlight %}
 
 ### ROLLBACK
 
+- 하나의 트랜잭션 처리가 비정상적으로 종료되어 데이터베이스의 일관성이 깨졌을 때,  
+트랜잭션이 행한 모든 변경 작업을 취소하고 이전 상태로 되돌리는 연산
+- ROLLBACK 연산 시 해당 트랜잭션은 받았던 자원과 잠금(LOCK)을 모두 반환하고, 재시작되거나 폐기된다.
+- 마지막 COMMIT 이후의 작업으로 돌아간다.
+    - 만약 COMMIT를 하지 않았다면 모든 작업이 사라진다.
 {% highlight sql %}
+ROLLBACK;
+{% endhighlight %}
+
+### SAVEPOINT
+
+- 트랜잭션을 중간 저장하는 연산
+- 하나의 트랜잭션 안에서 여러 번 실행할 수 있다.
+- COMMIT 연산 실행 시 이전에 생성한 모든 SAVEPOINT는 사라진다.
+- ROLLBACK할 시점으로 사용할 수 있다.
+{% highlight sql %}
+SAVEPOINT 별칭; /* SAVEPOINT 생성 */
+
+ROLLBACK TO 별칭; /* 사전에 생성한 SAVEPOINT까지 작업한 내용을 모두 취소한다. */
 {% endhighlight %}

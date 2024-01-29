@@ -102,6 +102,7 @@ tags: [출처, 참고]
     - [[Mysql, Oracle, teradata] row_number() over (partition by) 활용](https://dong-guri.tistory.com/5)
     - [MySQL - Limit와 Offset 사용법](https://chunggaeguri.tistory.com/entry/MySQL-Limit%EC%99%80-Offset-%EC%82%AC%EC%9A%A9%EB%B2%95)
     - [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
+    - [(SQL) TCL(Transaction Control Language) 이란 무엇일까?](https://rh-cp.tistory.com/41)
 
 ### 이론
 
