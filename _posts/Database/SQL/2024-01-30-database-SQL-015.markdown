@@ -1,0 +1,110 @@
+---
+layout: post
+title:  "권한 관리"
+date:   2024-01-30 00:13:00 +0900
+categories:  SQL
+---
+
+### 권한 부여
+
+- 테이블과 관련하여 다른 사용자에게 부여할 수 있는 주요 권한
+    - INSERT
+        - 데이터 삽입
+    - DELETE
+        - 데이터 삭제
+    - UPDATE
+        - 데이터 갱신
+    - SELECT
+        - 데이터 조회
+    - REFERENCES
+        - 권한 부여 대상인 테이블의 기본키를 참조하는 외래키를  
+        자신이 생성하는 테이블에 포함할 수 있다.
+- GRANT는 기본적으로 테이블을 구성하는 모든 속성에 권한을 부여한다.
+- 일부 속성만 나열하려면 권한과 함께 권한을 부여하고 싶은 속성의 목록을 () 안에 나열한다.
+- 모든 사용자에게 동일한 권한을 부여하고 싶다면 사용자명 대신에 PUBLIC 키워드를 사용하면 된다.
+- GRANT 명령어로 부여받은 권한은 기본적으로 다른 사용자에게 부여할 수 없다.
+- WITH GRANT OPTION을 포함하면 권한을 부여받은 사용자가 자신이 부여받은 권한을 다른 사용자에게도 부여할 수 있다.
+- 시스템 권한은 특정 객체에 대한 권한이 아니므로 객체를 지정할 필요가 없다.
+- 기본 형식
+{% highlight sql %}
+GRANT 권한 ON 객체 TO 사용자 [WITH GRANT OPTION]
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+/* 고객 테이블에 대한 검색 권한을 사용자 Hong에게 부여 */
+GRANT SELECT ON 고객 TO Hong;
+
+/* 고객 테이블에 대한 삽입과 삭제 권한을 모든 사용자에게 부여 */
+GRANT INSERT, DELETE ON 고객 TO PUBLIC;
+
+/*
+    고객 테이블을 구성하는 속성 중
+    등급과 적립금 속성에 대한 수정 권한을
+    사용자 Park에게 부여
+*/
+GRANT UPDATE(등급, 적립금) ON 고객 TO Park;
+
+/*
+    고객 테이블에 대한 검색 권한과
+    해당 권한을 다른 사용자에게 부여할 수 있는 권한을
+    사용자 Lee에게 부여
+*/
+GRANT SELECT ON 고객 TO Lee WITH GRANT OPTION;
+
+/* 테이블을 생성할 수 있는 시스템 권한을 사용자 Song에게 부여 */
+GRANT CREATE TABLE TO Song;
+
+/* 뷰를 생성할 수 있는 시스템 권한을 사용자 Shin에게 부여 */
+GRANT CREATE VIEW TO Shin;
+{% endhighlight %}
+
+### 권한 해제
+
+- 권한 삭제 대상이 되는 사용자가 다른 사용자에게 권한을 부여한 경우
+    - 연쇄적으로 권한 취소
+        - CASCADE 옵션 지정
+    - 대상 사용자만 권한 취소
+        - RESTRICT 옵션 지정
+- 시스템 권한은 특정 객체에 대한 권한이 아니므로 객체를 지정할 필요가 없다.
+- 기본 형식
+{% highlight sql %}
+REVOKE 권한 ON 객체 FROM 사용자 CASECADE | RESTRICT;
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+/*
+    사용자 Hong에게서 고객 테이블에 대한 조회 권한 취소하면서
+    Hong이 권한을 부여한 다른 사용자들의 권한도 함깨 취소
+*/
+REVOKE SELECT ON 고객 FROM Hong CASECADE;
+
+/*
+    사용자 Hong에게서 고객 테이블에 대한 조회 권한 취소하면서
+    Hong이 권한을 부여한 다른 사용자들의 권한은 남기고
+    Hong의 권한만 취소
+*/
+REVOKE SELECT ON 고객 FROM Hong RESTRICT;
+
+/* Hong에게서 테이블 생성 권한 취소 */
+REVOKE CREATE TABLE FROM Hong;
+{% endhighlight %}
+
+#### 역할의 부여와 취소
+
+- 역할 생성
+    - `CREATE ROLE 역할명;`
+
+- 역할에게 권한 부여
+    - `GRANT 권한 ON 객체 TO 역할명;`
+
+- 사용자에게 역할 부여
+    - `GRANT 역할명 TO 사용자;`
+
+- 역할에서 권한 취소
+    - `REVOKE 권한 ON 객체 FROM 역할명;`
+
+- 사용자에게서 역할 취소
+    - `REVOKE 역할명 FROM 사용자;`
+
+- 역할 삭제
+    - `DROP ROLE 역할명;`
