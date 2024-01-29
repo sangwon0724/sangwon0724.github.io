@@ -1,12 +1,37 @@
 ---
 layout: post
 title:  "순위 구하기"
-date:   2024-01-21 10:07:00 +0900
+date:   2024-01-29 10:07:00 +0900
 categories:  SQL
 published: false
 ---
 
-RANK와 DENSERANK
+### RANK
 
+RANK() OVER([PARTITION BY COL_NAME_1] ORDER BY COL_NAME_2 [DESC])
+
+- 기본 형식
+{% highlight sql %}
+SELECT
+    RANK() OVER([PARTITION BY 파티션_기준_속성_목록] [ORDER BY 정렬_조건_목록]) AS 별칭
+FROM
+    테이블명;
+{% endhighlight %}
+- 사용 예시
 {% highlight sql %}
 {% endhighlight %}
+
+### DENSE_RANK
+
+- 기본 형식
+{% highlight sql %}
+SELECT
+    DENSE_RANK() OVER([PARTITION BY 파티션_기준_속성_목록] [ORDER BY 정렬_조건_목록]) AS 별칭
+FROM
+    테이블명;
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+{% endhighlight %}
+
+- [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
