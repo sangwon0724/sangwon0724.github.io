@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+33. UUID 여부 확인
+    - IS_UUID
+    
+{% highlight sql %}
+{% endhighlight %}

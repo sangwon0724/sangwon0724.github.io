@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+36. mysql에서 varchar 칼럼에 이모티콘 등록시 오류가 발생한다면 이모티콘이 들어가는 칼럼의 조합 방식을 utf8_general_ci에서 utf8mb4_unicode_ci로 변경하면 된다. 
+
+{% highlight sql %}
+{% endhighlight %}

@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+40. mysql INT(11) 불가능한 이유
+    - https://dung-beetle.tistory.com/136
+
+{% highlight sql %}
+{% endhighlight %}

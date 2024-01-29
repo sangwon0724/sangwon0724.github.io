@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+32. IP 여부 확인
+    - IS_IPV4
+    - IS_IPV6
+    
+{% highlight sql %}
+{% endhighlight %}

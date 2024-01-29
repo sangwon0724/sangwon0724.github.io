@@ -1,0 +1,18 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+37. mysql fulltext indexing
+    - 문제점
+        - 어절 단위로 인식이됨
+    - 예시
+        - ※ 조건 : c++에서 ++을 검색
+        - (1) LIKE '%++%' => 검색 가능
+        - (2) MATCH(칼럼명) AGAINST('++') => 검색 불가
+        
+{% highlight sql %}
+{% endhighlight %}

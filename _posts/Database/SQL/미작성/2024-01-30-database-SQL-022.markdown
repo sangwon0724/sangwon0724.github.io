@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+22. LOCK 테이블
+
+{% highlight sql %}
+{% endhighlight %}

@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "제목"
+date:   2024-01-30 00:59:00 +0900
+categories:  SQL
+published: false
+---
+
+39. JOIN 진행시 ON 절과 WHERE 절에서의 차이
+    - https://developyo.tistory.com/12
+    
+{% highlight sql %}
+{% endhighlight %}
