@@ -1,17 +1,67 @@
 ---
 layout: post
 title:  "페이징 관련"
-date:   2024-01-29 00:33:00 +0900
+date:   2024-01-29 13:08:00 +0900
 categories:  SQL
-published: false
 ---
 
-### ROWNUM, ROW_NUMBER
+### ROW_NUMBER
 
+- 지정한 정렬 조건에 따라서 순번을 지정해주는 내장 함수
+- 기본 형식
 {% highlight sql %}
+SELECT
+    ROW_NUMBER() OVER([PARTITION BY 파티션_기준_속성_목록] [ORDER BY 정렬_조건_목록]) AS 별칭
+FROM
+    테이블명;
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+/* 나이의 역순으로 순번 지정 */
+SELECT
+    M.*,
+    ROW_NUMBER() OVER(ORDER BY AGE DESC) AS ORDER_NO
+FROM
+    MEMBER M
+ORDER BY
+    AGE DESC;
+
+/*
+    나이의 역순으로 순번 지정 + 성별 기준으로 그룹화해서 각 그룹마다 순번을 나눠서 지정함
+*/
+SELECT
+    M.*,
+    ROW_NUMBER() OVER(PARTITION BY GENDER ORDER BY AGE DESC) AS ORDER_NO
+FROM
+    MEMBER M
+ORDER BY
+    GENDER DESC,
+    AGE DESC;
 {% endhighlight %}
 
 ### LIMIT
 
+- 지정한 수치에 따라 가져오는 데이터의 개수와 탐색 범위가 달라진다.
+- 기본 형식
 {% highlight sql %}
+/* 방법 1 */
+SELECT
+    속성_목록
+FROM
+    테이블명
+LIMIT 가져올_데이터_개수
+OFFSET 탐색_시작_인덱스_번호;
+
+/* 방법 2 */
+SELECT
+    속성_목록
+FROM
+    테이블명
+LIMIT 탐색_시작_인덱스_번호, 가져올_데이터_개수;
+{% endhighlight %}
+- 사용 예시
+{% highlight sql %}
+/* 두 쿼리의 실행 결과는 같다. */
+SELECT * FROM MEMBER LIMIT 5 OFFSET 3;
+SELECT * FROM MEMBER LIMIT 3, 5;
 {% endhighlight %}
