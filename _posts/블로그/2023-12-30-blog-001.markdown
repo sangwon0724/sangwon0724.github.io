@@ -103,6 +103,7 @@ tags: [출처, 참고]
     - [MySQL - Limit와 Offset 사용법](https://chunggaeguri.tistory.com/entry/MySQL-Limit%EC%99%80-Offset-%EC%82%AC%EC%9A%A9%EB%B2%95)
     - [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
     - [(SQL) TCL(Transaction Control Language) 이란 무엇일까?](https://rh-cp.tistory.com/41)
+    - [[MySQL] Upsert 쿼리란 무엇일까?](https://devlog-wjdrbs96.tistory.com/365)
 
 ### 이론
 
