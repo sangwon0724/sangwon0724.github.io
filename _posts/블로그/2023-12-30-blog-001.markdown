@@ -104,6 +104,9 @@ tags: [출처, 참고]
     - [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
     - [(SQL) TCL(Transaction Control Language) 이란 무엇일까?](https://rh-cp.tistory.com/41)
     - [[MySQL] Upsert 쿼리란 무엇일까?](https://devlog-wjdrbs96.tistory.com/365)
+    - [[SQL] 뷰(view) - 뷰의 개념 / 필요성 / 장단점 / 구문 / 종류](https://reeme.tistory.com/54)
+    - [[SQL] 뷰(VIEW) 간단 정리](https://as-j.tistory.com/113)
+    - [데이터베이스 | 뷰 테이블(View table)](https://velog.io/@combi_jihoon/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EB%B7%B0-%ED%85%8C%EC%9D%B4%EB%B8%94View-table)
 
 ### 이론
 
