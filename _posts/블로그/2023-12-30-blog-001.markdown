@@ -114,6 +114,10 @@ tags: [출처, 참고]
     - [[mysql] 인덱스 정리 및 팁](https://jojoldu.tistory.com/243)
     - [[MYSQL] 📚 인덱스(index) 핵심 설계 & 사용 문법 💯 총정리](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%EC%9D%B8%EB%8D%B1%EC%8A%A4index-%ED%95%B5%EC%8B%AC-%EC%84%A4%EA%B3%84-%EC%82%AC%EC%9A%A9-%EB%AC%B8%EB%B2%95-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC)
     - [MySQL Index 특징 및 유의사항 정리](https://bcp0109.tistory.com/365)
+    - [MySQL 실행 계획과 결과 속성 설명 (MySQL EXPLAIN Output Format)](https://kukim.tistory.com/128)
+    - [MySQL 실행 계획(좋은 쿼리는 못 만들어도 뭐같은 쿼리는 만들지 말아야지)](https://jeong-pro.tistory.com/243)
+    - [MySQL EXPLAIN 실행계획 마스터하기(feat. RealMySQL 8.0)](https://zzang9ha.tistory.com/436)
+    - [[MySQL] 실행계획2 (EXPLAIN)](https://velog.io/@ddongh1122/MySQL-%EC%8B%A4%ED%96%89%EA%B3%84%ED%9A%8D2-EXPLAIN)
 
 ### 이론
 
