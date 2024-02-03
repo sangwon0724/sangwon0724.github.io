@@ -118,6 +118,9 @@ tags: [출처, 참고]
     - [MySQL 실행 계획(좋은 쿼리는 못 만들어도 뭐같은 쿼리는 만들지 말아야지)](https://jeong-pro.tistory.com/243)
     - [MySQL EXPLAIN 실행계획 마스터하기(feat. RealMySQL 8.0)](https://zzang9ha.tistory.com/436)
     - [[MySQL] 실행계획2 (EXPLAIN)](https://velog.io/@ddongh1122/MySQL-%EC%8B%A4%ED%96%89%EA%B3%84%ED%9A%8D2-EXPLAIN)
+    - [[MySQL] MySQL 동시성 처리(1) - LOCK](https://chanos.tistory.com/entry/MySQL-DB%EC%9D%98-%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%A0%9C%EC%96%B4%EB%A5%BC-%EC%9C%84%ED%95%9C-Lock%EA%B3%BC-MVCC)
+    - [DB Lock에 대한 이해와 MySQL Lock의 특징](https://coding-business.tistory.com/32)
+    - [MySQL LOCK 확인 및 해제(kill) 방법](https://blog.naver.com/bsos1202/221003933887)
 
 ### 이론
 
