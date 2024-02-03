@@ -1,12 +1,275 @@
 ---
 layout: post
-title:  "제목"
-date:   2024-01-30 00:59:00 +0900
+title:  "날짜 관련 함수"
+date:   2024-02-03 16:36:00 +0900
 categories:  SQL
 published: false
 ---
 
-23. 트리거
+### 요일 관련
 
-{% highlight sql %}
-{% endhighlight %}
+#### dayofweek(date)
+
+- 요일을 반환한다.
+- 일요일에서 토요일까지를 1부터 7까지의 숫자로 매칭해서 반환한다.
+
+#### weekday(date)
+
+- 요일을 반환한다.
+- 월요일에서 일요일까지를 0부터 6까지의 숫자로 매칭해서 반환한다.
+
+### N번쨰 날 관련
+ 
+#### dayofmonth(date)
+
+- 그 달의 몇 번째 날인지를 알려준다.
+- 범위 : 1 ~ 31
+ 
+#### dayofyear(date)
+
+- 그 해의 몇 번째 날인지를 알려준다.
+- 범위 : 1 ~ 366
+ 
+#### month(date)
+
+- 해당 날짜가 몇 월인지 알려준다. 
+- 범위 : 1 ~ 12
+
+#### monthname(date)
+
+- 해당 날짜의 영어식 월 이름을 반환한다.
+ 
+#### quarter(date)
+
+- 해당 날짜의 분기를 반환한다.
+- 범위 : 1 ~ 4
+ 
+#### week(date, first)
+
+- 해당 날짜가 몇 번째 주일인지를 반환한다.
+- 범위 : 0 ~ 52
+- first에 지정한 값에 따라서 한 주의 시작이 어떤 요일인지를 지정할 수 있다.
+    - 0으로 지정하면 일요일을 한 주의 시작일로 지정한다.
+    - 1로 지정하면 월요일을 한 주의 시작일로 지정한다.
+    - first는 생략할 수 있으며, 생략 시 일요일을 한 주의 시작일로 인식한다.
+ 
+### year(date)
+
+- 해당 날짜의 년도를 반환한다.
+- 범위 : 1000 ~ 9999
+
+#### hour(time)
+
+- 해당 날짜가 몇 시인지를 알려준다. (24시 기준)
+- 범위 : 0 ~ 23
+ 
+#### minute(time)
+
+- 해당 날짜가 몇 분인지를 알려준다.
+- 범위 : 0 ~ 59
+
+#### second(time)
+
+- 해당 날짜가 몇 초인지를 알려준다.
+- 범위 : 0 ~ 59
+
+period_add(p,n)
+yymm 또는 yyyymm 형식으로 주어진 달에 n개월을 더한다. 반환 값은 yyyymm의 형식이다.
+mysql> select period_add(9801,2);
+-> 199803
+
+period_diff(p1,p2)
+yymm 또는 yyyymm 형식으로 주어진 두 기간사이의 개월을 구한다
+mysql> select period_diff(9802,199703);
+-> 11
+ 
+date_add(date,interval expr type)
+date_sub(date,interval expr type)
+adddate(date,interval expr type)
+subdate(date,interval expr type)
+위의 함수들은 날자 연산을 한다. 잘 만 사용하면 꽤나 편리한 함수 들이다. 모두 mysql 3.22 버전에서 새롭게 추가되었다. adddate() 과 subdate() 는 date_add() 와 date_sub()의 또 다른 이름이다.
+인수로 사용되는 date 는 시작일을 나타내는 datetime 또는date 타입이다. expr 는 시작일에 가감하는 일수 또는 시간을 나타내는 표현식이다.
+type 값의 의미
+사용 예
+second, seconds
+초
+minute, minutes
+분
+hour, hours
+시간
+day, days
+일
+month, months
+월
+year, years
+년
+
+minute_second, "minutes:seconds"
+분:초
+hour_minute, "hours:minutes"
+시:분
+day_hour, "days hours"
+일 시
+year_month, "years-months"
+년 월
+hour_second, "hours:minutes:seconds"
+시 분
+day_minute, "days hours:minutes"
+일, 시, 분
+day_second, "days hours:minutes:seconds"
+일, 시, 분, 초
+
+#### to_days(date)
+
+주어진 날짜를 0000년부터의 일수로 바꾼다.
+mysql> select to_days(950501);
+-> 728779
+mysql> select to_days('1997-10-07');
+-> 729669
+ 
+#### from_days(n)
+
+주어진 일수 n로부터 날짜를 구한다
+mysql> select from_days(729669);
+-> '1997-10-07'
+ 
+#### date_format(date,format)
+
+format 의 정의에 따라 날자 혹은 시간을 출력한다. 매우 빈번히 쓰이는 함수 이다.
+format 에 사용되는 문자는 다음과 같다.
+ 
+%m
+월이름 (january..december)
+%w
+요일명 (sunday..saturday)
+%d
+영어식 접미사를 붙인 일(1st, 2nd, 3rd, etc.)
+%y
+4자리 년도
+%y
+2자리 년도
+%a
+짧은 요일명(sun..sat)
+%d
+일(00..31)
+%e
+일(0..31)
+%m
+월(01..12)
+%c
+월(1..12)
+%b
+짧은 월이름 (jan..dec)
+%j
+한해의 몇 번째 요일인가 (001..366)
+%h
+24시 형식의 시간 (00..23)
+%k
+24시 형식의 시간 (0..23)
+%h
+12시 형식의 시간 (01..12)
+%i
+12시 형식의 시간 (01..12)
+%l
+시간 (1..12)
+%i
+분 (00..59)
+%r
+시분초12시 형식 (hh:mm:ss [ap]m)
+%t
+시분초 24시 형식 (hh:mm:ss)
+%s
+초 (00..59)
+%s
+초 (00..59)
+%p
+am 또는 pm 문자
+%w
+일주일의 몇 번째 요일인가(0=sunday..6=saturday)
+%U
+한해의 몇 번째 주인가(0..52). 일요일이 시작일
+%u
+한해의 몇 번째 주인가(0..52). 월요일이 시작일
+%%
+`%' 문자를 나타냄
+ 
+위 표에 나와 있는 것들을 제외한 모든 문자는 그냥 그대로 출력된다.
+ 
+
+주의! : mysql 3.23 버전부터 % 기호가 각 형식문자 앞에 필요하게 되었다 그 이전 버전에서는 선택 사항이다.
+ 
+ 
+#### time_format(time,format)
+이 함수는 date_format()와 비슷한 역할을 하지만 단지 시,분,초 만을 나타낼 수 있다는 점이다.
+ 
+#### curdate()
+#### current_date()
+오늘 날짜를 'yyyy-mm-dd' 또는 yyyymmdd 형식으로 반환한다, 반환 값은 이 함수가 문자열로 쓰이느냐 숫자로 쓰이느냐에 따라 달라진다.
+mysql> select curdate();
+-> '1997-12-15'
+mysql> select curdate() + 0;
+-> 19971215
+ 
+#### curtime()
+#### current_time()
+'hh:mm:ss' 또는 hhmmss 형식으로 현재시간을 나타낸다. 반환 값은 이 함수가 문자열로 쓰이느냐 숫자로 쓰이느냐에 따라 달라진다.
+mysql> select curtime();
+-> '23:50:26'
+mysql> select curtime() + 0;
+-> 235026
+ 
+#### now()
+#### sysdate()
+#### current_timestamp()
+오늘 날자와 현재 시간을 'yyyy-mm-dd hh:mm:ss' 또는 yyyymmddhhmmss 형식으로 반환 한다, 역시 반환 값은 이 함수가 문자열로 쓰이느냐 숫자로 쓰이느냐에 따라 달라진다. 실제 개발 시 사용자의 등록일시 등을 나타낼 때 유용하게 쓰이는 함수다. 뒷부분의 실전예제에서 보게 될 것이다.
+mysql> select now();
+-> '1997-12-15 23:50:26'
+mysql> select now() + 0;
+-> 19971215235026
+ 
+#### sec_to_time(seconds)
+주어진 초를 'hh:mm:ss' 또는 hhmmss 형식의 시간단위로 바꿔준다.
+mysql> select sec_to_time(2378);
+-> '00:39:38'
+mysql> select sec_to_time(2378) + 0;
+-> 3938
+ 
+#### time_to_sec(time)
+주어진 시간을 초 단위로 바꿔준다.
+mysql> select time_to_sec('22:23:00');
+-> 80580
+mysql> select time_to_sec('00:39:38');
+-> 2378
+ 
+DATE_FORMAT(date,format) 
+     `%W'    Weekday name (`Sunday'..`Saturday') 
+     `%D'    Day of the month with english suffix (`1st', `2nd', `3rd', 
+             etc.) 
+     `%Y'    Year, numeric, 4 digits 
+     `%y'    Year, numeric, 2 digits 
+     `%a'    Abbreviated weekday name (`Sun'..`Sat') 
+     `%d'    Day of the month, numeric (`00'..`31') 
+     `%e'    Day of the month, numeric (`0'..`31') 
+     `%m'    Month, numeric (`01'..`12') 
+     `%c'    Month, numeric (`1'..`12') 
+     `%b'    Abbreviated month name (`Jan'..`Dec') 
+     `%j'    Day of year (`001'..`366') 
+     `%H'    Hour (`00'..`23') 
+     `%k'    Hour (`0'..`23') 
+     `%h'    Hour (`01'..`12') 
+     `%I'    Hour (`01'..`12') 
+     `%l'    Hour (`1'..`12') 
+     `%i'    Minutes, numeric (`00'..`59') 
+     `%r'    Time, 12-hour (`hh:mm:ss [AP]M') 
+     `%T'    Time, 24-hour (`hh:mm:ss') 
+     `%S'    Seconds (`00'..`59') 
+     `%s'    Seconds (`00'..`59') 
+     `%p'    `AM' or `PM' 
+     `%w'    Day of the week (`0'=Sunday..`6'=Saturday) 
+     `%U'    Week (`0'..`52'), Sunday is the first day of the week. 
+     `%u'    Week (`0'..`52'), Monday is the first day of the week. 
+     `%%'    Single `%' characters are ignored.  Use `%%' to produce a 
+             literal `%' (for future extensions).
+
+- [[mysql]날짜 관련 함수 모음](https://jang8584.tistory.com/7)
+- [[SQL] mysql 날짜 관련 함수 정리](https://velog.io/@12aeun/SQL-mysql%EC%97%90%EC%84%9C-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-%EA%B3%84%EC%82%B0%ED%95%98%EA%B8%B0)
