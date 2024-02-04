@@ -87,6 +87,8 @@ tags: [출처, 참고]
 
 ### DataBase
 
+- 강의 사이트
+    - [TCP SCHOOL > MySQL > 문자열 함수](https://tcpschool.com/mysql/mysql_builtInFunction_string)
 - 블로그 게시글
     - [[MYSQL] 📚 자료형 타입 종류 정리](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%EC%9E%90%EB%A3%8C%ED%98%95-%ED%83%80%EC%9E%85-%EC%A2%85%EB%A5%98-%EC%A0%95%EB%A6%AC)
     - [MySQL 컬럼명 변경, 컬럼 타입 변경, 컬럼 추가, 컬럼 삭제](https://juyoung-1008.tistory.com/17)
@@ -123,6 +125,8 @@ tags: [출처, 참고]
     - [MySQL LOCK 확인 및 해제(kill) 방법](https://blog.naver.com/bsos1202/221003933887)
     - [[mysql]날짜 관련 함수 모음](https://jang8584.tistory.com/7)
     - [[SQL] mysql 날짜 관련 함수 정리](https://velog.io/@12aeun/SQL-mysql%EC%97%90%EC%84%9C-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-%EA%B3%84%EC%82%B0%ED%95%98%EA%B8%B0)
+    - [MySQL 문자열 함수 [MySQL]](https://myvelop.tistory.com/49)
+    - [자주 쓰는 MYSQL 문자열 함수](https://king-rabbit.github.io/sql/mysql-str-functions/#-%EB%AA%87%EB%B2%88%EC%A7%B8-%EC%86%8C%EC%88%98%EC%A0%90-%EC%9E%90%EB%A6%AC%EA%B9%8C%EC%A7%80%EB%A7%8C-%ED%91%9C%EC%8B%9C%ED%95%98%EA%B8%B0)
 
 ### 이론
 
