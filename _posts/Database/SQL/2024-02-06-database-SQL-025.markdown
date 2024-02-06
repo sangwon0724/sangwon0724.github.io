@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "NULL 체크 함수"
+date:   2024-02-06 13:50:00 +0900
+categories:  SQL
+---
+
+### IFNULL(expr1,expr2)
+
+- expr1이 null이면 expr2를 반환한다.
+
+{% highlight sql %}
+SELECT IFNULL(NULL, 'This is NULL!!!'); /* 출력 : This is NULL!!! */
+{% endhighlight %}
+
+### ISNULL(expr)
+
+- expr이 NULL인지에 따라서 1 또는 0을 반환한다.
+
+{% highlight sql %}
+SELECT ISNULL(NULL); /* 출력 : 1 */
+
+SELECT ISNULL(1); /* 출력 : 0 */
+{% endhighlight %}
