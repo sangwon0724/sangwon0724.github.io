@@ -1,0 +1,27 @@
+---
+layout: post
+title:  "쿼리 지연시키기"
+date:   2024-02-06 14:28:00 +0900
+categories:  SQL
+---
+
+### SLEEP(duration)
+
+- duration으로 지정된 초만큼 일시정지 시킨다.
+- 주로 쿼리의 중간 결과를 확인하거나 트랜잭션을 지속시키는 등 테스트를 할 때 쓰인다.
+- 조회되는 데이터의 건 수 * 지정한 duration(초)만큼 지연된다.
+- 예시 1
+{% highlight sql %}
+SELECT 1; /* 출력 : 1 */
+DO SLEEP(5); /* 약 5초 대기 */
+SELECT 2; /* 출력 : 2 */
+{% endhighlight %}
+- 예시 2
+{% highlight sql %}
+SELECT 1, SLEEP(5), 2; /* 약 5초 대기 후 1, 0, 2 출력*/
+{% endhighlight %}
+- 예시 3
+{% highlight sql %}
+/* 데이터가 총 8건 존재하는 user_info 테이블 생성 */
+SELECT *, SLEEP(2) FROM user_info; /* 약 16초 후 실행 내용 출력 */
+{% endhighlight %}
