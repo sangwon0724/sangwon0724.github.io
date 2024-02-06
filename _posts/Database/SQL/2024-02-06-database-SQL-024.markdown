@@ -1,0 +1,79 @@
+---
+layout: post
+title:  "형변환"
+date:   2024-02-06 09:31:00 +0900
+categories:  SQL
+---
+
+### 형변환이란?
+
+- 데이터의 타입을 변경하는 것
+- 종류
+    - 암시적인 형변환
+    - 명시적인 형변환
+
+### 암시적인 형변환
+
+- 자료형을 지정하지 않아도 자동으로 형변환이 되는 것을 의미한다.
+
+{% highlight sql %}
+select 100 + '200'; /* 출력 : 300 */
+
+SELECT '100' + '200'; /* 출력 : 300 */
+
+SELECT CONCAT('100', '200'); /* 출력 : 100200, CONCAT 함수를 통해 합쳤기 때문에 문자열로 인식 */
+
+SELECT CONCAT(100, '200'); /* 출력 : 100200, CONCAT 함수를 통해 합쳤기 때문에 문자열로 인식 */
+
+SELECT 1 > '2test'; /* 출력 : 0, '2test'를 숫자 2로 인식한 후 1 > 2는 거짓이라서 0을 반환 */
+
+SELECT 3 > '2test'; /* 출력 : 1, '2test'를 숫자 2로 인식한 후 3 > 2는 참이라서 1을 반환 */
+
+SELECT 0 = 'test2'; /* 출력 : 1, 'test2'를 숫자 0으로 인식한 후 0 = 0는 참이라서 1을 반환 */
+{% endhighlight %}
+
+
+### 명시적인 형변환
+
+#### BINARY 연산자
+
+- BINARY 연산자는 뒤에 붙는 문자열을 바이너리 문자열로 변환한다.
+- BINARY 연산자를 이용하면 문자가 아닌 바이트를 기준으로 하여 비교나 검색 작업을 수행할 수 있다.
+
+{% highlight sql %}
+SELECT BINARY 'BINARY' = 'BiNaRy'; /* 출력 : 0 */
+
+SELECT 'BINARY' = 'BiNaRy'; /* 출력 : 1 */
+{% endhighlight %}
+
+#### CAST(expr AS type) 함수
+
+- 인수로 전달받은 값을 명시된 타입으로 변환하여 반환한다.
+- expr에는 형변환을 시도할 값을 명시한다.
+- type에는 변환할 자료형을 명시한다.
+
+{% highlight sql %}
+{% endhighlight %}
+
+#### CONVERT(expr\[USING charset][, type]) 함수
+
+- 인수로 전달받은 값을 명시된 타입으로 변환하여 반환한다.
+- expr에는 형변환을 시도할 값을 명시한다.
+- type에는 변환할 자료형을 명시한다.
+- USING 키워드를 사용하여 문자셋을 변경할 수 있다.
+
+{% highlight sql %}
+{% endhighlight %}
+
+#### CAST와 CONVERT에서 사용할 수 있는 자료형
+
+- BINARY
+- CHAR
+- DATE
+- DATETIME
+- TIME
+- DECIMAL
+- JSON (MySQL 5.7.8부터 제공)
+- NCHAR
+- SIGNED \[INTEGER]
+- UNSIGNED \[INTEGER]

@@ -127,6 +127,9 @@ tags: [출처, 참고]
     - [[SQL] mysql 날짜 관련 함수 정리](https://velog.io/@12aeun/SQL-mysql%EC%97%90%EC%84%9C-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-%EA%B3%84%EC%82%B0%ED%95%98%EA%B8%B0)
     - [MySQL 문자열 함수 [MySQL]](https://myvelop.tistory.com/49)
     - [자주 쓰는 MYSQL 문자열 함수](https://king-rabbit.github.io/sql/mysql-str-functions/#-%EB%AA%87%EB%B2%88%EC%A7%B8-%EC%86%8C%EC%88%98%EC%A0%90-%EC%9E%90%EB%A6%AC%EA%B9%8C%EC%A7%80%EB%A7%8C-%ED%91%9C%EC%8B%9C%ED%95%98%EA%B8%B0)
+    - [[MySQL] 형변환 CAST 함수 / CONVERT 함수 사용 방법](https://hoehen-flug.tistory.com/27)
+    - [[MySQL] CAST와 CONVERT](https://hajoung56.tistory.com/19)
+    - [[MYSQL] 📚 타입 강제 변환 (cast / convert)](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98-cast-convert#%EC%95%94%EC%8B%9C%EC%A0%81%EC%9D%B8_%ED%98%95%EB%B3%80%ED%99%98)
 
 ### 이론
 
