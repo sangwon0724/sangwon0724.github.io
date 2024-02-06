@@ -6,9 +6,7 @@ categories:  SQL
 published: false
 ---
 
-41. mysql 정렬할때 null 또는 공백을 맨 뒤로 보내기
-    - https://codingcoding.tistory.com/1134
-    - https://ponyozzang.tistory.com/700
+43. 쿼리 튜닝
 
 {% highlight sql %}
 {% endhighlight %}
