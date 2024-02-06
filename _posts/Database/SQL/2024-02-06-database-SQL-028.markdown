@@ -1,0 +1,43 @@
+---
+layout: post
+title:  "NULL의 특징"
+date:   2024-02-06 15:08:00 +0900
+categories:  SQL
+---
+
+### NULL에 대한 연산은 NULL이다.
+
+- 아래의 모든 쿼리의 결과는 NULL이다.
+
+{% highlight sql %}
+SELECT NULL + 1;
+
+SELECT NULL - 1;
+
+SELECT NULL * 1;
+
+SELECT NULL / 1;
+
+SELECT NULL % 1;
+
+SELECT CONCAT(1, NULL);
+{% endhighlight %}
+
+### NULL은 등호로 비교할 수 없다.
+
+- "NULL에 대한 연산은 NULL이다."랑 같은 맥락
+
+- 아래의 모든 쿼리의 결과는 NULL이다.
+{% highlight sql %}
+SELECT NULL = 0;
+
+SELECT NULL != 0;
+
+SELECT * FROM USER_INFO WHERE MOBILE_NO = NULL;
+
+SELECT * FROM USER_INFO WHERE MOBILE_NO != NULL;
+{% endhighlight %}
+
+- WHERE절에서 명시한 조건에 대해서 참이거나 거짓인 데이터들이 조회되야 하는데  
+NULL이랑 비교하면 참이나 거짓이 아닌 NULL이 되기 때문에 결과가 존재하지 않는다.
+- 따라서 IS NULL이나 IS NOT NULL 키워드를 사용하거나 ISULL(expr) 함수를 사용해야 한다.
