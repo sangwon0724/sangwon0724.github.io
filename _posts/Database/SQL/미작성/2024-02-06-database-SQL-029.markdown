@@ -33,5 +33,16 @@ published: false
 {% highlight sql %}
 {% endhighlight %}
 
+### 검색이 안 되는 경우에 확인할 사항
+
+- 표현식 확인하기
+- 최소 검색 가능한 자리 수
+    - `SHOW VARIABLES LIKE '%ft_min%';`를 실행하여 설정된 값을 확인한다.
+    - 만약 요구사항과 다르다면 운영체제에 맞는 파일에 가서 수정한다.
+    - MySQL이 설치된 폴더에 가서 my.ini나 my.cnf에 있는 변수 중에서  
+    ft_min_word_len 또는 innodb_ft_min_token_size의 값을 수정한다.
+    - 값을 수정했다면 MySQL을 종료 후 재실행한다.
+    - 인덱스가 이미 적용되있다면 `REPAIR TABLE 테이블명 QUICK;` 또는 `OPTIMIZE TABLE 테이블명;`를 실행한다.
+
 - [MySQL Full-Text 검색 / match against](https://dogcowking.tistory.com/78)
 - [[MySQL] FullText 검색, 여러개 Like](https://bogyum-uncle.tistory.com/182)
