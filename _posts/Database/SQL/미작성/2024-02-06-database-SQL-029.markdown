@@ -1,9 +1,8 @@
 ---
 layout: post
 title:  "FULLTEXT INDEXING"
-date:   2024-01-30 00:59:00 +0900
+date:   2024-02-06 16:23:00 +0900
 categories:  SQL
-published: false
 ---
 
 ### FULLTEXT INDEX
@@ -16,6 +15,8 @@ published: false
 - FULLTEXT INDEX는 다른 인덱스들과 다르게 전용 문법이 존재한다.
 - 어절 단위로 인식된다.
     - 만약에 AGAINST에 '공부'라고 지정했을 때 '데이터베이스 공부'는 검색되지만 '공부를 하자'는 검색되지 않는다.
+- FULLTEXT 검색은 기본적으로 검색할 문자열이 4자 이상이어야 한다.
+    - 만약 그보다 적은 글자 수에서도 검색되게 하려면 환경설정을 변경해줘야 한다.
 
 #### 기본 검색
 
@@ -23,26 +24,45 @@ published: false
 
 #### 자연 검색
 
-- `MATCH(칼럼명) AGAINST('expr1 expr2')`
+- `MATCH(칼럼명) AGAINST('expr1 expr2[ ...]')`
 - OR 검색을 한다.
 - 만약에 중간에 공백 문자가 포함된 검색을 하고 싶다면 큰따옴표로 묶는다.
     - `MATCH(칼럼명) AGAINST('"expr1 expr2"')`
+    - 그런데 시작하는 문자가 최소 글자 수보다 짧으면 무시된다.
 
 #### BOOLEAN MODE
 
-{% highlight sql %}
-{% endhighlight %}
+- 연산자를 사용한 검색이 가능하다.
+- 연산자 종류
+    - +
+        - AND 검색을 한다.
+        - 예시
+            - `SELECT * FROM BOARD_POST WHERE MATCH(CONTENT) AGAINST('"질풍가도" + "있을까?"' IN BOOLEAN MODE)`
+    - -
+        - 해당 문자열이 제외된 결과를 도출한다.
+        - 예시
+            - `SELECT * FROM BOARD_POST WHERE MATCH(CONTENT) AGAINST('"질풍가도" - "있을까?"' IN BOOLEAN MODE)`
+    - *
+        - 해당 문자열이 포함된 결과를 도출한다.
+        - 예시
+            - `SELECT * FROM BOARD_POST WHERE MATCH(CONTENT) AGAINST('질풍가도*' IN BOOLEAN MODE)`
+    - ""
+        - 구문을 감싼다.
+        - 연산자를 복합적으로 사용하기 위해 사용한다.
+- [참고](https://dev.mysql.com/doc/refman/5.7/en/fulltext-boolean.html)
 
 ### 검색이 안 되는 경우에 확인할 사항
 
 - 표현식 확인하기
 - 최소 검색 가능한 자리 수
     - `SHOW VARIABLES LIKE '%ft_min%';`를 실행하여 설정된 값을 확인한다.
-    - 만약 요구사항과 다르다면 운영체제에 맞는 파일에 가서 수정한다.
-    - MySQL이 설치된 폴더에 가서 my.ini나 my.cnf에 있는 변수 중에서  
-    ft_min_word_len 또는 innodb_ft_min_token_size의 값을 수정한다.
+    - 만약 요구사항과 다르다면 각 운영체제에 해당하는 설치 폴더로 이동하여 환경설정 파일을 수정한다.
+        - Windows OS
+            - my.ini
+        - Mac OS
+            - my.cnf
+    -  본인이 사용 중인 DB의 종류에 따라서 해당하는 변수를 변경한다.
+        - ft_min_word_len
+        - innodb_ft_min_token_size
     - 값을 수정했다면 MySQL을 종료 후 재실행한다.
-    - 인덱스가 이미 적용되있다면 `REPAIR TABLE 테이블명 QUICK;` 또는 `OPTIMIZE TABLE 테이블명;`를 실행한다.
-
-- [MySQL Full-Text 검색 / match against](https://dogcowking.tistory.com/78)
-- [[MySQL] FullText 검색, 여러개 Like](https://bogyum-uncle.tistory.com/182)
+    - 인덱스가 이미 적용되있다면 `REPAIR TABLE 테이블명 QUICK;`을 실행한다.

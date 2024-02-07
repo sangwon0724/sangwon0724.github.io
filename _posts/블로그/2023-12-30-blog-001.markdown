@@ -130,6 +130,8 @@ tags: [출처, 참고]
     - [[MySQL] 형변환 CAST 함수 / CONVERT 함수 사용 방법](https://hoehen-flug.tistory.com/27)
     - [[MySQL] CAST와 CONVERT](https://hajoung56.tistory.com/19)
     - [[MYSQL] 📚 타입 강제 변환 (cast / convert)](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98-cast-convert#%EC%95%94%EC%8B%9C%EC%A0%81%EC%9D%B8_%ED%98%95%EB%B3%80%ED%99%98)
+    - [MySQL Full-Text 검색 / match against](https://dogcowking.tistory.com/78)
+    - [[MySQL] FullText 검색, 여러개 Like](https://bogyum-uncle.tistory.com/182)
 
 ### 이론
 
