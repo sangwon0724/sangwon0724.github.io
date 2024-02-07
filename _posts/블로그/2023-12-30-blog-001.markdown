@@ -132,6 +132,13 @@ tags: [출처, 참고]
     - [[MYSQL] 📚 타입 강제 변환 (cast / convert)](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98-cast-convert#%EC%95%94%EC%8B%9C%EC%A0%81%EC%9D%B8_%ED%98%95%EB%B3%80%ED%99%98)
     - [MySQL Full-Text 검색 / match against](https://dogcowking.tistory.com/78)
     - [[MySQL] FullText 검색, 여러개 Like](https://bogyum-uncle.tistory.com/182)
+    - [[MYSQL] MYSQL Partition - 테이블 분할](https://velog.io/@rdj1014/MYSQL-MYSQL-Partition-%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%B6%84%ED%95%A0)
+    - [[MySQL] 파티셔닝 개념 및 사용법](https://narup.tistory.com/168)
+    - [MySQL Partition, 제대로 이해하기 (1)](https://gngsn.tistory.com/203#google_vignette)
+    - [[MYSQL] MYSQL Partition - 테이블 분할](https://velog.io/@rdj1014/MYSQL-MYSQL-Partition-%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%B6%84%ED%95%A0)
+    - [[MySQL] 파티셔닝 개념 및 사용법](https://narup.tistory.com/168)
+    - [MySQL Partition, 제대로 이해하기 (1)](https://gngsn.tistory.com/203)
+    - [MySQL Partition, 제대로 이해하기 (2)](https://gngsn.tistory.com/204?category=851218)
 
 ### 이론
 
