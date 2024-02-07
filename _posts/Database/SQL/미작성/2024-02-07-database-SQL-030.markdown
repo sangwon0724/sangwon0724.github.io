@@ -1,14 +1,14 @@
 ---
 layout: post
-title:  "제목"
-date:   2024-01-30 00:59:00 +0900
+title:  "BINARY 검색"
+date:   2024-02-07 09:43:00 +0900
 categories:  SQL
-published: false
 ---
 
-38. BINARY 검색 (LIKE의 속도 개선)
-    - https://taegon.kim/archives/5
-    - https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sdfzl_ar&logNo=221288783413
-
-{% highlight sql %}
-{% endhighlight %}
+- 기본적으로 WHERE절에서 등호나 LIKE 키워드를 통한 검색을 진행할 때는 대소문자를 구분하지 않는다.
+- BINARY 키워드를 사용하면 대소문자를 구분할 수 있다.
+- 기본 형식
+    - `CONVERT(expr USING BINARY)`
+    - `CAST(expr AS BINARY)`
+    - ※ 원래는 BINARY 연산자를 직접적으로 사용해서 검색할 수 있긴한데  
+    현재는 deprecated 처리되어있다.
