@@ -6,8 +6,7 @@ categories:  SQL
 published: false
 ---
 
-40. mysql INT(11) 불가능한 이유
-    - https://dung-beetle.tistory.com/136
+43. 쿼리 튜닝
 
 {% highlight sql %}
 {% endhighlight %}

@@ -1,13 +1,27 @@
 ---
 layout: post
-title:  "제목"
-date:   2024-01-30 00:59:00 +0900
+title:  "파티셔닝"
+date:   2024-02-07 09:55:00 +0900
 categories:  SQL
 published: false
 ---
 
-39. JOIN 진행시 ON 절과 WHERE 절에서의 차이
-    - https://developyo.tistory.com/12
-    
+### 파티션(Partition)이란?
+
+- 크기가 큰 테이블을 여러 개로 분할하는 기능
+- 인덱스를 사용하더라도 테이블의 크기가 매우 크면 부하가 크기때문에 이를 줄이기 위해 사용하는 기능
+- 파티션을 사용하지 않는다면 인덱스의 크기도 매우 커지고 물리적인 메모리 공간도 많이 필요하다.
+
+### 파티션의 특징
+
+- 파티션으로 나누어서 사용한다면 물리적 메모리를 효율적으로 사용할 수 있다.
+- 주로 데이터가 실시간으로 쌓이는 DB 환경에서 효율적이다.
+- 물리적으로 나누어지기 때문에 전체 데이터의 훼손 가능성이 적어진다.
+- Full Scan에서 데이터의 접근 범위를 줄여서 성능 향상이 발생할 수 있다.
+
 {% highlight sql %}
 {% endhighlight %}
+
+- [[MYSQL] MYSQL Partition - 테이블 분할](https://velog.io/@rdj1014/MYSQL-MYSQL-Partition-%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%B6%84%ED%95%A0)
+- [[MySQL] 파티셔닝 개념 및 사용법](https://narup.tistory.com/168)
+- [MySQL Partition, 제대로 이해하기 (1)](https://gngsn.tistory.com/203#google_vignette)
