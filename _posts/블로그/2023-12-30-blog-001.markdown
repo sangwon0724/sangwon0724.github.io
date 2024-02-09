@@ -142,6 +142,16 @@ tags: [출처, 참고]
     - [[MySQL] 쿼리성능 개선하며 알게된 것 기록 📝](https://jaejade.tistory.com/128)
     - [[MYSQL] SQL 쿼리문 최적화 - 효율적인 쿼리를 위한 팁](https://jhlee-developer.tistory.com/entry/MYSQL-SQL-%EC%BF%BC%EB%A6%AC%EB%AC%B8-%EC%B5%9C%EC%A0%81%ED%99%94-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9D%B8-%EC%BF%BC%EB%A6%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%8C%81)
     - [MYSQL 쿼리 실행 속도 분석 및 개선하기](https://bluemoon-clover.tistory.com/73)
+    - [[MySql] 쿼리 속도 개선 (Virtual Column 및 인덱스 적용) Or 절 여러개 예시](https://mingg123.tistory.com/257)
+    - [[번역] 속도와 성능을 위해 MySQL 쿼리를 최적화하는 방법](https://kkeolmusae.tistory.com/93)
+    - [[SQL] 쿼리 속도 향상을 위한 방법](https://velog.io/@piczo/SQL-%EC%BF%BC%EB%A6%AC-%EC%86%8D%EB%8F%84-%ED%96%A5%EC%83%81%EC%9D%84-%EC%9C%84%ED%95%9C-%EB%B0%A9%EB%B2%95)
+    - [MySQL 쓰면서 하지 말아야 할 것 17가지](https://blog.lael.be/post/370)
+- [SELECT 및 다른 명령문 최적화 하기](https://dataonair.or.kr/db-tech-reference/d-guide/dbms-2/?mod=document&uid=62469)
+- [Mysql 성능개선 팁](https://epthffh.tistory.com/entry/Mysql-%EC%84%B1%EB%8A%A5%EA%B0%9C%EC%84%A0-%ED%8C%81)
+- [쿼리 최적화: 빠른 쿼리를 위한 7가지 체크리스트 ✅](https://medium.com/watcha/%EC%BF%BC%EB%A6%AC-%EC%B5%9C%EC%A0%81%ED%99%94-%EC%B2%AB%EA%B1%B8%EC%9D%8C-%EB%B3%B4%EB%8B%A4-%EB%B9%A0%EB%A5%B8-%EC%BF%BC%EB%A6%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-7%EA%B0%80%EC%A7%80-%EC%B2%B4%ED%81%AC-%EB%A6%AC%EC%8A%A4%ED%8A%B8-bafec9d2c073)
+- [MySQL 속도 개선 TIP](https://kimyhcj.tistory.com/entry/MySQL-%EC%86%8D%EB%8F%84-%EA%B0%9C%EC%84%A0-TIP)
+- [[MySql] JOIN 속도를 빠르게! EXPLAIN, STRAIGHT_JOIN](https://marobiana.tistory.com/35)
+- [[기술적 선택] 쿼리 성능 개선을 위한 INDEX 적용](https://baebalja.tistory.com/566)
 
 ### 이론
 
