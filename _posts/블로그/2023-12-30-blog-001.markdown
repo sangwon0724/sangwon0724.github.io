@@ -139,6 +139,9 @@ tags: [출처, 참고]
     - [[MySQL] 파티셔닝 개념 및 사용법](https://narup.tistory.com/168)
     - [MySQL Partition, 제대로 이해하기 (1)](https://gngsn.tistory.com/203)
     - [MySQL Partition, 제대로 이해하기 (2)](https://gngsn.tistory.com/204?category=851218)
+    - [[MySQL] 쿼리성능 개선하며 알게된 것 기록 📝](https://jaejade.tistory.com/128)
+    - [[MYSQL] SQL 쿼리문 최적화 - 효율적인 쿼리를 위한 팁](https://jhlee-developer.tistory.com/entry/MYSQL-SQL-%EC%BF%BC%EB%A6%AC%EB%AC%B8-%EC%B5%9C%EC%A0%81%ED%99%94-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9D%B8-%EC%BF%BC%EB%A6%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%8C%81)
+    - [MYSQL 쿼리 실행 속도 분석 및 개선하기](https://bluemoon-clover.tistory.com/73)
 
 ### 이론
 
