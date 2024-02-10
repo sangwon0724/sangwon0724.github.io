@@ -1,13 +1,579 @@
 ---
 layout: post
 title:  "고급 매핑"
-date:   2023-12-11 22:45:00 +0900
+date:   2024-02-10 21:56:00 +0900
 categories: JPA
 tags: [연관관계, JPA 연관관계]
 published: false
 ---
 
-### 
+### 상속관계 매핑
+
+- 관계형 데이터베이스는 상속 관계가 존재하지 않는다.
+- 슈퍼타입 서브타입 관계라는 모델링 기법이 객체 상속과 유사하다.
+- 상속관계 매핑
+    - 객체의 상속과 구조와 DB의 슈퍼타입 서브타입 관계를 매핑하는 것
+    - 슈퍼 타입 · 서브 타입 논리 모델을 실제 물리 모델로 구현하는 방법
+- 상속관계 매핑 방법
+    - 조인 전략
+        - 각각 테이블로 변환한다.
+    - 단일 테이블 전략
+        - 통합 테이블로 변환한다.
+        - 기본 전략
+    - 구현 클래스마다 테이블 전략
+        - 서브타입 테이블로 변환한다.
+- 관련 어노테이션
+    - @Inheritance(strategy=InheritanceType.XXX) 
+        - JOINED
+            - 조인 전략
+        - SINGLE_TABLE
+            - 단일 테이블 전략
+        - TABLE_PER_CLASS
+            - 구현 클래스마다 테이블 전략
+    - @DiscriminatorColumn
+        - 부모 클래스에 명시한다.
+        - 자신을 상속받은 엔티티의 이름이 저장된다.
+        - name을 명시하지 않으면 기본 컬럼명은 DTYPE이 된다.
+    - @DiscriminatorValue
+        - 부모 클래스에 @DiscriminatorColumn가 적용되있을 때 DTYPE에 저장할 값을 지정한다.
+
+#### 조인 전략
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_012.png"/>
+
+- 장점
+    - 테이블 정규화
+    - 외래 키 참조 무결성 제약조건을 활용할 수 있다.
+    - 저장공간 효율화
+- 단점
+    - 조회시 조인을 많이 사용하여 성능 저하될 수도 있다.
+    - 조회 쿼리가 복잡해진다.
+    - 데이터 저장시 INSERT 쿼리가 2번 호출된다.
+    
+##### 엔티티 정의
 
 {% highlight java %}
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@DiscriminatorColumn
+public abstract class Item {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "item_id")
+	private Long Id;
+	
+	private String name;
+	private int price;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "A")
+public class Album extends Item {
+	private String artist;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "M")
+public class Movie extends Item {
+	private String director;
+	private String actor;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "B")
+public class Book extends Item {
+	private String author;
+	private String isbn;
+}
 {% endhighlight %}
+
+##### 생성된 테이블
+
+{% highlight sql %}
+create table Album (
+    artist varchar(255),
+    item_id bigint not null,
+    primary key (item_id)
+) engine=InnoDB
+
+create table Book (
+    author varchar(255),
+    isbn varchar(255),
+    item_id bigint not null,
+    primary key (item_id)
+) engine=InnoDB
+
+create table Item (
+    DTYPE varchar(31) not null,
+    item_id bigint not null auto_increment,
+    name varchar(255),
+    price integer not null,
+    primary key (item_id)
+) engine=InnoDB
+
+create table Movie (
+    actor varchar(255),
+    director varchar(255),
+    item_id bigint not null,
+    primary key (item_id)
+) engine=InnoDB
+
+alter table Album 
+    add constraint FK53gjpcnqq4ham6n200xsi04me 
+    foreign key (item_id) 
+    references Item (item_id)
+
+alter table Book 
+    add constraint FK282k6114lkwimf5inj4oeyvuy 
+    foreign key (item_id) 
+    references Item (item_id)
+
+alter table Movie 
+    add constraint FK77rr749acgm001t9th29xusam 
+    foreign key (item_id) 
+    references Item (item_id)
+{% endhighlight %}
+
+##### 테스트
+
+{% highlight java %}
+Movie movie = new Movie();
+movie.setDirector("D-1");
+movie.setActor("A-1");
+movie.setName("Movie-1");
+movie.setPrice(10000);
+em.persist(movie); //INSERT 2번 실행 (Item → Movie)
+
+em.flush();
+em.clear();
+
+Movie findMovie = em.find(Movie.class, movie.getId()); //SELECT 실행 (Movie Join Item)
+System.out.println("findMovie : " + findMovie); //출력 : Movie(director=D-1, actor=A-1)
+
+tx.commit();
+{% endhighlight %}
+
+{% highlight sql %}
+insert 
+into
+    Item (name, price, DTYPE) 
+values
+    (?, ?, 'M')
+
+insert 
+into
+    Movie (actor, director, item_id) 
+values
+    (?, ?, ?)
+
+select
+    m1_0.item_id,
+    m1_1.name,
+    m1_1.price,
+    m1_0.actor,
+    m1_0.director 
+from
+    Movie m1_0 
+join
+    Item m1_1 
+        on m1_0.item_id=m1_1.item_id 
+where
+    m1_0.item_id=?
+{% endhighlight %}
+
+#### 단일 테이블 전략
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_013.png"/>
+
+- 장점
+    - 조인이 필요 없으므로 일반적으로 조회 성능이 빠르다.
+    - 조회 쿼리가 단순하다.
+- 단점
+    - 자식 엔티티가 매핑한 컬럼은 모두 null 허용
+    - 단일 테이블에 모든 것을 저장하므로 테이블이 커질 수 있다.
+    - 상황에 따라서 조회 성능이 오히려 느려질 수 있다
+
+##### 엔티티 정의
+
+{% highlight java %}
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Data
+@DiscriminatorColumn
+public abstract class Item {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "item_id")
+	private Long Id;
+	
+	private String name;
+	private int price;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "A")
+public class Album extends Item {
+	private String artist;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "M")
+public class Movie extends Item {
+	private String director;
+	private String actor;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "B")
+public class Book extends Item {
+	private String author;
+	private String isbn;
+}
+{% endhighlight %}
+
+##### 생성된 테이블
+
+{% highlight sql %}
+create table Item (
+    DTYPE varchar(31) not null,
+    item_id bigint not null auto_increment,
+    name varchar(255),
+    price integer not null,
+    actor varchar(255),
+    director varchar(255),
+    artist varchar(255),
+    author varchar(255),
+    isbn varchar(255),
+    primary key (item_id)
+) engine=InnoDB
+{% endhighlight %}
+
+##### 테스트
+
+{% highlight java %}
+Movie movie = new Movie();
+movie.setDirector("D-1");
+movie.setActor("A-1");
+movie.setName("Movie-1");
+movie.setPrice(10000);
+em.persist(movie); //INSERT 2번 실행 (Item → Movie)
+
+em.flush();
+em.clear();
+
+Movie findMovie = em.find(Movie.class, movie.getId()); //SELECT 실행 (Movie Join Item)
+System.out.println("findMovie : " + findMovie); //출력 : Movie(director=D-1, actor=A-1)
+
+tx.commit();
+{% endhighlight %}
+
+{% highlight sql %}
+insert 
+into
+    Item (name, price, actor, director, DTYPE) 
+values
+    (?, ?, ?, ?, 'M')
+
+select
+    m1_0.item_id,
+    m1_0.name,
+    m1_0.price,
+    m1_0.actor,
+    m1_0.director 
+from
+    Item m1_0 
+where
+    m1_0.DTYPE='M' 
+    and m1_0.item_id=?
+{% endhighlight %}
+
+#### 구현 클래스마다 테이블 전략
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_014.png"/>
+
+- 데이터베이스 설계자와 ORM 전문가 모두 추천하지 않는 방식
+- 장점
+    - 서브 타입을 명확하게 구분해서 처리할 때 효과적
+    - not null 제약조건 사용 가능
+- 단점
+    - 여러 자식 테이블을 함께 조회할 때 성능이 느림
+        - UNION SQL이 필요하다.
+    - 자식 테이블을 통합해서 쿼리하기 어려움
+
+##### 엔티티 정의
+
+{% highlight java %}
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Data
+@DiscriminatorColumn
+public abstract class Item {
+    /*
+        TABLE_PER_CLASS 옵션을 사용할 때 IDENTITY 전락을 사용하면 오류가 발생한다.
+    */
+	@Id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "item_id")
+	private Long Id;
+	
+	private String name;
+	private int price;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "A")
+public class Album extends Item {
+	private String artist;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "M")
+public class Movie extends Item {
+	private String director;
+	private String actor;
+}
+
+@Entity
+@Data
+@DiscriminatorValue(value = "B")
+public class Book extends Item {
+	private String author;
+	private String isbn;
+}
+{% endhighlight %}
+
+##### 생성된 테이블
+
+{% highlight sql %}
+create table Album (
+    item_id bigint not null,
+    name varchar(255),
+    price integer not null,
+    artist varchar(255),
+    primary key (item_id)
+) engine=InnoDB
+    
+create table Book (
+    item_id bigint not null,
+    name varchar(255),
+    price integer not null,
+    author varchar(255),
+    isbn varchar(255),
+    primary key (item_id)
+) engine=InnoDB
+
+create table Item_SEQ (
+    next_val bigint
+) engine=InnoDB
+
+insert into Item_SEQ values ( 1 )
+
+create table Movie (
+    item_id bigint not null,
+    name varchar(255),
+    price integer not null,
+    actor varchar(255),
+    director varchar(255),
+    primary key (item_id)
+) engine=InnoDB
+{% endhighlight %}
+
+##### 테스트
+
+{% highlight java %}
+Movie movie = new Movie();
+movie.setDirector("D-1");
+movie.setActor("A-1");
+movie.setName("Movie-1");
+movie.setPrice(10000);
+em.persist(movie); //INSERT 2번 실행 (Item → Movie)
+
+em.flush();
+em.clear();
+
+Movie findMovie = em.find(Movie.class, movie.getId()); //SELECT 실행 (Movie Join Item)
+System.out.println("findMovie : " + findMovie); //출력 : Movie(director=D-1, actor=A-1)
+
+tx.commit();
+{% endhighlight %}
+
+{% highlight sql %}
+select
+    next_val as id_val 
+from
+    Item_SEQ for update
+
+update
+    Item_SEQ 
+set
+    next_val= ? 
+where
+    next_val=?
+
+insert 
+into
+    Movie (name, price, actor, director, item_id) 
+values
+    (?, ?, ?, ?, ?)
+
+select
+    m1_0.item_id,
+    m1_0.name,
+    m1_0.price,
+    m1_0.actor,
+    m1_0.director 
+from
+    Movie m1_0 
+where
+    m1_0.item_id=?
+{% endhighlight %}
+
+### 매핑 정보 상속
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_015 .png"/>
+
+- 단순히 공통으로 사용될 속성들을 관리하기 위한 방법이다.
+- 상속관계 매핑이 아니다.
+- 엔티티에 속하지 않는다.
+- 테이블과 매핑되지 않는다.
+- 부모 클래스를 상속 받는 자식 클래스에 매핑 정보만 제공한다.
+- 직접 생성해서 사용할 일이 없으므로 추상 클래스로 생성하는 것이 권장된다.
+- @Entity 클래스는 엔티티나 @MappedSuperclass로 지정한 클래스만 상속 가능하다.
+- 관련 어노테이션
+    - @MappedSuperclass
+        - 매핑 정보만 받는 슈퍼 클래스를 지정할 때 사용한다.
+
+#### 엔티티 정의
+
+{% highlight java %}
+@MappedSuperclass
+@Data
+public abstract class BaseEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long Id;
+	
+	private String name;
+}
+
+@Entity
+@Data
+public class Member extends BaseEntity {
+	private String email;
+}
+
+@Entity
+@Data
+public class Seller extends BaseEntity {
+	private String shopname;
+}
+{% endhighlight %}
+
+#### 생성된 테이블
+
+{% highlight sql %}
+create table Member (
+    Id bigint not null auto_increment,
+    name varchar(255),
+    email varchar(255),
+    primary key (Id)
+) engine=InnoDB
+
+create table Seller (
+    Id bigint not null auto_increment,
+    name varchar(255),
+    shopname varchar(255),
+    primary key (Id)
+) engine=InnoDB
+{% endhighlight %}
+
+#### 테스트
+
+{% highlight java %}
+Member member = new Member();
+member.setName("ABC");
+member.setEmail("ABC@gmail.com");
+em.persist(member);
+
+em.flush();
+em.clear();
+
+Member findMember = em.find(Member.class, member.getId());
+System.out.println("findMember : " + findMember); //findMember : Member(email=ABC@gmail.com)
+
+Seller seller = new Seller();
+seller.setName("Seller");
+seller.setShopname("Shop");
+em.persist(seller);
+
+em.flush();
+em.clear();
+
+Seller findSeller = em.find(Seller.class, seller.getId());
+System.out.println("findSeller : " + findSeller); //findSeller : Seller(shopname=Shop)
+
+tx.commit();
+{% endhighlight %}
+
+{% highlight sql %}
+insert 
+into
+    Member (email, name) 
+values
+    (?, ?)
+
+select
+    m1_0.Id,
+    m1_0.email,
+    m1_0.name 
+from
+    Member m1_0 
+where
+    m1_0.Id=?
+
+insert 
+into
+    Seller (name, shopname) 
+values
+    (?, ?)
+
+select
+    s1_0.Id,
+    s1_0.name,
+    s1_0.shopname 
+from
+    Seller s1_0 
+where
+    s1_0.Id=?
+{% endhighlight %}
+
+### 공통 코드
+
+{% highlight java %}
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello"); //애플리케이션 전체 공유 (persistence.xml 참조)
+EntityManager em = emf.createEntityManager(); //한번 쓰고 버려야함, 쓰레드간 공유하지 않음
+EntityTransaction tx = em.getTransaction(); //조회를 제외한 DML 작업시 필수로 사용
+tx.begin();
+
+try {
+    //실행 내용
+} catch (Exception e) {
+    e.printStackTrace();
+    tx.rollback();
+} finally {
+    em.close();
+}
+
+emf.close();
+{% endhighlight %}
+
