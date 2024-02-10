@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "프록시와 연간관계 매핑"
-date:   2024-02-11 09:00:00 +0900
+date:   2024-02-11 23:37:00 +0900
 categories: JPA
 tags: [연관관계, JPA 연관관계, 프록시]
 published: false
@@ -9,11 +9,51 @@ published: false
 
 ### 프록시
 
+#### em.find()와 em.getReference()의 차이
+
+- em.find()
+    - 데이터베이스를 통해서 실제 엔티티 객체 조회
+- em.getReference()
+    - 데이터베이스 조회를 미루는 가짜(프록시) 엔티티 객체 조회
+
 #### 프록시 특징
+
+- 실제 클래스를 상속 받아서 만들어진다.
+- 실제 클래스와 겉모양이 같다.
+- 사용하는 입장에서는 진짜 객체인지 프록시 객체인지 구분하지 않고 사용하면 된다. (이론상)
+- 프록시 객체는 실제 객체의 참조(target)를 보관한다.
+- 프록시 객체를 호출하면 프록시 객체는 실제 객체의 메소드를 호출한다.
+- 프록시 객체는 처음 사용할 때 한 번만 초기화
+- 프록시 객체를 초기화 할 때, 프록시 객체가 실제 엔티티로 바뀌는 것은 아니다.
+- 프록시 객체가 초기화되면 프록시 객체를 통해서 실제 엔티티에 접근할 수 있다.
+- 프록시 객체는 원본 엔티티를 상속받기 때문에 타입 체크시 주의해야 한다.
+    - <b>== 연산자가 아니라 instance of 연산자를 사용한다.</b>
+- 영속성 컨텍스트에 찾는 엔티티가 이미 있으면 em.getReference()를 호출해도 실제 엔티티를 반환한다.
+- 영속성 컨텍스트의 도움을 받을 수 없는 준영속 상태일 때, 프록시를 초기화하면 문제가 발생한다.
+    - 하이버네이트는 org.hibernate.LazyInitializationException 예외를 발생시킨다.
 
 #### 프록시 객체의 초기화
 
+{% highlight java %}
+Member member = em.getReference(Member.class, "id1");
+member.getName()
+{% endhighlight %}
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_016 .png"/>
+
 #### 프록시 확인
+
+- 프록시 인스턴스의 초기화 여부 확인
+    - `PersistenceUnitUtil.isLoaded(Object entity)`
+    - 예시
+        - `emf.getPersistenceUnitUtil().isLoaded(mr)`
+- 프록시 클래스 확인 방법
+    - `entity.getClass().getName()`를 출력해본다.
+    - javasist or HibernateProxy라는 키워드가 클래스명에 포함되어 있는지 확인한다.
+- 프록시 강제 초기화
+    - `org.hibernate.Hibernate.initialize(entity);`
+    - JPA 표준은 강제 초기화가 없다.
+    - JPA에서 강제 초기화하려면 `member.getName()`같이 호출해서 초기화해야 한다.
 
 ### 즉시 로딩과 지연 로딩
 
