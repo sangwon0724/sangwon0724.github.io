@@ -6,7 +6,21 @@ categories: JPA
 published: false
 ---
 
-### 
+### 경로 표현식
+
+### 페치 조인
+
+#### 기본
+
+#### 한계
+
+### 다형성 쿼리
+
+### 엔티티 직접 사용
+
+### Named 쿼리
+
+### 벌크 연산
 
 {% highlight java %}
 {% endhighlight %}
