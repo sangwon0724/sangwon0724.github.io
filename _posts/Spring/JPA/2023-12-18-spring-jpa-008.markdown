@@ -4,7 +4,6 @@ title:  "고급 매핑"
 date:   2024-02-10 21:56:00 +0900
 categories: JPA
 tags: [연관관계, JPA 연관관계]
-published: false
 ---
 
 ### 상속관계 매핑
