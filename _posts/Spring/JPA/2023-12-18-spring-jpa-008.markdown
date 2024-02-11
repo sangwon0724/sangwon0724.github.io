@@ -439,7 +439,7 @@ where
 
 ### 매핑 정보 상속
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_015 .png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_015.png"/>
 
 - 단순히 공통으로 사용될 속성들을 관리하기 위한 방법이다.
 - 상속관계 매핑이 아니다.
@@ -575,4 +575,3 @@ try {
 
 emf.close();
 {% endhighlight %}
-
