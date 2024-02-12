@@ -1,65 +1,63 @@
 ---
 layout: post
-title:  "JPA 쿼리"
+title:  "임베디드 타입"
 date:   2023-12-11 22:49:00 +0900
 categories: JPA
 ---
 
-### JPQL
+### 정의
 
-- 테이블이 아닌 엔티티 객체를 대상으로 검색하는 객체지향 쿼리
-- from절 뒤에 테이블명이 아닌 객체명이 붙는다.
-- 반드시 객체명과 동일하게 명시해야 한다. (대소문자 오타 실수 주의)
-- 전체 검색을 할 때 *이 아닌 객체명이나 별칭을 명시한다.
-- 사용 예시
-    {% highlight java %}
-    //파라미터 사용 방법
-    //쿼리 => name 사용시 :name으로 명시
-    //파라미터 => name 사용 시 @Param("name") String name으로 명시
-    @Query(value="SELECT m FROM Member AS m WHERE m.name = :name")
-    public Member findByName(@Param("name") String name);
-    {% endhighlight %}
+- JPA에서 정의한 사용자 정의 값 타입
+- 예시 1) 근무 시작 기간 & 근무 종료 기간 =(임베디드 타입으로 정의)=> 근무 기간
+- 예시 2) 우편번호 & 지역 정보 & 상세 주소 =(임베디드 타입으로 정의)=> 거주정보
+- 하이버네이트에서의 컴포넌트와 같은 것을 의미한다.
 
-### Native SQL
+### 사용법
 
-- @Query 어노테이션에서 원래의 쿼리를 쓰는 방식
-- nativeQuery = true 옵션 활성화가 필요하다.
-- 사용 예시
-    {% highlight java %}
-    //파라미터 사용 방법
-    //쿼리 => name 사용시 :name으로 명시
-    //파라미터 => name 사용 시 @Param("name") String name으로 명시
-    @Query(value = "SELECT * FROM member AS m WHERE m.name = :name", nativeQuery = true)
-    public Member findByName(@Param("name") String name);
-    {% endhighlight %}
+- @Embeddable: 값 타입을 정의하는 곳에 표시
+- @Embedded: 값 타입을 사용하는 곳에 표시
+- 임베디드 타입은 기본 생성자가 필수다.
 
-### Converter
+### 장점
 
-- 엔티티의 데이터를 변환하는 기능
-- useYN같이 DB에서는 String이지만 객체에서는 boolean으로 저장하고 싶을 때 사용한다.
-- 항상 적용되기 원하면 autoApply=true 옵션을 활성화하면 된다.
+- 재사용성
+- 높은 응집도
+- 해당 값 타입만 사용하는 의미있는 메서드를 만들 수 있다.
+
+### 예외사항 (칼럼명이 겹치는 경우)
+
+- 재사용성
+- 높은 응집도
+- 해당 값 타입만 사용하는 의미있는 메서드를 만들 수 있다.
 - 사용 예시
     {% highlight java %}
     @Entity
-    class Member{
+    public class Member {
         @Id
         @GeneratedValue
-        private Integer id;
+        private Long id;
+        private String name;
 
-        @Convert(converter=BooleanToYNConverter.class)
-        private boolean useYn;
+        @Embedded
+        Address homeAddress;
+
+        @Embedded
+        @AttributeOverrides({
+            @AttributeOverride(name="area", column=@Column(name="COMPANY_AREA")),
+            @AttributeOverride(name="city", column=@Column(name="COMPANY_CITY")),
+            @AttributeOverride(name="street", column=@Column(name="COMPANY_STREET")),
+            @AttributeOverride(name="building", column=@Column(name="COMPANY_BUILDING")),
+            @AttributeOverride(name="homeNumber", column=@Column(name="COMPANY_HOMENUMBER"))
+        })
+        Address companyAddress;
     }
 
-    @Converter(autoApply=true)
-    class ConverterBooleanToYN implements AttributeConverter&lt;Boolean, String&gt;{
-        @Override
-        public String convertToDatabaseColumn(Boolean value){
-            return (value != null && value) ? "Y" : "N";
-        }
-
-        @Override
-        public Boolean convertToEntityAttribute(String dbData){
-            return "Y".eqauls(dbData);
-        }
+    @Embeddable
+    public class Address {
+        String area;
+        String city;
+        String street;
+        String building;
+        String homeNumber;
     }
     {% endhighlight %}
