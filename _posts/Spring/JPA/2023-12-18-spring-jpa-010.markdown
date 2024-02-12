@@ -3,6 +3,7 @@ layout: post
 title:  "값 타입"
 date:   2024-02-11 22:26:00 +0900
 categories: JPA
+tags: [값 타입, 임베디드 타입, 임베디드]
 ---
 
 ### 기본값 타입
