@@ -3,6 +3,7 @@ layout: post
 title:  "연결 자료구조와 연결 리스트"
 date:   2024-02-11 19:15:00 +0900
 categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+tags: [연결 자료구조, 연결 리스트]
 ---
 
 ### 연결 자료구조

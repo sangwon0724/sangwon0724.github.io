@@ -3,6 +3,7 @@ layout: post
 title:  "순차 자료구조와 선형 리스트"
 date:   2024-02-11 18:14:00 +0900
 categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+tags: [순차 자료구조, 선형 리스트]
 ---
 
 ### 순차 자료구조

@@ -3,6 +3,7 @@ layout: post
 title:  "큐 (Queue)"
 date:   2024-02-12 19:08:00 +0900
 categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+tags: [큐]
 ---
 
 ### 큐란?
