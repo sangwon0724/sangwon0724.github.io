@@ -30,6 +30,7 @@ categories: MyBatis
   </dependency>
   {% endhighlight %}
 
+{:start="2"}
 2. root-context.xml에 DBMS 유저 정보 등록
   {% highlight xml %}
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -40,6 +41,7 @@ categories: MyBatis
   </bean>
   {% endhighlight %}
 
+{:start="3"}
 3. root-context.xml에 sqlSession 등록
   {% highlight xml %}
   <bean id="SqlSessionFectory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -52,6 +54,7 @@ categories: MyBatis
   </bean>
   {% endhighlight %}
 
+{:start="4"}
 4. root-context.xml에 DAO를 작성할 패키지를 등록 (임의값 : com.my.mapper)
   {% highlight xml %}
   <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
@@ -59,11 +62,13 @@ categories: MyBatis
   </bean>
 {% endhighlight %}
 
+{:start="5"}
 5. DAO를 작성할 패키지를 빈으로 등록할 수 있게 컴포넌트 스캔 추가 (임의값 : com.my.mapper)
 {% highlight xml %}
 <context:component-scan base-package="com.my.mapper" />
 {% endhighlight %}
 
+{:start="6"}
 6. 3에서 작성한 SqlSessionFectory의 property의 value의 classpath가 의미하는 지점인  
 프로젝트명/src/main/resources에 가서 mybatis-config.xml을 작성한다.
   {% highlight xml %}
@@ -73,7 +78,8 @@ categories: MyBatis
     <!-- ... -->
   </configuration>
   {% endhighlight %}
-
+  
+{:start="7"}
 7. 3에서 작성한 SqlSessionFectory의 property의 mapperLocations 파라미터에 명시한 대로 폴더를 만든 후  
 그 위치에 지정한 형식의 이름을 가진 xml 파일을 만든다.  
 해당 파일은 SQL을 작성할 문서가 된다. (*Mapper.xml => blogMapper.xml, userMapper.xml 등등)

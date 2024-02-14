@@ -8,8 +8,8 @@ categories: MyBatis
 ### 별칭 사용하기
 
 1. 자신이 설정한 [프로젝트명/src/main/resources] 경로에 있는 mybatis 관련 설정 파일로 이동
-2. &nbsp;configuration> 태그 안에 &nbsp;typeAliases> 태그 작성
-3. &nbsp;typeAliases> 태그 안에 &nbsp;typeAlias type="com.my.vo.BoardVO" alias="BoardVO" />처럼 작성
+2. &lt;configuration> 태그 안에 &lt;typeAliases> 태그 작성
+3. &lt;typeAliases> 태그 안에 &lt;typeAlias type="com.my.vo.BoardVO" alias="BoardVO" />처럼 작성
 
 {% highlight xml %}
 <?xml version="1.0" encoding="UTF-8"?>
@@ -36,7 +36,7 @@ categories: MyBatis
 ### 언더바(_)가 포함된 필드명 CamelCase로 맵핑하기
 
 1. 자신이 설정한 [프로젝트명/src/main/resources] 경로에 있는 mybatis 관련 설정 파일로 이동
-2. &lt;configuration> 태그 안에 <settings> 태그 작성
+2. &lt;configuration> 태그 안에 &lt;settings> 태그 작성
 3. &lt;settings> 태그 안에 &lt;setting name="mapUnderscoreToCamelCase" value="true" /> 작성
 
 {% highlight java %}
