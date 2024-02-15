@@ -1,0 +1,146 @@
+---
+layout: post
+title:  "JSX"
+date:   2024-02-15 15:39:00 +0900
+categories: React
+published: false
+---
+
+### JSX
+
+- 자바스크립트를 확장한 문법
+- React에서는 UI를 어떻게 표현해야 하는지를 설명하기 위해 React와 함께 사용할 것을 권장한다.
+- JSX를 사용하면 자바스크립트 코드 내에서도 HTML 코드처럼 UI를 바로 표현할 수 있기 때문에 UI 관련 작업을 할 때 좀 더 직관적이고 용이한 개발이 가능하다.
+- JSX는 표준 자바스크립트 문법이 아니기 때문에, 웹 브라우저는 JSX 코드를 그대로 이해하지 못한다.
+- JSX 코드는 웹 브라우저에서 실행되기 전 Babel과 같은 도구를 사용하여 표준 자바스크립트 문법으로 변환되어야 한다.
+
+- JSX 코드 예시
+{% highlight react %}
+function App() {
+  return (
+    <div>
+      <h1>h1 태그 내용</h1>
+    </div>
+  );
+}
+{% endhighlight %}
+
+- Babel에 의해 표준 자바스크립트 문법(ES5)으로 변환된 JSX 코드
+{% highlight javascript %}
+"use strict";
+
+function App() {
+  return React.createElement("div", null, React.createElement("h1", null, "Hello World!"));
+}
+{% endhighlight %}
+
+### 요소는 반드시 닫혀야 한다.
+
+- HTML에서는 제대로 종료 태그를 사용하여 요소를 닫지 않아도 대부분 문제 없이 동작한다.
+    - 하지만 JSX에서는 반드시 요소를 닫아야만 오류가 발생하지 않는다.
+- 만약 아래의 코드처럼 &lt;h1>요소를 닫지 않고 JSX 코드를 저장하면,  
+실행 중인 React 애플리케이션은 아래와 같은 오류를 발생시키며 동작을 멈춘다.
+- &lt;img>나 &lt;br>요소와 같은 빈 요소(void elements)도 반드시 슬래시(/)를 사용하여  
+self-closing을 해 줘야만 오류가 발생하지 않는다.
+
+{% highlight react %}
+export default function App() {
+  return (
+    <div>
+      <h1>h1 태그 내용</h1>
+    </div>
+  );
+}
+{% endhighlight %}
+
+### 컴포넌트에는 최상위 요소가 단 하나만 존재해야 한다.
+
+- 컴포넌트(component)가 여러 개의 요소를 한 번에 반환할 수 있도록  
+React에서는 반드시 컴포넌트의 최상위 요소가 하나만 존재하도록 강제하고 있다.
+- 아래 코드에서는 &lt;h1>과 &lt;p>요소 이렇게 2개의 최상위 요소가 존재하기 때문에, 오류가 발생한다.
+
+{% highlight react %}
+export default function App() {
+  return (
+      <h1>h1 태그 내용</h1>
+      <p>p 태그 내용</p>
+  );
+}
+{% endhighlight %}
+
+- React v15까지는 주로 아래 코드처럼 &lt;div>요소를 최상위 요소로 사용하여 나머지 요소들을 감싸주는 방식을 주로 사용하였다.
+    - 하지만 이러한 방식은 단순히 JSX 문법을 맞추기 위해서 불필요한 &lt;div>요소를 추가해야만 하기에 권장할 만한 방법은 아니다.
+- React DOM에 의해 관리되는 모든 요소들은 최종적으로 id 속성값이 root인 &lt;div>요소 안에 렌더링된다.
+    - 이 때의 &lt;div>같은 노드를 `루트 DOM 노드`라고 부른다.
+
+{% highlight react %}
+export default function App() {
+  return (
+    <div>
+      <h1>h1 태그 내용</h1>
+      <p>p 태그 내용</p>
+    </div>
+  );
+}
+{% endhighlight %}
+
+- 하지만 React v16부터는 이러한 불필요한 &lt;div>요소의 사용을 방지하고자 Fragment라는 기능을 추가되었다.
+- 아래 코드처럼 &lt;fragment>요소를 최상위 요소로 사용하면 별도의 요소를 추가하지 않고도 여러 자식 요소들을 그룹화 할 수 있다.
+- &lt;fragment>요소는 HTML 페이지에는 실제 렌더링되지 않기 때문에 최종 결과물에 불필요한 요소가 추가되지 않는다.
+{% highlight react %}
+export default function App() {
+  return (
+    <fragment>
+      <h1>h1 태그 내용</h1>
+      <p>p 태그 내용</p>
+    </fragment>
+  );
+}
+{% endhighlight %}
+
+- &lt;fragment>요소는 아래 코드처럼 축약형 문법으로도 사용할 수 있다.
+- 그러나 Fragment의 축약형 문법에서는 키(key)와 속성(attribute)을 사용할 수 없다.
+
+{% highlight react %}
+export default function App() {
+  return (
+    <>
+      <h1>h1 태그 내용</h1>
+      <p>p 태그 내용</p>
+    </>
+  );
+}
+{% endhighlight %}
+
+### 자바스크립트 표현식은 중괄호({})로 감싸져야 한다.
+
+- JSX 구문에는 자바스크립트 표현식을 그대로 사용할 수 있다.
+- 그러나 자바스크립트 표현식을 사용할 때는 반드시 중괄호({})로 감싸줘야지 정상적으로 컴파일된다.
+
+{% highlight react %}
+export default function App() {
+  const name = "홍길동";
+  return <h1>Hello, {name}</h1>;
+}
+
+{% endhighlight %}
+
+### JSX 주석
+
+- JSX에서의 주석은 일반 자바 스크립트의 주석처럼 사용할 수는 없다.
+- `//내용` 방식이든 `/* 내용 방식 */` 방식이든 중괄호 안에 작성해야 한다.
+    - 그렇지 않으면 오류가 발생한다.
+
+{% highlight react %}
+export default function App() {
+  return (
+    <>
+      <h1>Hello, World!</h1>
+      {
+        //주석 내용
+      }
+      {/* 주석 내용 */}
+    </>
+  );
+}
+{% endhighlight %}
