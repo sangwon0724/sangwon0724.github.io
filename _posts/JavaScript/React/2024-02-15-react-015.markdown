@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "JSX"
+title:  "DOM 속성"
 date:   2024-02-15 16:01:00 +0900
 categories: React
 published: false
@@ -8,6 +8,8 @@ published: false
 
 
 ### XXX
+
+https://tcpschool.com/react/react_jsx_domattribute
 
 {% highlight react %}
 {% endhighlight %}
