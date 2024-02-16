@@ -1,0 +1,15 @@
+---
+layout: post
+title:  "데이터 관리"
+date:   2024-02-15 16:01:00 +0900
+categories: React
+published: false
+---
+
+### XXX
+
+https://tcpschool.com/react/react_data_props
+https://tcpschool.com/react/react_data_state
+
+{% highlight react %}
+{% endhighlight %}

@@ -1,56 +1,16 @@
 ---
 layout: post
-title:  "router"
-date:   2023-12-14 00:34:00 +0900
+title:  "환경변수"
+date:   2023-12-14 00:39:00 +0900
 categories: React
 ---
 
-### 설치 방법
+### .env 파일 사용 방법
 
-- npm install react-router-dom을 실행한다.
-
-### 컨트롤러 만들기
-
-1. App.js에 import {HashRouter, Route} from "react-router-dom";를 통해서 import한다.
-2. return에서 &lt;HashRouter>&lt;Route/>&lt;/HashRouter>를 명시한다.
-3. Route를 사용할 js 파일을 import 한다. (예시 : import About from "./route/About";)
-4. Route의 path 속성에 이동할 경로명을 명시한다. (예시 : &lt;Route path="/about"/>)
-5. Route의 component 속성에 이동할 js 파일의 이름을 명시한다.  
-(예시 : &lt;Route path="/about" component={About}/>)
-6. 두 개 이상의 경로를 지정할 때는 그냥 HashRouter 태그 안에 계속 추가하면 된다.
-7. 스프링과 달리 리액트에서는 중간에 거치는 url들에 해당하는 Route들도 랜더링하기 때문에  
-이를 피하기 위해 exact={true}를 사용하여  현재 접속중인 url과 Route 태그에 명시된 path가 동일한 것만 랜더링 하도록 한다. 
-
-### 네비게이션 메뉴 만들기
-
-1. navigation.js에 import { Link } from "react-router-dom";를 통해서 import한다.
-2. a 태그는 아예 이동을 시켜버리기 때문에 상호작용되는 페이지를 만들기 위해 Link 태그를 사용한다.
-3. Link 태그 예시 => &lt;Link to="/about">About&lt;/Link>
-
-### 상황에 따른 컨트롤러 만들기
-
-1. import { HashRouter as Router, Route, Switch } from "react-router-dom";
-2. 상황을 설정할 값 선언
-3. 아래와 같은 틀의 코드 작성하기
-{% highlight javascript %}
-<Router>
-    <Switch>
-    {isLoggedIn ? (
-        <>
-        <<Route exact path="/">
-            <Home />
-        </Route>
-        </>
-    ) : (
-        <Route exact path="/">
-            <Auth />
-        </Route>
-    )}
-    </Switch>
-</Router>
-{% endhighlight %}
-
-### 리다이렉트 시키기
-
-1. import { useHistory } from "react-router-dom";
-2. history.push(URL);
+- 리액트에서 create-react-app을 사용한 이후에 .env 파일을 사용하고 싶다면  
+.env 파일 안에서 사용되는 환경변수명들 앞에는 반드시 "REACT_APP_"을 붙여야 한다.  
+예시) REACT_APP_PROJECT_ID=abc
+- 쉼표나 세미콜론이 아닌 엔터로 구분한다.
+- 사용할때는 process.env.REACT_APP_XXX=123로 사용할 수 있다.
+- 개인 API KEY를 가리기 위해 사용하는 경우가 많지만 결국 브라우저를 통해 요청되면  
+데이터가 이동하기 때문에 반드시 숨겨지는것은 아니다.

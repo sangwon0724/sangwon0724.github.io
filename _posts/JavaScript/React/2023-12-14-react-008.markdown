@@ -1,25 +1,27 @@
 ---
 layout: post
-title:  "경로 설정"
-date:   2023-12-14 00:41:00 +0900
+title:  "fontAwesome 사용하기"
+date:   2023-12-14 00:43:00 +0900
 categories: React
 ---
 
-### jsconfig.json 사용방법
+### 설치 방법
 
-1. jsconfig.json 파일을 package.json 파일과 같은 위치에 만들어서 아래의 코드를 복붙한다.
-{% highlight json %}
-{
-    "compilerOptions": {
-        "baseUrl": "src"
-    },
-    "include": [
-        "src"
-    ]
-}
-{% endhighlight %}
-2. import할 때 from의 주소를 절대경로로 작성한다.
-  - 기존 : import AppRouter from "./Router";
-  - 변경 : import AppRouter from "components/Router";
+1. 터미널에 명령어 npm install @fortawesome/react-fontawesome 입력하기
+2. 필요한 아이콘에 따라서 추가로 터미널에 명령어 입력하기
+  - npm install @fortawesome/fontawesome-free
+  - npm install @fortawesome/fontawesome-svg-core
+  - npm install @fortawesome/free-brands-svg-icons
+  - npm install @fortawesome/free-regular-svg-icons
+  - npm install @fortawesome/free-solid-svg-icons
 
-3. 만약 작동하지 않는다면 vscode를 껐다가 다시 킨다.
+### 사용 방법
+
+1. "@fortawesome/react-fontawesome" 패키지에서 FontAwesomeIcon를 import 받는다.  
+>import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+2. 필요한 패키지에서 필요한 기능을 import 받는다.  
+>예시 1) import { faTwitter } from "@fortawesome/free-brands-svg-icons";  
+>예시 2) import { faUser } from "@fortawesome/free-solid-svg-icons";
+3. &lt;FontAwesomeIcon/> 태그를 통해서 아이콘을 사용한다.
+>예시 1) &lt;FontAwesomeIcon icon={faTwitter} color={"#04AAFF"} size="2x" />  
+>예시 2) &lt;FontAwesomeIcon icon={faUser} color={"#04AAFF"} size="2x" />

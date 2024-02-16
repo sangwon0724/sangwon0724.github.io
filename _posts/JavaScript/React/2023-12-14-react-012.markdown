@@ -1,176 +1,97 @@
 ---
 layout: post
-title:  "Firebase Database 기능 사용하기 (Firestore Database)"
-date:   2023-12-14 14:58:00 +0900
+title:  "Firebase Storage 기능 사용하기"
+date:   2023-12-14 15:20:00 +0900
 categories: React
 ---
 
 ### 준비 과정
 
 1. firebase에 대한 KEY 정보를 담고 있는 js 파일로 이동한다.
-2. 최상단에 import "firebase/firestore";를 추가한다
-3. export const dbService = firebase.firestore();를 추가한다.
+2. 최상단에 import "firebase/storage";를 추가한다
+3. export const storageService = firebase.storage();를 추가한다.
 
-### 기능을 사용하기 위한 공통 전제 조건
-
-- export const dbService = firebase.firestore(); 필요 => firebase 설정 js 파일
-- import { dbService, useEffect } from "XXX"; 필요 => 기능을 사용할 js 파일
-
-### 데이터 추가 (Insert)
+### 파일 정보 가져오기 + 이미지 미리보기
 
 - 기본 틀
 {% highlight javascript %}
-const 함수명 = async (event) => {
-    event.preventDefault();
-    await dbService.collection("컬렉션명").add({
-      항목명1 : 항목명1,
-      항목명2: 항목명2,
-      ...
-    });
-};
-{% endhighlight %}
+<input type="file" accept="image/*" onChange={onFileChange} />
 
-- 예시
+const [attachment, setAttachment] = useState();
+
+const onFileChange = (event) => {
+    const {
+      target: { files },
+    } = event;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+        const {
+          currentTarget: { result },
+        } = finishedEvent;
+        setAttachment(result);
+    };
+    reader.readAsDataURL(theFile);
+};
+
+{attachment && (
+    <div>
+        <img src={attachment} width="50px" height="50px" />
+        <button onClick={onClearAttachment}>Clear</button>
+    </div>
+)}
+{% endhighlight %}
+- 추가 정보
+  - event.target.files[0]은 file 태그에 올라온 파일의 정보를 가리킨다.
+  - FileReader.onloadend는 FileReader가 읽기 동작이 끝났을 때마다 발생시키는 이벤트다.
+  - reader.readAsDataURL(theFile);은 읽어들인 파일의 정보를 데이터 URL로 만드는 방법이다.
+  - 데이터 URL로 만들어진 파일의 정보는 reader.onloadend를 통해서  
+  e.target.result 또는 e.currentTarget.result로 받을 수 있다.
+
+### 파일 업로드
+
+- 전제 조건
+  - 해당 프로젝트의 터미널에서 npm install uuid 입력  
+  (식별자명을 랜덤으로 만들어주는 기능, 랜덤 함수를 직접 만들어서 대체 가능)
+  - 해당 기능을 사용할 js 파일에 가서 import { v4 as uuidv4 } from "uuid";를 통해서 import 하기
+  - export const storageService = firebase.storage(); 필요 => firebase 설정 js 파일
+  - import { storageService } from "XXX"; 필요 => 기능을 사용할 js 파일
+- 기본 틀
 {% highlight javascript %}
-const [nweet, setNweet] = useState("");
 const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.collection("jack").add({
-    nweet,
-    createdAt: Date.now(),
-    });
-    setNweet("");
+
+    let attachmentUrl = "";
+
+    if (attachment != "") {
+        const attachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+        const response = await attachmentRef.putString(attachment, "data_url");
+        attachmentUrl = await response.ref.getDownloadURL();
+    }
 };
 {% endhighlight %}
+- 추가 정보
+  - attachment는 데이터 URL화 시킨 파일을 가리킨다.
+  - storageService.ref()는 루트 폴더를 가리킨다.
+  - storageService.ref().child("폴더명/파일명");을 통해서 원하는 위치에 원하는 파일명을 지정한다.
+  - fileRef.putString(attachment, "data_url");를 통해서 업로드한다.
+  - attachmentUrl = await response.ref.getDownloadURL();을 통해서 업로드한 파일이 업로드 된 실제 경로를 알 수 있다.
 
-### 데이터 수정 (Update)
+### 파일 삭제
+
+- 전제조건
+  - import { dbService, storageService } from "myDatabase";
 
 - 기본 틀
-{% highlight javascript %}
-const 함수명 = async (event) => {
-    event.preventDefault();
-    await dbService.doc(`컬렉션명/${해당 문서의 id}`).update({
-        항목: 내용,
-    });
-};
-{% endhighlight %}
-
-- 예시
-{% highlight javascript %}
-const [editing, setEditing] = useState(false);
-const onSubmit = async (event) => {
-    event.preventDefault();
-    await dbService.doc(`jack/${nweetObj.id}`).update({
-    text: newNweet,
-    });
-    setEditing(false);
-};
-{% endhighlight %}
-
-### 데이터 삭제 (Delete)
-
-- 기본 틀
-{% highlight javascript %}
-const 함수명 = async () => {
-      await dbService.doc(`컬렉션명/${해당 문서의 id}`).delete();
-};
-{% endhighlight %}
-
-- 예시
 {% highlight javascript %}
 const onDeleteClick = async () => {
     const ok = window.confirm("Are you sure you want to delete this nweet?");
     if (ok) {
-    await dbService.doc(`jack/${nweetObj.id}`).delete();
+        await dbService.doc(`nweets/${nweetObj.id}`).delete(); //데이터베이스 삭제
+        await storageService.refFromURL(nweetObj.attachmentUrl).delete(); //스토리지 삭제
     }
 };
 {% endhighlight %}
-
-### 데이터 가져오기 (Select)
-
-- 기본 틀
-{% highlight javascript %}
-const [XXX, setXXX] = useState([]);
-const 함수명 = async (event) => {
-    const 변수명 = await dbService.collection("컬렉션명").get();
-    변수명.forEach((document) => {
-        const nweetObject = {
-        ...document.data(),
-        id: document.id,
-        };
-        setXXX((prev) => [nweetObject, ...prev]);
-    });
-};
-useEffect(() => {
-  getNweets();
-}, []);
-{% endhighlight %}
-
-- 예시
-{% highlight javascript %}
-const [nweets, setNweets] = useState([]);
-const getNweets = async () => {
-    const dbNweets = await dbService.collection("jack").get();
-    dbNweets.forEach((document) => {
-        const nweetObject = {
-            ...document.data(),
-            id: document.id,
-        };
-        setNweets((prev) => [nweetObject, ...prev]);
-    });
-};
-useEffect(() => {
-    getNweets();
-}, []);
-{% endhighlight %}
-
 - 추가 정보
-  - dbService.collection("컬렉션명").get();은 단순하게 object를 주기때문에 풀어서 사용해야 한다.
-  - forEach를 돌릴때 마다 setXXX를 해야지 데이터의 개수만큼 정상적으로 데이터를 읽을 수 있다.
-  - document.data()처럼 data() 함수를 써야지 해당 문서의 값들을 가져올수 있다.
-  - 해당 문서의 id 값은 document.id처럼 개별 요소이기 때문에 필요한 경우에는 이처럼 직접 추가해줘야 한다.
-  - 리액트의 useState를 통한 setXXX를 사용할 때 값이 아닌 함수로 전달할 수 있는데,  
-  이 때 사용되는 변수는 이전에 setXXX를 통해서 설정된 현재의 XXX의 값을 가져올 수 있다.
-
-### 데이터 정렬하기 (order by)
-
-- 오름차순
-{% highlight javascript %}
-dbService.collection("컬렉션명").orderBy("항목명", "asc")
-{% endhighlight %}
-
-- 내림차순
-{% highlight javascript %}
-dbService.collection("컬렉션명").orderBy("항목명", "desc")
-{% endhighlight %}
-
-### 데이터 조건 추가하기 (where)
-
-- 기본 틀
-{% highlight javascript %}
-dbService.collection("컬렉션명").where("","항목명", "값")
-{% endhighlight %}
-- 단순 연산자 : &lt;, &gt; &lt;=, &gt;=, ==, !=
-- 하나라도 만족하는 경우 : in, not-in
-  - 예시) where("", "in", ["a", "b", "c"])
-- 해당하는 값을 포함하는 배열 : array-contains
-  - 예시) where("", "array-contains", "a")
-- 해당하는 값을 하나라도 포함하는 배열 : array-contains-any
-  - 예시) where("", "array-contains-any", ["a", "b", "c"])
-
-### 데이터 실시간 업데이트
-
-- 기본 틀
-{% highlight javascript %}
-dbService.collection("컬렉션명").onSnapshot((snapshot) => {
-    const nweetArray = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setNweets(nweetArray);
-});
-{% endhighlight %}
-- 추가 정보
-  - 재랜더링을 하려면 this.setState()를 써야 한다.
-  - useState를 쓰고 있는 경우에는 값의 변화에 따른 재랜더링이 안 되기 때문에  
-  실시간 변경을 위해서는 onSnapshot()을 사용해야 한다.
+  - attachmentUrl는 글을 작성할 때 같이 업로드한 파일의 업로드 주소다.
+  - storageService.refFromURL(주소)는 참조하고 있는 주소를 통해서 파일의 관리를 할 수 있다.

@@ -1,147 +1,176 @@
 ---
 layout: post
-title:  "Firebase Auth 기능 사용하기"
-date:   2023-12-14 14:48:00 +0900
+title:  "Firebase Database 기능 사용하기 (Firestore Database)"
+date:   2023-12-14 14:58:00 +0900
 categories: React
 ---
 
 ### 준비 과정
 
 1. firebase에 대한 KEY 정보를 담고 있는 js 파일로 이동한다.
-2. 최상단에 import "firebase/auth";를 추가한다.
-  - import할 때 에러가 난다면 "* as"를 지운다. (firebase 8.0.0부터 쓰면 안됨)
-  - 8.0.0 이전 : import * as firebase from 'firebase/app'
-  - 8.0.0 이후 : import firebase from 'firebase/app'
-3. export const authService = firebase.auth();를 작성한다.
+2. 최상단에 import "firebase/firestore";를 추가한다
+3. export const dbService = firebase.firestore();를 추가한다.
 
-### 회원가입 및 로그인 (이메일 + 비밀번호)
+### 기능을 사용하기 위한 공통 전제 조건
 
+- export const dbService = firebase.firestore(); 필요 => firebase 설정 js 파일
+- import { dbService, useEffect } from "XXX"; 필요 => 기능을 사용할 js 파일
 
-- 전제 조건
-  - export const authService = firebase.auth(); 필요 => firebase 설정 js 파일
-  - import { authService } from "XXX"; 필요 => 기능을 사용할 js 파일
-  - 회원가입/로그인 여부 판단하는 변수 존재
+### 데이터 추가 (Insert)
+
+- 기본 틀
+{% highlight javascript %}
+const 함수명 = async (event) => {
+    event.preventDefault();
+    await dbService.collection("컬렉션명").add({
+      항목명1 : 항목명1,
+      항목명2: 항목명2,
+      ...
+    });
+};
+{% endhighlight %}
+
 - 예시
 {% highlight javascript %}
+const [nweet, setNweet] = useState("");
 const onSubmit = async (event) => {
-    //form의 submit 동작 막기
     event.preventDefault();
+    await dbService.collection("jack").add({
+    nweet,
+    createdAt: Date.now(),
+    });
+    setNweet("");
+};
+{% endhighlight %}
 
-    try
-    {
-        let data;
+### 데이터 수정 (Update)
 
-        if (newAccount) {
-            //계정 생성의 경우
-            data = await authService.createUserWithEmailAndPassword(
-            email,
-            password
-            );
-        }
-        else
-        {
-            //로그인의 경우
-            data = await authService.signInWithEmailAndPassword(email, password);
-        }
-        console.log(data);
-    }
-    catch (error)
-    {
-        console.log(error);
+- 기본 틀
+{% highlight javascript %}
+const 함수명 = async (event) => {
+    event.preventDefault();
+    await dbService.doc(`컬렉션명/${해당 문서의 id}`).update({
+        항목: 내용,
+    });
+};
+{% endhighlight %}
+
+- 예시
+{% highlight javascript %}
+const [editing, setEditing] = useState(false);
+const onSubmit = async (event) => {
+    event.preventDefault();
+    await dbService.doc(`jack/${nweetObj.id}`).update({
+    text: newNweet,
+    });
+    setEditing(false);
+};
+{% endhighlight %}
+
+### 데이터 삭제 (Delete)
+
+- 기본 틀
+{% highlight javascript %}
+const 함수명 = async () => {
+      await dbService.doc(`컬렉션명/${해당 문서의 id}`).delete();
+};
+{% endhighlight %}
+
+- 예시
+{% highlight javascript %}
+const onDeleteClick = async () => {
+    const ok = window.confirm("Are you sure you want to delete this nweet?");
+    if (ok) {
+    await dbService.doc(`jack/${nweetObj.id}`).delete();
     }
 };
 {% endhighlight %}
 
-### 로그인한 유저의 정보 가져오기
+### 데이터 가져오기 (Select)
 
-- 전제 조건
-  - export const firebaseInstance = firebase; 필요 => firebase 설정 js 파일
-  - import { authService } from "XXX"; 필요 => 기능을 사용할 js 파일
+- 기본 틀
+{% highlight javascript %}
+const [XXX, setXXX] = useState([]);
+const 함수명 = async (event) => {
+    const 변수명 = await dbService.collection("컬렉션명").get();
+    변수명.forEach((document) => {
+        const nweetObject = {
+        ...document.data(),
+        id: document.id,
+        };
+        setXXX((prev) => [nweetObject, ...prev]);
+    });
+};
+useEffect(() => {
+  getNweets();
+}, []);
+{% endhighlight %}
+
 - 예시
 {% highlight javascript %}
-//전제조건 만족 후
-authService.onAuthStateChanged((user) => {
-    //user에 로그인한 유저의 정보가 들어있다.
-    if (user) {
-      //로그인에 성공한 경우
-    } else {
-      //로그인에 실패한 경우
-    }
+const [nweets, setNweets] = useState([]);
+const getNweets = async () => {
+    const dbNweets = await dbService.collection("jack").get();
+    dbNweets.forEach((document) => {
+        const nweetObject = {
+            ...document.data(),
+            id: document.id,
+        };
+        setNweets((prev) => [nweetObject, ...prev]);
+    });
+};
+useEffect(() => {
+    getNweets();
+}, []);
+{% endhighlight %}
+
+- 추가 정보
+  - dbService.collection("컬렉션명").get();은 단순하게 object를 주기때문에 풀어서 사용해야 한다.
+  - forEach를 돌릴때 마다 setXXX를 해야지 데이터의 개수만큼 정상적으로 데이터를 읽을 수 있다.
+  - document.data()처럼 data() 함수를 써야지 해당 문서의 값들을 가져올수 있다.
+  - 해당 문서의 id 값은 document.id처럼 개별 요소이기 때문에 필요한 경우에는 이처럼 직접 추가해줘야 한다.
+  - 리액트의 useState를 통한 setXXX를 사용할 때 값이 아닌 함수로 전달할 수 있는데,  
+  이 때 사용되는 변수는 이전에 setXXX를 통해서 설정된 현재의 XXX의 값을 가져올 수 있다.
+
+### 데이터 정렬하기 (order by)
+
+- 오름차순
+{% highlight javascript %}
+dbService.collection("컬렉션명").orderBy("항목명", "asc")
+{% endhighlight %}
+
+- 내림차순
+{% highlight javascript %}
+dbService.collection("컬렉션명").orderBy("항목명", "desc")
+{% endhighlight %}
+
+### 데이터 조건 추가하기 (where)
+
+- 기본 틀
+{% highlight javascript %}
+dbService.collection("컬렉션명").where("","항목명", "값")
+{% endhighlight %}
+- 단순 연산자 : &lt;, &gt; &lt;=, &gt;=, ==, !=
+- 하나라도 만족하는 경우 : in, not-in
+  - 예시) where("", "in", ["a", "b", "c"])
+- 해당하는 값을 포함하는 배열 : array-contains
+  - 예시) where("", "array-contains", "a")
+- 해당하는 값을 하나라도 포함하는 배열 : array-contains-any
+  - 예시) where("", "array-contains-any", ["a", "b", "c"])
+
+### 데이터 실시간 업데이트
+
+- 기본 틀
+{% highlight javascript %}
+dbService.collection("컬렉션명").onSnapshot((snapshot) => {
+    const nweetArray = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setNweets(nweetArray);
 });
 {% endhighlight %}
-- 현재 로그인 중인 유저 정보 가져오기 : authService.currentUser;
-- 참고 : https://firebase.google.com/docs/reference/js/firebase.auth
-
-### 로그인한 유저의 정보 업데이트하기
-
-- 전제조건
-  - export const firebaseInstance = firebase; 필요 => firebase 설정 js 파일
-  - import { authService } from "XXX"; 필요 => 기능을 사용할 js 파일
-  - authService.onAuthStateChanged((user) => {} );를 통해서 유저 정보 가져오기
-  - 가져온 유저 정보를 변수에 저장 (예시 : userObj)
-- 예시
-{% highlight javascript %}
-//전제조건 만족 후
-const 함수명 = async (event) => {
-      await userObj.updateProfile(
-        { displayName: newDisplayName }
-      );
-};
-{% endhighlight %}
 - 추가 정보
-  - displayName이 유저의 닉네임을 가리킨다.
-
-### 소셜로그인 - 일반
-
-- 전제 조건
-  - export const firebaseInstance = firebase; 필요 => firebase 설정 js 파일
-  - import { authService, firebaseInstance } from "XXX"; 필요 => 기능을 사용할 js 파일
-- 예시
-{% highlight javascript %}
-const onSocialClick = async (event) => {
-    const { target: { name } } = event;
-    let provider;
-
-    if (name === "google")
-    {
-        provider = new firebaseInstance.auth.GoogleAuthProvider();
-    }
-    else if (name === "github")
-    {
-        provider = new firebaseInstance.auth.GithubAuthProvider();
-    }
-    const data = await authService.signInWithPopup(provider);
-    console.log(data);
-};
-{% endhighlight %}
-
-- 추후에 콘솔의 계정 메뉴(로그인 종류 설정 페이지)에서 승인된 도메인에 소셜 로그인 기능을 추가할 도메인을 추가한다.
-                
--※ 참고 : https://firebase.google.com/docs/reference/js/firebase.auth
-
-### 소셜로그인 - 깃허브
-1. 깃허브 페이지로 가서 로그인을 한다.
-2. Settings 메뉴로 간다.
-3. Developer settings를 클릭한다.
-4. OAuth App을 클릭한다.
-5. Register a new application을 클릭한다.
-6. 앱 이름과 URL을 작성한다.
-  - URL은 firebase의 계정 메뉴에서 깃허브 활성화시 나오는 URL을 입력한다.
-  - 홈페이지 URL은 콜백 URL과 동일하게 쓰되, 콜백 URL의 주소에서 "__/auth/handler"만 제외한다.
-7. Register application을 클릭해서 등록한다.
-8. 깃허브에서 앱을 등록했을 때 나오는 Client ID와 Client secrets를 복사해서  
-firebase의 콘솔의 계정 메뉴의 깃허브 항목에 붙여넣은 뒤 저장한다.
-
-### 로그아웃
-
-- 전제조건
-  - export const authService = firebase.auth();
-  - import { authService } from "XXX"; 필요
-  - import { useHistory } from "react-router-dom";
-- 예시
-{% highlight javascript %}
-const onLogOutClick = () => {
-    authService.signOut();
-    history.push("/");
-};
-{% endhighlight %}
+  - 재랜더링을 하려면 this.setState()를 써야 한다.
+  - useState를 쓰고 있는 경우에는 값의 변화에 따른 재랜더링이 안 되기 때문에  
+  실시간 변경을 위해서는 onSnapshot()을 사용해야 한다.

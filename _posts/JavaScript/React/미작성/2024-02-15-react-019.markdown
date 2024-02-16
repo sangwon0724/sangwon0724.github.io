@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "이벤트 전파"
+date:   2024-02-15 16:01:00 +0900
+categories: React
+published: false
+---
+
+### XXX
+
+https://tcpschool.com/react/react_event_handling
+
+{% highlight react %}
+{% endhighlight %}

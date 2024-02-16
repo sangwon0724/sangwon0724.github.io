@@ -94,3 +94,10 @@ class App extends React.Component {
 
 1. render
 2. componentDidUpdate
+
+<!--
+https://tcpschool.com/react/react_component_element
+https://tcpschool.com/react/react_component_component
+https://tcpschool.com/react/react_component_import
+https://tcpschool.com/react/react_component_export
+-->
