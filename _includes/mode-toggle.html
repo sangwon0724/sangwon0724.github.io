@@ -21,6 +21,8 @@
             this.setLight();
           }
         }
+      } else {
+        this.setDark();
       }
 
       let self = this;
@@ -101,14 +103,14 @@
     if (toggle.hasMode) {
       if (toggle.isSysDarkPrefer) {
         if (toggle.isLightMode) {
-          toggle.clearMode();
+          toggle.setDark();
         } else {
           toggle.setLight();
         }
 
       } else {
         if (toggle.isDarkMode) {
-          toggle.clearMode();
+          toggle.setLight();
         } else {
           toggle.setDark();
         }
