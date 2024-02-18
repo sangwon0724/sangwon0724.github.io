@@ -468,10 +468,166 @@ from
 
 ### 경로 표현식
 
-{% highlight java %}
+#### 경로 표현식이란?
+
+- .(점) 연산자를 통해 객체 그래프를 탐색하는 것
+{% highlight sql %}
+select
+    m.username /* 상태 필드 */
+from
+    Member m 
+join
+    m.team t /* 단일 값 연관 필드 */
+join
+    m.orders o /* 컬렉션 값 연관 필드 */
+where t.name = '팀A'
 {% endhighlight %}
 
+#### 관련 용어
+
+- 상태 필드 (state field)
+    - 단순히 값을 저장하기 위한 필드
+    - 예시 : m.username
+- 연관 필드 (association field)
+    - 연관관계를 위한 필드
+        - 단일 값 연관 필드
+            - 대상이 엔티티인 경우에 해당한다.
+                - @ManyToOne, @OneToOne
+                - 예시 : m.team
+        - 컬렉션 값 연관 필드
+            - 대상이 컬렉션인 경우에 해당한다.
+                - @OneToMany, @ManyToMany
+                - 예시 : m.orders
+
+#### 경로 표현식의 특징
+
+- 상태 필드 (state field)
+    - 이름이나 나이처럼 특정 값을 나타내는 상태 필드는 더 이상 경로 탐색을 할 수 없다.
+- 단일 값 연관 경로
+    - 단일 값 연관 필드가 조회 대상에 포함될 경우에 묵시적 내부 조인이 발생한다.
+        - inner join을 의미한다.
+    - 추가 탐색이 가능하다.
+- 컬렉션 값 연관 경로
+    - 컬렉션 값 연관 필드가 조회 대상에 포함될 경우에 묵시적 내부 조인이 발생한다.
+    - 컬렉션 자체를 가리키는 것이기 때문에 추가 탐색이 불가능하다.
+    - FROM 절에서 명시적 조인을 통해 별칭을 얻으면 별칭을 통해 탐색할 수 있다.
+        - 예시 : `select m.username from team t join t.members m`
+
+#### 명시직 조인
+
+- join 키워드 직접 사용하여 조인한 경우를 의미한다.
+    - 예시 : `select m from Member m join m.team t`
+
+#### 묵시적 조인
+
+- 경로 표현식에 의해 묵시적으로 조인이 발생하는 경우를 의미한다.
+    - 내부 조인만 가능
+    - 예시 : `select m.team from Member m`
+
+#### 경로 표현식 - 예제
+
+- `select o.member.team from Order o` => 성공
+- `select t.members from Team` => 성공
+- `select t.members.username from Team t` => 실패
+- `select m.username from Team t join t.members m` => 성공
+
+#### 경로 탐색을 사용한 묵시적 조인 시 주의사항
+
+- <b>경로 탐색에 의한 묵시적 조인 시은 항상 내부 조인이다.</b>
+- 컬렉션 값 연관 필드 경로 탐색의 끝이다.
+    - 만약 추가 탐색을 진해앟려면 명시적 조인을 통해 별칭을 얻어야 한다.
+- 경로 탐색은 주로 SELECT, WHERE 절에서 사용하지만 묵시적 조인으로 인해 FROM (JOIN) 절에 영향을 준다.
+
+#### TIP
+
+- <b>가급적 묵시적 조인 대신에 명시적 조인을 사용해야 한다.</b>
+- 조인은 SQL 튜닝에서 매우 중요한 요소다.
+- 묵시적 조인은 조인이 일어나는 상황을 한눈에 파악하기 어렵다.
+    - 추후 유지보수에 매우 곤란함을 제공하기도 한다.
+
 ### 패치 조인
+
+- <b style="color: red;">실무에서 매우 중요한 기능이다.</b>
+- SQL 조인 종류에 포함되지 않는다.
+- JPQL에서 성능 최적화를 위해 제공하는 기능
+- 연관된 엔티티나 컬렉션을 SQL 한 번에 함께 조회하는 기능
+    - 일반 조인 실행시 연관된 엔티티를 함께 조회하지 않는다.
+- `join fetch` 명령어를 통해 사용한다.
+    - `[ LEFT [OUTER] | INNER ] JOIN FETCH 조인경로`
+- JPQL은 결과를 반환할 때 연관관계를 고려하지 않는다.
+    - SELECT 절에 지정한 엔티티만 조회한다.
+- 페치 조인을 사용할 때만 연관된 엔티티도 함께 조회한다.
+    - 즉시 로딩으로 동작한다.
+- 페치 조인은 객체 그래프를 SQL 한번에 조회하는 개념이다.
+- N + 1 문제를 해결할 때 많이 사용된다.
+    - N + 1이란 최초 1번 엔티티 A의 목록을 조회하고 A의 목록에 대해 반복문을 돌리면서  
+    해당 A에 관련된 엔티티 B를 조회할 때 해당하는 B가 영속성 컨텍스트에 존재하지 않아서  
+    SQL을 새로 실행하는 경우가 최대 N번 (A의 개수를 의미) 발생 할 수 있다는 것을 의미한다.
+- 모든 것을 페치 조인으로 해결할 수 는 없다.
+- 페치 조인은 객체 그래프를 유지할 때 사용하면 효과적이다.
+- 여러 테이블을 조인해서 엔티티가 가진 모양이 아닌 전혀 다른 결과를 내야 한다면,   
+페치 조인보다는 일반 조인으로 필요한 데이터들만 조회해서 DTO로 반환하는 것이 효과적이다.
+
+#### 엔티티 페치 조인
+
+- 특정 엔티티를 조회할 때 연관된 엔티티도 함께 조회한다.
+- 페치 조인으로 함께 조회하기 때문에 즉시 로딩이 된다.
+- 예시
+    - JPQL
+        - `select m from Member m join fetch m.team`
+    - SQL
+        - `SELECT M.*, T.* FROM MEMBER M INNER JOIN TEAM T ON M.TEAM_ID=T.ID`
+        - 회원과 팀에 대해서 모두 조회한다.
+
+#### 컬렉션 페치 조인
+
+- 일대다 관계, 컬렉션 페치 조인
+- 예시
+    - JPQL
+        - `select t from Team t join fetch t.members where t.name = 'Team A'`
+    - SQL
+        - `SELECT T.*, M.* FROM TEAM T INNER JOIN MEMBER M ON T.ID=M.TEAM_ID WHERE T.NAME = 'Team A'`
+
+#### 페치 조인과 DISTINCT
+
+- SQL의 DISTINCT
+    - 중복된 결과를 제거하는 명령
+    - SQL에서는 DISTINCT를 추가해도 데이터가 조금이라도 다르면 중복이 제거되지 않는다.
+- JPQL의 DISTINCT
+    - SQL에 DISTINCT를 추가한다.
+    - 애플리케이션에서 엔티티 중복을 제거한다.
+        - 같은 식별자를 가진 엔티티를 제거한다.
+    - 하이버네이트6 변경 사항
+        - DISTINCT 명령어를 사용하지 않아도 애플리케이션에서 자동으로 중복 제거를 시도한다.
+- 예시
+    - `select distinct t from Team t join fetch t.members where t.name = 'Team A'`
+
+#### 페치 조인의 특징과 한계
+
+- 페치 조인 대상에는 별칭을 줄 수 없다. 
+    - 하이버네이트는 가능하다.
+    - 가급적 사용하지 않아야 한다.
+    - 관례적으로 별칭을 주지 않는다.
+- 둘 이상의 컬렉션은 페치 조인 할 수 없다.
+    - 한 번의 일대다도 조회되는 데이터의 수가 급증할 수 있는데 그 이상은 더욱 급증할 수 있다.
+- 컬렉션을 페치 조인하면 페이징 API(setFirstResult, setMaxResults)를 사용할 수 없다. 
+    - 일대일, 다대일 같은 단일 값 연관 필드들은 페치 조인해도 페이징이 가능하다.
+    - 방향을 뒤집어서 해결하는 방법도 있다.
+        - 기존
+            - `select t from Team t join fetch t.members m`
+        - 변경
+            - `select m from Member m join fetch m.team t`
+    - @BatchSize를 활용하기도 한다.
+    - 하이버네이트는 경고 로그를 남기고 메모리에서 페이징을 한다.
+        - 매우 위험한 방법이다.
+- 연관된 엔티티들을 SQL 한 번으로 조회하여 성능 최적화에 도움을 준다.
+- 엔티티에 직접 적용하는 글로벌 로딩 전략보다 우선권을 갖는다.
+    - 글로벌 로딩 전략은 `@OneToMany(fetch = FetchType.LAZY)`같은 경우를 의미한다.
+- 실무에서 글로벌 로딩 전략은 모두 지연 로딩이다.
+- 최적화가 필요한 곳은 페치 조인 적용한다.
+    - 예시 : N + 1
+
+#### 페치 조인 - 정리
 
 {% highlight java %}
 {% endhighlight %}
