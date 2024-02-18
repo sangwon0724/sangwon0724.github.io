@@ -50,6 +50,8 @@ categories: React&nbsp;Hooks
   };
   {% endhighlight %}
 
+<!--  참고 : https://dudghsx.tistory.com/18 -->
+
 ### useInput
 
 - useInput : 값 변경 + 유효성 검사

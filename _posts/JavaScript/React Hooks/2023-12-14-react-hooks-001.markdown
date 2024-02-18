@@ -24,3 +24,67 @@ categories: React&nbsp;Hooks
 
 - Visual Studio Code 대신 코드를 테스트 할 수 있다.
 - 주소 : https://codesandbox.io/
+
+<!--
+
+[정리할 목록]
+
+useState
+useInput
+useTabs
+useEffect
+useBeforeLeave
+useRef
+userFullscreen
+useTitle
+useClick
+useFadeIn
+useNetwork
+useScroll
+useConfirm
+usePreventLeave
+useNotification
+useMemo
+useId
+useMemo
+useCallback
+useReducer
+useContext
+
+forwardRef
+CustomHooks
+
+https://velog.io/@joohyeson/React-Hooks-%EC%A2%85%EB%A5%98
+useReducer (복잡한 컴포넌트들의 state를 관리 -분리)
+useCallback (특정 함수 재사용)
+useMemo (연산한 값 재사용)
+useRef (DOM선택, 컴포넌트 안에서 조회/수정할 수 있는 변수 관리)
+useImperativeHandle
+useLayoutEffect
+useDebugValue
+
+https://kyung-a.tistory.com/38
+useTransition
+useDeferreValue
+useInsertionEffect
+
+https://ko.legacy.reactjs.org/docs/hooks-reference.html
+useState
+useEffect
+useContext
+useReducer
+useCallback
+useMemo
+useRef
+useImperativeHandle
+useLayoutEffect
+useDebugValue
+useDeferredValue
+useTransition
+useId
+Library Hooks
+useSyncExternalStore
+useInsertionEffect
+
+
+-->
