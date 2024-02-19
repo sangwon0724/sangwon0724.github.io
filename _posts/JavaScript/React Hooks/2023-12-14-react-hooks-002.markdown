@@ -50,7 +50,7 @@ categories: React&nbsp;Hooks
   };
   {% endhighlight %}
 
-<!--  참고 : https://dudghsx.tistory.com/18 -->
+<!--  참고 : https://dudghsx.tistory.com/18, https://tcpschool.com/react/react_data_state -->
 
 ### useInput
 

@@ -1,0 +1,168 @@
+---
+layout: post
+title:  "컴포넌트 스타일링"
+date:   2024-02-19 21:22:00 +0900
+categories: React
+published: false
+---
+
+### React 컴포넌트 스타일링
+
+- React 공식 문서에서는 스타일링에 관한 명확한 가이드는 제공하고 있지 않는다.
+- 워낙 다양한 스타일링 방식들이 개발되어 사용되고 있기 때문에 특정 방식만으로 한정하여 권장하는 것은 의미가 없다.
+- React에서는 다양한 스타일링 방식 중에서 개발 환경이나 개발자의 기호에 따라 어떠한 스타일링 방식을 사용하면 된다.
+- React에서 자주 사용되는 스타일링 방식
+    - CSS 스타일링
+    - Sass
+    - CSS Module
+    - styled-components
+
+### CSS 스타일링
+
+- 전통적인 CSS를 사용하는 방법이다.
+- 종류  
+    - 인라인 스타일을 사용하는 방법
+    - 별도의 .css 파일을 사용하는 방법
+
+#### 인라인 스타일
+
+##### 일반적인 경우
+
+{% highlight html %}
+<h1 style="background-color: blue;">스타일 적용하기 !!!</h1>
+{% endhighlight %}
+
+##### 리액트의 경우
+
+- 속성명을 카멜 케이스로 작성한다.
+- 쌍따옴표 대신에 중괄호를 쓰고, 그 안에 객체를 생성하고, 그 안에 스타일을 명시한다.
+
+{% highlight react %}
+<h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
+{% endhighlight %}
+
+#### .css 파일 사용하기
+
+{% highlight css %}
+.h1 {
+    background-color: blue;
+}
+{% endhighlight %}
+
+##### 일반적인 경우
+
+{% highlight html %}
+<h1 class="h1">스타일 적용하기 !!!</h1>
+{% endhighlight %}
+
+##### 리액트의 경우
+
+{% highlight html %}
+<h1 className="h1">스타일 적용하기 !!!</h1>
+{% endhighlight %}
+
+### Sass (Syntactically Awesome Stylesheet)
+
+- 기존 CSS의 단점을 보완하기 위해 만들어진 스크립팅 언어 겸 CSS 전처리기
+- 기존의 CSS 문법은 단순 반복되는 코드가 많았기에 프로젝트의 크기가 커질수록 문제가 많아졌다.
+    - 작성되는 CSS 코드의 양도 많아지고 복잡해짐에 따라 유지 보수가 힘들어졌다.
+    - 다른 프로그래밍 언어에서는 기본적으로 제공되는 기본적인 연산 기능이나 함수 등을 지원하지 않았다.
+- Sass는 기존의 CSS 문법을 확장하여 반복되는 중첩 구문을 간결하게 만듦으로써 코드의 가독성을 높였다.
+    - 변수나 함수, 반복문, 조건문 등을 사용할 수 있도록 지원하고 있다.
+    - Mixin 기능을 제공함으로써 코드의 재사용성을 높일 수 있도록 개발되었다.
+- .sass와 .scss 확장자를 지원한다.
+    - 기존 css 문법을 확장해서 만든 언어이기 때문에 기존 .css 파일의 확장자를 변경해도 잘 동작한다.
+- 웹 브라우저는 스크립팅 언어인 Sass 파일을 인식할 수 없다.
+    - 별도의 컴파일러를 통해 웹 브라우저가 인식할 수 있는 일반적인 CSS 코드로 변환되야 한다.
+- Sass는 문법적으로 엄청나게 멋진 스타일시트의 줄임말이다.
+- Sas는 전처리를 위한 별도의 컴파일러가 필요하고, 컴파일하는데 추가적인 시간이 소요된다는 단점을 가지고 있다.
+    - Sass를 사용하는 것이 CSS를 사용하는 것보다 무조건 더 좋은 건 아니다.
+    - 프로젝트의 상황 및 특성을 고려하여 CSS와 Sass 중 적합한 스타일링 방식을 선택해서 사용해야 한다.
+
+>Mixin이란?
+>>- 함수와 비슷한 동작을 하는 기능
+>>- CSS 스타일 시트에서 반복적으로 재사용할 수 있는 CSS 스타일 그룹을 선언하는 문법
+
+#### Sass와 SCSS
+
+- Sass가 .sass와 .scss를 지원하긴 하지만 둘은 엄연히 사용법이 다르다.
+    - sass는 중첩을 들여쓰기를 통해 나타낸다.
+    - scss는 중첩을 중괄호를 통해 나타낸다.
+- .scss는 정확히는 Sass가 아닌 SCSS의 확장자다.
+
+#### SCSS (Sassy CSS)
+
+- Sass한 듯한 CSS 줄임말이다.
+- Sass보다 늦게 개발되었다.
+- Sass보다 좀 더 넓은 범용성과 CSS와의 완벽한 호환성을 가지고 있다.
+    - 이런 장점떄문에 현재 널리 사용되고 있다.
+
+#### CSS와 Saas와 SCSS의 비교
+
+##### CSS
+
+{% highlight css %}
+nav ul {
+    margin: 0;
+    list-style: none;
+}
+nav li {
+    display: inline-block;
+}
+nav a {
+    display: block;
+    padding: 6px 12px;
+}
+{% endhighlight %}
+
+##### Sass
+
+{% highlight sass %}
+nav
+    ul
+        margin: 0
+        list-style: none
+
+    li
+        display: inline-block
+
+    a
+        display: block
+        padding: 6px 12px
+{% endhighlight %}
+
+##### SCSS
+
+{% highlight scss %}
+nav {
+    ul {
+        margin: 0;
+        list-style: none;
+    }
+
+    li {
+        display: inline-block;
+    }
+
+    a {
+        display: block;
+        padding: 6px 12px;
+    }
+}
+{% endhighlight %}
+
+#### React에서 Sass 사용하기
+
+- React에서 sass를 사용하기 위해서는 node-sass 라이브러리를 설치해야 한다.
+- npm인 경우
+    - `npm install node-sass`
+- yarn인 경우
+    - `yarn add node-sass`
+
+### CSS Module
+
+https://tcpschool.com/react/react_styling_cssmodule
+
+### styled-components
+
+https://tcpschool.com/react/react_styling_styledcomponents
