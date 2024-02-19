@@ -3,7 +3,6 @@ layout: post
 title:  "컴포넌트 스타일링"
 date:   2024-02-19 21:22:00 +0900
 categories: React
-published: false
 ---
 
 ### React 컴포넌트 스타일링
@@ -161,8 +160,304 @@ nav {
 
 ### CSS Module
 
-https://tcpschool.com/react/react_styling_cssmodule
+- CSS 클래스를 불러와 사용할 때 클래스명을 고유한 이름으로 자동 변환해줌으로써  
+CSS 클래스명이 서로 중첩되는 현상을 미연에 방지해 주는 기술
+- React 컴포넌트에서 해당 CSS 파일을 불러올 때 선언된 CSS 클래스명은 모두 고유한 이름으로 자동 변환된다.
+- 고유한 클래스명은 파일 경로, 파일 이름, 원래 작성한 클래스명, 해쉬값 등을 사용하여 자동 생성된다.
+- CSS Module을 사용하면 CSS 파일마다 고유한 네임스페이스를 자동으로 부여해 주기 때문에  
+각각의 React 컴포넌트는 완전히 분리된 스타일을 보장받게 된다.
+- 장점
+    - 동일한 클래스명의 재정의로 인한 스타일의 전역 오염을 미연에 방지할 수 있다.
+    - 자동으로 고유한 클래스명으로 변환해주기 때문에 클래스명을 짓기 위한 개발자의 고민을 줄여줄 수 있다.
+    - 컴포넌트 단위로 스타일을 관리할 수 있어서 스타일의 유지보수가 편해진다.
+- 단점
+    - 모듈마다 별도의 CSS 파일을 작성해야 하기 때문에 별도로 많은 CSS 파일을 만들어 관리해야 한다.
+    - 클래스를 동적으로 추가할 경우 최종 렌더링된 결과물에서 자동 변환된 클래스명이  
+    코드의 가독성을 어지럽히는 경우가 종종 발생한다.
+
+>외부 CSS 파일을 참조하는 방식은 React 애플리케이션의 규모가 커질수록  
+>여러 컴포넌트에서 사용된 CSS 클래스명이 서로 중복될 가능성이 높아진다.  
+>만약 서로 다른 두 개의 CSS 파일에 동일한 이름의 CSS 클래스가 정의되어 있다면,  
+>해당 클래스가 적용된 React 엘리먼트는 이 두 스타일이 모두 한꺼번에 적용된다.
+>이와 같은 문제점을 해결하기 위해 CSS Module을 사용한다.
+
+#### 적용 방법
+
+- 특정 모듈만을 위한 CSS 파일 생성
+    - 파일명 : `[모듈명].module.css`
+- 클래스 참조 시키기
+    - 예시
+        - `import styles from "파일 경로";`
+        - `<div className="{styles.[클래스명]}">...</div>`
+
+#### 예시
+
+{% highlight css %}
+/* MemberInfo.module.css */
+.sample1 {
+    background-color: blueviolet;
+}
+
+.sample2 {
+    color: black;
+}
+{% endhighlight %}
+
+{% highlight react %}
+/* MemberInfo.jsx */
+
+import style from './MemberInfo.module.css'
+
+const MemberInfo = (props) => {
+  return (
+      <>
+        <h1 className={`${style.sample1} ${style.sample2}`}>{props.children}</h1>
+        <h1 className={[style.sample1, style.sample2].join(" ")}>자식 엘리먼트의 갯수는 {props.children.length ?? 0}개입니다.</h1>
+        <h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
+      </>
+    );
+};
+
+MemberInfo.defaultProps = {
+  username: "홍길동",
+  age: "28"
+};
+
+export default MemberInfo;
+{% endhighlight %}
+
+#### classnames
+
+- CSS Module을 사용하는 경우에 가독성 관련 문제를 해결하기 위해 사용하는 라이브러리
+- CSS 클래스를 동적으로 설정하는 조건부 스타일링 작업에 매우 유용한 라이브러리
+- CSS Module에서 여러 개의 클래스를 동시에 적용할 때 매우 편리하게 사용할 수 있다.
+- 불리언 값인 false로 평가되는 값들은 모두 무시된다.
+- 일반적으로 사용하면 별칭도 같이 써 줘야하지만, bind()도 같이 쓰면 별칭도 생략할 수 있다.
+- 설치 방법
+    - npm
+        - `npm install classnames`
+    - yarn
+        - `yarn add classnames`
+- 기본 사용 예시
+    - classNames('foo', 'bar'); => 'foo bar'
+    - classNames('foo', { bar: true }); => 'foo bar'
+    - classNames({ 'foo-bar': true }); => 'foo-bar'
+    - classNames({ 'foo-bar': false }); => ''
+    - classNames({ foo: true }, { bar: true }); => 'foo bar'
+    - classNames({ foo: true, bar: true }); => 'foo bar'
+    - classNames(null, false, 'foo', undefined, 0, 1, { bar: null }, ''); => 'foo 1'
+
+{% highlight react %}
+//import classNames from 'classnames';
+import classNames from 'classnames/bind';
+import style from './MemberInfo.module.css'
+
+const MemberInfo = (props) => {
+  const cx = classNames.bind(style);
+  let isActive = true;
+
+  return (
+      <>
+        <h1 className={classNames(style.sample1, style.sample2)}>{props.children}</h1>
+        <h1 className={cx('sample1', { 'sample2': isActive })}>{props.children}</h1>
+        <h1>자식 엘리먼트의 갯수는 {props.children.length ?? 0}개입니다.</h1>
+        <h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
+      </>
+    );
+};
+
+MemberInfo.defaultProps = {
+  username: "홍길동",
+  age: "28"
+};
+
+export default MemberInfo;
+{% endhighlight %}
+
 
 ### styled-components
+
+#### CSS-in-JS
+
+- 자바스크립트 코드 안에 CSS 코드를 함께 작성하는 방식
+
+#### vjeux가 설명한 기존의 CSS 스타일링 방식의 문제점
+
+- Global namaspace
+    - CSS는 전역 스코프에 모든 스타일을 작성한다.
+    - 이로 인해 CSS 클래스명에 대한 별도의 명명 규칙이 필요하다.
+- Dependencies
+    - 하나의 CSS 스타일이 여러 HTML 요소에 적용될 수 있다.
+    - 반대로 하나의 HTML 요소에 여러 CSS 스타일이 적용될 수도 있다.
+    - 이 모든 관계는 명시적이지 않기 때문에 개발자가 이 모든 의존 관계를 기억해야한다.
+- Dead Code Elimination
+    - CSS 코드의 의존 관계는 명시적이지 않다.
+        - 현재 사용되고 있지 않은 코드의 파악이 쉽지 않다.
+        -  기능 변경에 따른 유지보수가 힘들다.
+- Sharing Constants
+    - JS와 CSS 파일이 서로 분리되어 있기 때문에 JS의 상태 값을 CSS에 공유하기 어렵습니다.
+- Non-deterministic Resolution
+    - 로드 순서에 따라 CSS의 우선 순위가 변경된다.
+    - CSS의 로드 순서까지 관리해야만 합니다.
+
+#### vjeux가 설명한 CSS-in-JS를 통한 기존 문제점에 대한 보완 사항
+
+- Global namaspace
+    - CSS 스타일이 지역 스코프로 한정되므로, 별도의 명명 규칙이 필요하지 않다.
+- Dependencies
+    - CSS가 컴포넌트 레벨에서 모듈화되므로, CSS 간의 의존 관계를 고려할 필요가 없다.
+- Dead Code Elimination
+    - CSS가 컴포넌트와 같은 파일에 존재하므로, 사용되지 않는 코드를 간단히 파악할 수 있다.
+- Sharing Constants
+    - JS 코드와 CSS 코드가 한 파일에 존재하므로, 상태나 함수를 서로 쉽게 공유할 수 있다.
+- Non-deterministic Resolution
+    - HTML과 CSS를 강하게 결합시킴으로써, 현재 렌더링된 HTML에 적용된 CSS가 무엇인지 언제나 알 수 있다.
+
+#### CSS-in-JS의 단점
+
+- CSS-in-JS는 컴포넌트가 렌더링될 때 자바스크립트 코드의 해석 과정이 필요하다.
+    - 추가적인 CPU의 런타임 오버헤드(runtime overhead)가 발생한다.
+- CSS-in-JS 방식으로 구현된 React 웹 앱을 방문하는 사용자들은 해당 라이브러리를 다운로드해야 한다.
+    - 번들의 크기가 늘어나고 렌더링 속도가 저하된다.
+- CSS-in-JS의 각 속성들이 React DevTool에 포함된다.
+    - 디버깅할 때 DevTool을 통한 코드의 가독성이 저하된다.
+
+#### CSS-in-JS 라이브러리
+
+- styled-components
+- Emotion
+- styled-jsx
+- vanilla-extract
+
+#### styled-components
+
+- 설치 방법
+    - npm
+        - `npm install styled-components`
+    - yarn
+        - `yarn add styled-components`
+
+##### 기본 사용법
+
+- css가 적용된 새로운 컴포넌트를 만드는 방식이다.
+- `styled.[태그명]``CSS 스타일``;`
+    - 태그명에는 html 태그명을 명시한다.
+- 예시
+
+{% highlight react %}
+import styled, { css } from "styled-components";
+
+const Button1 = styled.button`
+  padding: 6px 12px;
+  margin: 10px;
+  border: 2px solid orange;
+  color: orange;
+  font-size: 1rem;
+`;
+
+const Sample = (props) => {
+  return (
+      <>
+        <Button1>버튼</Button1>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
+
+##### 기존 컴포넌트 상속 받기
+
+- 기존에 생성한 스타일 컴포넌트를 상속받아서 추가로 스타일을 작성하는 방법이다.
+- `styled.[태그명]`CSS 스타일`;` 
+- 예시
+{% highlight react %}
+import styled, { css } from "styled-components";
+
+const Button1 = styled.button`
+  padding: 6px 12px;
+  margin: 10px;
+  border: 2px solid orange;
+  color: orange;
+  font-size: 1rem;
+`;
+
+const Button2 = styled(Button1)`
+  border: 4px solid green;
+  color: green;
+`;
+
+const Sample = (props) => {
+  return (
+      <>
+        <Button1>버튼</Button1>
+        <Button2>버튼</Button2>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
+
+##### Tagged 템플릿 리터럴
+
+- 컴포넌트를 통해 넘어온 props에 따라 서로 다른 스타일을 적용하는 방법
+- 예시
+{% highlight react %}
+import styled, { css } from "styled-components";
+
+const Button3 = styled.button`
+  padding: 6px 12px;
+  margin: 10px;
+  border: 2px solid ${(props) => props.color};
+  color: ${(props) => props.color};
+  font-size: 1rem;
+`;
+
+const Sample = (props) => {
+  return (
+      <>
+        <Button3 color="red">버튼</Button3>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
+
+##### css prop를 활용한 조건부 스타일링
+
+- 특정 조건의 만족 여부에 따라서 추가 스타일을 지정하는 방법
+- props의 값을 생략하면 true라고 간주한다.
+- 예시
+{% highlight react %}
+import styled, { css } from "styled-components";
+
+const Button4 = styled.button`
+  padding: 6px 12px;
+  margin: 10px;
+  border: 2px solid ${(props) => props.color};
+  color: ${(props) => props.color};
+  font-size: 1rem;
+
+  ${(props) =>
+    props.bold &&
+    css`
+      color: ${(props) => props.color};
+      font-weight: 600;
+      border: 4px solid ${(props) => props.color};
+    `}
+`;
+
+const Sample = (props) => {
+  return (
+      <>
+        <Button4 color="orange" bold>버튼</Button4>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
 
 https://tcpschool.com/react/react_styling_styledcomponents
