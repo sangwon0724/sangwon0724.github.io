@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "이벤트 전파"
-date:   2024-02-15 16:01:00 +0900
+date:   2024-02-20 00:29:00 +0900
 categories: React
 published: false
 ---

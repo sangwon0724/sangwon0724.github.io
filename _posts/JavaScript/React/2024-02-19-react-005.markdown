@@ -459,5 +459,3 @@ const Sample = (props) => {
 
 export default Sample;
 {% endhighlight %}
-
-https://tcpschool.com/react/react_styling_styledcomponents
