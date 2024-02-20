@@ -1,8 +1,9 @@
 ---
 layout: post
 title:  "useState"
-date:   2024-12-14 09:57:00 +0900
+date:   2024-02-20 18:52:00 +0900
 categories: React&nbsp;Hooks
+tags: [useState, useInput, useTabs]
 ---
 
 ### useState
@@ -106,6 +107,172 @@ const Sample = () => {
       <h1>{count}</h1>
       <button onClick={() => fun1()}>비동기적으로 동작</button>
       <button onClick={() => fun2()}>동기적으로 동작</button>
+    </>
+  );
+};
+
+export default Sample;
+{% endhighlight %}
+
+### useInput (useState 활용)
+
+- useState를 활용하여 유효성 검사를 할 때 많이 사용한다.
+
+#### 초기값 설정하기
+
+- 단순하게 초기값을 설정한다.
+
+{% highlight react %}
+import { useState } from "react";
+
+const useInput = (initialValue) => {
+  const [value, setValue] = useState(initialValue);
+  return { value };
+}
+
+const Sample = () => {
+  const birthYear = useInput(2024);
+
+  return (
+    <>
+      <h1>useInput 연습하기</h1>
+      <input placeholder="몇 년도에 태어나셨나요?" value={birthYear.value} />
+    </>
+  );
+};
+
+export default Sample;
+{% endhighlight %}
+
+##### 초기값 설정 시의 성능 변경점
+
+- useState의 초기값을 함수로 설정해야 하는 경우가 있다.
+    - 데이터베이스에서 데이터를 조회하는 경우
+    - 처리해야하는 데이터의 양이 많은 경우
+- 초기값을 함수로 주게 되면 렌더링이 될 때마다 useState가 다시 호출되기 때문에 초기값을 반환하는 함수도 늘 새로 실행된다.
+- 이를 막기 위해서는 초기값을 반환하는 함수를 콜백으로 설정하면 된다.
+    - 좋은 예시
+        - `const [value, setValue] = useState(() => 함수명([파라미터]));`
+    - 나쁜 예시
+        - `const [value, setValue] = useState(함수명([파라미터]));`
+
+#### 값 변경하기
+
+- 값을 변경하는 기능을 추가한다.
+
+{% highlight react %}
+import { useState } from "react";
+
+const useInput = (initialValue) => {
+  const [value, setValue] = useState(initialValue);
+  const handleInputValue = (event) => {
+    setValue(event.target.value);
+  }
+
+  return { value, handleInputValue};
+}
+
+const Sample = () => {
+  const birthYear = useInput(2024);
+
+  return (
+    <>
+      <h1>useInput 연습하기</h1>
+      <input placeholder="몇 년도에 태어나셨나요?" value={birthYear.value} onChange={birthYear.handleInputValue}/>
+    </>
+  );
+};
+
+export default Sample;
+{% endhighlight %}
+
+#### 유효성 검사 기능 추가하기
+
+- 유효성 검사를 통과했을 때만 값을 변경할 수 있는 기능을 추가한다.
+
+{% highlight react %}
+import { useState } from "react";
+
+//숫자인지 확인
+const isNumber = (value) => {
+  return !isNaN(value)
+};
+
+const useInput = (initialValue, validator) => {
+  const [value, setValue] = useState(() => initialValue);
+  const handleInputValue = (event) => {
+    const newValue = event.target.value;
+    let isValid = false; //유효성 검증 통과 여부
+    if (typeof validator === 'function') {
+      isValid = validator(newValue);
+    }
+    if(isValid){
+      setValue(newValue);
+    } else {
+      //후속 조치
+      console.log("유효성 검사 통과 안 됨");
+    }
+  }
+
+  return { value, handleInputValue};
+}
+
+const Sample = () => {
+  const birthYear = useInput(2024, isNumber);
+
+  return (
+    <>
+      <h1>useInput 연습하기</h1>
+      <input placeholder="몇 년도에 태어나셨나요?" value={birthYear.value} onChange={birthYear.handleInputValue} />
+    </>
+  );
+};
+
+export default Sample;
+{% endhighlight %}
+
+ ### useTabs (useState 활용)
+
+- 값의 전환을 쉽게 사용하기 위한 기능
+- 화면 전환 시에 유용하다.
+
+{% highlight react %}
+import { useState } from "react";
+
+const items = [
+  {
+    tabName: "첫번째 버튼",
+    content: "첫번째 내용"
+  },
+  {
+    tabName: "두번째 버튼",
+    content: "두번째 내용"
+  },
+  {
+    tabName: "세번째 버튼",
+    content: "세번째 내용"
+  }
+];
+
+const useTabs = (initialTab, allTabs) => {
+  if(!allTabs || !Array.isArray(allTabs)){
+      return; 
+  }
+  const [currentIndex, setCurrentIndex] = useState(() => initialTab);
+  return {
+      currentItem : allTabs[currentIndex],
+      changeItem : setCurrentIndex
+  };
+};
+
+const Sample = () => {
+  const {currentItem, changeItem} = useTabs(0, items);
+
+  return (
+    <>
+      <h1>useTabs 연습하기</h1>
+      {items.map((item, index) => <button key={index} onClick={() => changeItem(index)}>{item.tabName}</button>)}
+      <div>{currentItem.content}</div>
     </>
   );
 };

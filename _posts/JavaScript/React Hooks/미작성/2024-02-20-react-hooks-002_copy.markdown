@@ -6,52 +6,6 @@ categories: React&nbsp;Hooks
 published: false
 ---
 
-### useState
-
-- useState : 초기값 설정 + setter 추가
-- 사용 방법
-1. 기존의 import React from "react";에서 import React, {useState} from "react";로 변경한다.
-2. const [val, setVal] = useState("원하는 값");을 선언한다.
-3. 만약 함수를 선언해서 그 안에서 값을 변경한다면 setVal(val + "XXX");처럼 하면 된다.
-- 특징
-  - useState는 배열을 반환한다.
-  - val와 setVal은 그 어떤 이름을 써도 상관이 없긴 하지만  
-  본인의 편의나 팀간의 협력을 위해서라도 val와 setVal과 같이 쓰는 것이 좋다.
-  - 만약 setVal은 사용하지 않고 val만 사용하고 싶다면 const [val] = useState("원하는 값")[0];처럼 사용하면 된다.
-  - useState를 사용하게 된다면 this를 사용하지 않아도 된다.
-  - 리액트의 useState를 통한 setXXX를 사용할 때 값이 아닌 함수로 전달할 수 있는데,  
-  이 때 사용되는 변수는 이전에 setXXX를 통해서 설정된 현재의 XXX의 값을 가져올 수 있다.
-  {% highlight javascript %}
-  //코드를 단축시키지 않은 경우
-  let temp=[];
-  const getNweets = async () => {
-      const dbNweets = await dbService.collection("jack").get();
-      dbNweets.forEach((document) => {
-          const nweetObject = {
-              ...document.data(),
-              id: document.id,
-          };
-          temp.push(nweetObject);
-      });
-      setNweets(temp);
-  };
-  {% endhighlight %}  
-
-  {% highlight javascript %}
-  //코드를 단축시킨 경우
-  const getNweets = async () => {
-      const dbNweets = await dbService.collection("jack").get();
-      dbNweets.forEach((document) => {
-          const nweetObject = {
-              ...document.data(),
-              id: document.id,
-          };
-          setNweets((prev) => [nweetObject, ...prev]);
-      });
-  };
-  {% endhighlight %}
-
-<!--  참고 : https://dudghsx.tistory.com/18, https://tcpschool.com/react/react_data_state -->
 
 ### useInput
 
