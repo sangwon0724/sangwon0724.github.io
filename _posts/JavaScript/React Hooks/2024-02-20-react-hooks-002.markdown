@@ -1,14 +1,43 @@
 ---
 layout: post
-title:  "State Hooks"
-date:   2023-12-14 09:57:00 +0900
+title:  "useState"
+date:   2024-12-14 09:57:00 +0900
 categories: React&nbsp;Hooks
 ---
 
 ### useState
 
-- useState : 초기값 설정 + setter 추가
-- 사용 방법
+#### useState란?
+
+- state의 초기값 설정
+- getter/setter 추가
+
+#### useState의 특징
+
+- 사용자가 직접 업데이트할 수 있는 state 변수를 선언하고 관리할 수 있다.
+- 초기값을 설정할 수 있다.
+- const 키워드로 선언을 한다.
+    - 잘못된 수정을 방지하기 위한 처리다.
+    - 만약 const가 아니라 var나 let으로 선언하면 값이 바뀌긴 하지만 리렌더링이 일어나지는 않는다.
+- getter와 setter로 state를 관리한다.
+    - 첫번째로 명시하는 인자는 getter가 된다.
+    - 두번째로 명시하는 인자는 setter가 된다.
+- getter는 순수하게 변수처럼 사용한다.
+- setter의 콜백에는 기존 값과 변경될 값을 나타내게 된다.
+    - `setCount((val) => val + 1)`처럼 사용한다.
+    - `val + 1`이나 `++ val`은 먹히지만 `val ++`은 동작하지 않는다.
+- <b>비동기로 동작한다.</b>
+
+#### 사용 방법
+
+- useState를 import 하기
+    - `import { useState } from "react";`
+- 초기값/getter/setter 설정하기
+    - 작성 방법
+        - `const [변수명, set변수명] = useState(초기값);`
+    - 예시
+        - `const [count, setCount] = useState(0);`
+
 1. 기존의 import React from "react";에서 import React, {useState} from "react";로 변경한다.
 2. const [val, setVal] = useState("원하는 값");을 선언한다.
 3. 만약 함수를 선언해서 그 안에서 값을 변경한다면 setVal(val + "XXX");처럼 하면 된다.
@@ -20,83 +49,66 @@ categories: React&nbsp;Hooks
   - useState를 사용하게 된다면 this를 사용하지 않아도 된다.
   - 리액트의 useState를 통한 setXXX를 사용할 때 값이 아닌 함수로 전달할 수 있는데,  
   이 때 사용되는 변수는 이전에 setXXX를 통해서 설정된 현재의 XXX의 값을 가져올 수 있다.
-  {% highlight javascript %}
-  //코드를 단축시키지 않은 경우
-  let temp=[];
-  const getNweets = async () => {
-      const dbNweets = await dbService.collection("jack").get();
-      dbNweets.forEach((document) => {
-          const nweetObject = {
-              ...document.data(),
-              id: document.id,
-          };
-          temp.push(nweetObject);
-      });
-      setNweets(temp);
+
+#### 예시
+
+{% highlight react %}
+import { useState } from "react";
+
+const Sample = () => {
+  const [count, setCount] = useState(0);
+  return (
+    <>
+      <h1>{count}</h1>
+      <button onClick={() => setCount((val) => val - 1)}>- 1</button>
+      <button onClick={() => setCount((val) => val + 1)}>+ 1</button>
+    </>
+  );
+};
+
+export default Sample;
+{% endhighlight %}
+
+#### useState는 비동기적으로 동작한다.
+
+- useState는 성능 최적화를 위해서 비동기적을 동작한다.
+    - 리액트는 성능을 최적화하기 위해 setState를 배치 처리한다.
+        - setState 연속으로 호출하면 그 동작들을 한 번에 모아서 한꺼번에 랜더링한다.
+    - 배치 (batch)
+        - 리액트가 성능 향상을 위해 여러 개의 setState를 하나의 리렌더링으로 묶는 과정
+        - <b>16ms</b>동안 변경된 State들을 하나로 묶는다.
+            - 16ms동안 동일한 setState를 아무리 실행해봤자 1번만 실행된다.
+        - 동일한 State에 대해서 여러 번 setState를 실행했다면 마지막으로 실행한 setState만 적용된다.
+- 사실 useState의 setter는 콜백을 안 써도 동작한다.
+    - 예시 : `setCount(count + 1)`
+- useState를 동기적으로 처리하려면 인자로 콜백함수를 집어넣거나 useEffect의 의존성 배열을 활용하면 된다.
+- 테스트 코드
+{% highlight react %}
+import { useState } from "react";
+
+const Sample = () => {
+  const [count, setCount] = useState(0);
+  const fun1 = () => {
+    //1씩 증가한다.
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1);
   };
-  {% endhighlight %}  
-
-  {% highlight javascript %}
-  //코드를 단축시킨 경우
-  const getNweets = async () => {
-      const dbNweets = await dbService.collection("jack").get();
-      dbNweets.forEach((document) => {
-          const nweetObject = {
-              ...document.data(),
-              id: document.id,
-          };
-          setNweets((prev) => [nweetObject, ...prev]);
-      });
+  const fun2 = () => {
+    //3씩 증가한다.
+    setCount((val) => val + 1);
+    setCount((val) => val + 1);
+    setCount((val) => val + 1);
   };
-  {% endhighlight %}
+  return (
+    <>
+      <h1>3씩 증가시켜보자</h1>
+      <h1>{count}</h1>
+      <button onClick={() => fun1()}>비동기적으로 동작</button>
+      <button onClick={() => fun2()}>동기적으로 동작</button>
+    </>
+  );
+};
 
-<!--  참고 : https://dudghsx.tistory.com/18, https://tcpschool.com/react/react_data_state -->
-
-### useInput
-
-- useInput : 값 변경 + 유효성 검사
-- 사용 방법
-  1. import React, {useState} from "react";를 진행한다.
-  2. useInput을 선언한다.
-{% highlight javascript %}
-const useInput = (initialValue, validator) => {
-        const [value , setValue] = useState(initialValue);
-        const onChange = event => {
-            const { 
-                target : {value}
-            } = event;
-        };
-        let willUpdate = true;
-        if(typeof validator === "function"){
-            willUpdate = validator(value);
-        }
-        if(willUpdate){
-            setValue(value);
-        }
-        return {value, onChange};
-    };
-{% endhighlight %}  
-{:start="3"}
-  3. const name = useInput("원하는 값");을 선언한다.
-  4. input에서 값을 사용할 때 {name.value}로 사용하면 된다.  
-  {name.value}가 사용가능한 이유는 useInput이 value라는 이름의 값을 return하기 때문이다.  
-  아니면 name안의 내용물을 모두 풀어주는 {...name}을 사용하면 된다.
-
-### useTabs
-
-- useTabs : 값의 전환을 쉽게 사용하기 위한 기능
-- 사용 방법
-  1. import React, {useState} from "react";를 진행한다.
-  2. useTabs를 선언한다.
-  {% highlight javascript %}
-  const useTabs = (initialTab, allTabs) -> {
-          if(!allTabs || Array.isArray(allTabs)){
-              return; 
-          }
-          const [currentIndex, setCurrentIndex] = useState(initialTab);
-          return {
-              currentItem : allTabs[currentIndex],
-              changeItem : setCurrentIndex
-          };
-      };
-  {% endhighlight %}
+export default Sample;
+{% endhighlight %}
