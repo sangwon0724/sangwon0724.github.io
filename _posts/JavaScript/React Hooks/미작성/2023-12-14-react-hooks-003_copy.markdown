@@ -8,6 +8,8 @@ published: false
 
 ### useEffect
 
+#### useEffect란?
+
 - useEffect : Element에 효과 부여하기
 - 사용 방법
     1. 기존의 import React from "react";에서 import React, {useEffect} from "react";로 변경한다.
@@ -23,7 +25,13 @@ published: false
         - 해당 component가 unmount 될 때
             - 해당하는 unmount 될 때만 사용하려면 dependancy가 항상 같도록 useEffect의 두번째 인자에 []를 넘기면 된다.
 
-### useBeforeLeave
+#### 사용 방법
+
+{% highlight react %}
+
+{% endhighlight %}
+
+### useBeforeLeave (useEffect 활용)
 
 - useBeforeLeave : 마우스가 문서를 떠나려고 하는 시점에 실행되는 기능
 - 사용 방법

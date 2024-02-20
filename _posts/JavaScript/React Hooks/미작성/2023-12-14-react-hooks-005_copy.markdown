@@ -6,7 +6,11 @@ categories: React&nbsp;Hooks
 published: false
 ---
 
-### useTitle
+### Compositive Hooks이란?
+
+- XXX
+
+### useTitle (useState, useEffect 활용)
 
 - useTitle : Document의 title을 변경하는 기능
 - 사용 방법
@@ -24,7 +28,7 @@ published: false
   };
   {% endhighlight %}
 
-### useClick
+### useClick (useEffect, useRef 활용)
 
 - useClick : 클릭한 시점에 일어나는 이벤트
 - 사용 방법
@@ -55,7 +59,7 @@ published: false
 - useEffect에서 빈 배열을 넣지 않으면 매번 업데이트 될 때마다 eventListener가 추가된다.
 - useEffect 안에서 return을 시켜서 removeEventListener를 시키는 이유는 componentWillUnMoount때 호출되게 하기 위해서다.
 
-### useFadeIn
+### useFadeIn (useEffect, useRef 활용)
 
 - useFadeIn : 어떤 Element든 상관없이 애니메이션을 Element 안으로 서서히 사라지게 하는 이벤트
 - 사용 방법
@@ -83,7 +87,7 @@ published: false
   3. App()에서 const fadeIn = useFadeIn(동작시간, 딜레이시간);를 작성한다.
   4. 사용할 컴포넌트에서 {...fadeIn}을 작성한다.
 
-### useNetwork
+### useNetwork (useState , useEffect 활용)
 
 - useNetwork : 온라인/오프라인 여부 확인
 - 사용 방법
@@ -116,7 +120,7 @@ published: false
   3. App()에서 const online = useNetwork();를 작성한다.
   4. {onLine ? "온라인" : "오프라인"}처럼 사용하여 네트워크의 상태를 확인한다.
 
-### useScroll
+### useScroll (useState , useEffect 활용)
 
 - useScroll : 스크롤 사용시 발생하는 이벤트
 - 사용 방법

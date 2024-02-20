@@ -8,6 +8,8 @@ published: false
 
 ### useRef
 
+#### useRef란?
+
 - useRef : 리액트의 컴포넌트가 특정 요소를 참조하게 하는 기능
 - 리액트의 컴포넌트는 기본적으로 ref를 가지고 있다.
 - 사용 방법
@@ -18,7 +20,13 @@ published: false
   refTest.current를 통해서 해당 요소에 접근할 수 있다.
   - 예시) setTimeouy(() => refTest.current.focus(), 3000);
 
-### userFullscreen
+#### 사용 방법
+
+{% highlight react %}
+
+{% endhighlight %}
+
+### userFullscreen (useRef 활용)
 
 - userFullscreen : 어떤 Element든 풀스크린으로 만들거나 일반 화면으로 돌아가게 한다.
 - 사용 방법
