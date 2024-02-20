@@ -1,14 +1,161 @@
 ---
 layout: post
-title:  "이벤트 전파"
-date:   2024-02-20 00:29:00 +0900
+title:  "이벤트 처리"
+date:   2024-02-20 16:42:00 +0900
 categories: React
 published: false
 ---
 
-### XXX
+### 이벤트 핸들링
 
-https://tcpschool.com/react/react_event_handling
+#### 이벤트 핸들러(event handler)란?
+
+- 사용자의 마우스 클릭이나 키보드 동작, 사용자 입력의 포커스 등과 같은 이벤트가 발생했을 때 그 처리를 담당하는 실행 함수
+- React에서는 이벤트 핸들러를 JSX 코드 내에 작성하여 추가함으로써 해당 이벤트를 처리한다.
+- 일반적으로 handle\[Event명]처럼 이벤트 핸들러명을 작성한다.
+    - 예시 : handleClick, handleFocus, handleBlur
+- HTML과 React에서 이벤트 핸들러를 등록하는 방법이 다르다.
+    - HTML
+        - 이벤트명을 소문자로 작성한다.
+        - 이벤트 핸들러를 큰따옴표 안에 문자열 형태로 전달한다.
+        - `<button onclick="handleClick()">이벤트 실행</button>`
+    - React
+        - 이벤트명을 카멜 케이스로 작성한다.
+        - 이벤트 핸들러를 함수 형태의 객체로 prop로 전달해야 한다.
+        - 만약에 이벤트 핸들러 뒤에 ()를 붙이게 되면 해당 페이지가 랜더링될 때마다 해당 이벤트 핸들러가 실행된다.
+        - `<button onClick={handleClick}>이벤트 실행</button>`
 
 {% highlight react %}
+const Sample = () => {
+  const handleClick = () => {
+    alert("버튼을 클릭했습니다!");
+  };
+
+  return <button onClick={handleClick}>이벤트 실행</button>;
+};
+
+export default Sample;
 {% endhighlight %}
+
+- 인라인 방식으로 이벤트 핸들러의 선언과 전달을 동시에 할 수 있다.
+
+{% highlight react %}
+function Sample(){
+    return (
+        <>
+            <button onClick={function handleClick(){
+                console.log("이벤트 실행");
+            }}>이벤트 실행</button>
+            <button onClick={
+                () => {
+                    console.log("이벤트 실행");
+                }
+            }>이벤트 실행</button>
+        </>
+    );
+}
+{% endhighlight %}
+
+#### 이벤트 핸들러에서 props 참조하기
+
+- 이벤트 핸들러는 React 컴포넌트 내부에서 선언된다.
+- 즉, 컴포넌트의 props에 접근할 수 있다.
+
+{% highlight react %}
+/* Sample.jsx */
+
+const Sample = (props) => {
+
+  return (
+      <>
+        <button onClick={()=> console.log(props)}>버튼</button>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
+
+#### 이벤트 핸들러를 props로 전달하기
+
+- 부모 컴포넌트에서 자식 컴포넌트의 이벤트 핸들러를 동적으로 명시해야 할 경우가 생길 수 있다.
+- 그럴 때는 부모 컴포넌트로부터 전달 받은 props를 그대로 이벤트 핸들러에 전달하면 된다.
+
+### 이벤트 전파
+
+#### 이벤트 전파(event propagation)
+
+- React에서는 이벤트가 발생할 경우 이벤트가 시작된 요소로부터 상위 방향으로 이벤트가 순서대로 전파된다.
+- React에서 이벤트 핸들러(event handler)는 모든 하위 요소에서 발생한 이벤트를 수신할 수 있다.
+- 예시
+{% highlight react %}
+const Sample = (props) => {
+  return (
+      <>
+        <div onClick={()=>alert("상위 요소 클릭")}>
+          <button onClick={()=>alert("하위 요소 클릭")}>버튼</button>
+        </div>
+      </>
+    );
+};
+export default Sample;
+{% endhighlight %}
+
+#### 이벤트 전파의 중지
+
+- 이벤트 객체(event object)
+    - 특정 타입의 이벤트에 대한 상세한 정보를 저장하고 있는 객체
+- 이벤트 핸들러는 이벤트 객체만을 인수로 전달받을 수 있다.
+- 이벤트 핸들러는 전달받은 이벤트 객체를 사용하여 이벤트의 전파를 중지할 수 있다.
+    - <b>stopPropagation() 메소드를 사용한다.</b>
+- 예시
+{% highlight react %}
+const Sample = (props) => {
+  return (
+      <>
+        <div onClick={()=>alert("상위 요소 클릭")}>
+          <button onClick={(e)=>{
+            e.stopPropagation();
+            alert("하위 요소 클릭");
+          }}>버튼</button>
+        </div>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
+
+#### 기본 동작 방지
+
+- 일부 브라우저 이벤트에는 기본 동작(default behavior)이 설정되어 있다.
+    - 예시 : &lt;form>요소 내부에 위치한 버튼을 클릭했을 경우 onSubmit 이벤트가 발생하고, 전체 페이지를 다시 로드한다.
+- HTML과 React에서 기본 동작을 방지하는 방법이 다르다.
+    - HTML
+        - 이벤트 핸들러에 false를 전달한다.
+    - React
+        - preventDefault() 메소드를 호출한다.
+- 예시
+{% highlight react %}
+const Sample = (props) => {
+  return (
+      <>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            alert("onSubmit 실행 !");
+          }}
+        >
+          <input />
+          <button>Submit</button>
+        </form>
+      </>
+    );
+};
+
+export default Sample;
+{% endhighlight %}
+
+ 
+
+다음 예제의 <input>요소의 입력 필드에 텍스트를 입력하고 제출하기 버튼을 클릭하면, 전체 페이지가 다시 로드되는 것을 확인할 수 있습니다.

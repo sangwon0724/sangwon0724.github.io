@@ -1,12 +1,13 @@
 ---
 layout: post
 title:  "렌더링 제어"
-date:   2024-02-15 16:01:00 +0900
+date:   2024-02-20 16:01:00 +0900
 categories: React
 published: false
 ---
 
-### XXX
+### 조건부 렌더링
+### 배열 렌더링
 
 https://tcpschool.com/react/react_rendering_conditional
 
