@@ -3,7 +3,6 @@ layout: post
 title:  "이벤트 처리"
 date:   2024-02-20 16:42:00 +0900
 categories: React
-published: false
 ---
 
 ### 이벤트 핸들링
