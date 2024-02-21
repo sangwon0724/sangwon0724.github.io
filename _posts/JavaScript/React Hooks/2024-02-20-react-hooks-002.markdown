@@ -231,7 +231,7 @@ const Sample = () => {
 export default Sample;
 {% endhighlight %}
 
- ### useTabs (useState 활용)
+### useTabs (useState 활용)
 
 - 값의 전환을 쉽게 사용하기 위한 기능
 - 화면 전환 시에 유용하다.
