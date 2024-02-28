@@ -3,6 +3,61 @@ layout: page
 # The Home page layout
 ---
 
+<style>
+  #technical-skills-block {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    gap: 5%;
+  }
+</style>
+
+<h2 id="about-me"><span class="mr-2">About Me</span><a href="#about-me" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+
+<h3 id="intro"><span class="mr-2">Intro</span><a href="#intro" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+
+<p><span style="font-size: 2rem;font-weight: 800;">안녕하세요, 멈추지 않는 개발자 <span style="color: #3a7bd5;font-size: 2.4rem;">이상원</span>입니다.</span><br><br><br>
+<span style="font-size: 1.2rem;">
+서울에서 3년차 웹 백엔드 개발자 겸 플러터 앱 개발자로 일하고 있습니다.<br>
+개발자로서 차근차근히 새롭게 배우는 것과 깊이 배우는 것을 멈추지 않고<br>
+다양한 사람, 다양한 주제, 다양한 경우를 만나서 퀄리티 높은 서비스를 만들어서<br>
+더욱 많은 보람감을 얻는 것을 인생의 목표로 삼고 있습니다.
+</span></p>
+
+<h3 id="skills"><span class="mr-2">Skills</span><a href="#skills" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+
+<div id="technical-skills-block">
+  <div>
+    <h4 id="language"><span class="mr-2">Language</span></h4>
+    <ul style="padding-inline-start: 0;">
+      <li>Java</li>
+      <li>JavaScript</li>
+      <li>SQL</li>
+      <li>Dart</li>
+    </ul>
+  </div>
+  <div>
+    <h4 id="framework--library"><span class="mr-2">Framework &amp; library</span></h4>
+    <ul style="padding-inline-start: 0;">
+      <li>Spring Framework/Boot</li>
+      <li>React.js</li>
+    </ul>
+  </div>
+  <div>
+    <h4 id="communication"><span class="mr-2">Communication</span></h4>
+    <ul style="padding-inline-start: 0;">
+      <li>Slack</li>
+      <li>Jira</li>
+    </ul>
+  </div>
+</div>
+
+<h3 id="go-about"><span class="mr-2">저에</span><a href="#go-about" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
+
+저에 대한 자세한 정보는 <a href="/about/">[링크]</a>를 눌러주세요!
+
+
 {% assign pinned = site.posts | where: "pin", "true" %}
 {% assign default = site.posts | where_exp: "item", "item.pin != true and item.hidden != true" %}
 

@@ -4,33 +4,15 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-## About Me
+### Work Experience
 
-### Intro
+### (주) 크림하우스
 
-안녕하세요, 멈추지 않는 개발자 이상원입니다.
-서울에서 3년차 웹 백엔드 개발자 겸 플러터 앱 개발자로 일하고 있습니다.
-제가 맡게된 서비스들을 사용자들이 행복하게 이용하는 것을 보면서 보람감을 느끼며 살고 있습니다.
-다양한 사람, 다양한 주제, 다양한 경우를 만나서 퀄리티 높은 서비스를 만들어서
-더욱 많은 보람감을 얻는 것을 인생의 목표로 삼고 있습니다.
+- `2022.11.22 ~` 자바 백엔드 개발자 및 플러터 앱 개발자
 
-### Technical Skills
+### (주) 퀀텀에듀솔루션
 
-#### Language
-
-- Java
-- JavaScript
-- SQL
-- Dart
-
-#### Framework & library
-
-- Spring Framework/Boot
-- React.js
-
-#### Communication
-
-- Slack
+- `2021.02.26 ~ 2021.05.25` 자바 백엔드 개발자
 
 ## Projects
 
