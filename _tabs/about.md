@@ -4,6 +4,34 @@ icon: fas fa-info-circle
 order: 4
 ---
 
+## About Me
+
+### Intro
+
+안녕하세요, 멈추지 않는 개발자 이상원입니다.
+서울에서 3년차 웹 백엔드 개발자 겸 플러터 앱 개발자로 일하고 있습니다.
+제가 맡게된 서비스들을 사용자들이 행복하게 이용하는 것을 보면서 보람감을 느끼며 살고 있습니다.
+다양한 사람, 다양한 주제, 다양한 경우를 만나서 퀄리티 높은 서비스를 만들어서
+더욱 많은 보람감을 얻는 것을 인생의 목표로 삼고 있습니다.
+
+### Technical Skills
+
+#### Language
+
+- Java
+- JavaScript
+- SQL
+- Dart
+
+#### Framework & library
+
+- Spring Framework/Boot
+- React.js
+
+#### Communication
+
+- Slack
+
 ## Projects
 
 ### (주) 크림하우스
@@ -91,3 +119,26 @@ order: 4
     - 공통된 화면을 처리하기 위해 `tiles framework`로 화면을 구성하였습니다.
 - 깃허브
     - [링크](https://github.com/sangwon0724/every-ware-user-spring)
+
+## Favorite
+
+- IT 관련 유튜브 영상 보기
+- IT 관련 피드 확인
+- 내가 모르는 새로운 기술 공부하기
+    - 현재 사용 중인 기술의 신규 기능
+    - 새로운 언어나 프레임워크
+- 웹툰
+- 게임
+
+## Contact Me
+
+- 이메일 (구글) : `leews0724@gmail.com`
+- 이메일 (네이버) : `leews0724@naver.com`
+- 깃허브 : `https://github.com/sangwon0724`
+
+## Education
+
+- `2016` 유한대학교 IT소프트웨어공학과 입학
+- `2017` 육군 입대
+- `2018` 육군 병장 만기전역
+- `2021` 유한대학교 졸업
