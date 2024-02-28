@@ -19,9 +19,9 @@ timezone: Asia/Seoul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Devlog                          # the main title
+title: Sangwon                           # the main title
 
-tagline: 시간은 늘 부족하다.   # it will display as the sub-title
+tagline: 멈추지 않는 개발자   # it will display as the sub-title
 
 description: 
 #>-                        # used by seo meta and the atom feed
@@ -134,10 +134,10 @@ theme_mode:
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn: 'https://chirpy-img.netlify.app'
+img_cdn: ''
 
 # the avatar on sidebar, support local or CORS resources
-avatar: '/commons/avatar.jpg'
+avatar: '/assets/img/profile/profile_001.jpg'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
