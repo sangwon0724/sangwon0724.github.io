@@ -93,3 +93,7 @@ logging.level.org.hibernate.type.descriptor.sql=TRACE
     </persistence-unit>
 </persistence>
 {% endhighlight %}
+
+### 출처
+
+- [자바 ORM 표준 JPA 프로그래밍 - 기본편](https://www.inflearn.com/course/ORM-JPA-Basic#curriculum)

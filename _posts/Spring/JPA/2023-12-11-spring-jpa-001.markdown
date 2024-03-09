@@ -182,3 +182,7 @@ Member member = memberDAO.find(memberId); //SELECT M.*, T.* FROM MEMBER JOIN TEA
 Team team = member.getTeam();
 String teamName = team.getName();
 {% endhighlight %}
+
+### 출처
+
+- [자바 ORM 표준 JPA 프로그래밍 - 기본편](https://www.inflearn.com/course/ORM-JPA-Basic#curriculum)

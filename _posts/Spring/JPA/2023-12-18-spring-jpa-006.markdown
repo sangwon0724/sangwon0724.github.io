@@ -244,3 +244,7 @@ int memberSize = findTeam.getMembers().size(); //역방향 조회
 - 연관관계의 주인(Owner)
     - 객체 양방향 연관관계는 관리 주인이 필요
     - C언어로 치면 포인터
+
+### 출처
+
+- [자바 ORM 표준 JPA 프로그래밍 - 기본편](https://www.inflearn.com/course/ORM-JPA-Basic#curriculum)

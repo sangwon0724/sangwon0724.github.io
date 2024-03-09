@@ -409,6 +409,6 @@ tags: [엔티티, 엔티티 매핑]
     그 개수만큼 DB에 미리 올려놓고 사용할 수 있다.
     - 여러 웹 서버가 있어도 동시성 이슈 없이 다양한 문제들을 해결해준다.
 
+### 출처
 
-{% highlight java %}
-{% endhighlight %}
+- [자바 ORM 표준 JPA 프로그래밍 - 기본편](https://www.inflearn.com/course/ORM-JPA-Basic#curriculum)
