@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "MySQL 연결"
+title:  "[JPA 기본] MySQL 연결"
 date:   2023-12-11 22:49:00 +0900
 categories: JPA
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "JPA Cache"
+title:  "[JPA 기본] JPA Cache"
 date:   2023-12-11 22:49:00 +0900
 categories: JPA
 ---

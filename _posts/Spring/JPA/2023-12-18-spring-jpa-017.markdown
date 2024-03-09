@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "H2 Database"
+title:  "[JPA 기본] H2 Database"
 date:   2023-12-11 22:49:00 +0900
 categories: JPA
 ---
