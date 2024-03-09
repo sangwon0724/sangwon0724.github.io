@@ -19,7 +19,7 @@ timezone: Asia/Seoul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Devlog                           # the main title
+title: Sangwon's Devlog                           # the main title
 
 tagline: 멈추지 않는 개발자   # it will display as the sub-title
 
