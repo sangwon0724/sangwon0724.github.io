@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "객체지향 쿼리 언어 (JPQL)"
+title:  "[JPA 기본] 객체지향 쿼리 언어 (JPQL)"
 date:   2024-01-25 23:51:00 +0900
 categories: JPA
 tags: [JPQL]

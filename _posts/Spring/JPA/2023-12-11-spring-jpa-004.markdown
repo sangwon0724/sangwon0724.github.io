@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "영속성 관리"
+title:  "[JPA 기본] 영속성 관리"
 date:   2023-12-11 22:41:00 +0900
 categories: JPA
 tags: [영속성, 영속성 관리, 영속성 컨텍스트]
