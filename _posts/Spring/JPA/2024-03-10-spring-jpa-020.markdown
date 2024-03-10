@@ -1,0 +1,197 @@
+---
+layout: post
+title:  "[JPA 활용] 지연 로딩과 조회 성능 최적화"
+date:   2024-03-10 15:04:00 +0900
+categories: JPA
+---
+
+### JPA와 API
+
+- 결론부터 말하면 API에서는 엔티티 그대로 반환하면 안 된다.
+- 엔티티는 스펙이 변경될 가능성이 크기 때문이다.
+- 또한 애플리케이션 내부 로직이 노출될 위험성도 존재하기 떄문이라는 이유도 있다.
+
+### v1 - 엔티티를 직접 노출
+
+- 엔티티를 그대로 반환하기 때문에 API에서 사용하기에는 좋지 않은 방법
+- 지연 로딩에 의해 프록시로 존재하는 부분을 강제로 초기화해줘야 한다.
+
+{% highlight java %}
+//주문 단순 조회 v1
+@GetMapping("/api/v1/simple-orders")
+public List<Order> ordersV1() {
+    List<Order> all = orderRepository.findAll(new OrderSearch());
+    for (Order order : all) {
+        order.getMember().getName(); //Lazy 강제 초기화 (Member 엔티티)
+        order.getDelivery().getAddress(); //Lazy 강제 초기화 (Delivery 엔티티)
+    }
+    return all;
+}
+{% endhighlight %}
+
+{% highlight java %}
+public List<Order> findAll() {
+    return
+            em.createQuery("select o from Order o", Order.class)
+            .getResultList();
+}
+{% endhighlight %}
+
+#### Hibernate5Module
+
+- JPA 사용 시 일반적으로 fetch 전략을 LAZY로 잡기 때문에 실제 엔티티 객체 대신에 프록시 객체를 갖고 있다.
+- jackson 라이브러리는 기본적으로 이 프록시 객체를 json으로 어떻게 생성해야 하는지 모르기 때문에 예외가 발생한다.
+- 이를 해결하기 위해 Hibernate5Module 또는 Hibernate5JakartaModule를 스프링 빈으로 등록해준다.
+
+##### 스프링 부트 2.X를 사용 중인 경우
+
+{% highlight gradle %}
+implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+{% endhighlight %}
+
+{% highlight java %}
+@Bean
+Hibernate5Module hibernate5Module() {
+    return new Hibernate5Module();
+}
+{% endhighlight %}
+
+##### 스프링 부트 3.X를 사용 중인 경우
+
+{% highlight gradle %}
+implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+{% endhighlight %}
+
+{% highlight java %}
+@Bean
+Hibernate5JakartaModule hibernate5Module() {
+    return new Hibernate5JakartaModule();
+}
+{% endhighlight %}
+
+#### @JsonIgnore
+
+- 엔티티를 직접 반환할 때 해당 엔티티에 양방향 연관관계가 존재한다면 양측 엔티티가 서로 호출하면서 무한 루프가 발생한다.
+- `@JsonIgnore`를 추가해서 순환 참조를 막는다.
+- `@JsonIgnore`는 주로 @ManyToOne 어노테이션이 있는 필드에 추가하면 된다.
+
+### v2 - 엔티티를 DTO로 변환
+
+- 엔티티를 DTO로 변환 후 반환하는 방법이다.
+- 조회한 엔티티를 DTO의 생성자를 통해 DTO로 변환한다.
+- 장점
+    - 해당 API를 위한 어느정도 고정된 스펙의 DTO를 반환하기 때문에 API의 스펙이 변경될 일이 적다.
+- 단점
+    - 지연 로딩이기 때문에 N + 1의 문제가 존재한다.
+    - 발생하는 문제의 유형을 부르는 이름이 N + 1인거지 실제로는 더 많은 쿼리가 발생할 수도 있다.
+    - 만약에 조회한 엔티티 내부에 프록시로 존재하는 필드가 M개 있다면 실행되는 쿼리의 개수는 1 + N * M이 될 수도 있다.
+- 팁
+    - `map(o -> new SimpleOrderDto(o))`는 람다 레퍼런스 방식으로 `map(SimpleOrderDto::new)`처럼 표현할 수 있다.
+
+{% highlight java %}
+//주문 단순 조회 v2
+@GetMapping("/api/v2/simple-orders")
+public List<SimpleOrderDto> ordersV2() {
+    List<Order> orders = orderRepository.findAll();
+    
+    List<SimpleOrderDto> result =
+            orders.stream()
+            .map(o -> new SimpleOrderDto(o))
+            .collect(toList());
+
+    return result;
+}
+{% endhighlight %}
+
+{% highlight java %}
+public List<Order> findAll() {
+    return
+            em.createQuery("select o from Order o", Order.class)
+            .getResultList();
+}
+{% endhighlight %}
+
+{% highlight java %}
+@Data
+public class SimpleOrderDto {
+    private Long orderId;
+    private String name;
+    private LocalDateTime orderDate;
+    private OrderStatus orderStatus;
+    private Address address;
+
+    public SimpleOrderDto(Order order) {
+        orderId = order.getId();
+        name = order.getMember().getName(); //Lazy 강제 초기화 (Member 엔티티)
+        orderDate = order.getOrderDate();
+        orderStatus = order.getStatus();
+        address = order.getDelivery().getAddress(); //Lazy 강제 초기화 (Delivery 엔티티)
+    }
+}
+{% endhighlight %}
+
+### v3 - 페치 조인 최적화
+
+- 페치 조인(fetch join)으로 데이터를 한꺼번에 가져온다.
+- 엔티티로 조회했기 때문에 DB와의 작업이 수월하다. (ex : 변경 감지)
+- 유연도가 높은 방식이다. (v4에 비해서 비교적 높은 편)
+
+{% highlight java %}
+//주문 단순 조회 v3
+@GetMapping("/api/v3/simple-orders")
+public List<SimpleOrderDto> ordersV3() {
+    List<Order> orders = orderRepository.findAllWithMemberDelivery();
+    
+    List<SimpleOrderDto> result =
+            orders.stream()
+            .map(o -> new SimpleOrderDto(o))
+            .collect(toList());
+    
+    return result;
+}
+{% endhighlight %}
+
+{% highlight java %}
+public List<Order> findAllWithMemberDelivery() {
+    return
+            em.createQuery("select o from Order o "
+                    + "join fetch o.member m "
+                    + "join fetch o.delivery d", Order.class)
+            .getResultList();
+}
+{% endhighlight %}
+
+### v4 - JPA에서 DTO로 바로 조회
+
+- DB에서 조회한 데이터를 엔티티가 아닌 DTO로 바로 받는 방식
+- DTO로 조회했기 때문에 DB와의 작업이 수월하지 못 하다. (ex : 변경 감지)
+- 유연도가 낮은 방식이다. (v3에 비해서 비교적 낮은 편)
+- 화면에 최적화되 있는 방식
+    - 대신에 특정 DTO에 의존도가 높다.
+- JPQL 작성 방법이 좀 번거롭다. (패키지명 직접 명시)
+
+{% highlight java %}
+//주문 단순 조회 v4
+@GetMapping("/api/v4/simple-orders")
+public List<OrderSimpleQueryDto> ordersV4() {
+    return orderSimpleQueryRepository.findOrderDtos();
+}
+{% endhighlight %}
+
+{% highlight java %}
+//패키지명을 직접 명시해줘야 한다.
+//사용하는 IDE에서 관련 기능을 사용할 수 있다면 그나마 사용성이 증가한다.
+public List<OrderSimpleQueryDto> findOrderDtos() {
+    return em.createQuery(
+            "select new jpabook.jpashop.repository.order.simpleQuery.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+                    " from Order o" +
+                    " join o.member m" +
+                    " join o.delivery d", OrderSimpleQueryDto.class)
+            .getResultList();
+}
+{% endhighlight %}
+
+### 출처
+
+- [실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1)
+- [실전! 스프링 부트와 JPA 활용2 - API 개발과 성능 최적화](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-API%EA%B0%9C%EB%B0%9C-%EC%84%B1%EB%8A%A5%EC%B5%9C%EC%A0%81%ED%99%94)
