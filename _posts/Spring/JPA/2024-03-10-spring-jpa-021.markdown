@@ -3,7 +3,6 @@ layout: post
 title:  "[JPA 활용] 컬렉션 조회 최적화"
 date:   2024-03-10 15:59:00 +0900
 categories: JPA
-published: false
 ---
 
 ### 컬렉션 조회
@@ -335,8 +334,11 @@ public class OrderItemQueryDto {
 - 컬렉션을 IN 절을 통해 한꺼번에 조회하는 방식
 - IN 절에서 사용할 id 값 목록을 미리 만들어야 한다.
 - v4의 N + 1 문제가 해결된다.
-- Collectors.groupingBy를 사용하기 위해서는 `@EqualsAndHashCode(of = "orderId")`처럼 객체끼리 구분할 수 있는 방법을 명시해줘야 한다.
-    - 아래 예시의 경우에는 OrderQueryDto에 추가해줘야 한다.
+- Collectors.groupingBy를 사용하기 위해서는 `@EqualsAndHashCode(of = "orderId")`처럼 객체끼리 구분할 수 있는 정확한 방법을 명시해줘야 한다.
+    - Collectors.groupingBy는 그룹화 키를 기준으로 엔티티를 그룹화하기 위해 엔티티의 해시코드를 사용한다.
+    - 엔티티에 @EqualsAndHashCode 어노테이션이 없으면 기본 해시코드 구현이 사용된다.
+    - 기존 해시코드 구현은 엔티티의 식별자를 고려하지 않기 때문에 동일한 식별자를 가진 엔티티가 서로 다른 그룹으로 분류될 수 있다.
+    - 아래 예시의 경우에는 OrderItemQueryDto의 orderId를 기준으로 그룹화하기 때문에 OrderQueryDto에 어노테이션을 추가해줘야 한다.
 <!-- TODO : 왜 OrderQueryDTO인지 확인 -->
 
 {% highlight java %}
@@ -398,8 +400,87 @@ private Map<Long, List<OrderItemQueryDto>> findOrderItemMap(List<Long> orderIds)
 
 ### v6 - 플랫 데이터 최적화
 
+- Inner Join으로 쿼리 한 번으로 모든 데이터를 가져오는 방법
+- groupingBy()를 위해 ` @EqualsAndHashCode(of = "xxx")`를 지정해야 한다
+- 장점
+    - 쿼리를 한 번만 실행한다.
+    - 플랫 데이터에 최적화되어 있다.
+- 단점
+    - 쿼리를 한 번만 실행하기 위해 많은 조인이 발생한다.
+        - DB에서 애플리케이션에 전달하는 중복되는 데이터의 양이 증가한다.
+        - 상황에 따라서 성능이 하락할 수도 있다.
+    - 애플리케이션에서 해야 할 추가 작업이 크다.
+        - 분해하고 재조립하는 등 할 일이 많고 어렵고 복잡하다.
+    - 데이터 중복으로 인하여 페이징이 불가능하다.
+
 {% highlight java %}
+//주문 조회 v6
+@GetMapping("/api/v6/orders")
+public List<OrderQueryDto> ordersV6() {
+    List<OrderFlatDto> flats = orderQueryRepository.findAllByDto_flat();
+
+    return flats.stream()
+            .collect(groupingBy(o -> new OrderQueryDto(o.getOrderId(), o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+                    mapping(o -> new OrderItemQueryDto(o.getOrderId(), o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+            )).entrySet().stream()
+            .map(e -> new OrderQueryDto(e.getKey().getOrderId(), e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(), e.getKey().getAddress(), e.getValue()))
+            .collect(toList());
+}
 {% endhighlight %}
+
+{% highlight java %}
+public List<OrderFlatDto> findAllByDto_flat() {
+    return em.createQuery(
+            "select new jpabook.jpashop.repository.order.query.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.orderPrice, oi.count)" +
+                    " from Order o" +
+                    " join o.member m" +
+                    " join o.delivery d" +
+                    " join o.orderItems oi" +
+                    " join oi.item i", OrderFlatDto.class)
+            .getResultList();
+}
+{% endhighlight %}
+
+{% highlight java %}
+@Data
+public class OrderFlatDto {
+
+    private Long orderId;
+    private String name;
+    private LocalDateTime orderDate;
+    private Address address;
+    private OrderStatus orderStatus;
+    private String itemName;
+    private int orderPrice;
+    private int count;
+
+    public OrderFlatDto(Long orderId, String name, LocalDateTime orderDate, OrderStatus orderStatus, Address address, String itemName, int orderPrice, int count) {
+        this.orderId = orderId;
+        this.name = name;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.address = address;
+        this.itemName = itemName;
+        this.orderPrice = orderPrice;
+        this.count = count;
+    }
+
+}
+{% endhighlight %}
+
+### 결론
+
+- 왠만하면 엔티티로 조회 후 DTO로 변환한다.
+- 만약 성능이 떨어지면 페치 조인을 사용한다.
+- 컬렉션을 최적화하자.
+    - 페이징이 필요하다면 `hibernate.default_batch_fetch_size` 또는 `@BatchSize`를 설정한다.
+    - 페이징이 필요없다면 페치 조인을 사용한다.
+- 엔티티 조회 방식으로 해결이 안 되면 그 때부터 DTO 조회 방식을 사용한다.
+- DTO 조회 방식으로도 해결되지 않는다면 Navite Query나 스프링 JdbcTemplete을 사용한다.
+- 어지간해서는 페치 조인으로 성능이 많이 개선된다.
+    - 페치 조인으로도 안 되면 캐시를 사용하는 걸 고려해보는 것이 좋다.
+    - 엔티티는 영속성 컨텍스트에서 관리되기 때문에 엔티티를 캐시로 사용하면 안 된다.
+    - DTO만 캐시로 사용해야 한다.
 
 ### 출처
 
