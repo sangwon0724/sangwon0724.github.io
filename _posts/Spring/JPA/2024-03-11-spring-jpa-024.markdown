@@ -75,6 +75,32 @@ public void testMember() {
 }
 {% endhighlight %}
 
+### 제네릭 타입
+
+- T
+	- 엔티티
+- ID
+	- 엔티티의 식별자 타입
+- S
+	- 엔티티와 그 자식 타입
+
+### 주요 메소드
+
+- save(S)
+	- 새로운 엔티티는 저장하고 이미 있는 엔티티는 병합한다.
+- delete(T)
+	- 엔티티 하나를 삭제한다.
+	- 내부에서 EntityManager.remove()를 호출한다.
+- findById(ID)
+	- 엔티티 하나를 조회한다.
+	- 내부에서 EntityManager.find()를 호출한다.
+- getOne(ID)
+	- 엔티티를 프록시로 조회한다.
+	- 내부에서 EntityManager.getReference()를 호출한다.
+- findAll(…)
+	- 모든 엔티티를 조회한다.
+	- 정렬이나 페이징 조건을 파라미터로 제공할 수 있다.
+있다
 ### 출처
 
 - [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%ED%84%B0-JPA-%EC%8B%A4%EC%A0%84)
