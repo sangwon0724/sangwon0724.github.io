@@ -100,7 +100,11 @@ public void testMember() {
 - findAll(…)
 	- 모든 엔티티를 조회한다.
 	- 정렬이나 페이징 조건을 파라미터로 제공할 수 있다.
-있다
+
+### 매우 다양한 기능
+
+-  위에 소개한 메소드말고도 기본적인 CRUD 관련 기능에 Flush 기능도 있다.
+
 ### 출처
 
 - [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%ED%84%B0-JPA-%EC%8B%A4%EC%A0%84)
