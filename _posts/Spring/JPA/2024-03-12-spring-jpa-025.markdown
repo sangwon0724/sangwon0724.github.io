@@ -1,0 +1,293 @@
+---
+layout: post
+title:  "[Spring Data JPA] 확장 기능"
+date:   2024-03-12 21:35:00 +0900
+categories: JPA
+---
+
+### 사용자 정의 레포지토리
+
+- Spring Data Jpa의 JpaRepository는 인터페이스만 정의하고 구현체는 스프링이 자동 생성해준다.
+- JpaRepository에서는 제공해주는 기능이 참 많지만 그러나 경우에 따라서 별도의 메소드를 직접 정의해야할 때가 많다.
+- 그럴 때 사용자 정의 리포지토리를 구현해서 더욱 유연하고 효율적인 개발을 실천한다.
+
+#### 장점
+
+- 복잡한 쿼리 구현
+    - Spring Data JPA는 기본적인 쿼리 기능을 제공한다.
+        - 복잡한 쿼리나 특정 조건에 맞는 쿼리를 구현하기에는 부족할 수 있다.
+    - 사용자 정의 리포지토리를 사용하면 MyBatis, JPQL, Native SQL 등을 직접 사용하여 원하는 쿼리를 자유롭게 작성할 수 있다.
+- 비즈니스 로직 추가
+    - 비즈니스 로직을 함께 처리해야 하는 경우 사용자 정의 리포지토리가 유용하다.
+    - 예시 : 특정 조건에 따라 데이터를 필터링, 여러 엔터티를 조인하여 결과를 가져오는 등의 로직을 구현
+- 성능 향상
+    - Spring Data JPA는 다양한 기능을 제공하기 위해 추상화 레이어를 사용한다.
+    - 하지만 특정 상황에서는 이 추상화 레이어가 오히려 성능 저하를 초래할 수 있다. 
+    - 사용자 정의 리포지토리를 사용하면 불필요한 추상화 레이어를 제거하고 쿼리를 최적화하여 성능을 향상시킬 수 있다.
+- 유지 보수성 향상
+    - 리포지토리에 대한 비즈니스 로직을 분리하여 관리하면 코드의 가독성과 유지 보수성을 향상시킬 수 있다.
+    - 여러 개발자가 프로젝트에 참여하는 경우 사용자 정의 리포지토리를 통해 각 개발자가 담당하는 영역을 명확하게 구분할 수 있다.
+- 테스트 용이성 향상
+    - 사용자 정의 리포지토리는 단위 테스트를 수행하기에도 유리하다.
+    - 사용자 정의 리포지토리를 사용하면 쿼리와 비즈니스 로직을 분리하여 각각 독립적으로 테스트할 수 있다.
+
+#### 기능 구현 방식
+
+- JPA 직접 사용 (EntityManager)
+- 스프링 JDBC Template 사용
+- MyBatis 사용
+- Querydsl 사용
+- 데이터베이스 커넥션 직접 사용
+
+#### 구현 방법
+
+1. JpaRepository를 상속받는 인터페이스를 생성한다.
+{% highlight java %}
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    //...
+}
+{% endhighlight %}
+
+{:start="2"}
+2. 내가 원하는 기능을 구현하기 위한 인터페이스를 생성한다.
+{% highlight java %}
+public interface MemberRepositoryCustom {
+	List<Member> findMemberCustom();
+}
+{% endhighlight %}
+
+{:start="3"}
+3. 2번에서 생성한 인터페이스를 구현한 클래스를 생성하고, 메소드를 정의한다.
+    - 주로 `사용자 정의 인터페이스명`와 `Impl`을 합친 단어를 클래스명으로 사용한다.
+{% highlight java %}
+@RequiredArgsConstructor
+public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
+	private final EntityManager em;
+	
+	@Override
+	public List<Member> findMemberCustom() {
+		//실제로 사용하고 싶은 기능을 구현
+		return em.createQuery("select m from Member m").getResultList();
+	}
+
+}
+{% endhighlight %}
+
+{:start="4"}
+4. 1번에서 작성한 인터페이스가 상속받는 인터페이스 목록에 2번에서 생성한 인터페이스를 추가한다.
+{% highlight java %}
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
+
+}
+{% endhighlight %}
+
+{:start="5"}
+5. 이제 원하는 곳에서 사용하면 된다.
+{% highlight java %}
+@Test
+public void callCustom() {
+    List<Member> result = memberRepository.findMemberCustom();
+}
+{% endhighlight %}
+
+### JPA Auditing
+
+- 엔터티의 생성, 수정 정보를 자동으로 추적하여 기록하는 기능
+- 개발자가 직접 코드를 작성하지 않고도 엔터티의 변경 이력을 관리할 수 있도록 도와준다.
+
+#### 장점
+
+- 개발 생산성 향상
+    - 엔터티 변경 이력 관리 코드를 직접 작성할 필요 없이 자동으로 기록
+- 데이터 추적 및 감사
+    - 누가, 언제 엔터티를 변경했는지 쉽게 추적 가능
+- 변경 이력 관리
+    - 엔터티 변경 이력을 통해 과거 데이터 복원 및 비교 가능
+
+#### 사용 방법
+
+1. 공통된 로직을 처리하기 위한 공용 클래스를 생성한다.
+{% highlight java %}
+@EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass
+public class BaseEntity {
+    @CreatedDate
+    @Column(updatable = false) //"updatable = false"를 지정하면 수정 불가능한 컬럼인 것을 의미한다.
+    private LocalDateTime createdDate; //작성일시
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate; //수정일시
+
+    @CreatedBy
+    @Column(updatable = false)
+    private String createdBy; //작성자
+
+    @LastModifiedBy
+    private String lastModifiedBy; //수정자
+}
+{% endhighlight %}
+
+{:start="2"}
+2. 공통 속성이 필요한 엔티티 클래스가 공용 클래스를 상속받게 한다.
+{% highlight java %}
+@Entity
+@Getter
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
+public class User extends BaseEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	private String username;
+	
+	public User(String username) {
+		this.username = username;
+	}
+}
+{% endhighlight %}
+
+{:start="3"}
+3. `@SpringBootApplication` 어노테이션이 붙은 시작 클래스에 찾아가서 `@EnableJpaAuditing` 어노테이션을 추가한다.
+
+- 아래처럼 설정하면 저장 시점에 등록일, 등록자, 수정일, 수정자에 같은 데이터가 저장된다.
+- 만약 저장 시점에 등록일과 등록자만 저장하고 싶다면 `@EnableJpaAuditing` 어노테이션에 `modifyOnCreate = false` 옵션을 주면 된다.
+
+{% highlight java %}
+@EnableJpaAuditing
+@SpringBootApplication
+public class DataJpaApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(DataJpaApplication.class, args);
+	}
+}
+{% endhighlight %}
+
+{:start="4"}
+4. 3번에서 사용한 클래스에 `@Bean`을 통해서 공통 속성에 들어갈 값을 지정한다.
+
+- 아래 예시에서는 String을 썼지만 실제 스펙에서는 제네럴 타입이기 때문에 프로젝트 스펙에 맞게 수정하면 된다.
+- `UID.randomUUID().toString()`도 예시를 위해 넣은 것이지 실제로는 세션에 있는 회원 아이디같은 값이 들어간다.
+
+{% highlight java %}
+@EnableJpaAuditing
+@SpringBootApplication
+public class DataJpaApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DataJpaApplication.class, args);
+	}
+
+	@Bean
+	public AuditorAware<String> auditorProvider(){
+		//람다 방식
+		//return () -> Optional.of(UUID.randomUUID().toString());
+		
+		return new AuditorAware<String>() {
+			@Override
+			public Optional<String> getCurrentAuditor() {
+				return Optional.of(UUID.randomUUID().toString());
+			}
+		};
+	}
+}
+{% endhighlight %}
+
+### 도메인 클래스 컨버터 (Web 확장)
+
+- Spring Data JPA가 제공하는 HTTP 요청 파라미터 또는 경로 변수에서 엔터티 객체로 변환하는 기능
+- 컨트롤러 코드에서 엔터티 ID 대신 엔터티 객체를 직접 사용할 수 있어 코드를 더욱 명확하고 간결하게 작성할 수 있다.
+- 도메인 클래스 컨버터도 리포지토리를 사용해서 엔티티를 찾음
+
+#### 도메인 클래스 컨버터 사용 전
+
+{% highlight java %}
+@GetMapping("/members/{id}")
+public String findMember(@PathVariable("id") Long id) {
+    Member member = memberRepository.findById(id).get();
+    return member.getUsername();
+}
+{% endhighlight %}
+
+#### 도메인 클래스 컨버터 사용 후
+
+{% highlight java %}
+@GetMapping("/members/{id}")
+public String findMember(@PathVariable("id") Member member) {
+    return member.getUsername();
+}
+{% endhighlight %}
+
+#### 장점
+
+- 코드 간결화
+    - 엔터티 ID 대신 엔터티 객체를 직접 사용하여 코드를 더욱 명확하고 간결하게 작성할 수 있다.
+- 유지 보수성 향상
+    - 코드를 더욱 쉽게 이해하고 유지 관리할 수 있다.
+- 코드 재사용성 향상
+    - 엔터티 객체를 직접 사용하여 코드 재사용성을 높일 수 있다.
+
+#### 주의사항
+
+- 도메인 클래스 컨버터로 엔티티를 파라미터로 받으면, 이 엔티티는 단순 조회용으로만 사용해야 한다.
+- 트랜잭션이 없는 범위에서 엔티티를 조회했으므로, 엔티티를 변경해도 DB에 반영되지 않는다.
+- 엔터티 ID만 사용하는 경우 성능 저하를 초래할 수 있다.
+- 엔터티 클래스에 대한 의존성을 증가시킬 수 있다.
+
+### 페이징과 정렬 (Web 확장)
+
+- Spring Data Jpa가 제공하는 페이징과 정렬 기능을 Spring MVC에서 편리하게 사용할 수 있다.
+- 파라미터로 Pageable을 받아서 사용한다.
+- `Pageable` 은 인터페이스이기 때문에, 실제로는 `org.springframework.data.domain.PageRequest` 객체가 생성된다.
+
+#### 요청 파라미터
+
+- 예시
+    - ` /members?page=0&size=3&sort=id,desc&sort=username,desc`
+- page
+    - 현재 페이지
+    - 0부터 시작한다.
+- size
+    - 한 페이지에 노출할 데이터 건수
+- sort
+    - 정렬 조건
+    - 예시 : 정렬 속성,정렬 속성...(ASC | DESC)
+    - 정렬 방향을 변경하고 싶으면 sort 파라미터추가 (ASC 생략 가능)
+
+#### 환경설정
+
+- 글로벌 설정
+{% highlight properties %}
+spring.data.web.pageable.default-page-size=20 /# 기본 페이지 사이즈/
+spring.data.web.pageable.max-page-size=2000 /# 최대 페이지 사이즈/
+{% endhighlight %}
+
+- 개별 설정
+{% highlight java %}
+@GetMapping("/members")
+public Page<MemberDto> list(@PageableDefault(size = 50, sort = "username", direction = Direction.DESC) Pageable pageable) {
+    return memberRepository.findAll(pageable).map(m -> new MemberDto(m.getId(), m.getUsername(), null));
+}
+{% endhighlight %}
+
+- 페이징 정보가 둘 이상인 경우
+- `@Qualifier` 어노테이션에 지정한 값이 접두사가 된다.
+- 만약 `@Qualifier("member")`일 때 페이징 정보를 요청하고 싶다면 `/members?member_page=0&order_page=1`처럼 요청하면 된다.
+
+{% highlight java %}
+@GetMapping("/members")
+public Page<MemberDto> list(@Qualifier("member") Pageable memberPageable, @Qualifier("order") Pageable orderPageable) {
+    //...
+}
+{% endhighlight %}
+
+#### 예시
+
+{% highlight java %}
+
+{% endhighlight %}
+
+### 출처
+
+- [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%ED%84%B0-JPA-%EC%8B%A4%EC%A0%84)

@@ -1,56 +1,109 @@
 ---
 layout: post
-title:  "[Spring Data JPA] Spring Data JPA에 대하여"
-date:   2024-03-11 21:34:00 +0900
+title:  "[Spring Data JPA] JpaRepository"
+date:   2024-03-11 21:47:00 +0900
 categories: JPA
 ---
 
-### Spring Data JPA란?
+### 기존 JPA의 Repository
 
-- Spring 프레임워크에서 제공하는 JPA를 위한 라이브러리
-- 다양한 기능을 제공하여 애플리케이션 개발을 더욱 간편하고 효율적으로 만들어준다.
-- Spring 프레임워크와 JPA를 함께 사용하면 더욱 강력하고 유연한 데이터 접근 계층을 구축할 수 있다.
+- 기존에 JPA만 사용할 때 Repository를 작성하면 다음과 같이 작성했다.
+- 기능 자체에는 문제가 없지만 개발하는 서비스의 수가 많아지다 보면 그만큼 동일한 유형의 코드가 많이 반복되게 된다.
 
-### 제공 기능
+{% highlight java %}
+@Repository
+public class MemberJpaRepository {
+	@PersistenceContext
+	private EntityManager em;
+	
+	public Member save(Member member) {
+		em.persist(member);
+		return member;
+	}
+	
+	public void delete(Member member) {
+		em.remove(member);
+	}
+	
+	public List<Member> findAll(){
+		return em.createQuery("select m from Member m", Member.class).getResultList();
+	}
+	
+	public Optional<Member> findById(Long id){
+		Member member = em.find(Member.class, id);
+		return Optional.ofNullable(member);
+	}
+	
+	public long count() {
+		return em.createQuery("select count(m) from member m", Long.class).getSingleResult();
+	}
 
-#### JPA 기능 추상화
-
-- JPA의 복잡한 인터페이스를 추상화하여 코드 작성을 간소화한다.
-- JPA 표준을 구현하는 다양한 ORM 프레임워크를 지원한다. (예시 : 하이버네이트)
-
-#### Repository 인터페이스
-
-- 데이터 접근 계층(DAO)를 위한 기본 인터페이스를 제공한다.
-- CRUD(Create, Read, Update, Delete) 작업을 위한 추상 메소드를 제공한다.
-
-#### 자동 쿼리 생성
-
-- 엔터티 클래스와 메소드 이름을 기반으로 자동으로 쿼리를 생성한다.
-- JPQL(Java Persistence Query Language)을 사용하여 쿼리를 직접 작성할 수 있다.
-
-#### 데이터 페이징 및 정렬
-
-- 페이징 및 정렬 기능을 쉽게 구현할 수 있도록 지원한다.
-- 다양한 페이징 라이브러리와 연동 가능한다.
-
-#### 트랜잭션 관리
-
-- Spring 프레임워크의 트랜잭션 관리 기능을 활용할 수 있다.
-- 데이터 접근 계층에서 트랜잭션을 쉽게 관리할 수 있다.
-
-#### Auditing
-
-- 엔터티 객체의 변경 내용을 자동으로 감사(audit)할 수 있다.
-- 누가, 언제, 어떤 내용을 변경했는지 추적할 수 있다.
-
-### 환경설정
-
-- `build.gradle`의 dependencies에 단 1줄만 추가해주면 된다.
-
-{% highlight gradle %}
-implementation ‘org.springframework.boot:spring-boot-starter-data-jpa’
+    //...
+}
 {% endhighlight %}
 
+### JpaRepository?
+
+- 기존 JPA만 사용할 때 Repository를 만들 때 비슷한 유형의 코드들이 반복되는 것을 막고자 Spring Data JPA는 JpaRepository라는 인터페이스를 만들어냈다.
+- 해당 인터페이스는 Spring Data JPA에서 기본적으로 제공하는 기능으로 JpaRepository를 상속받은 인터페이스를 사용한다면 기존에 반복되는 유형의 코드들을 생성하지 않아도 된다.
+- 이전 문단의 예시는 다음과 같이 줄일 수 있다.
+
+{% highlight java %}
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long>{
+
+}
+{% endhighlight %}
+
+- 왜 작업할 게 이것밖에 없지 의문이 들 수 있지만 정말 이게 끝이다.
+- 실제로 아래 코드로 테스트를 돌려보면 정상적으로 동작한다.
+
+{% highlight java %}
+@Autowired
+MemberRepository memberRepository;
+
+@Test
+public void testMember() {
+    Member member = new Member("memberA");
+    Member savedMember = memberRepository.save(member);
+    
+    Member findMember = memberRepository.findById(savedMember.getId()).get();
+    
+    assertThat(findMember.getId()).isEqualTo(member.getId());
+    assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+    assertThat(member).isEqualTo(findMember);
+}
+{% endhighlight %}
+
+### 제네릭 타입
+
+- T
+	- 엔티티
+- ID
+	- 엔티티의 식별자 타입
+- S
+	- 엔티티와 그 자식 타입
+
+### 주요 메소드
+
+- save(S)
+	- 새로운 엔티티는 저장하고 이미 있는 엔티티는 병합한다.
+- delete(T)
+	- 엔티티 하나를 삭제한다.
+	- 내부에서 EntityManager.remove()를 호출한다.
+- findById(ID)
+	- 엔티티 하나를 조회한다.
+	- 내부에서 EntityManager.find()를 호출한다.
+- getOne(ID)
+	- 엔티티를 프록시로 조회한다.
+	- 내부에서 EntityManager.getReference()를 호출한다.
+- findAll(…)
+	- 모든 엔티티를 조회한다.
+	- 정렬이나 페이징 조건을 파라미터로 제공할 수 있다.
+
+### 매우 다양한 기능
+
+-  위에 소개한 메소드말고도 기본적인 CRUD 관련 기능에 Flush 기능도 있다.
 
 ### 출처
 
