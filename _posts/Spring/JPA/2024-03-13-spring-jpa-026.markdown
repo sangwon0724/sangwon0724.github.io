@@ -25,6 +25,8 @@ categories: JPA
 1. 프로젝션 인터페이스를 정의한다.
 
 - 엔티티에서 가져올 속성에 대해서 getter 메소드명을 작성하는 방식으로 작성한다.
+- 인터페이스만 가능한 건 아니고 구체적인 DTO 형식도 가능하다.
+    - 생성자의 파라미터명으로 매칭된다.
 
 {% highlight java %}
 public interface UsernameOnly {
@@ -33,6 +35,8 @@ public interface UsernameOnly {
 {% endhighlight %}
 
 - 프로젝션은 엔티티에 대해서 target이라는 속성으로 커스텀 값을 만들어서 반환할 수 있다.
+- 대힌 이렇게 SpEL 문법을 사용하면 DB에서 엔티티 필드를 다 조회해온 다음에 계산한다.
+    - JPQL SELECT절 최적화가 안된다.
 
 {% highlight java %}
 public interface UsernameOnly {
@@ -44,13 +48,22 @@ public interface UsernameOnly {
 {:start="2"}
 2. 리포지토리에 프로젝션을 반환하는 메소드를 생성한다.
 
-- 아래 예시에서는 Member 엔티티를 사용하는 리포지토리를 사용했기 때문에 Member 엔티티에 대한 프로젝션만 사용할 수 있다.
+- 아래 예시에서는 Member 엔티티를 사용하는 리포지토리를 사용했기 때문에 기본적으로는 Member 엔티티에 대한 프로젝션만 사용할 수 있다.
 
 {% highlight java %}
 public interface MemberRepository extends JpaRepository<Member, Long> {
     List<UsernameOnly> findProjectionByUsername(@Param("username") String name);
 }
 {% endhighlight %}
+
+- 다만 제네릭 타입을 명시하면 동적으로 프로젝션 데이터를 변경할 수 있다.
+
+{% highlight java %}
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    <T> List<T> findProjectionByUsername(String name, Class<T> type);
+}
+{% endhighlight %}
+
 
 {:start="3"}
 3. 2번에서 생성한 메소드를 통해서 프로젝션을 반환한다.
@@ -72,6 +85,7 @@ public void projections() {
     
     //when
     List<UsernameOnly> result = memberRepository.findProjectionByUsername("m1");
+    //List<UsernameOnly> result = memberRepository.findProjectionByUsername("m1", UsernameOnlyDto.class);
     for (UsernameOnly usernameOnly : result) {
         System.out.println("usernameOnly = " + usernameOnly.getUsername());
     }
@@ -83,13 +97,15 @@ public void projections() {
 
 ### 주의 사항
 
+- 실무의 복잡한 쿼리를 해결하기에는 한계가 있다.
+    - 프로젝션 대상이 root 엔티티를 넘어가면 JPQL SELECT 최적화가 안 된다.
+    - 프로젝션 대상이 root 엔티티가 아니면 LEFT OUTER JOIN이 되며, 모든 필드를 엔티티로 조회한 다음에 계산한다.
 - 프로젝션은 엔티티의 속성만 선택적으로 조회한다.
     - 엔티티 전체 정보가 필요한 경우에는 사용할 수 없다.
 - 프로젝션은 엔티티 클래스와 밀접하게 연결되어 있다.
     - 엔티티 클래스가 변경되면 프로젝션 인터페이스도 변경해야 한다.
-
-{% highlight java %}
-{% endhighlight %}
+- 실무의 복잡한 쿼리를 해결하기에는 한계가 있다.
+    - 실무에서는 단순할 때만 사용하고, 조금이라도 복잡해지면 QueryDSL을 사용하는 것이 좋다.
 
 ### 출처
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[QueryDSL] 사용자 정의 리포지토리"
+title:  "[QueryDSL] 스프링 데이터 페이징"
 date:   2024-03-09 23:00:00 +0900
 categories: JPA
 published: false
