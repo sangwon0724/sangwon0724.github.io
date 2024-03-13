@@ -1,0 +1,96 @@
+---
+layout: post
+title:  "[Spring Data JPA] 프로젝션(Projection)"
+date:   2024-03-13 21:21:00 +0900
+categories: JPA
+---
+
+### 프로젝션이란?
+
+- 엔티티의 특정 속성만 선택하여 조회하는 기능
+
+### 특징
+
+- 데이터 추출 최적화
+    - 필요한 데이터만 조회하여 성능을 향상시키고 네트워크 트래픽을 줄일 수 있다.
+- DTO 매핑 간소화
+    - 별도의 DTO 클래스를 만들지 않고도 원하는 데이터 형식으로 결과를 받을 수 있다.
+- 코드 간결성
+    - 쿼리 코드를 간결하고 명확하게 작성할 수 있다.
+
+### 사용 방법
+
+- ※ Member 엔티티의 String username 속성만 가져오고 싶다고 가정하고 예시를 작성한다.
+
+1. 프로젝션 인터페이스를 정의한다.
+
+- 엔티티에서 가져올 속성에 대해서 getter 메소드명을 작성하는 방식으로 작성한다.
+
+{% highlight java %}
+public interface UsernameOnly {
+	String getUsername();
+}
+{% endhighlight %}
+
+- 프로젝션은 엔티티에 대해서 target이라는 속성으로 커스텀 값을 만들어서 반환할 수 있다.
+
+{% highlight java %}
+public interface UsernameOnly {
+	@Value("#{target.username + '' + target.age + ' ' + target.team.name}")
+	String getUsername();
+}
+{% endhighlight %}
+
+{:start="2"}
+2. 리포지토리에 프로젝션을 반환하는 메소드를 생성한다.
+
+- 아래 예시에서는 Member 엔티티를 사용하는 리포지토리를 사용했기 때문에 Member 엔티티에 대한 프로젝션만 사용할 수 있다.
+
+{% highlight java %}
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    List<UsernameOnly> findProjectionByUsername(@Param("username") String name);
+}
+{% endhighlight %}
+
+{:start="3"}
+3. 2번에서 생성한 메소드를 통해서 프로젝션을 반환한다.
+
+{% highlight java %}
+@Test
+public void projections() {
+    //given
+    Team teamA = new Team("teamA");
+    em.persist(teamA);
+    
+    Member m1 = new Member("m1", 0, teamA);
+    Member m2 = new Member("m2", 0, teamA);
+    em.persist(m1);
+    em.persist(m2);
+    
+    em.flush();
+    em.clear();
+    
+    //when
+    List<UsernameOnly> result = memberRepository.findProjectionByUsername("m1");
+    for (UsernameOnly usernameOnly : result) {
+        System.out.println("usernameOnly = " + usernameOnly.getUsername());
+    }
+    
+    //then
+}
+{% endhighlight %}
+
+
+### 주의 사항
+
+- 프로젝션은 엔티티의 속성만 선택적으로 조회한다.
+    - 엔티티 전체 정보가 필요한 경우에는 사용할 수 없다.
+- 프로젝션은 엔티티 클래스와 밀접하게 연결되어 있다.
+    - 엔티티 클래스가 변경되면 프로젝션 인터페이스도 변경해야 한다.
+
+{% highlight java %}
+{% endhighlight %}
+
+### 출처
+
+- [실전! 스프링 데이터 JPA](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%ED%84%B0-JPA-%EC%8B%A4%EC%A0%84)
