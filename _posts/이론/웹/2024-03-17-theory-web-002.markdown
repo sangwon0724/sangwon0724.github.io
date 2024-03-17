@@ -1,0 +1,64 @@
+---
+layout: post
+title:  "URI와 웹 브라우저 요청 흐름"
+date:   2024-03-17 23:18:00 +0900
+categories: 이론&nbsp;-&nbsp;웹
+---
+
+### URI (Uniform Resource Identifier)
+
+- 리소스를 식별하는 통합된 방법
+- 인터넷 상의 자원을 식별하는 문자열
+- 웹 페이지, 이미지, 동영상 등 다양한 자원을 포함한다.
+- 비유 : 사람을 식별하는 모든 정보 (이름, 주소, 주민번호 등)
+- 예시 : `http://www.example.com/index.html`
+
+### URL (Uniform Resource Locator)
+
+- URI의 하위 집합
+- 자원의 위치와 접근 방법을 명시적으로 나타낸다.
+- 프로토콜, 호스트, 경로 등을 포함한다.
+- 비유 : 사람을 찾아가는 방법 (집 주소, 전화번호 등)
+- 예시 : `https://www.google.com/search?q=URI`
+
+### URN (Uniform Resource Name)
+
+- URI의 하위 집합
+- 자원의 이름만을 나타낸다.
+- 위치나 접근 방법은 포함하지 않는다.
+- 비유 : 사람의 이름
+- 예시 : `urn:isbn:978-0-321-74713-2`
+
+### 웹 브라우저 요청 흐름
+
+- 예시 : `https://sangwon0724.github.io/posts/spring-jpa-028/#q-type`
+
+1. 사용자가 웹 브라우저에 URL을 입력한다.
+2. 웹 브라우저는 URL에 포함된 도메인 이름을 IP 주소로 변환하기 위해 DNS 서버에 쿼리를 전송한다.
+3. DNS 서버는 도메인 이름에 해당하는 IP 주소를 반환한다.
+4. 웹 브라우저는 웹 서버에 HTTP 요청 메시지를 감싼 패킷을 생성해서 전달한다.
+    - TCP/IP 계층에서 3-way handshake 과정을 통해 웹 서버와 연결된 후 메시지를 전달하는 과정을 거친다.
+5. 웹 서버는 HTTP 응답 메시지를 감싼 패킷을 생성해서 웹 브라우저로 전송한다.
+
+- HTTP 요청 메시지에 포함된 정보
+    - 요청 메서드 (GET, POST, PUT, DELETE 등)
+    - 요청 URL
+    - HTTP 버전
+    - 헤더 정보 (사용자 에이전트, 쿠키 등)
+- HTTP 응답 메시지에 포함된 정보
+    - 응답 코드 (200 OK, 404 Not Found 등)
+    - 응답 메시지
+    - HTTP 버전
+    - 헤더 정보 (콘텐츠 유형, 콘텐츠 길이 등)
+    - 본문 (HTML, CSS, JavaScript, 이미지 등)
+
+#### HTTP 요청 메시지 예시
+
+{% highlight http %}
+GET posts/spring-jpa-028/#q-type HTTP/1.1
+Host: https://sangwon0724.github.io
+{% endhighlight %}
+
+### 출처
+
+- [모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-%EC%9B%B9-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC#curriculum)

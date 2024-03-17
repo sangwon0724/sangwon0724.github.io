@@ -89,7 +89,7 @@ category_depth:
     #- 이론&nbsp;-&nbsp;네트워크
     #- 이론&nbsp;-&nbsp;소프트웨어&nbsp;공학
     - 이론&nbsp;-&nbsp;데이터베이스
-    #- 이론&nbsp;-&nbsp;웹
+    - 이론&nbsp;-&nbsp;웹
 
 social:
   # Change to your full name.
