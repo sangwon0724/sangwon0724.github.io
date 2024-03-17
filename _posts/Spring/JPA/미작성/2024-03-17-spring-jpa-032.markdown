@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "[QueryDSL] 동적 쿼리"
-date:   2024-03-09 23:00:00 +0900
+date:   2024-03-17 11:00:00 +0900
 categories: JPA
 published: false
 ---
 
-{% highlight java %}
-{% endhighlight %}
+### BooleanBuilder
+### Where 다중 파라미터
 
 ### 출처
 
