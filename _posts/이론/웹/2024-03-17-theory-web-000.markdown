@@ -6,11 +6,6 @@ categories: 이론&nbsp;-&nbsp;웹
 published: false
 ---
 
-인터넷 네트워크
-### IP
-### TCP & UDP
-### PORT
-### DNS
 
 URI와 웹 브라우저 요청 흐름
 ### URI
