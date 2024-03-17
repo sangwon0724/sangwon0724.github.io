@@ -1,0 +1,90 @@
+---
+layout: post
+title:  "정리할 내용 목록"
+date:   2023-12-15 09:46:00 +0900
+categories: 이론&nbsp;-&nbsp;웹
+published: false
+---
+
+인터넷 네트워크
+### IP
+### TCP & UDP
+### PORT
+### DNS
+
+URI와 웹 브라우저 요청 흐름
+### URI
+### URL
+### URN
+### Origin
+### 웹 브라우저 요청 흐름
+
+HTTP 기본
+### 모든 것이 HTTP
+### 클라이언트-서버 구조
+### Stateful & Stateless
+### 비연결성 (connectionless)
+### HTTP 메시지
+
+HTTP 메소드
+### GET
+### POST
+### PUT
+### PATCH
+### DELETE
+### 그 외 메소드
+### HTTP API 설계
+
+HTTP 상태 코드
+### 1XX
+### 2XX
+### 3XX
+### 4XX
+### 5XX
+
+HTTP 헤더
+### 개요
+### 표현
+### 콘텐츠 협상
+### 전송 방식
+### 일반 정보
+### 특별한 정보
+### 인증
+### 쿠키
+### 캐시 기본 동작
+### 검증 헤더와 조건부 요청
+### 캐시와 조건부 요청 헤더
+### 프록시 캐시
+### 캐시 무효화
+
+- [모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-%EC%9B%B9-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC#curriculum)
+
+### 안전한 메소드, 멱등성 메소드
+### 컨텐츠 협상과 MIME Type
+### Keep-Alive, Date, Transfer-Encoding
+### Authorization, 기타 헤더, 커스텀 헤더
+### 캐시 신선도 검사
+### CORS
+### HTTPS, HTTP2, HTTP3
+### 웹소켓
+### VPN
+### 포워드/리버스 프록시
+### 게이트웨이
+
+### 브라우저 동작 원리
+### HTTP 헤더와 바디
+### CURL
+### 쿠키와 세션
+### SSL
+### 웹서버와 WAS
+### 패킷
+### 클라우드
+### SaaS
+### CSR과 SSR
+### URI 인코딩과 디코딩
+### URL 예약 문자
+### 웹 구성 3대 요소
+### 웹 1.0, 2.0, 3.0
+### 웹 아키텍처
+### SEO
+### TLS
