@@ -1,0 +1,223 @@
+---
+layout: post
+title:  "[QueryDSL] QueryDSL과 프로젝션"
+date:   2024-03-17 13:27:00 +0900
+categories: JPA
+---
+
+### 기본
+
+#### 프로젝션 대상이 하나인 경우
+
+- 프로젝션 대상이 하나면 타입을 명확하게 지정할 수 있다.
+
+{% highlight java %}
+//프로젝션 대상이 하나이기 때문에 String으로 지정할 수 있다.
+List<String> result =
+    queryFactory
+    .select(member.username)
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
+#### 프로젝션 대상이 둘 이상인 경우
+
+- 프로젝션 대상이 둘 이상이면 Tuple을 통해 조회한다.
+
+{% highlight java %}
+//프로젝션 대상이 둘 이상이기 때문에 Tuple로 조회해야 한다.
+List<Tuple> result =
+        queryFactory
+        .select(member.username, member.age)
+        .from(member)
+        .fetch();
+
+for (Tuple tuple : result) {
+    String username = tuple.get(member.username);
+    Integer age= tuple.get(member.age);
+    System.out.println("username = " + username);
+    System.out.println("out = " + age);
+}
+{% endhighlight %}
+
+### DTO 조회
+
+- QueryDSL에서 DTO를 반환할 때는 3가지 방법을 지원한다.
+- 종류
+    - 프로퍼티 접근
+    - 필드 직접 접근
+    - 생성자 사용
+- 권장방법
+    - DTO에 setter 메서드가 존재하는 경우
+        - Projections.bean 사용
+    - DTO에 setter 메서드가 존재하지 않거나 성능 향상이 필요한 경우
+        - Projections.fields 사용
+    - 유연성이 필요하거나 필드 접근 방식을 변경해야 하는 경우
+        - Projections.constructor 사용
+- 각 방식마다 장단점이 있으므로 상황에 맞는 방식을 선택하는 것이 중요하다.
+
+{% highlight java %}
+@Data
+public class MemberDto {
+    private String username;
+    private int age;
+
+    public MemberDto() {
+
+    }
+    public MemberDto(String username, int age) {
+        this.username = username;
+        this.age = age;
+    }
+}
+{% endhighlight %}
+
+#### 프로퍼티 접근
+
+- setter 메서드를 사용하여 값을 설정하는 방법
+- 기본 생성자가 필요하다. (NoArgsConstructor)
+- 장점
+    - 간결한 코드
+        - setter 메서드를 사용하여 DTO에 값을 설정하기 때문에 코드가 간결하다.
+    - 익숙한 방식
+        - 대부분의 개발자가 setter 메서드를 사용하는 방식에 익숙하기 때문에 코드를 이해하기 쉽다.
+- 단점
+    - setter 메서드 의존
+        - DTO에 setter 메서드가 존재하지 않으면 사용할 수 없다.
+    - 추가적인 메서드 호출
+        - setter 메서드를 호출하기 때문에 성능적인 측면에서 조금 더 비효율적일 수 있다.
+
+{% highlight java %}
+List<MemberDto> result =
+    queryFactory
+    .select(
+        Projections.bean(MemberDto.class, member.username, member.age)
+    )
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
+#### 필드 직접 접근
+
+- 필드에 직접 접근하여 값을 설정하는 방법
+- 필드의 접근 제어자가 public으로 설정되어 있어야 한다.
+- 장점
+    - setter 메서드 의존 없음
+        - setter 메서드 없이 필드에 직접 값을 설정하기 때문에 setter 메서드가 없는 DTO에도 사용할 수 있다.
+    - 성능 향상
+        - setter 메서드를 호출하지 않기 때문에 Projections.bean보다 성능이 조금 더 향상될 수 있다.
+- 단점
+    - 코드 복잡성 증가
+        - 필드 이름을 직접 명시해야 하기 때문에 코드가 Projections.bean보다 복잡해질 수 있다.
+    - 필드 접근 방식 변경 불가능
+        - 필드 접근 방식을 변경할 수 없어 유연성이 떨어진다.
+
+{% highlight java %}
+List<MemberDto> result =
+    queryFactory
+    .select(
+        Projections.fields(MemberDto.class, member.username, member.age)
+    )
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
+- 별칭이 다른 경우에는 `필드.as(String alias)` 메소드를 사용한다.
+- `ExpressionUtils.as` 메소드를 사용하기도 한다.
+
+{% highlight java %}
+List<UserDto> fetch =
+    queryFactory
+    .select(
+        Projections.fields(
+            UserDto.class, 
+            member.username.as("name"),
+            ExpressionUtils.as(
+            JPAExpressions.select(memberSub.age.max()).from(memberSub)
+            , "age")
+        )
+    )
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
+{% highlight java %}
+@Data
+public class UserDto {
+    private String name;
+    private int age;
+}
+{% endhighlight %}
+
+#### 생성자 사용
+
+- 생성자를 사용하여 값을 설정하는 방법
+- 장점
+    - 유연성
+        - 생성자를 통해 원하는 방식으로 DTO에 값을 설정할 수 있다.
+    - 필드 접근 방식 변경 가능
+        - 생성자를 통해 필드 접근 방식을 변경할 수 있다.
+- 단점
+    - 코드 복잡성 증가
+        - 생성자를 직접 정의해야 하기 때문에 코드가 Projections.bean이나 Projections.fields보다 복잡해질 수 있다.
+    - 유지 보수 어려움
+        - 생성자가 변경되면 쿼리도 함께 변경해야 하기 때문에 유지 보수가 어려워질 수 있다.
+
+{% highlight java %}
+List<MemberDto> result =
+    queryFactory
+    .select(
+        Projections.fields(MemberDto.class, member.username, member.age)
+    )
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
+### @QueryProjection
+
+- 반환할 DTO의 생성자를 별개의 Q-Type으로 만드는 방법
+- 사용 방법
+    1. 생성자 위에 `@QueryProjection` 어노테이션을 추가한다.
+    2. gradle을 실행해서 Q-Type을 생성한다.
+    3. 필요한 곳에서 사용한다.
+- 장점
+    - 코드 간결화
+        - 쿼리 결과를 매핑하는 코드를 간소화할 수 있다.
+    - 유연성 향상 
+        - 쿼리 결과를 원하는 클래스에 자유롭게 매핑할 수 있다.
+    - 유지 관리 용이
+        - 쿼리 결과와 DTO 또는 임의의 클래스 간의 매핑을 명확하게 정의할 수 있다.
+-  단점
+    - 쿼리 최적화 제약
+        - @QueryProjection을 사용하면 쿼리 최적화 기능이 제한될 수 있다.
+    - 엔티티 클래스 변경 시 영향
+        - 엔티티 클래스의 구조가 변경되면 @QueryProjection을 사용하는 코드도 변경해야 한다.
+
+{% highlight java %}
+List<MemberDto> result =
+    queryFactory
+    .select(new QMemberDto(member.username, member.age))
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
+{% highlight java %}
+@Data
+@NoArgsConstructor
+public class MemberDto {
+	private String username;
+	private Integer age;
+	
+    //DTO를 Q-Type으로 만들어 주는 어노테이션
+	@QueryProjection
+	public MemberDto(String username, Integer age) {
+		this.username = username;
+		this.age = age;
+	}
+}
+{% endhighlight %}
+
+
+### 출처
+
+- [실전! Querydsl](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84)

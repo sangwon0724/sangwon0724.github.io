@@ -209,6 +209,18 @@ where
 
 - 이외에도 수많은 검색 조건 메소드가 존재한다.
 
+### 중복 제거
+
+- `distinct()` 메소드를 통해 중복을 제거할 수 있다.
+
+{% highlight java %}
+List<String> result = 
+    queryFactory
+    .select(member.username).distinct()
+    .from(member)
+    .fetch();
+{% endhighlight %}
+
 ### 결과 조회
 
 - `fetch()`
