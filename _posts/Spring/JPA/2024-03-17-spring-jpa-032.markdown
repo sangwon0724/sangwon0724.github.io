@@ -1,0 +1,116 @@
+---
+layout: post
+title:  "[QueryDSL] 동적 쿼리"
+date:   2024-03-17 13:57:00 +0900
+categories: JPA
+published: false
+---
+
+### 동적 쿼리
+
+- QueryDSL에서는 두 가지 방법을 통해 동적 쿼리를 생성할 수 있다.
+- 종류
+    - BooleanBuilder
+    - Where 다중 파라미터
+
+### BooleanBuilder
+
+- JPA Criteria API에서 제공하는 조건 생성 클래스를 활용하는 방법
+- 여러 개의 조건을 논리적으로 연결하여 동적 쿼리를 생성한다.
+- and(), or(), not() 등의 메소드를 통해 조건을 조합할 수 있다.
+- 장점
+    - 다양한 조건을 자유롭게 조합할 수 있다.
+    - 코드 작성이 간편하다.
+- 단점
+    - 코드 가독성이 떨어질 수 있다.
+    - 복잡한 조건을 처리하기 어려워질 수 있다.
+
+{% highlight java %}
+@Test
+public void dynamicQuery_BooleanBuilder() throws Exception {
+    String usernameParam = "member1";
+    Integer ageParam = 10;
+    
+    BooleanBuilder builder = getBooleanBuilderForTest(usernameParam, ageParam);
+    List<Member> result = 
+        queryFactory
+        .selectFrom(member)
+        .where(builder)
+        .fetch();
+
+    assertThat(result.size()).isEqualTo(1);
+}
+{% endhighlight %}
+
+{% highlight java %}
+private BooleanBuilder getBooleanBuilderForTest(String usernameCond, Integer ageCond) {
+    BooleanBuilder builder = new BooleanBuilder();
+    
+    if (usernameCond != null) {
+        builder.and(member.username.eq(usernameCond));
+    }
+    
+    if (ageCond != null) {
+        builder.and(member.age.eq(ageCond));
+    }
+    
+    return builder;
+}
+{% endhighlight %}
+
+### Where 다중 파라미터
+
+- JPA QueryDSL에서 제공하는 기본 기능을 활용하는 방법
+- `where(Predicate... o)` 메소드에 여러 개의 파라미터를 전달하여 동적 쿼리를 생성한다.
+- and(), or(), not() 등의 메소드를 통해 조건을 조합할 수 있다.
+- 장점
+    - 코드 가독성이 높다.
+    - 복잡한 조건을 처리하기 쉽다.
+- 단점
+    - 코드 작성이 다소 번거롭다.
+    - 지원하는 기능이 제한적일 수 있다.
+
+{% highlight java %}
+@Test
+public void dynamicQuery_WhereParam() throws Exception {
+        String usernameParam = "member1";
+        Integer ageParam = 10;
+        
+        List<Member> result = 
+            queryFactory
+            .selectFrom(member)
+            .where(
+                usernameEq(usernameParam), 
+                ageEq(ageParam)
+            )
+            //.where(allEq(usernameCond, ageCond)) //=> 조합한 WhereParam을 사용하는 방법
+            .fetch();
+        
+        assertThat(result.size()).isEqualTo(1);
+}
+{% endhighlight %}
+
+{% highlight java %}
+//회원명 비교
+private BooleanExpression usernameEq(String usernameCond) {
+    return usernameCond != null ? member.username.eq(usernameCond) : null;
+}
+
+//나이 비교
+private BooleanExpression ageEq(Integer ageCond) {
+    return ageCond != null ? member.age.eq(ageCond) : null;
+}
+{% endhighlight %}
+
+- 조합해서 사용할 수 있다.
+- 대신 null 체크를 주의해서 처리해야 한다.
+{% highlight java %}
+//회원명 비교 + 나이 비교
+private BooleanExpression allEq(String usernameCond, Integer ageCond) {
+    return usernameEq(usernameCond).and(ageEq(ageCond));
+}
+{% endhighlight %}
+
+### 출처
+
+- [실전! Querydsl](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84)
