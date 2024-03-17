@@ -1,0 +1,97 @@
+---
+layout: post
+title:  "[QueryDSL] 사용자 정의 리포지토리"
+date:   2024-03-17 14:42:00 +0900
+categories: JPA
+---
+
+### 사용자 정의 리포지토리
+
+- QueryDSL은 JPQL 빌더 역할을 한다.
+- 즉, 실제 데이터를 다루는 부분은 JPA가 한다.
+- JPA Repository에서 QueryDSL을 사용하기 위해서는 사용자 정의 리포지토리가 필요하다.
+
+### 사용 방법
+
+1. Spring Data JPA의 JPARepository를 상속받은 인터페이스를 생성한다.
+{% highlight java %}
+public interface MemberRepository extends JpaRepository<Member, Long> {
+	//...
+}
+{% endhighlight %}
+
+{:start="2"}
+2. 사용자 정의 리포지토리에 대한 인터페이스를 생성한다.
+{% highlight java %}
+public interface MemberRepositoryCustom {
+	//...
+}
+{% endhighlight %}
+
+{:start="3"}
+3. 2번에서 만든 인터페이스를 1번에서 생성한 인터페이스의 상속 목록에 추가한다.
+{% highlight java %}
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
+	//...
+}
+{% endhighlight %}
+
+{:start="4"}
+4. 2번에서 만든 인터페이스의 기능을 실제로 구현하기 위한 클래스를 생성한다.
+{% highlight java %}
+public class MemberRepositoryCutomImpl implements MemberRepositoryCustom {
+    //...
+}
+{% endhighlight %}
+
+{:start="5"}
+5. 생성할 기능을 인터페이스와 클래스에서 각각 정의한다.
+
+{% highlight java %}
+//인터페이스
+List<MemberDto> search(String username);
+{% endhighlight %}
+
+{% highlight java %}
+//클래스
+@Override
+public List<MemberDto> search(String username) {
+    return 
+        queryFactory
+        .select(
+            new QMemberDto(
+                member.username,
+                member.age
+            )
+        )
+        .from(member)
+        .where(
+            member.username.eq(username)
+        )
+        .fetch();
+}
+{% endhighlight %}
+
+{:start="6"}
+6. 필요한 곳에서 사용한다.
+{% highlight java %}
+@Test
+public void customRepositoryTest() {
+    Member member1 = new Member("member1", 10);
+    Member member2 = new Member("member2", 20);
+    Member member3 = new Member("member3", 30);
+    Member member4 = new Member("member4", 40);
+    em.persist(member1);
+    em.persist(member2);
+    em.persist(member3);
+    em.persist(member4);
+    
+    List<MemberDto> result = memberRepository.search("member1");
+    
+    assertThat(result.get(0).getUsername()).isEqualTo("member1");
+}
+{% endhighlight %}
+
+### 출처
+
+- [실전! Querydsl](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84)
