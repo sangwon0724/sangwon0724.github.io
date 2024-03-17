@@ -1,0 +1,51 @@
+---
+layout: post
+title:  "[QueryDSL] 벌크 연산"
+date:   2024-03-17 14:15:00 +0900
+categories: JPA
+---
+
+### 벌크 연산
+
+- QueryDSL에서도 여러 개의 엔티티를 수정/삭제하는 벌크 연산을 수행할 수 있다.
+- 벌크 연산이기 때문에 실행 후 영속성 컨텍스를 비워주는 것이 좋다.
+
+### 수정 연산
+
+- `update(인스턴스)` 메소드를 통해 수정할 테이블을 지정한다.
+- `set(필드, 값)` 메소드를 통해 수정할 필드 및 변경할 값을 지정한다.
+- `where(Predicate... o)` 메소드를 통해 변경될 데이터들의 조건을 지정한다.
+
+{% highlight java %}
+//데이터 수정
+long count = 
+    queryFactory
+    .update(member)
+    .set(member.username, "비회원")
+    .where(member.age.lt(28))
+    .execute();
+
+em.flush();
+em.clear();
+{% endhighlight %}
+
+### 삭제 연산
+
+- `delete(인스턴스)` 메소드를 통해 수정할 테이블을 지정한다.
+- `where(Predicate... o)` 메소드를 통해 삭제될 데이터들의 조건을 지정한다.
+
+{% highlight java %}
+//데이터 삭제
+long count = 
+    queryFactory
+    .delete(member)
+    .where(member.age.gt(18))
+    .execute();
+
+em.flush();
+em.clear();
+{% endhighlight %}
+
+### 출처
+
+- [실전! Querydsl](https://www.inflearn.com/course/querydsl-%EC%8B%A4%EC%A0%84)
