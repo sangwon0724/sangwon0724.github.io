@@ -9,12 +9,6 @@ published: false
 
 
 
-HTTP 기본
-### 모든 것이 HTTP
-### 클라이언트-서버 구조
-### Stateful & Stateless
-### 비연결성 (connectionless)
-### HTTP 메시지
 
 HTTP 메소드
 ### GET
