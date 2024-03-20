@@ -7,18 +7,6 @@ published: false
 ---
 
 
-
-
-
-HTTP 메소드
-### GET
-### POST
-### PUT
-### PATCH
-### DELETE
-### 그 외 메소드
-### HTTP API 설계
-
 HTTP 상태 코드
 ### 1XX
 ### 2XX
