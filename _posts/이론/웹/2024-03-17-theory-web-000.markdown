@@ -6,24 +6,6 @@ categories: 이론&nbsp;-&nbsp;웹
 published: false
 ---
 
-
-HTTP 헤더
-### 개요
-### 표현
-### 콘텐츠 협상
-### 전송 방식
-### 일반 정보
-### 특별한 정보
-### 인증
-### 쿠키
-### 캐시 기본 동작
-### 검증 헤더와 조건부 요청
-### 캐시와 조건부 요청 헤더
-### 프록시 캐시
-### 캐시 무효화
-
-- [모든 개발자를 위한 HTTP 웹 기본 지식](https://www.inflearn.com/course/http-%EC%9B%B9-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%81%AC#curriculum)
-
 ### 안전한 메소드, 멱등성 메소드
 ### 컨텐츠 협상과 MIME Type
 ### Keep-Alive, Date, Transfer-Encoding
@@ -54,3 +36,4 @@ HTTP 헤더
 ### SEO
 ### TLS
 ### Origin
+### 가상 호스팅
