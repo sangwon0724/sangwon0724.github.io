@@ -1,7 +1,10 @@
 ---
 layout: post
-title:  "웹 브라우저 동작 원리"
+title:  "랜더링"
 date:   2024-03-24 09:46:00 +0900
 categories: 이론&nbsp;-&nbsp;웹
 published: false
 ---
+
+### CSR
+### SSR

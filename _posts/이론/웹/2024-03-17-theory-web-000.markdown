@@ -6,34 +6,11 @@ categories: 이론&nbsp;-&nbsp;웹
 published: false
 ---
 
+기존꺼 보강
 ### 안전한 메소드, 멱등성 메소드
 ### 컨텐츠 협상과 MIME Type
-### Keep-Alive, Date, Transfer-Encoding
 ### Authorization, 기타 헤더, 커스텀 헤더
 ### 캐시 신선도 검사
-### CORS
-### HTTPS, HTTP2, HTTP3
-### 웹소켓
-### VPN
-### 포워드/리버스 프록시
-### 게이트웨이
-
-### 브라우저 동작 원리
-### HTTP 헤더와 바디
-### CURL
-### 쿠키와 세션
-### SSL
-### 웹서버와 WAS
-### 패킷
-### 클라우드
-### SaaS
-### CSR과 SSR
 ### URI 인코딩과 디코딩
 ### URL 예약 문자
-### 웹 구성 3대 요소
-### 웹 1.0, 2.0, 3.0
-### 웹 아키텍처
-### SEO
-### TLS
-### Origin
-### 가상 호스팅
+### CDN 서비스
