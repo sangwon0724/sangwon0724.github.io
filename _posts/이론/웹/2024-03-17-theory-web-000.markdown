@@ -7,13 +7,6 @@ published: false
 ---
 
 
-HTTP 상태 코드
-### 1XX
-### 2XX
-### 3XX
-### 4XX
-### 5XX
-
 HTTP 헤더
 ### 개요
 ### 표현
