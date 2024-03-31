@@ -1,0 +1,91 @@
+---
+layout: post
+title:  "CORS"
+date:   2024-03-31 19:18:00 +0900
+categories: 이론&nbsp;-&nbsp;웹
+---
+
+### CORS란?
+
+- 서로 다른 도메인 간 리소스 공유를 허용하는 기술
+- Cross-Origin Resource Sharing의 약자
+- 웹 브라우저는 보안 정책으로 인해 동일한 도메인에서만 리소스에 접근할 수 있도록 제한한다.
+    - CORS는 이러한 제한을 극복하여 서로 다른 도메인 간 리소스에 안전하게 접근할 수 있도록 해준다.
+
+### CORS 작동 방식
+
+1. 클라이언트는 브라우저에 다른 도메인의 리소스에 대한 요청을 보냅니다.
+2. 브라우저는 서버에 CORS preflight 요청을 보냅니다.
+3. 서버는 CORS 헤더를 포함하여 응답을 보냅니다.
+4. 브라우저는 CORS 헤더를 기반으로 요청을 허용하거나 거부합니다.
+
+### CORS 헤더
+
+- `Access-Control-Allow-Origin`
+    - 어떤 도메인에서 리소스에 접근할 수 있는지 허용하는지 설정한다.
+- `Access-Control-Allow-Credentials`
+    - 쿠키나 HTTP 인증 정보와 같은 자격 증명을 포함하여 요청을 허용할지 설정한다.
+- `Access-Control-Allow-Methods`
+    - 어떤 HTTP 메서드를 허용하는지 설정한다.
+- `Access-Control-Allow-Headers`
+    - 어떤 HTTP 헤더를 허용하는지 설정한다.
+- `Access-Control-Max-Age`
+    - CORS preflight 요청 캐싱 시간을 설정한다.
+
+### CORS 활용 예시
+
+- 웹사이트에서 다른 도메인의 이미지를 표시하는 경우
+- AJAX 요청을 통해 다른 도메인의 API를 호출하는 경우
+- 웹 애플리케이션에서 다른 도메인의 데이터를 가져오는 경우
+
+### CORS 관련 용어
+
+- 동일 출처 정책
+    - 웹 브라우저 보안 정책으로 동일한 도메인에서만 리소스에 접근할 수 있도록 제한하는 정책
+- CORS preflight 요청
+    - 브라우저가 다른 도메인의 리소스에 접근하기 전에 서버에 보내는 요청
+- OPTIONS 메소드
+    - CORS preflight 요청에 사용되는 HTTP 메소드
+
+### 실무 예시 (리액트 + 스프링부트)
+
+{% highlight react %}
+async function getPost(id){
+    return await fetch("http://localhost:8080/posts/" + id,{
+        method: "GET",
+      },)
+      .then((response) => response.json())
+      .then((data) => data);
+}
+
+useEffect(() => {
+    console.log("id", id)
+    if(id != null && id != ""){
+      getPost(id)
+      .then(jsonData => {
+        setTitle(jsonData.title);
+        setContent(jsonData.content);
+      })
+      .catch(error => console.error(error));
+    }
+}, []);
+{% endhighlight %}
+
+{% highlight java %}
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RestController
+@RequiredArgsConstructor
+public class PostController {
+
+    private final PostRepository postRepository;
+
+    /**
+     * 게시글 상세
+     */
+    @GetMapping("/posts/{id}")
+    public PostDTO getPost(@PathVariable("id") Long id){
+        Optional<Post> data = postRepository.findById(id);
+        return PostDTO.fromPost(data.get());
+    }
+}
+{% endhighlight %}
