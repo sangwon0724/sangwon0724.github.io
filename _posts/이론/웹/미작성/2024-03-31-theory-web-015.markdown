@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "클라우드"
+title:  "가상 호스팅"
 date:   2024-03-24 09:46:00 +0900
 categories: 이론&nbsp;-&nbsp;웹
 published: false

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "웹 구성 3대 요소"
+title:  "웹 아키텍처"
 date:   2024-03-24 09:46:00 +0900
 categories: 이론&nbsp;-&nbsp;웹
 published: false
