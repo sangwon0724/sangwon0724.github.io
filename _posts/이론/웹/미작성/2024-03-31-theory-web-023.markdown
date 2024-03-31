@@ -1,7 +1,0 @@
----
-layout: post
-title:  "웹 아키텍처"
-date:   2024-03-31 23:48:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
-published: false
----
