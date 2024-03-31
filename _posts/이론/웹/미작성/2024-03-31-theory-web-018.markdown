@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "포워드/리버스 프록시"
+title:  "웹소켓"
 date:   2024-03-24 09:46:00 +0900
 categories: 이론&nbsp;-&nbsp;웹
 published: false
