@@ -86,7 +86,7 @@ category_depth:
     - 이론&nbsp;-&nbsp;자료&nbsp;구조
     #- 이론&nbsp;-&nbsp;컴퓨터&nbsp;아키텍처
     #- 이론&nbsp;-&nbsp;시스템&nbsp;분석&nbsp;및&nbsp;설계
-    #- 이론&nbsp;-&nbsp;네트워크
+    - 이론&nbsp;-&nbsp;네트워크
     #- 이론&nbsp;-&nbsp;소프트웨어&nbsp;공학
     - 이론&nbsp;-&nbsp;데이터베이스
     - 이론&nbsp;-&nbsp;웹
