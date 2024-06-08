@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "네트워크 계층 (IP)"
-date:   2024-05-04 18:37:00 +0900
+date:   2024-06-08 14:08:00 +0900
 categories: 이론&nbsp;-&nbsp;네트워크
 published: false
 ---
