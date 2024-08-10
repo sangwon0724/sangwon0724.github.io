@@ -1,0 +1,70 @@
+---
+layout: post
+title:  "컨버터 (@Converter)"
+date:   2024-08-10 14:15:00 +0900
+categories: JPA
+---
+
+### @Converter
+
+- 역할 : 해당 클래스를 컨버터 클래스로 등록
+- 경로 : jakarta.persistence.Converter
+
+### AttributeConverter<X,Y>
+
+- 역할 : 컨버터 클래스 구현을 위한 인터페이스
+- 경로 : jakarta.persistence.AttributeConverter
+
+### 사용 방법
+
+1. AttributeConverter 인터페이스를 구현한 클래스를 생성한다.
+2. 해당 클래스에 @Converter 어노테이션을 붙인다.
+3. 서로 매핑될 데이터 유형을 지정한다.
+4. 컨버터를 사용할 필드에 @Convert 어노테이션을 지정해주면 된다.
+
+### 설명
+
+#### convertToDatabaseColumn
+
+- 지정한 메소드 시그니쳐로 통해 전달받은 값을 DB에 저장하기 위해 가공하는 과정이다.
+- AttributeConverter를 통해 X라는 자료형으로 넘겨받은 파라미터를 Y라는 자료형으로 변환해서 저장한다.
+
+### convertToEntityAttribute
+
+- 해당 엔티티의 값을 조회할 때 그 값을 가공하는 방식을 지정한다.
+- AttributeConverter를 통해 지정한 X라는 자료형으로 변환한다.
+
+### 예제 (컨버터)
+
+{% highlight java %}
+@Converter
+public class ConverterForString implements AttributeConverter<String, String> {
+    /**
+     * DB에 저장 시 빈 문자열을 NULL로 변환
+     * 이유 : 제약 조건 확인용
+     * @param param 파라미터
+     */
+    @Override
+    public String convertToDatabaseColumn(String param) {
+        return "".equals(param) ? null : param;
+    }
+
+    /**
+     * DB에서 가져올 때 NULL을 빈 문자열로 변환
+     * @param dbData DB에서 조회한 데이터
+     */
+    @Override
+    public String convertToEntityAttribute(String dbData) {
+        return dbData == null ? "" : dbData;
+    }
+}
+{% endhighlight %}
+
+### 예제 (컨버터 사용)
+
+{% highlight java %}
+@Convert(converter = ConverterForString.class)
+@Column(length = 50)
+@Comment("설명")
+private String description; //설명
+{% endhighlight %}
