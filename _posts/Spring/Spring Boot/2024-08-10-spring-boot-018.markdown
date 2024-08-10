@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "정적 리소스 제공"
+date:   2024-08-10 15:17:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 리소스의 경로
+
+- 이미지나 동영상같은 리소스 파일들에 대한 경로를 커스텀해야하는 경우가 있다.
+- 예시
+    - 웹 애플리케이션이 실행되는 위치가 아닌 다른 폴더의 파일을 가져오고 싶은 경우
+    - 실제 이미지가 저장되는 폴더명과 다른 이름으로 접근하게 하고 싶은 경우
+    - S3를 통해 이미지를 관리하는 경우
+- 그럴 떄는 `WebMvcConfigurer`의 `addResourceHandlers`를 통해 커스텀할 수 있다.
+
+### addResourceHandlers
+
+- addResourceHandler
+    - 외부에서 접근할 경로를 지정한다.
+    - 만약 `/static/images/**`처럼 지정했다면 `주소/static/images/temp.png`처럼 접근할 수 있다.
+- addResourceLocations
+    - 실제 파일이 저장된 위치를 지정한다.
+    - `classpath:xxx`를 통해 프로젝트 내부의 파일을 가져오게 지정할 수 있다.
+    - `file:\\\xxx`를 통해 프로젝트 외부의 파일을 가져오게 지정할 수 있다.
+- setCachePeriod
+    - 캐시의 유효기간을 지정한다.
+    - 단위 : 초
+
+### 예제
+
+{% highlight java %}
+@Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/images/**")
+                .addResourceLocations("classpath:static/img/")
+                .setCachePeriod(20);
+
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:///file_storage/")
+                .setCachePeriod(20);
+
+        registry.addResourceHandler("/resources/**")
+                .addResourceLocations("file:///file_storage/")
+                .setCachePeriod(20);
+    }
+{% endhighlight %}
