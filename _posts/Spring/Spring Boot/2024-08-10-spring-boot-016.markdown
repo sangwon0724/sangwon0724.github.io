@@ -1,0 +1,55 @@
+---
+layout: post
+title:  "공통 예외 처리 (Advice)"
+date:   2024-08-10 14:42:00 +0900
+categories: Spring&nbsp;Boot
+tags: [Advice]
+---
+
+### 공통 예외 처리
+
+- 개발을 하다보면 예외가 발생하는 경우가 꽤 있다.
+- 이 중 공통되는 부분은 한 곳에서 처리하게 하려고 한다.
+
+### @RestControllerAdvice
+
+- 흔히 API를 위해 @RestController를 사용할 때 각 컨트롤러 메소드에서 예외가 발생하면 공통된 처리를 적용하기 위해 사용한다.
+- 사용법은 단순히 공통 처리를 위한 클래스를 하나 만들고 @RestControllerAdvice를 추가하면 된다.
+- 해당 클래스 내부에는 각 예외에 대한 처리를 하면 된다.
+
+{% highlight java %}
+/**
+    * 사용불가 처리된 API
+*/
+@ExceptionHandler(NotUsedException.class)
+public ApiResultVO handelNotUsedException(Exception e) {
+    log.error("[ApiAdvice] NotUsedException");
+    return ApiResultVO.error(ErrorCode.NOT_USED);
+}
+{% endhighlight %}
+
+### 컨트롤러의 종류로 인한 문제점
+
+- 추가로 정의되는 종류가 있을지는 정확히는 모르겠지만 대체적으로 컨트롤러는 2가지 종류가 있다.
+    - 페이지를 위한 컨트롤러 (@Controller)
+    - API를 위한 컨트롤러 (@RestController)
+- 여기서 문제점이 발생하는데 아까 사용했던 @RestControllerAdvice에는 @ControllerAdvice 어노테이션이 포함되어 있다.
+    - 그래서 페이지에 대한 컨트롤러 메소드든 API에 대한 컨트롤러 메소드든  
+    @RestControllerAdvice가 있다면 오류가 났을 때 해당 클래스로 매핑되버린다.
+- 그렇다보니 API 전용 서버를 쓰거나 별도 설정이 있는게 아니라면 다음과 같이 처리해야 한다.
+    - 그래서 @RestControllerAdvice를 쓰는 경우에는 페이지용 url과 API용 url에 규칙을 정해두는 것이 좋다.
+    - `/api/xxx`라던가 `xxx.api`같은 것처럼 말이다.
+{% highlight java %}
+/**
+    * 404, Not Found.에 대한 처리
+*/
+@ResponseStatus(HttpStatus.NOT_FOUND)
+@ExceptionHandler(NoResourceFoundException.class)
+public ApiResultVO handle404(HttpServletRequest request, HttpServletResponse response, NoResourceFoundException exception) throws IOException {
+    log.error("[ApiAdvice] 404, Not Found.");
+    if(!request.getServletPath().startsWith("/api")){
+        response.sendRedirect("/error");
+    }
+    return ApiResultVO.error(ErrorCode.ERROR_404);
+}
+{% endhighlight %}
