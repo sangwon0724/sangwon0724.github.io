@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "[고급편] 우리는 로그를 추적하고 싶다."
-date:   2024-09-09 22:46:00 +0900
+date:   2024-09-10 21:46:00 +0900
 categories: Spring&nbsp;Boot
 tags: []
 published: false
