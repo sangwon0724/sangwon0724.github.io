@@ -1,0 +1,393 @@
+---
+layout: post
+title:  "[고급편] 로그추적기 V1 (프로토타입)"
+date:   2024-09-10 22:35:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 로그 추적기 v1 개발
+
+- 애플리케이션의 모든 로직에 직접 로그를 남겨도 사실 상관은 없지만, 그것은 너무 비효율적이다.
+- 이전 요구사항을 분석하여 로그에 포함될 정보에는 무엇이 필요할지 확인해보자.
+    - 이번에는 우선 `메서드 호출의 깊이 표현`과 `HTTP 요청을 구분해야 한다.`라는 항목에 집중해보자.
+    - 메소드 호출의 깊이라는 것은 컨트롤러 → 서비스 → 리포지토리 순서로 갈 때의 깊이를 의미한다.
+    - HTTP 요청을 구분한다는 것은 여러 개의 요청이 있을 때 각 요청을 구분할 수 있어야 한다는 것을 의미한다.
+    - 이 2가지를 합쳐 로그가 표시할 기반 데이터를 관리하는 클래스를 만들어 보자.
+
+#### TraceId
+
+- 트랜잭션 ID와 메소드 호출의 깊이를 표현하기 위한 클래스
+
+{% highlight java %}
+package com.example.trace;
+
+import java.util.UUID;
+
+public class TraceId {
+    private String id; //트랜잭션 ID
+    private int level; //메소드 호출의 깊이
+
+    public TraceId() {
+        this.id = createId();
+        this.level = 0;
+    }
+
+    private TraceId(String id, int level) {
+        this.id = id;
+        this.level = level;
+    }
+
+    /**
+     * 랜덤 문자열을 생성하여 트랜잭션 ID로 설정한다.
+     - UUID는 너무 길어서 앞 8자리만 사용
+     - 보통은 8자리만 사용해도 충분하다.
+     */
+    private String createId() {
+        return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    /**
+     * 하위의 TraceId를 반환한다.
+     */
+    public TraceId createNextId() {
+        return new TraceId(id, level + 1);
+    }
+
+    /**
+     * 상위의 TraceId를 반환한다.
+     */
+    public TraceId createPreviousId() {
+        return new TraceId(id, level - 1);
+    }
+
+    /**
+     * 깊이가 0단계인지 확인한다.
+     */
+    public boolean isFirstLevel() {
+        return level == 0;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+}
+{% endhighlight %}
+
+#### TraceStatus
+
+- 로그의 상태 정보를 나타내기 위한 클래스
+
+{% highlight java %}
+package com.example.trace;
+
+public class TraceStatus {
+    private TraceId traceId; // 트랜잭션 ID 및 메소드 호출의 깊이 정보
+    private Long startTimeMs; //로그 출력 시각
+    private String message; //출력할 메시지
+    
+    public TraceStatus(TraceId traceId, Long startTimeMs, String message) {
+        this.traceId = traceId;
+        this.startTimeMs = startTimeMs;
+        this.message = message;
+    }
+    
+    public Long getStartTimeMs() {
+        return startTimeMs;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public TraceId getTraceId() {
+        return traceId;
+    }
+}
+
+{% endhighlight %}
+
+#### TraceV1
+
+- TraceId와 TraceStatus를 통해 로그를 출력하는 클래스
+
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+public class TraceV1 {
+    private static final String START_PREFIX = "-->";
+    private static final String COMPLETE_PREFIX = "<--";
+    private static final String EX_PREFIX = "<X-";
+
+    /**
+     * 로그 출력 시작
+     * @param message 출력할 메시지
+     */
+    public TraceStatus begin(String message) {
+        TraceId traceId = new TraceId();
+        Long startTimeMs = System.currentTimeMillis();
+        log.info("[{}] {}{}", traceId.getId(), addSpace(START_PREFIX, traceId.getLevel()), message);
+        return new TraceStatus(traceId, startTimeMs, message);
+    }
+
+    /**
+     * 메소드 정상 종료 시의 로그 출력
+     * @param status 상태값
+     */
+    public void end(TraceStatus status) {
+        complete(status, null);
+    }
+
+    /**
+     * 메소드 실행 도중 예외 발생 시의 로그 출력
+     * @param status 상태값
+     * @param e 예외
+     */
+    public void exception(TraceStatus status, Exception e) {
+        complete(status, e);
+    }
+
+    /**
+     * 로그 출력
+     * @param status 상태값
+     * @param e 예외
+     */
+    private void complete(TraceStatus status, Exception e) {
+        Long stopTimeMs = System.currentTimeMillis();
+        long resultTimeMs = stopTimeMs - status.getStartTimeMs();
+        TraceId traceId = status.getTraceId();
+        if (e == null) {
+            log.info(
+                "[{}] {}{} time={}ms",
+                traceId.getId(),
+                addSpace(COMPLETE_PREFIX, traceId.getLevel()),
+                status.getMessage(),
+                resultTimeMs
+            );
+        } else {
+            log.info(
+                "[{}] {}{} time={}ms ex={}",
+                traceId.getId(),
+                addSpace(EX_PREFIX, traceId.getLevel()),
+                status.getMessage(),
+                resultTimeMs,
+                e.toString()
+            );
+        }
+    }
+
+    /**
+     * 깊이 차이를 나타내기 위해 화살표의 길이를 증가시킴
+     * @param prefix 화살표 종류
+     * @param level 메소드 호출의 깊이
+     */
+    private static String addSpace(String prefix, int level) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            sb.append( (i == level - 1) ? "|" + prefix : "| ");
+        }
+        return sb.toString();
+    }
+}
+
+{% endhighlight %}
+
+### 로그 추적기 v1 테스트
+
+- TraceV1에서 단축키 `Ctrl + Shift + T`를 실행해서 테스트를 생성하자.
+- 아래 테스트를 통해 로그 추적기의 동작 원리와 사용 방법을 이해헤보자.
+
+{% highlight java %}
+package com.example.trace;
+
+import org.junit.jupiter.api.Test;
+
+class TraceV1Test {
+    @Test
+    void begin_end() {
+        TraceV1 trace = new TraceV1();
+        TraceStatus status = trace.begin("hello");
+        trace.end(status);
+    }
+
+    @Test
+    void begin_exception() {
+        TraceV1 trace = new TraceV1();
+        TraceStatus status = trace.begin("hello");
+        trace.exception(status, new IllegalStateException());
+    }
+}
+{% endhighlight %}
+
+- begin_end 실행 로그
+>[51ded38c] hello  
+>[51ded38c] hello time=9ms
+
+- begin_exception 실행 로그
+>[cc7f34ea] hello  
+>[cc7f34ea] hello time=7ms ex=java.lang.IllegalStateException
+
+### 로그 추적기 v1 적용
+
+- 차이점을 확인하기 위해 기존의 v0 패키지를 복사해서 v1으로 추가하자.
+    - v1 패키지 내부의 클래스명에서 v0을 v1로 변경한다.
+    - 각 클래스의 내부 로직에서 참고하는 타 클래스도 v1인지 확인한다.
+    - 컨트롤러에서 매핑 정보를 `/v0/request`에서 `/v1/request`로 변경한다.
+- TraceV1을 적용해보자.
+
+#### 컨트롤러
+
+{% highlight java %}
+package com.example.v1;
+
+import com.example.trace.TraceStatus;
+import com.example.trace.TraceV1;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class OrderControllerV1 {
+    private final OrderServiceV1 orderService;
+    private final TraceV1 trace;
+
+    @GetMapping("/v1/request")
+    public String request(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderController.request()");
+            orderService.orderItem(itemId);
+            trace.end(status);
+            return "ok";
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e; //예외를 꼭 다시 던져주어야 한다.
+        }
+    }
+}
+{% endhighlight %}
+
+#### 서비스
+
+{% highlight java %}
+package com.example.v1;
+
+import com.example.trace.TraceStatus;
+import com.example.trace.TraceV1;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class OrderServiceV1 {
+    private final OrderRepositoryV1 orderRepository;
+    private final TraceV1 trace;
+
+    public void orderItem(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderService.orderItem()");
+            orderRepository.save(itemId);
+            trace.end(status);
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+    }
+}
+
+{% endhighlight %}
+
+#### 리포지토리
+
+{% highlight java %}
+package com.example.v1;
+
+import com.example.trace.TraceStatus;
+import com.example.trace.TraceV1;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderRepositoryV1 {
+    private final TraceV1 trace;
+
+    public void save(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderRepository.save()");
+            //저장 로직
+            if (itemId.equals("ex")) {
+                throw new IllegalStateException("예외 발생!");
+            }
+            sleep(1000);
+            trace.end(status);
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+        //저장 로직
+        if (itemId.equals("ex")) {
+            throw new IllegalStateException("예외 발생!");
+        }
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+### 로그추적기 v1 적용 결과
+
+#### 성공하는 케이스
+
+- 실행 후 http://localhost:8081/v1/request?itemId=test로 이동해서 확인해보자.
+
+>[b9044175] OrderController.request()  
+>[b4302b26] OrderService.orderItem()  
+>[de52ee68] OrderRepository.save()  
+>[de52ee68] OrderRepository.save() time=1007ms  
+>[b4302b26] OrderService.orderItem() time=1007ms  
+>[b9044175] OrderController.request() time=1008ms
+
+#### 실패하는 케이스
+
+- 실행 후 http://localhost:8081/v1/request?itemId=ex로 이동해서 확인해보자.
+
+>[d9e5fe30] OrderController.request()  
+>[5ab04ca5] OrderService.orderItem()  
+>[1194edd9] OrderRepository.save()  
+>[1194edd9] OrderRepository.save() time=0ms ex=java.lang.IllegalStateException: 예외 발생!  
+>[5ab04ca5] OrderService.orderItem() time=1ms ex=java.lang.IllegalStateException: 예외 발생!  
+>[d9e5fe30] OrderController.request() time=1ms ex=java.lang.IllegalStateException: 예외 발생!
+
+### 로그추적기 v1 적용 결과 분석
+
+- 직접 로그를 일일이 남기는 것보다는 낫긴한데 아직은 좀 번거롭다.
+- 로그를 남기기 위한 코드가 너무 복잡하다.
+- 요청을 한 번만 했으니 트랜잭션 ID가 동일해야 하는데 깊이가 변경될 때마다 새로운 트랜잭션 ID가 발급된다.
+- 깊이가 다른데도 같은 깊이처럼 출력된다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)

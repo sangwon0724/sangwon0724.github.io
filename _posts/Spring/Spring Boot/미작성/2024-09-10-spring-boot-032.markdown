@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[고급편] 스프링 AOP - 실전 예제"
+title:  "[고급편] 스프링 AOP 구현"
 date:   2024-09-09 22:46:00 +0900
 categories: Spring&nbsp;Boot
 tags: []

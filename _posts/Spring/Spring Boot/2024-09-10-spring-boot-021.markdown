@@ -1,0 +1,237 @@
+---
+layout: post
+title:  "[고급편] 개발자는 반복하는 일을 싫어한다."
+date:   2024-09-10 21:46:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 반복되는 코드는 생각보다 많다.
+
+- 만약 100개의 API가 있다고 치자.
+- 이 100개의 API를 실행한다고 했을 때 실행할 때마다 각 메소드가 실행되었다는 로그를 기록하려면 어떻게 해야할까?
+- 아주 단순하게 가정해보자.
+    1. 컨트롤러든, 서비스든, 리포지토리든 단순하게 시작과 종료 때만 코드 1줄을 통해 로그를 출력한다.
+    2. 1개의 컨트롤러 메소드에서는 1개의 서비스의 메소드를 호출하고, 그 1개의 서비스 메소드에서는 1개의 리포지토리의 메소드를 호출한다.
+    3. 각 메소드는 무조건 겹치지 않는다.
+- 위의 단순한 가정에서만 해도 시작과 종료니까 2번, 컨트롤러/서비스/리포지토리 3가지 유형, API는 총 100가지라면  
+단순 계산해도 2 * 3 * 100 = 600, 총 600줄의 코드가 생긴다.
+    - 600줄의 코드가 실무에서는 얼마되지 않는 코드일 수도 있다.
+    - 다만 이 단순한 로그를 똑같이 찍어내는데 600줄을 사용된다는 것은 상당히 관리하기 귀찮아진다.
+    - 만약 로그를 출력하는 양식이 바뀐다고 하면 똑같이 600줄을 수정해야 한다.
+    - 지금은 대략 600줄이지만 실무에서는 몇 줄이 될지 감히 가늠할 수도 없다.
+
+### 공통된 소스는 최소한으로만 사용할 수는 없을까?
+
+- 당연히 있다.
+- 비슷한 코드가 반복된다는 것은 결국 그 코드를 실행하기 위한 패턴이 일정하다는 것을 의미한다.
+- 즉, 그 패턴을 찾아서 거기에만 자동으로 적용될 수 있게 한다면 우리는 최소한의 코드로 최대한의 성과를 얻을 수 있다.
+- 이번 여정은 로그를 출력하는 것을 예시로 공통 코드를 적용하는 기술을 익혀나가는 과정이다.
+
+### 프로젝트 생성
+
+- 긴 여정을 한 번에 정리하기 위해 하나의 프로젝트로 묶는다.
+
+1. [스프링 이니셜라이저](https://start.spring.io/)를 통해 간단하게 com.example.demo로 프로젝트를 생성하자.
+    - dependencies
+        - spring-boot-starter-web
+        - lombok
+2. 나는 해당 프로젝트를 하위 모듈들을 위한 구심점으로 쓰고 직접 사용하지는 않을 것이다.
+3. 그래서 src 폴더를 포함한 하위 파일들을 삭제한다.
+4. 1번 ~ 3번까지 진행하였고, Java 버전이 17이라는 가정하에 build.gradle의 소스를 아래와 같이 수정한다.
+{% highlight gradle %}
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.3'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+bootJar.enabled = false // 빌드시 현재 모듈의 .jar를 생성하지 않습니다.
+
+//group = 'com.example'
+//version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+/*
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+*/
+subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
+	group 'com.example'
+	version '0.0.1-SNAPSHOT'
+	sourceCompatibility = '17'
+
+	apply plugin: 'java'
+	apply plugin: 'java-library'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.projectlombok:lombok'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+}
+
+/*
+tasks.named('test') {
+	useJUnitPlatform()
+}
+*/
+{% endhighlight %}
+{:start="5"}
+5. 이제 첫번째 모듈인 chapter1을 생성할 것이다.
+6. demo 패키지 우클릭 > 새로 만들기 > 모듈... 순서로 실핼한다.
+7. 첫번째 챕터를 처리하기 위한 것이니 이름 입력란에 chapter1를 입력 후 생성 버튼을 누른다.
+8. 잘 되는지 확인하기 위해 chapter1 모듈에 자동 생성된 Main 클래스로 이동한다.
+9. @SpringBootApplication 어노테이션을 추가한다.
+10. chapter1 모듈의 resources 폴더에 application.yaml을 생성한다.
+11. 추후 생성할 모듈과 구분하기 위해 server.port=8081을 설정한다.
+12. 이제 Main 클래스를 실행해서 잘 동작하는지 확인해보자.
+13. Main 클래스의 소스를 아래 형식처럼 수정 후 실행하자.
+{% highlight java %}
+@SpringBootApplication
+public class Main {
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
+}
+{% endhighlight %}
+{:start="14"}
+14. 이제 localhost:8081으로 이동해서 서버가 잘 올라갔나 확인하면 된다.
+
+### 미미한 시작 (v0)
+
+- 아주 간단한 API를 만들어서 점점 발전해나가자.
+- chatper1 모듈에 v0 패키지를 만들고, 거기에 일반적인 웹 애플리케이션처럼 컨트롤러/서비스/리포지토리의 패턴을 가진 API를 만든다.
+- 실행 후 http://localhost:8081/v0/request?itemId=test로 이동하면 결과로 ok를 반환하는 것을 확인할 수 있다.
+- 실행 후 http://localhost:8081/v0/request?itemId=ex로 이동하면 콘솔에서 예외가 발생하는 것을 확인할 수 있다.
+
+#### 리포지토리
+
+- 간단히 상품을 저장하는 로직만 있다.
+- itemId가 ex로 들어오면 예외를 발생시킨다.
+
+{% highlight java %}
+package com.example.v0;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderRepositoryV0 {
+    public void save(String itemId) {
+        //저장 로직
+        if (itemId.equals("ex")) {
+            throw new IllegalStateException("예외 발생!");
+        }
+
+        //상품을 저장하는데 약 1초 정도 걸리는 것으로 가정하기 위해 추가
+        sleep(1000);
+    }
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+#### 서비스
+
+{% highlight java %}
+package com.example.v0;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class OrderServiceV0 {
+    private final OrderRepositoryV0 orderRepository;
+
+    public void orderItem(String itemId) {
+        orderRepository.save(itemId);
+    }
+}
+{% endhighlight %}
+
+#### 컨트롤러
+
+{% highlight java %}
+package com.example.v0;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class OrderControllerV0 {
+    private final OrderServiceV0 orderService;
+
+    @GetMapping("/v0/request")
+    public String request(String itemId) {
+        orderService.orderItem(itemId);
+        return "ok";
+    }
+}
+{% endhighlight %}
+
+### 요구사항 분석을 분석해보자
+
+- 로그를 출력할 때는 특정 기능이 실행되었을 때 무슨 일이 있었는지 정보를 담고 있어야 한다.
+- 정리하면 다음과 같이 될 것이다.
+    - 모든 메소드의 호출과 응답 정보를 로그로 출력한다.
+        - 단, 외부로 공개될 public 메소드일 때만 해당한다.
+    - 애플리케이션의 흐름을 변경하면 안 된다.
+        - 로그를 남긴다고 해서 비즈니스 로직의 동작에 영향을 주면 안 된다.
+    - 로그는 정보를 포함하고 있어야 한다.
+        - 메소드 호출에 걸린 시간
+        - 정상 흐름과 예외 흐름 구분
+            - 예외 발생시 예외 정보가 남아야 한다.
+        - 메소드 호출의 깊이 표현
+        - HTTP 요청을 구분해야 한다.
+            - HTTP 요청 단위로 특정 ID를 남겨서 어떤 HTTP 요청에서 시작된 것인지 명확하게 구분이 가능해야 한다.
+            - 하나의 HTTP 요청이 시작해서 끝날 때 까지를 하나의 트랜잭션으로 취급한다.
+            - 이 때 트랜잭션의 고유코드를 일반적으로 트랜잭션 ID라고 지칭한다. (DB의 트랜잭션과는 무관)
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
