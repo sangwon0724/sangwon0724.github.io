@@ -1,0 +1,843 @@
+---
+layout: post
+title:  "[고급편] 쓰레드 로컬 (Thread Local)"
+date:   2024-09-11 21:55:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 필드 동기화 - 개발
+
+- 직전의 로그 추적기 v2에서는 TraceId를 파라미터로 넘김으로써 트랜잭션 ID를 공유하고, 메소드의 깊이를 나타낼 수 있었다.
+- 다만, 로그를 출력해야 하는 곳에서는 무조건 TraceId가 파라미터로 있어야 한다는 문제점이 있다.
+- 해당 문제를 해결하기 위한 방법을 알아보자.
+
+#### LogTrace
+
+- 향후 다양한 방식으로 구현할 수 있게 로그용 인터페이스를 생성한다.
+- 로그 추적기를 위한 최소한의 기능인 `begin`, `end`, `excption`을 정의한다.
+
+{% highlight java %}
+package com.example.trace;
+
+public interface LogTrace {
+    TraceStatus begin(String message);
+    void end(TraceStatus status);
+    void exception(TraceStatus status, Exception e);
+}
+{% endhighlight %}
+
+#### FieldLogTrace
+
+- LogTrace를 구현했다.
+- 실제 기능은 이전의 TraceV2과 거의 동일하다.
+
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class FieldLogTrace implements LogTrace {
+    private static final String START_PREFIX = "-->";
+    private static final String COMPLETE_PREFIX = "<--";
+    private static final String EX_PREFIX = "<X-";
+    private TraceId traceIdHolder; //traceId 동기화, 동시성 이슈 발생
+
+
+    @Override
+    public TraceStatus begin(String message) {
+        syncTraceId();
+        TraceId traceId = traceIdHolder;
+        Long startTimeMs = System.currentTimeMillis();
+        log.info("[{}] {}{}", traceId.getId(), addSpace(START_PREFIX, traceId.getLevel()), message);
+        return new TraceStatus(traceId, startTimeMs, message);
+    }
+
+    @Override
+    public void end(TraceStatus status) {
+        complete(status, null);
+    }
+
+    @Override
+    public void exception(TraceStatus status, Exception e) {
+        complete(status, e);
+    }
+
+    /**
+     * 실제 로그 출력
+     * @param status 로그 상태값
+     * @param e 예외
+     */
+    private void complete(TraceStatus status, Exception e) {
+        Long stopTimeMs = System.currentTimeMillis();
+        long resultTimeMs = stopTimeMs - status.getStartTimeMs(); //실행 시간
+        TraceId traceId = status.getTraceId();
+        if (e == null) {
+            log.info(
+                "[{}] {}{} time={}ms",
+                traceId.getId(),
+                addSpace(COMPLETE_PREFIX, traceId.getLevel()), status.getMessage(),
+                resultTimeMs
+            );
+        } else {
+            log.info(
+                "[{}] {}{} time={}ms ex={}",
+                traceId.getId(),
+                addSpace(EX_PREFIX, traceId.getLevel()), status.getMessage(), resultTimeMs,
+                e.toString()
+            );
+        }
+        releaseTraceId();
+    }
+
+    /**
+     * TraceId를 동기화한다.
+     * - 깊이값을 증가시킨다.
+     * - 최초 레벨일 경우에는 TraceId를 생성한다.
+     */
+    private void syncTraceId() {
+        if (traceIdHolder == null) {
+            traceIdHolder = new TraceId();
+        } else {
+            traceIdHolder = traceIdHolder.createNextId();
+        }
+    }
+
+
+    /**
+     * TraceId의 동기화를 해제한다.
+     * - 깊이값을 감소시킨다.
+     * - 최초 레벨일 경우에는 TraceId를 제거한다.
+     */
+    private void releaseTraceId() {
+        if (traceIdHolder.isFirstLevel()) {
+            traceIdHolder = null; //destroy
+        } else {
+            traceIdHolder = traceIdHolder.createPreviousId();
+        }
+    }
+
+    /**
+     * 깊이 표현을 위한 문자열 추가
+     * @param prefix 추가할 문자열
+     * @param level 나타낼 깊이
+     */
+    private static String addSpace(String prefix, int level) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            sb.append( (i == level - 1) ? "|" + prefix : "| ");
+        }
+        return sb.toString();
+    }
+}
+{% endhighlight %}
+
+#### 테스트 생성 및 실행
+
+- `Ctrl + Shift + T`를 통해 테스트를 생성 및 실행해보자.
+
+{% highlight java %}
+package com.example.trace;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class FieldLogTraceTest {
+    FieldLogTrace trace = new FieldLogTrace();
+
+    @Test
+    void begin_end_level2() {
+        TraceStatus status1 = trace.begin("hello1");
+        TraceStatus status2 = trace.begin("hello2");
+        trace.end(status2);
+        trace.end(status1);
+    }
+    
+    @Test
+    void begin_exception_level2() {
+        TraceStatus status1 = trace.begin("hello");
+        TraceStatus status2 = trace.begin("hello2");
+        trace.exception(status2, new IllegalStateException());
+        trace.exception(status1, new IllegalStateException());
+    }
+}
+{% endhighlight %}
+
+- begin_end_level2 실행 로그
+>[ca243076] hello1  
+>[ca243076] |-->hello2  
+>[ca243076] |<--hello2 time=1ms  
+>[ca243076] hello1 time=2ms
+
+- begin_exception_level2 실행 로그
+>[777ea750] hello  
+>[777ea750] |-->hello2  
+>[777ea750] |<X-hello2 time=0ms ex=java.lang.IllegalStateException  
+>[777ea750] hello time=2ms ex=java.lang.IllegalStateException
+
+#### 테스트 결과
+
+- 트랜잭션 ID도 동일하게 나오고, 메소드 호출에 따른 깊이도 잘 표현된다.
+- FieldLogTrace.traceIdHolder 필드를 사용해서 TraceId가 동기화된다.
+- 결론
+    - 불필요하게 TraceId 를 파라미터로 전달하지 않아도 된다.
+    - 메소드의 파라미터에 불필요하게 TraceId를 선언할 필요가 없어졌다.
+
+### 필드 동기화 - 적용
+
+#### 스프링 빈 등록
+
+- 우선 FieldLogTrace를 스프링 빈으로 등록하는 것이 좋다.
+- 수동으로 등록하면 추후에 구현체를 편리하게 변경할 수 있다.
+
+{% highlight java %}
+package com.example;
+
+import com.example.trace.FieldLogTrace;
+import com.example.trace.LogTrace;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class LogTraceConfig {
+    @Bean
+    public LogTrace logTrace() {
+        return new FieldLogTrace();
+    }
+}
+{% endhighlight %}
+
+#### v2 → v3
+
+- FieldLogTrace를 적용하기 위해 기존의 v2 패키지를 복사해서 v3으로 추가하자.
+    - v3 패키지 내부의 클래스명에서 v2을 v3로 변경한다.
+    - 각 클래스의 내부 로직에서 참고하는 타 클래스도 v3인지 확인한다.
+    - 컨트롤러에서 매핑 정보를 `/v2/request`에서 `/v3/request`로 변경한다.
+- TraceV2를 LogTrace로 변경한다.
+- 각 메소드에서 사용하는 파라미터에 있는 `TraceId taceId`를 모두 제거한다.
+- beginSync를 begin으로 변경한다.
+
+#### 컨트롤러
+
+{% highlight java %}
+package com.example.v3;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class OrderControllerV3 {
+    private final OrderServiceV3 orderService;
+    private final LogTrace trace;
+
+    @GetMapping("/v3/request")
+    public String request(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderController.request()");
+            orderService.orderItem(itemId);
+            trace.end(status);
+            return "ok";
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e; //예외를 꼭 다시 던져주어야 한다.
+        }
+    }
+}
+{% endhighlight %}
+
+#### 서비스
+
+{% highlight java %}
+package com.example.v3;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceId;
+import com.example.trace.TraceStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class OrderServiceV3 {
+    private final OrderRepositoryV3 orderRepository;
+    private final LogTrace trace;
+
+    public void orderItem(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderService.orderItem()");
+            orderRepository.save(itemId);
+            trace.end(status);
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 리포지토리
+
+{% highlight java %}
+package com.example.v3;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderRepositoryV3 {
+    private final LogTrace trace;
+
+    public void save(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin("OrderRepository.save()");
+            //저장 로직
+            if (itemId.equals("ex")) {
+                throw new IllegalStateException("예외 발생!");
+            }
+            sleep(1000);
+            trace.end(status);
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+        //저장 로직
+        if (itemId.equals("ex")) {
+            throw new IllegalStateException("예외 발생!");
+        }
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+#### 적용 결과 확인
+
+- 정상 실행 (http://localhost:8081/v3/request?itemId=test)
+>[27735fbd] OrderController.request()  
+>[27735fbd] |-->OrderService.orderItem()  
+>[27735fbd] | |-->OrderRepository.save()  
+>[27735fbd] | |<--OrderRepository.save() time=1001ms  
+>[27735fbd] |<--OrderService.orderItem() time=1001ms  
+>[27735fbd] OrderController.request() time=1002ms  
+
+- 예외 실행 (http://localhost:8081/v3/request?itemId=ex)
+>[b4a6f209] OrderController.request()  
+>[b4a6f209] |-->OrderService.orderItem()  
+>[b4a6f209] | |-->OrderRepository.save()  
+>[b4a6f209] | |<X-OrderRepository.save() time=1ms ex=java.lang.IllegalStateException: 예외 발생!  
+>[b4a6f209] |<X-OrderService.orderItem() time=1ms ex=java.lang.IllegalStateException: 예외 발생!  
+>[b4a6f209] OrderController.request() time=1ms ex=java.lang.IllegalStateException: 예외 발생!
+
+#### 적용 후기
+
+- traceIdHolder를 필드를 통해 동기화를 했더니 파라미터를 추가할 필요없이 깔끔한 로그추적기를 만들 수 있엇다.
+- 하지만 실무에 적용하기에는 아직 문제점이 있다.
+
+### 필드 동기화 - 동시성 문제
+
+- 로그 추적기 자체에는 문제가 없어보인다.
+- 하지만 사실 FieldLogTrace에는 심각한 동시성 문제가 숨어있다.
+
+#### 문제 확인해보기
+
+- v3 API를 1초 안에 여러 번 호출해보자 (http://localhost:8081/v3/request?itemId=test)
+>[nio-8081-exec-5] com.example.trace.FieldLogTrace          : [84dee891] OrderController.request()
+>[nio-8081-exec-5] com.example.trace.FieldLogTrace          : [84dee891] |-->OrderService.orderItem()
+>[nio-8081-exec-5] com.example.trace.FieldLogTrace          : [84dee891] | |-->OrderRepository.save()
+>[nio-8081-exec-7] com.example.trace.FieldLogTrace          : [84dee891] | | |-->OrderController.request()
+>[nio-8081-exec-7] com.example.trace.FieldLogTrace          : [84dee891] | | | |-->OrderService.orderItem()
+>[nio-8081-exec-7] com.example.trace.FieldLogTrace          : [84dee891] | | | | |-->OrderRepository.save()
+>[nio-8081-exec-5] com.example.trace.FieldLogTrace          : [84dee891] | |<--OrderRepository.save() time=1013ms
+>[nio-8081-exec-5] com.example.trace.FieldLogTrace          : [84dee891] |<--OrderService.orderItem() time=1013ms
+>[nio-8081-exec-5] com.example.trace.FieldLogTrace          : [84dee891] OrderController.request() time=1013ms
+>[nio-8081-exec-7] com.example.trace.FieldLogTrace          : [84dee891] | | | | |<--OrderRepository.save() time=1002ms
+>[nio-8081-exec-7] com.example.trace.FieldLogTrace          : [84dee891] | | | |<--OrderService.orderItem() time=1002ms
+>[nio-8081-exec-7] com.example.trace.FieldLogTrace          : [84dee891] | | |<--OrderController.request() time=1002ms
+
+- 분명 실행되는 쓰레드는 다를텐데 트랜잭션 ID는 동일하고, 순서는 뒤죽박죽 섞여있다.
+- 어째서 이런 문제가 발생하는 것일까?
+
+#### 동시성 문제
+
+- 사실 원인은 동시성때문이다.
+- FieldLogTrace는 현재 싱글톤으로 등록되어 있는 스프링 빈이다.
+    - 즉, FieldLogTrace의 인스턴스는 애플리케이션에 단 1개만 존재한다.
+- 싱글톤 빈에 여러 쓰레드가 동시에 접근하기 때문에 동시성이 발생하는 것이다.
+- 이러한 동시성 문제는 실무에서 개발자를 유난히 괴롭히는 문제 중 하나이다.
+
+### 동시성 문제 - 예제 코드
+
+- 동시성 문제가 어떻게 발생하는지 단순화해서 알아보자.
+- 우선 build.gradle의 dependencies에 아래의 코드를 추가하자.
+    - 아래 코드를 추가해야지 테스트 코드에서 @Slfj4 같은 애노테이션이 작동한다.
+{% highlight gradle %}
+//테스트에서 lombok 사용
+testCompileOnly 'org.projectlombok:lombok'
+testAnnotationProcessor 'org.projectlombok:lombok'
+{% endhighlight %}
+
+#### 테스트 생성
+
+- 우선 test쪽에 동시성 테스트를 위한 FieldService 클래스를 추가하자.
+- 최대한 단순한 로직으로 확인해보자.
+- 파라미터로 넘어온 name을 필드인 nameStore에 저장 후,  
+1초 간 정지한 뒤에 필드에 저장된 nameStore를 반환한다.
+
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@Slf4j
+@SpringBootTest
+public class FieldService {
+    private String nameStore;
+
+    public String logic(String name) {
+        log.info("저장 name={} -> nameStore={}", name, nameStore);
+        nameStore = name;
+        sleep(1000);
+        log.info("조회 nameStore={}",nameStore);
+        return nameStore;
+    }
+    
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+- 이번에는 FieldService를 테스트하기 위한 FieldServiceTest 클래스를 추가하자.
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+class FieldServiceTest {
+    private FieldService fieldService = new FieldService();
+
+    @Test
+    void field() {
+        log.info("main start");
+
+        Runnable userA = () -> {
+            fieldService.logic("userA");
+        };
+        Runnable userB = () -> {
+            fieldService.logic("userB");
+        };
+
+        Thread threadA = new Thread(userA);
+        threadA.setName("thread-A");
+
+        Thread threadB = new Thread(userB);
+        threadB.setName("thread-B");
+
+        threadA.start(); //쓰레드 A 실행
+
+        sleep(2000); //동시성 문제 발생X
+        //sleep(100); //동시성 문제 발생O
+
+        threadB.start(); //쓰레드 B 실행
+
+        sleep(3000); //메인 쓰레드 종료 대기
+
+        log.info("main exit");
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+#### 테스트 실행 (sleep 2000ms)
+
+- logic 메소드 내부에 sleep(1000)으로 1초의 지연시간이 있다.
+- 정상적인 결과를 확인하기 위해 테스트에서는 넉넉하게 2초(2000ms)의 지연시간을 설정했다.
+- 지연시간을 넉넉하게 잡았기 때문에 쓰레드는 A → B 순으로 차례대로 진행됬다.
+
+>[Test worker] INFO com.example.trace.FieldServiceTest -- main start
+>[thread-A] INFO com.example.trace.FieldService -- 저장 name=userA -> nameStore=null
+>[thread-A] INFO com.example.trace.FieldService -- 조회 nameStore=userA
+>[thread-B] INFO com.example.trace.FieldService -- 저장 name=userB -> nameStore=userA
+>[thread-B] INFO com.example.trace.FieldService -- 조회 nameStore=userB
+>[Test worker] INFO com.example.trace.FieldServiceTest -- main exit
+
+#### 테스트 실행 (sleep 1000ms)
+
+- logic 메소드 내부에 sleep(1000)으로 1초의 지연시간이 있다.
+- 정상적이지 않은 결과를 확인하기 위해 이번 테스트에서는 0.1초(100ms)의 지연시간을 설정했다.
+- 지연시간을 짧게 잡았기 때문에 쓰레드 A와 B가 뒤죽박죽 실행되었다.
+
+>[Test worker] INFO com.example.trace.FieldServiceTest -- main start
+>[thread-A] INFO com.example.trace.FieldService -- 저장 name=userA -> nameStore=null
+>[thread-B] INFO com.example.trace.FieldService -- 저장 name=userB -> nameStore=userA
+>[thread-A] INFO com.example.trace.FieldService -- 조회 nameStore=userB
+>[thread-B] INFO com.example.trace.FieldService -- 조회 nameStore=userB
+>[Test worker] INFO com.example.trace.FieldServiceTest -- main exit
+
+#### 동시성 문제가 발생하는 범위
+
+- 지역 변수에서는 동시성 문제가 발생하지 않는다.
+    - 지역 변수는 쓰레드마다 각각 다른 메모리 영역이 할당된다.
+- 동시성 문제는 같은 인스턴스의 필드에서 발생한다.
+    - 주로 싱글톤에서 자주 발생한다.
+    - static같은 공용 필드에 접근할 때 발생한다.
+- 동시성 문제는 값을 읽기만 하면 발생하지 않는다.
+    - 동시성 문제는 어디선가 값을 변경하기 때문에 발생한다.
+
+### ThreadLocal
+
+- 해당 쓰레드만 접근할 수 있는 특별한 저장소
+- 싱글톤 객체의 필드를 사용하면서 동시성 문제를 해결할 수 있다.
+- java.lang.ThreadLocal
+
+#### 일반적인 변수 필드와 ThreadLocal의 차이
+
+- 일반적인 변수 필드
+    - 여러 쓰레드가 같은 인스턴스의 필드에 접근하면 처음 쓰레드가 보관한 데이터가 사라질 수 있다.
+- ThreadLocal
+    - 각 쓰레드마다 별도의 내부 저장소를 제공한다.
+    - 같은 인스턴스의 쓰레드 로컬 필드에 접근해도 문제 없다.
+
+#### 사용법
+
+- 값 저장
+    - ThreadLocal.set(xxx)
+- 값 조회
+    - ThreadLocal.get()
+- 값 제거
+    - ThreadLocal.remove()
+
+#### 주의사항 (★★★)
+
+- 해당 쓰레드가 쓰레드 로컬을 모두 사용하고 나면 ThreadLocal.remove() 를 호출해서  
+쓰레드 로컬에 저장된 값을 반드시 제거해주어야 한다.
+- 저장된 값을 제거하지 않으면 해당 쓰레드에서 계속 값을 가지고 있기 때문에,  
+항상 메모리를 차지하고 있어서 메모리 누수의 원인이 된다.
+
+### ThreadLocal - 예제 코드
+
+#### 테스트 생성 및 실행
+
+- ThreadLocal의 사용법을 익히기 위해 test에 ThreadLocalService 클래스를 추가한다.
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ThreadLocalService {
+    private ThreadLocal<String> nameStore = new ThreadLocal<>();
+    
+    public String logic(String name) {
+        log.info("저장 name={} -> nameStore={}", name, nameStore.get());
+        nameStore.set(name);
+        sleep(1000);
+        log.info("조회 nameStore={}",nameStore.get());
+        return nameStore.get();
+    }
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+- 이제 ThreadLocalService를 테스트 하기 위해 ThreadLocalServiceTest 클래스를 추가한다.
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class ThreadLocalServiceTest {
+    private ThreadLocalService service = new ThreadLocalService();
+
+    @Test
+    void threadLocal() {
+        log.info("main start");
+        Runnable userA = () -> {
+            service.logic("userA");
+        };
+        Runnable userB = () -> {
+            service.logic("userB");
+        };
+        Thread threadA = new Thread(userA);
+        threadA.setName("thread-A");
+        Thread threadB = new Thread(userB);
+        threadB.setName("thread-B");
+        threadA.start();
+        sleep(100);
+        threadB.start();
+        sleep(2000);
+        log.info("main exit");
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+- threadLocal 실행 로그
+>[Test worker] INFO com.example.trace.ThreadLocalServiceTest -- main start  
+>[thread-A] INFO com.example.trace.ThreadLocalService -- 저장 name=userA -> nameStore=null  
+>[thread-B] INFO com.example.trace.ThreadLocalService -- 저장 name=userB -> nameStore=null  
+>[thread-A] INFO com.example.trace.ThreadLocalService -- 조회 nameStore=userA  
+>[thread-B] INFO com.example.trace.ThreadLocalService -- 조회 nameStore=userB  
+>[Test worker] INFO com.example.trace.ThreadLocalServiceTest -- main exit
+
+#### 테스트 결과
+
+- 쓰레드 로컬을 통해 쓰레드는 각각 별도의 데이터 저장소를 가지게 되었다.
+- 드디어 동시성 문제가 해결되었다.
+
+### 쓰레드 로컬 동기화 - 개발
+
+- FieldLogTrace 에서 발생했던 동시성 문제를 ThreadLocal로 해결해보자.
+
+#### ThreadLocalLogTrace
+
+- 필드 대신에 쓰레드 로컬을 사용해서 데이터를 동기화하는 ThreadLocalLogTrace를 생성한다.
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ThreadLocalLogTrace implements LogTrace {
+    private static final String START_PREFIX = "-->";
+    private static final String COMPLETE_PREFIX = "<--";
+    private static final String EX_PREFIX = "<X-";
+    private ThreadLocal<TraceId> traceIdHolder = new ThreadLocal<>();
+    
+    @Override
+    public TraceStatus begin(String message) {
+        syncTraceId();
+        TraceId traceId = traceIdHolder.get();
+        Long startTimeMs = System.currentTimeMillis();
+        log.info(
+            "[{}] {}{}",
+            traceId.getId(),
+            addSpace(START_PREFIX, traceId.getLevel()),
+            message
+        );
+        return new TraceStatus(traceId, startTimeMs, message);
+    }
+    
+    @Override
+    public void end(TraceStatus status) {
+        complete(status, null);
+    }
+    
+    @Override
+    public void exception(TraceStatus status, Exception e) {
+        complete(status, e);
+    }
+    
+    private void complete(TraceStatus status, Exception e) {
+        Long stopTimeMs = System.currentTimeMillis();
+        long resultTimeMs = stopTimeMs - status.getStartTimeMs();
+        TraceId traceId = status.getTraceId();
+        if (e == null) {
+            log.info(
+                "[{}] {}{} time={}ms",
+                traceId.getId(),
+                addSpace(COMPLETE_PREFIX, traceId.getLevel()),
+                status.getMessage(),
+                resultTimeMs
+            );
+        } else {
+            log.info(
+                "[{}] {}{} time={}ms ex={}",
+                traceId.getId(),
+                addSpace(EX_PREFIX, traceId.getLevel()),
+                status.getMessage(),
+                resultTimeMs,
+                e.toString()
+            );
+        }
+        releaseTraceId();
+    }
+    
+    private void syncTraceId() {
+        TraceId traceId = traceIdHolder.get();
+        if (traceId == null) {
+            traceIdHolder.set(new TraceId());
+        } else {
+            traceIdHolder.set(traceId.createNextId());
+        }
+    }
+    
+    private void releaseTraceId() {
+        TraceId traceId = traceIdHolder.get();
+        if (traceId.isFirstLevel()) {
+            traceIdHolder.remove(); //쓰레드 로컬 제거
+        } else {
+            traceIdHolder.set(traceId.createPreviousId());
+        }
+    }
+    
+    private static String addSpace(String prefix, int level) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            sb.append( (i == level - 1) ? "|" + prefix : "| ");
+        }
+        return sb.toString();
+    }
+}
+{% endhighlight %}
+
+#### 테스트 생성 및 실행
+
+- `Ctrl + Shift + T`를 통해 ThreadLocalLogTrace를 테스트하기 위한 클래스를 생성한다.
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+class ThreadLocalLogTraceTest {
+    ThreadLocalLogTrace trace = new ThreadLocalLogTrace();
+
+    @Test
+    void begin_end_level2() {
+        TraceStatus status1 = trace.begin("hello1");
+        TraceStatus status2 = trace.begin("hello2");
+        trace.end(status2);
+        trace.end(status1);
+    }
+    
+    @Test
+    void begin_exception_level2() {
+        TraceStatus status1 = trace.begin("hello");
+        TraceStatus status2 = trace.begin("hello2");
+        trace.exception(status2, new IllegalStateException());
+        trace.exception(status1, new IllegalStateException());
+    }
+}
+{% endhighlight %}
+
+- begin_end_level2 실행 로그
+>[31295c64] hello1  
+>[31295c64] |-->hello2  
+>[31295c64] |<--hello2 time=0ms  
+>[31295c64] hello1 time=8ms
+
+- begin_exception_level2 실행 로그
+>[e7c1fc9e] hello  
+>[e7c1fc9e] |-->hello2  
+>[e7c1fc9e] |<X-hello2 time=1ms ex=java.lang.IllegalStateException  
+>[e7c1fc9e] hello time=7ms ex=java.lang.IllegalStateException
+
+#### 테스트 결과
+- ThreadLocalLogTrace 자체는 문제가 없다.
+- 다만 확실한 결과를 얻기 위해서는 애플리케이션에 ThreadLocalLogTrace를 적용해서 확인해봐야할 것 같다.
+
+### 쓰레드 로컬 동기화 - 적용
+
+- LogTraceConfig에서 `return new FieldLogTrace();`를 `return new ThreadLocalLogTrace();`로 수정한다.
+- 그런 다음에 실제 API를 호출해서 로그를 확인해보자. (http://localhost:8081/v3/request?itemId=test)
+
+#### 실행 결과
+
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] OrderController.request()  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] |-->OrderService.orderItem()  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] | |-->OrderRepository.save()  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] OrderController.request()  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] |-->OrderService.orderItem()  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] | |-->OrderRepository.save()  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] | |<--OrderRepository.save() time=1002ms  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] |<--OrderService.orderItem() time=1002ms  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] OrderController.request() time=1003ms  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] | |<--OrderRepository.save() time=1014ms  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] |<--OrderService.orderItem() time=1014ms  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] OrderController.request() time=1014ms
+
+#### 로그를 트랜젹션 ID 기준으로 분리
+
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] OrderController.request()  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] |-->OrderService.orderItem()  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] | |-->OrderRepository.save()  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] | |<--OrderRepository.save() time=1002ms  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] |<--OrderService.orderItem() time=1002ms  
+[nio-8081-exec-1] com.example.trace.ThreadLocalLogTrace    : [8e08ea14] OrderController.request() time=1003ms  
+  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] OrderController.request()  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] |-->OrderService.orderItem()  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] | |-->OrderRepository.save()  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] | |<--OrderRepository.save() time=1014ms  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] |<--OrderService.orderItem() time=1014ms  
+[nio-8081-exec-2] com.example.trace.ThreadLocalLogTrace    : [d4fcf2b4] OrderController.request() time=1014ms
+
+#### 적용 결과
+
+- 각 쓰레드별로 로그가 정확하게 나누어져 있는 것을 확인할 수 있다.
+
+### 쓰레드 로컬 - 주의사항
+
+- 쓰레드 로컬의 값을 사용 후 제거하지 않고 그냥 두게 된다면,  
+WAS(톰캣)처럼 쓰레드 풀을 사용하는 경우에 심각한 문제가 발생할 수 있다.
+- 문제를 가정해보자.
+    1. 현재 쓰레드 풀은 3개의 쓰레드를 사용하도록 설정되어 있다.
+    2. 이 때 사용자 A가 HTTP 요청을 시도했다.
+    3. WAS는 사용자 A에게 쓰레드-1을 할당한다.
+    4. 쓰레드-1은 사용자 A의 데이터를 쓰레드 로컬에 저장한다.
+    5. 사용자 A의 HTTP 응답이 끝난다.
+    6. 이 때, WAS는 쓰레드-1을 제거하는 게 아닌 쓰레드 풀에 반환한다.
+    7. 즉, 쓰레드-1은 쓰레드 풀에서 계속 살아있기 때문에 쓰레드 로컬의 쓰레드-1에 대한 전용 보관소에 사용자 A의 데이터도 함께 살아있다.
+- 왜 쓰레드를 제거하지 않고 쓰레드 풀에 반환할까?
+    - 쓰레드를 생성하는 비용이 비싸기 때문이다.
+- 무엇이 문제가 될까?
+    - 데이터가 살아있기 때문에 그만큼 메모리를 잡아먹는다.
+        - 이는 메모리 누수의 원인이 된다.
+    - 쓰레드 풀에 반환된 쓰레드는 다른 사용자에게도 할당될 수 있다.
+        - 쓰레드 로컬의 값을 제거하지 않으면 데이터가 살아있는데 그 데이터를 다른 사용자가 볼 수 있게 된다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
