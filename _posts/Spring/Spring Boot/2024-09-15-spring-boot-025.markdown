@@ -1,0 +1,417 @@
+---
+layout: post
+title:  "[고급편] 템플릿 메서드 패턴"
+date:   2024-09-09 22:46:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 공통된 코드
+
+- 현재 작성한 코드들을 잘 살펴보면 중복된 코드가 존재한다.
+- 좋은 설계는 변하는 것과 변하지 않는 것을 분리하여 모듈화하는 것이다.
+- 템플릿 메서드 패턴(Template Method Pattern)을 통해 문제를 해결해보자.
+
+### 템플릿 메서드 패턴 - 예제1
+
+- 우선 템플릿 메서드 패턴이 필요한 경우를 이해하기 위해  
+TemplateMethodTest를 생성한 후 templateMethodV0를 실행해보자.
+
+{% highlight java %}
+package com.example.trace.template;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class TemplateMethodTest {
+    @Test
+    void templateMethodV0() {
+        logic1();
+        logic2();
+    }
+
+    private void logic1() {
+        long startTime = System.currentTimeMillis();
+        //비즈니스 로직 실행
+        log.info("비즈니스 로직1 실행");
+        //비즈니스 로직 종료
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+
+    private void logic2() {
+        long startTime = System.currentTimeMillis();
+        //비즈니스 로직 실행
+        log.info("비즈니스 로직2 실행");
+        //비즈니스 로직 종료
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+}
+{% endhighlight %}
+
+- templateMethodV0 실핼 로그
+>비즈니스 로직1 실행  
+>resultTime=5  
+>비즈니스 로직2 실행  
+>resultTime=0
+
+- logic1() 과 logic2() 는 시간을 측정하는 부분과 비즈니스 로직을 실행하는 부분이 함께 존재한다.
+    - 변하는 부분
+        - 비즈니스 로직
+    - 변하지 않는 부분
+        - 시간 측정을 측정하는 부분
+- 이제 템플릿 메서드 패턴을 사용해서 변하는 부분과 변하지 않는 부분을 분리해보자.
+
+### 템플릿 메서드 패턴 - 예제2
+
+#### 변하지 않는 부분
+
+- 공통된 로직을 처리하기 위해 AbstractTemplate를 생성하자.
+{% highlight java %}
+package com.example.trace.template;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public abstract class AbstractTemplate {
+    public void execute() {
+        long startTime = System.currentTimeMillis();
+
+        //비즈니스 로직 실행
+        call(); //상속
+        //비즈니스 로직 종료
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+    
+    //비즈니스 로직
+    protected abstract void call();
+}
+{% endhighlight %}
+
+- 템플릿 메서드 패턴은 이름 그대로 템플릿을 사용하는 방식이다.
+- 이 때 템플릿은 변하지 않는 틀을 의미한다.
+    - 템플릿 역할을 하는 부분에는 변하지 않는 부분들을 몰아서 작성한다.
+    - 그래서 변하지 않는 부분인 시간 측정 로직을 몰아둔 것을 확인할 수 있다.
+- 변하는 부분은 자식 클래스에 두고 상속과 오버라이딩을 사용해서 처리한다.
+
+#### 변하는 부분
+
+- 변하는 부분을 확인하기 위해 SubClassLogic1과 SubClassLogic2를 작성해보자.
+
+##### SubClassLogic1
+
+{% highlight java %}
+package com.example.trace.template;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class SubClassLogic1 extends AbstractTemplate {
+    @Override
+    protected void call() {
+        log.info("비즈니스 로직1 실행");
+    }
+}
+{% endhighlight %}
+
+##### SubClassLogic2
+
+{% highlight java %}
+package com.example.trace.template;
+
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
+public class SubClassLogic2 extends AbstractTemplate {
+    @Override
+    protected void call() {
+        log.info("비즈니스 로직2 실행");
+    }
+}
+{% endhighlight %}
+
+#### 테스트 생성
+
+- 이전의 TemplateMethodTest에 templateMethodV1를 추가하자.
+
+{% highlight java %}
+/**
+    * 템플릿 메서드 패턴 적용
+*/
+@Test
+void templateMethodV1() {
+    AbstractTemplate template1 = new SubClassLogic1();
+    template1.execute();
+    AbstractTemplate template2 = new SubClassLogic2();
+    template2.execute();
+}
+{% endhighlight %}
+
+#### 테스트 실행
+
+- templateMethodV1 실행 로그
+
+>com.example.trace.template.SubClassLogic1 -- 비즈니스 로직1 실행  
+>com.example.trace.template.AbstractTemplate -- resultTime=5  
+>com.example.trace.template.SubClassLogic2 -- 비즈니스 로직2 실행  
+>com.example.trace.template.AbstractTemplate -- resultTime=1
+
+- 테스트 결과를 통해 변하지 않는 부분은 AbstractTemplate에서,  
+변하는 부분은 AbstractTemplate를 상속받은 SubClassLogic1과 SubClassLogic2에서 처리하는 것을 확인할 수 있다.
+
+### 템플릿 메서드 패턴 - 예제3
+
+- 다만 저렇게 일일이 상속받은 클래스를 생성하려면   
+실행해야 하는 비즈니스 로직의 수만큼 클래스가 많아진다는 단점이 있다.
+- 그래서 해결책으로 익명 내부 클래스를 사용할 수 있다.
+
+#### 테스트 생성
+
+- 익명 내부 클래스를 통한 테스트를 위해 이번에는 TemplateMethodTest에 templateMethodV2를 추가하자.
+
+{% highlight java %}
+/**
+    * 템플릿 메서드 패턴, 익명 내부 클래스 사용
+    */
+@Test
+void templateMethodV2() {
+    AbstractTemplate template1 = new AbstractTemplate() {
+        @Override
+        protected void call() {
+            log.info("비즈니스 로직1 실행");
+        }
+    };
+    log.info("클래스 이름1={}", template1.getClass());
+
+    template1.execute();
+    AbstractTemplate template2 = new AbstractTemplate() {
+        @Override
+        protected void call() {
+            log.info("비즈니스 로직1 실행");
+        }
+    };
+    log.info("클래스 이름2={}", template2.getClass());
+    template2.execute();
+}
+{% endhighlight %}
+
+#### 테스트 실행
+
+- templateMethodV2 실행 로그
+
+>com.example.trace.template.TemplateMethodTest -- 클래스 이름1=class com.example.trace.template.TemplateMethodTest$1  
+>com.example.trace.template.TemplateMethodTest -- 비즈니스 로직1 실행  
+>com.example.trace.template.AbstractTemplate -- resultTime=1  
+>com.example.trace.template.TemplateMethodTest -- 클래스 이름2=class com.example.trace.template.TemplateMethodTest$2  
+>com.example.trace.template.TemplateMethodTest -- 비즈니스 로직1 실행  
+>com.example.trace.template.AbstractTemplate -- resultTime=0
+
+- 실행 결과를 보면 자바가 임의로 만들어주는 익명 내부 클래스 이름은  
+TemplateMethodTest$1 , TemplateMethodTest$2 인 것을 확인할 수 있다
+
+### 템플릿 메서드 패턴 - 적용
+
+- 이번에는 실제 애플리케이션에 적용해보자.
+- 우선 템플릿 부분을 정의하는 AbstractTemplate을 생성한다.
+
+{% highlight java %}
+package com.example.trace.template;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+
+public abstract class AbstractTemplate<T> {
+    private final LogTrace trace;
+    public AbstractTemplate(LogTrace trace) {
+        this.trace = trace;
+    }
+    public T execute(String message) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin(message);
+            T result = call(); //비즈니스 로직 호출
+            trace.end(status);
+            return result;
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+    }
+    
+    //비즈니스 로직
+    protected abstract T call();
+}
+{% endhighlight %}
+
+- 제네릭을 통해 반환 타입을 동적으로 지정할 수 있게 했다.
+- 객체를 생성할 때 내부에서 사용할 LogTrace trace 를 전달받는다.
+- 로그에 출력할 message 를 외부에서 파라미터로 전달받는다.
+- 비즈니스 로직을 담당하는 call 메소드를 도중에 호출하게 한다.
+
+#### v3 v4 복사
+
+- 템플릿 메서드 패턴을 적용하기 위해 기존의 v3 패키지를 복사해서 v4으로 추가하자.
+    - v4 패키지 내부의 클래스명에서 v3을 v4로 변경한다.
+    - 각 클래스의 내부 로직에서 참고하는 타 클래스도 v4인지 확인한다.
+    - 컨트롤러에서 매핑 정보를 `/v3/request`에서 `/v4/request`로 변경한다.
+- 이제 AbstractTemplate을 적용해보자.
+
+#### 컨트롤러
+
+{% highlight java %}
+package com.example.v4;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import com.example.trace.template.AbstractTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class OrderControllerV4 {
+    private final OrderServiceV4 orderService;
+    private final LogTrace trace;
+
+    @GetMapping("/v4/request")
+    public String request(String itemId) {
+        AbstractTemplate<String> template = new AbstractTemplate<>(trace) {
+            @Override
+            protected String call() {
+                orderService.orderItem(itemId);
+                return "ok";
+            }
+        };
+        return template.execute("OrderController.request()");
+    }
+}
+{% endhighlight %}
+
+#### 서비스
+
+{% highlight java %}
+package com.example.v4;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import com.example.trace.template.AbstractTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class OrderServiceV4 {
+    private final OrderRepositoryV4 orderRepository;
+    private final LogTrace trace;
+
+    public void orderItem(String itemId) {
+        AbstractTemplate<Void> template = new AbstractTemplate<>(trace) {
+            @Override
+            protected Void call() {
+                orderRepository.save(itemId);
+                return null;
+            }
+        };
+        template.execute("OrderService.orderItem()");
+    }
+}
+{% endhighlight %}
+
+#### 리포지토리
+
+{% highlight java %}
+package com.example.v4;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import com.example.trace.template.AbstractTemplate;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderRepositoryV4 {
+    private final LogTrace trace;
+
+    public void save(String itemId) {
+        AbstractTemplate<Void> template = new AbstractTemplate<>(trace) {
+            @Override
+            protected Void call() {
+                //저장 로직
+                if (itemId.equals("ex")) {
+                    throw new IllegalStateException("예외 발생!");
+                }
+                sleep(1000);
+                return null;
+            }
+        };
+        template.execute("OrderRepository.save()");
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+#### 적용 결과
+
+- http://localhost:8081/v4/request?itemId=test를 실행해보자.
+
+>[2f2dbf29] OrderController.request()  
+>[2f2dbf29] |-->OrderService.orderItem()  
+>[2f2dbf29] | |-->OrderRepository.save()  
+>[2f2dbf29] | |<--OrderRepository.save() time=1015ms  
+>[2f2dbf29] |<--OrderService.orderItem() time=1015ms  
+>[2f2dbf29] OrderController.request() time=1016ms
+
+### 좋은 설계란?
+
+- 좋은 설계에 대해서는 수많은 정의가 존재한다.
+- 그 수많은 정의에서도 공통적으로 나오는 말은 `변경이 일어날 때 자연스럽게 대처할 수 있다.`이다.
+- 우리는 지금 템플릿 메서드 패턴을 통해 공통된 부분을 모아뒀다.
+    - 수정할 일이 생긴다면 템플릿 부분만 수정해주면 된다.
+    - 만약 템플릿이 없었다면 공통된 부분을 모두 수정해줘야 한다.
+
+### 단일 책임 원칙 (SRP)
+
+- v4의 놀라운 점은 단순히 패턴을 적용했다고 소스 코드를 줄인 것이 아니다.
+- v4는 로그를 남기는 부분에 단일 책임 원칙을 지키게 했다.
+- 즉, 변경점이 일어날 수 있는 부분을 한 곳으로 모아서 변경에 쉽고 유연하게 대처할 수 있는 구조를 만들었다.
+
+### 템플릿 메서드 패턴의 목적
+
+- 템플릿 메서드 패턴의 목적은 다음과 같다.
+    - 템플릿에서 알고리즘의 골격을 정의하고, 비즈니스 로직은 자식 클래스에서 작성한다.
+    - 자식 클래스가 알고리즘의 구조를 변경하지 않고도, 알고리즘의 특정 단계를 재정의할 수 있다.
+- 결국 템플릿 메서드 패턴은 상속과 오버라이딩을 통한 다형성으로 문제를 해결하는 것이다.
+- 다만 문제점이 있다.
+    - 템플릿 메서드 패턴은 상속을 사용하기 때문에 상속에서 오는 단점들도 갖고 있다.
+    - 자식 클래스가 부모 클래스와 컴파일 시점에 강하게 결합되는 문제가 있다.
+        - 이것은 의존관계에 대한 문제이다.
+    - 자식 클래스 입장에서는 부모 클래스의 기능을 전혀 사용하지 않는다.
+        - 부모 클래스의 기능을 전혀 사용하지 않는데, 부모 클래스를 알아야한다.
+    - 상속 구조를 사용하기 때문에, 별도의 클래스나 익명 내부 클래스를 만들어야 되서 복잡하다.
+        
+### 전략 패턴 (Strategy Pattern)
+
+- 템플릿 메서드 패턴과 비슷한 역할을 하는 디자인 패턴인 전략 패턴을 적용하면 상속의 단점을 제거할 수 있다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
