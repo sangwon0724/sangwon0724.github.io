@@ -1,0 +1,288 @@
+---
+layout: post
+title:  "[고급편] 템플릿 콜백 패턴"
+date:   2024-09-16 14:02:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+published: false
+---
+
+### 템플릿 콜백 패턴 - 시작
+
+- 템플릿 콜백 패턴은 전략 패턴에서 템플릿과 콜백 부분이 강조된 패턴이다.
+    - GOF 패턴은 아니고, 스프링 내부에서 이런 방식을 자주 사용하기 때문에 부르는 명칭이다.
+- 전략 패턴에서 Context가 템플릿 역할을 하고, Strategy 부분이 콜백으로 넘어온다 생각하면 된다
+- 전략 패턴에서 사용되는 정의가 템플릿 콜백 패턴에서는 다음과 같이 바뀐다.
+    - Context → Template
+    - Strategy → Callback
+
+### 템플릿 콜백 패턴 - 예제
+
+- Callback과 Template을 정의해보자.
+
+#### Callback
+
+{% highlight java %}
+package com.example.trace.template_callback;
+
+public interface Callback {
+    void call();
+}
+{% endhighlight %}
+
+#### Template
+
+{% highlight java %}
+package com.example.trace.template_callback;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class TimeLogTemplate {
+    public void execute(Callback callback) {
+        long startTime = System.currentTimeMillis();
+
+        //비즈니스 로직 실행
+        callback.call(); //위임
+        //비즈니스 로직 종료
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+}
+{% endhighlight %}
+
+#### 테스트 생성 및 실행
+
+- 템플릿 콜백 패턴을 테스트하기 위해 TemplateCallbackTest를 생성하자.
+
+{% highlight java %}
+package com.example.trace.template_callback;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class TemplateCallbackTest {
+    /**
+     * 템플릿 콜백 패턴 - 익명 내부 클래스
+     */
+    @Test
+    void callbackV1() {
+        TimeLogTemplate template = new TimeLogTemplate();
+        template.execute(new Callback() {
+            @Override
+            public void call() {
+                log.info("비즈니스 로직1 실행");
+            }
+        });
+        template.execute(new Callback() {
+            @Override
+            public void call() {
+                log.info("비즈니스 로직2 실행");
+            }
+        });
+    }
+
+    /**
+     * 템플릿 콜백 패턴 - 람다
+     */
+    @Test
+    void callbackV2() {
+        TimeLogTemplate template = new TimeLogTemplate();
+        template.execute(() -> log.info("비즈니스 로직1 실행"));
+        template.execute(() -> {
+            log.info("비즈니스 로직2 실행");
+        });
+    }
+}
+{% endhighlight %}
+
+- callbackV1 실행 로그
+>com.example.trace.template_callback.TemplateCallbackTest -- 비즈니스 로직1 실행  
+>com.example.trace.template_callback.TimeLogTemplate -- resultTime=4  
+>com.example.trace.template_callback.TemplateCallbackTest -- 비즈니스 로직2 실행  
+>com.example.trace.template_callback.TimeLogTemplate -- resultTime=0
+
+- callbackV2 실행 로그
+>com.example.trace.template_callback.TemplateCallbackTest -- 비즈니스 로직1 실행  
+>com.example.trace.template_callback.TimeLogTemplate -- resultTime=4  
+>com.example.trace.template_callback.TemplateCallbackTest -- 비즈니스 로직2 실행  
+>com.example.trace.template_callback.TimeLogTemplate -- resultTime=0
+
+### 템플릿 콜백 패턴 - 적용
+
+- 기존의 v4 패키지를 복사해서 v5으로 추가하자.
+    - v5 패키지 내부의 클래스명에서 v4을 v5로 변경한다.
+    - 각 클래스의 내부 로직에서 참고하는 타 클래스도 v5인지 확인한다.
+    - 컨트롤러에서 매핑 정보를 `/v4/request`에서 `/v5/request`로 변경한다.
+
+#### 콜백
+
+- 콜백을 전달하는 인터페이스이다.
+- 제네릭으로 콜백의 반환 타입을 정의한다.
+
+{% highlight java %}
+package com.example.trace.callback;
+
+public interface TraceCallback<T> {
+    T call();
+}
+{% endhighlight %}
+
+#### 템플릿
+
+- excute가 message와 callback을 받도록 정의한다.
+- 제네릭으로 반환 타입을 정의한다.
+
+{% highlight java %}
+package com.example.trace.callback;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+
+public class TraceTemplate {
+    private final LogTrace trace;
+
+    public TraceTemplate(LogTrace trace) {
+        this.trace = trace;
+    }
+
+    public <T> T execute(String message, TraceCallback<T> callback) {
+        TraceStatus status = null;
+        try {
+            status = trace.begin(message);
+            T result = callback.call(); //로직 호출
+            trace.end(status);
+            return result;
+        } catch (Exception e) {
+            trace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 컨트롤러
+
+{% highlight java %}
+package com.example.v5;
+
+import com.example.trace.LogTrace;
+import com.example.trace.callback.TraceCallback;
+import com.example.trace.callback.TraceTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class OrderControllerV5 {
+    private final OrderServiceV5 orderService;
+    private final TraceTemplate template;
+
+    public OrderControllerV5(OrderServiceV5 orderService, LogTrace trace) {
+        this.orderService = orderService;
+        this.template = new TraceTemplate(trace);
+    }
+
+    @GetMapping("/v5/request")
+    public String request(String itemId) {
+        return template.execute("OrderController.request()", new
+            TraceCallback<>() {
+                @Override
+                public String call() {
+                    orderService.orderItem(itemId);
+                    return "ok";
+                }
+            });
+    }
+}
+{% endhighlight %}
+
+#### 서비스
+
+{% highlight java %}
+package com.example.v5;
+
+import com.example.trace.LogTrace;
+import com.example.trace.callback.TraceTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OrderServiceV5 {
+    private final OrderRepositoryV5 orderRepository;
+    private final TraceTemplate template;
+    public OrderServiceV5(OrderRepositoryV5 orderRepository, LogTrace trace) {
+        this.orderRepository = orderRepository;
+        this.template = new TraceTemplate(trace);
+    }
+    public void orderItem(String itemId) {
+        template.execute("OrderService.orderItem()", () -> {
+            orderRepository.save(itemId);
+            return null;
+        });
+    }
+}
+{% endhighlight %}
+
+#### 리포지토리
+
+{% highlight java %}
+package com.example.v5;
+
+import com.example.trace.LogTrace;
+import com.example.trace.callback.TraceTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class OrderRepositoryV5 {
+    private final TraceTemplate template;
+    public OrderRepositoryV5(LogTrace trace) {
+        this.template = new TraceTemplate(trace);
+    }
+    public void save(String itemId) {
+        template.execute("OrderRepository.save()", () -> {
+            //저장 로직
+            if (itemId.equals("ex")) {
+                throw new IllegalStateException("예외 발생!");
+            }
+            sleep(1000);
+            return null;
+        });
+    }
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+#### 적용 결과
+
+- http://localhost:8081/v5/request?itemId=test에 접속해서 적용 결과를 확인해보자.
+
+>[7922aa5c] OrderController.request()  
+>[7922aa5c] |-->OrderService.orderItem()  
+>[7922aa5c] | |-->OrderRepository.save()  
+>[7922aa5c] | |<--OrderRepository.save() time=1013ms  
+>[7922aa5c] |<--OrderService.orderItem() time=1014ms  
+>[7922aa5c] OrderController.request() time=1016ms
+
+### 정리
+
+- 진행 과정
+    - 더 적은 코드로 로그 추적기를 적용하기 위해 다양한 시도를 하였다.
+    - 템플릿 메서드 패턴, 전략 패턴, 템플릿 콜백 패턴을 통해 변하는 코드와 변하지 않는 코드를 분리했다. 
+    - 최종적으로 템플릿 콜백 패턴을 적용하고 콜백으로 람다를 사용해서 코드 사용도 최소화 할 수 있었다.
+- 한계
+    - 아무리 최적화를 해도 결국 로그 추적기를 적용하기 위해서는 원본 코드를 수정해야 한다.
+        - 수많을 클래스가 존재할 때 힘든 정도의 차이가 있을 뿐 본질적으로는 코드를 다 수정해야 한다.
+- 결론
+    - 원본 코드를 손대지 않고 로그 추적기를 적용할 수 있는 방법이 필요하다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
