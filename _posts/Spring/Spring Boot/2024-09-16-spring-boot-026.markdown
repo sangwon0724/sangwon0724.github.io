@@ -1,0 +1,430 @@
+---
+layout: post
+title:  "[고급편] 전략 패턴"
+date:   2024-09-16 13:26:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 전략 패턴 - 시작
+
+- 전략 패턴의 이해를 돕기 위해 템플릿 메서드 패턴에서 만들었던 테스트와 동일한 코드를 작성한다.
+- 패키지는 com.example.trace.strategy로 추가한다.
+- 이름은 ContextV1Test로 추가한다.
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class ContextV1Test {
+    @Test
+    void strategyV0() {
+        logic1();
+        logic2();
+    }
+
+    private void logic1() {
+        long startTime = System.currentTimeMillis();
+        //비즈니스 로직 실행
+        log.info("비즈니스 로직1 실행");
+        //비즈니스 로직 종료
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+
+    private void logic2() {
+        long startTime = System.currentTimeMillis();
+        //비즈니스 로직 실행
+        log.info("비즈니스 로직2 실행");
+        //비즈니스 로직 종료
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+}
+{% endhighlight %}
+
+### 전략 패턴 - 예제1
+
+- 우선 템플릿 메서드 패턴과 전략 패턴의 차이점을 알아보자.
+- 차이점
+    - 탬플릿 메서드 패턴
+        - 부모 클래스에 변하지 않는 템플릿을 정의한다.
+        - 변하는 부분을 자식 클래스에 두어서 상속을 통해 비즈니스 로직을 정의한다.
+    - 전략 패턴
+        - 변하지 않는 부분을 Context라는 곳에 정의한다.
+        - 변하는 부분을 Strategy 라는 인터페이스를 만들고 해당 인터페이스를 구현해서 비즈니스 로직을 정의한다.
+- 전략 패턴의 특징
+    - 전략 패턴은 상속이 아니라 위임으로 문제를 해결한다.
+    - 알고리즘 제품군을 정의하고 각각을 캡슐화하여 상호 교환 가능하게 만든다.
+    - 전략 패턴을 사용하면 알고리즘을 사용하는 클라이언트와 독립적으로 알고리즘을 변경할 수 있다.
+
+#### Strategy
+
+- 변하는 부분인 Strategy를 정의해보자.
+- 템플릿 메서드 패턴에서 부모 클래스에 정의했던 걸 단순히 인터페이스로 분리햐면 된다.
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+public interface Strategy {
+    void call();
+}
+{% endhighlight %}
+
+#### 비즈니스 로직
+
+- Strategy를 구현한 비즈니스 로직을 정의하자.
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
+public class StrategyLogic1 implements Strategy {
+    @Override
+    public void call() {
+        log.info("비즈니스 로직1 실행");
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class StrategyLogic2 implements Strategy {
+    @Override
+    public void call() {
+        log.info("비즈니스 로직2 실행");
+    }
+}
+{% endhighlight %}
+
+#### Context
+
+- 이번에는 변하지 않는 부분인 Context를 정의하자.
+- 전략 패턴에서는 변하지 않는 부분인 이것을 컨텍스트(문맥)이라 한다.
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 필드에 전략을 보관하는 방식
+ */
+@Slf4j
+public class ContextV1 {
+    private Strategy strategy;
+
+    public ContextV1(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void execute() {
+        long startTime = System.currentTimeMillis();
+
+        //비즈니스 로직 실행
+        strategy.call(); //위임
+        //비즈니스 로직 종료
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+}
+{% endhighlight %}
+
+- Context는 내부에 Strategy 인터페이스를 필드로 가지고 있다.
+    - 이 필드에 변하는 부분인 Strategy의 구현체를 주입하면 된다.
+- 전략 패턴은 Context가 Strategy 인터페이스에만 의존한다는 것이 핵심이다.
+    - 그래서 Strategy의 구현체를 변경하거나 새로 만들어도 Context 코드에는 영향을 주지 않는다.
+- 전략 패턴은 스프링에서 의존관계 주입에서 사용하는 방식이다.
+
+#### 테스트 생성 및 실행
+
+- 이전에 생성한 ContextV1Test에 전략 패턴을 테스트하는 메소드를 추가하자.
+
+{% highlight java %}
+ /**
+    * 전략 패턴 적용
+    */
+@Test
+void strategyV1() {
+    Strategy strategyLogic1 = new StrategyLogic1();
+    ContextV1 context1 = new ContextV1(strategyLogic1);
+    context1.execute();
+    
+    Strategy strategyLogic2 = new StrategyLogic2();
+    ContextV1 context2 = new ContextV1(strategyLogic2);
+    context2.execute();
+}
+{% endhighlight %}
+
+- strategyV1 실행 로그
+>INFO com.example.trace.strategy.StrategyLogic1 -- 비즈니스 로직1 실행  
+>INFO com.example.trace.strategy.ContextV1 -- resultTime=4  
+>INFO com.example.trace.strategy.StrategyLogic2 -- 비즈니스 로직2 실행  
+>INFO com.example.trace.strategy.ContextV1 -- resultTime=0
+
+### 전략 패턴 - 예제2
+
+- 전략 패턴도 익명 내부 클래스를 사용할 수 있다.
+
+#### 익명 클래스 방식 - 1
+
+- 익명 내부 클래스로 테스트하기 위해 ContextV1Test에 메소드를 추가하자.
+
+{% highlight java %}
+/**
+    * 전략 패턴 익명 내부 클래스1
+    */
+@Test
+void strategyV2() {
+    Strategy strategyLogic1 = new Strategy() {
+        @Override
+        public void call() {
+            log.info("비즈니스 로직1 실행");
+        }
+    };
+    log.info("strategyLogic1={}", strategyLogic1.getClass());
+    ContextV1 context1 = new ContextV1(strategyLogic1);
+    context1.execute();
+    Strategy strategyLogic2 = new Strategy() {
+        @Override
+        public void call() {
+            log.info("비즈니스 로직2 실행");
+        }
+    };
+    log.info("strategyLogic2={}", strategyLogic2.getClass());
+    ContextV1 context2 = new ContextV1(strategyLogic2);
+    context2.execute();
+}
+{% endhighlight %}
+
+- strategyV2 실행 로그
+>com.example.trace.strategy.ContextV1Test -- strategyLogic1=class com.example.trace.strategy.ContextV1Test$1  
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직1 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=0  
+>com.example.trace.strategy.ContextV1Test -- strategyLogic2=class com.example.trace.strategy.ContextV1Test$2  
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직2 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=0
+
+#### 익명 클래스 방식 - 2
+
+- 따로 변수에 저장하지 않고 바로 주입하는 방식을 사용할 수도 있다.
+
+{% highlight java %}
+/**
+    * 전략 패턴 익명 내부 클래스2
+    */
+@Test
+void strategyV3() {
+    ContextV1 context1 = new ContextV1(new Strategy() {
+        @Override
+        public void call() {
+            log.info("비즈니스 로직1 실행");
+        }
+    });
+    context1.execute();
+    ContextV1 context2 = new ContextV1(new Strategy() {
+        @Override
+        public void call() {
+            log.info("비즈니스 로직2 실행");
+        }
+    });
+    context2.execute();
+}
+{% endhighlight %}
+
+- strategyV3 실행 로그
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직1 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=4  
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직2 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=0
+
+#### 익명 클래스 방식 - 3
+
+- Java 8부터는 람다 방식으로도 작성할 수 있다.
+
+{% highlight java %}
+/**
+    * 전략 패턴, 람다
+    */
+@Test
+void strategyV4() {
+    ContextV1 context1 = new ContextV1(() -> log.info("비즈니스 로직1 실행"));
+    context1.execute();
+    ContextV1 context2 = new ContextV1(() -> {
+        log.info("비즈니스 로직2 실행");
+    });
+    context2.execute();
+
+}
+{% endhighlight %}
+
+- strategyV4 실행 로그
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직1 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=5  
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직2 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=1
+
+#### 문제점
+
+- Context와 Strategy를 조립한 이후에는 전략을 변경하기가 번거롭다.
+- Context에 setter를 제공해서 Strategy를 넘겨 받아 변경하는 방법이 있긴 하다.
+    - 다만, Context를 싱글톤으로 사용할 때는 동시성 이슈 등 고려할 점이 많다.
+- 전략을 실시간으로 변경해야 하면 차라리 Context를 하나 더 생성하고,  
+그곳에 다른 Strategy를 주입하는 것이 더 나을 수 있다.
+
+### 전략 패턴 - 예제3
+
+- 이전처럼 먼저 조립하고 사용하는 방식보다 더 유연하게 전략 패턴을 사용하는 방법을 알아보자.
+- 이번에는 전략을 실행할 때 직접 파라미터로 전달해서 사용해보자.
+
+#### Context
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+    * 전략을 파라미터로 전달 받는 방식
+*/
+@Slf4j
+public class ContextV2 {
+    public void execute(Strategy strategy) {
+        long startTime = System.currentTimeMillis();
+
+        //비즈니스 로직 실행
+        strategy.call(); //위임
+        //비즈니스 로직 종료
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("resultTime={}", resultTime);
+    }
+}
+{% endhighlight %}
+
+- ContextV2는 전략을 필드로 가지지 않는다.
+- 대신에 전략을 execute가 호출될 때 마다 항상 파라미터로 전달받는다.
+
+#### 테스트 생성 및 실행
+
+- 파라미터 주입 방식을 테스트하기 위해 ContextV2Test를 생성하자.
+
+{% highlight java %}
+package com.example.trace.strategy;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class ContextV2Test {
+    /**
+     * 전략 패턴 적용
+     */
+    @Test
+    void strategyV1() {
+        ContextV2 context = new ContextV2();
+        context.execute(new StrategyLogic1());
+        context.execute(new StrategyLogic2());
+    }
+}
+{% endhighlight %}
+
+- strategyV1 실행 로그
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직1 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=5  
+>com.example.trace.strategy.ContextV1Test -- 비즈니스 로직2 실행  
+>com.example.trace.strategy.ContextV1 -- resultTime=1
+
+- Context를 실행하는 방식이 변경되었다.
+    - 이전
+        - Context와 Strategy를 먼저 조립 후 실행하는 방식
+    - 현재
+        - Context를 실행할 때 마다 전략을 인수로 전달
+- 클라이언트는 Context를 실행하는 시점에 원하는 Strategy를 전달할 수 있게 되었다.
+    - 이전 방식과 비교해서 더욱 유연하게 원하는 전략을 적용할 수 있다.
+- 이전과 비교했을 때 하나의 Context만 생성하는 방식으로 변경되었다.
+
+#### 익명 클래스 방식 - 1
+
+- 파라미터 주입 방식에서도 익명 클래스 방식을 사용할 수 있다.
+
+{% highlight java %}
+/**
+    * 전략 패턴 익명 내부 클래스
+    */
+@Test
+void strategyV2() {
+    ContextV2 context = new ContextV2();
+    context.execute(new Strategy() {
+        @Override
+        public void call() {
+            log.info("비즈니스 로직1 실행");
+        }
+    });
+    context.execute(new Strategy() {
+        @Override
+        public void call() {
+            log.info("비즈니스 로직2 실행");
+        }
+    });
+}
+{% endhighlight %}
+
+- strategyV2 실행 로그
+>com.example.trace.strategy.ContextV2Test -- 비즈니스 로직1 실행  
+>com.example.trace.strategy.ContextV2 -- resultTime=5  
+>com.example.trace.strategy.ContextV2Test -- 비즈니스 로직2 실행  
+>com.example.trace.strategy.ContextV2 -- resultTime=0
+
+#### 익명 클래스 방식 - 2
+
+- Java 8 이상일 경우 람다를 사용할 수도 있다.
+
+{% highlight java %}
+/**
+    * 전략 패턴 익명 내부 클래스2, 람다
+    */
+@Test
+void strategyV3() {
+    ContextV2 context = new ContextV2();
+    context.execute(() -> log.info("비즈니스 로직1 실행"));
+    context.execute(() -> {
+        log.info("비즈니스 로직2 실행");
+    });
+}
+{% endhighlight %}
+
+- strategyV3 실행 로그
+>com.example.trace.strategy.ContextV2Test -- 비즈니스 로직1 실행  
+>com.example.trace.strategy.ContextV2 -- resultTime=4  
+>com.example.trace.strategy.ContextV2Test -- 비즈니스 로직2 실행  
+>com.example.trace.strategy.ContextV2 -- resultTime=0
+
+### 정리
+
+- ContextV1
+    - 필드에 Strategy 를 저장하는 방식으로 전략 패턴을 적용했다.
+    - 선 조립, 후 실행 방법에 적합하다.
+    - Context를 실행하는 시점에는 이미 조립이 끝난 상태다.
+        - 전략을 신경쓰지 않고 단순히 실행만 하면 된다.
+- ContextV2
+    - 파라미터에 Strategy를 전달받는 방식으로 전략 패턴을 적용했다.
+    - 실행할 때 마다 전략을 유연하게 변경할 수 있다.
+        - 다만, 실행할 때 마다 전략을 계속 지정해주어야 한다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
