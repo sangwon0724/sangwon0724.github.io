@@ -1,0 +1,566 @@
+---
+layout: post
+title:  "[고급편] 인터페이스 기반 프록시와 클래스 기반 프록시"
+date:   2024-09-18 23:35:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 인터페이스 기반 프록시 - 적용
+
+- v1에서 기존 런타임 객체 의존 관계는 아래와 같다.
+```mermaid
+flowchart LR
+    A[client] ----> B[orderControllerV1]
+    B ----> C[orderServiceV1]
+    C ----> D[orderRepositoryV1]
+```
+- 이번에는 프록시를 적용해서 아래와 같이 변경할 것이다.
+```mermaid
+flowchart LR
+    A[client] ----> B[orderControllerProxy]
+    B ----> C[orderControllerV1]
+    C ----> D[orderServiceProxy]
+    D ----> E[orderServiceV1]
+    E ----> F[orderRepositoryProxy]
+    F ----> G[orderRepositoryV1]
+```
+
+#### 리포지토리 (프록시)
+
+{% highlight java %}
+package com.example.app.v1.proxy;
+
+import com.example.app.v1.OrderRepositoryV1;
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class OrderRepositoryInterfaceProxy implements OrderRepositoryV1 {
+    private final OrderRepositoryV1 target;
+    private final LogTrace logTrace;
+
+    @Override
+    public void save(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = logTrace.begin("OrderRepository.save()");
+            //target 호출
+            target.save(itemId);
+            logTrace.end(status);
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 서비스 (프록시)
+
+{% highlight java %}
+package com.example.app.v1.proxy;
+
+import com.example.app.v1.OrderServiceV1;
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class OrderServiceInterfaceProxy implements OrderServiceV1 {
+    private final OrderServiceV1 target;
+    private final LogTrace logTrace;
+
+    @Override
+    public void orderItem(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = logTrace.begin("OrderService.orderItem()");
+            //target 호출
+            target.orderItem(itemId);
+            logTrace.end(status);
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 컨트롤러 (프록시)
+
+{% highlight java %}
+package com.example.app.v1.proxy;
+
+import com.example.app.v1.OrderControllerV1;
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class OrderControllerInterfaceProxy implements OrderControllerV1 {
+    private final OrderControllerV1 target;
+    private final LogTrace logTrace;
+
+    @Override
+    public String request(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = logTrace.begin("OrderController.request()");
+            //target 호출
+            String result = target.request(itemId);
+            logTrace.end(status);
+            return result;
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+    
+    @Override
+    public String noLog() {
+        return target.noLog();
+    }
+}
+{% endhighlight %}
+
+#### 프록시를 스프링 빈으로 등록
+
+- 프록시를 실제 스프링 빈 대신 등록한다.
+    - 실제 객체는 스프링 빈으로 등록하지 않는다.
+- 프록시는 내부에 실제 객체를 참조하고 있다.
+- 스프링 빈으로 실제 객체 대신에 프록시 객체를 등록했다.
+    - 스프링 빈을 주입 받으면 실제 객체 대신 프록시 객체가 주입된다.
+- 실제 객체가 스프링 빈으로 등록되지 않는다고 해서 사라지는 것은 아니다.
+    - 프록시 객체가 실제 객체를 참조하기 때문에 프록시를 통해서 실제 객체를 호출할 수 있다.
+    - 프록시 객체 안에 실제 객체가 있는 것이다.
+
+{% highlight java %}
+package com.example;
+
+import com.example.app.v1.*;
+import com.example.app.v1.proxy.OrderControllerInterfaceProxy;
+import com.example.app.v1.proxy.OrderRepositoryInterfaceProxy;
+import com.example.app.v1.proxy.OrderServiceInterfaceProxy;
+import com.example.trace.LogTrace;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class InterfaceProxyConfig {
+    @Bean
+    public OrderControllerV1 orderController(LogTrace logTrace) {
+        OrderControllerV1Impl controllerImpl = new OrderControllerV1Impl(orderService(logTrace));
+        return new OrderControllerInterfaceProxy(controllerImpl, logTrace); //target : controllerImpl
+    }
+
+    @Bean
+    public OrderServiceV1 orderService(LogTrace logTrace) {
+        OrderServiceV1Impl serviceImpl = new OrderServiceV1Impl(orderRepository(logTrace));
+        return new OrderServiceInterfaceProxy(serviceImpl, logTrace); //target : serviceImpl
+    }
+
+    @Bean
+    public OrderRepositoryV1 orderRepository(LogTrace logTrace) {
+        OrderRepositoryV1Impl repositoryImpl = new OrderRepositoryV1Impl();
+        return new OrderRepositoryInterfaceProxy(repositoryImpl, logTrace); //target : repositoryImpl
+    }
+}
+{% endhighlight %}
+
+
+{% highlight java %}
+package com.example;
+
+import com.example.trace.LogTrace;
+import com.example.trace.ThreadLocalLogTrace;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+
+//@Import({AppV1Config.class, AppV2Config.class})
+@Import(InterfaceProxyConfig.class)
+@SpringBootApplication(scanBasePackages = "com.example.app.v3") //컨트롤러때문에 생기는 충돌 방지
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+
+    @Bean
+    public LogTrace logTrace() {
+        return new ThreadLocalLogTrace();
+    }
+}
+{% endhighlight %}
+
+#### 테스트
+
+- http://localhost:8082/v1/request?itemId=test에 접속해보자.
+>[73944d7f] OrderController.request()  
+>[73944d7f] |-->OrderService.orderItem()  
+>[73944d7f] | |-->OrderRepository.save()  
+>[73944d7f] | |<--OrderRepository.save() time=1006ms  
+>[73944d7f] |<--OrderService.orderItem() time=1006ms  
+>[73944d7f] OrderController.request() time=1007ms
+
+#### 결론
+
+- 프록시와 DI 덕분에 원본 코드를 전혀 수정하지 않고, 로그 추적기를 도입할 수 있었다.
+- 하지만 너무 많은 프록시 클래스를 만들어야 하는 큰 단점이 존재한다.
+
+### 구체 클래스 기반 프록시 - 예제1
+
+- 인터페이스가 없어도 프록시를 적용할 수 있는 방법은 없을까?
+- 그 방법을 알아보기 위해 기본 코드를 작성해보자.
+
+#### ConcreteLogic
+
+- 단순히 로그를 실행하고 데이터를 반환하는 로직을 가지고 있다.
+
+{% highlight java %}
+package com.example.pureproxy.concreteproxy;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ConcreteLogic {
+    public String operation() {
+        log.info("ConcreteLogic 실행");
+        return "data";
+    }
+}
+{% endhighlight %}
+
+#### ConcreteClient
+
+- ConcreteLogic을 실행하는 클라이언트 코드다.
+
+{% highlight java %}
+package com.example.pureproxy.concreteproxy;
+
+public class ConcreteClient {
+    private ConcreteLogic concreteLogic;
+
+    public ConcreteClient(ConcreteLogic concreteLogic) {
+        this.concreteLogic = concreteLogic;
+    }
+
+    public void execute() {
+        concreteLogic.operation();
+    }
+}
+{% endhighlight %}
+
+#### ConcreteProxyTest
+
+- 프록시를 적용하지 않았을 때의 결과를 확인하기 위해 ConcreteProxyTest를 만들자.
+
+{% highlight java %}
+package com.example.pureproxy.concreteproxy;
+
+import org.junit.jupiter.api.Test;
+
+public class ConcreteProxyTest {
+    @Test
+    void noProxy() {
+        ConcreteLogic concreteLogic = new ConcreteLogic();
+        ConcreteClient client = new ConcreteClient(concreteLogic);
+        client.execute();
+    }
+}
+{% endhighlight %}
+
+- noProxy 실행 로그
+>com.example.pureproxy.concreteproxy.ConcreteLogic -- ConcreteLogic 실행
+
+### 구체 클래스 기반 프록시 - 예제2
+
+- 이전에는 인터페이스를 기반으로 프록시를 도입했다.
+- 그런데 사실, 자바의 다형성은 인터페이스를 구현하든, 아니면 클래스를 상속하든 상위 타입만 맞으면 다형성이 적용된다.
+    - 즉, 인터페이스가 없어도 프록시를 만들수 있다.
+
+#### TimeProxy
+
+- 실행 시간을 측정하는 프록시다.
+- 인터페이스가 아니라 클래스인 ConcreteLogic를 상속 받아서 만든다.
+{% highlight java %}
+package com.example.pureproxy.concreteproxy;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class TimeProxy extends ConcreteLogic {
+    private ConcreteLogic realLogic;
+
+    public TimeProxy(ConcreteLogic realLogic) {
+        this.realLogic = realLogic;
+    }
+
+    @Override
+    public String operation() {
+        log.info("TimeDecorator 실행");
+        long startTime = System.currentTimeMillis();
+
+        String result = realLogic.operation();
+        
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("TimeDecorator 종료 resultTime={}", resultTime);
+        return result;
+    }
+}
+{% endhighlight %}
+
+#### ConcreteProxyTest
+
+- 구체 기반 프록시를 적용한 결과를 확인하기 위해 ConcreteProxyTest에 메서드를 추가하자.
+
+{% highlight java %}
+@Test
+    void addProxy() {
+        ConcreteLogic concreteLogic = new ConcreteLogic();
+        TimeProxy timeProxy = new TimeProxy(concreteLogic);
+        ConcreteClient client = new ConcreteClient(timeProxy);
+        client.execute();
+    }
+{% endhighlight %}
+
+- addProxy 실행 로그
+>com.example.pureproxy.concreteproxy.TimeProxy -- TimeDecorator 실행  
+>com.example.pureproxy.concreteproxy.ConcreteLogic -- ConcreteLogic 실행  
+>com.example.pureproxy.concreteproxy.TimeProxy -- TimeDecorator 종료 resultTime=1
+
+- 이 부분에서 중점은 timeProxy를 주입하는 부분이다.
+- 다형성에 의해 ConcreteLogic에 concreteLogic도 들어갈 수 있고, timeProxy도 들어갈 수 있다.
+- concreteLogic을 할당한다면 본인과 같은 타입을 할당하는 것이 된다.
+- timeProxy를 할당한다면 자식 타입을 할당하는 것이 된다.
+
+### 구체 클래스 기반 프록시 - 적용
+
+- 이번에는 구체 클래스만 존재하는 v2 애플리케이션에 프록시를 적용해보자.
+
+#### 리포지토리 (프록시)
+
+{% highlight java %}
+package com.example.app.v2.proxy;
+
+import com.example.app.v2.OrderRepositoryV2;
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+
+public class OrderRepositoryConcreteProxy extends OrderRepositoryV2 {
+    private final OrderRepositoryV2 target;
+    private final LogTrace logTrace;
+    
+    public OrderRepositoryConcreteProxy(OrderRepositoryV2 target, LogTrace
+            logTrace) {
+        this.target = target;
+        this.logTrace = logTrace;
+    }
+    
+    @Override
+    public void save(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = logTrace.begin("OrderRepository.save()");
+            //target 호출
+            target.save(itemId);
+            logTrace.end(status);
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 서비스 (프록시)
+
+{% highlight java %}
+package com.example.app.v2.proxy;
+
+import com.example.app.v2.OrderServiceV2;
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+
+public class OrderServiceConcreteProxy extends OrderServiceV2 {
+    private final OrderServiceV2 target;
+    private final LogTrace logTrace;
+
+    public OrderServiceConcreteProxy(OrderServiceV2 target, LogTrace logTrace) {
+        super(null); //부모 클래스에 기본 생성자가 없어서 null로 호출한다.
+        this.target = target;
+        this.logTrace = logTrace;
+    }
+
+    @Override
+    public void orderItem(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = logTrace.begin("OrderService.orderItem()");
+            //target 호출
+            target.orderItem(itemId);
+            logTrace.end(status);
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+- 여기서 구체 기반 프록시의 단점이 드러난다.
+- 자바 기본 문법에 의해 자식 클래스를 생성할 때는 항상 super() 로 부모 클래스의 생성자를 호출해야 한다.
+    - 이 부분을 생략하면 기본 생성자가 호출된다.
+    - 그런데 부모 클래스인 OrderServiceV2 는 기본 생성자가 없고, 생성자에서 파라미터 1개를 필수로 받는다.
+    - 따라서 파라미터를 넣어서 super(..) 를 호출해야 한다.
+- 프록시는 부모 객체의 기능을 사용하지 않기 때문에 super(null)을 입력해도 된다.
+- 인터페이스 기반 프록시는 이런 고민을 하지 않아도 된다.
+
+#### 컨트롤러 (프록시)
+
+{% highlight java %}
+package com.example.app.v2.proxy;
+
+import com.example.app.v2.OrderControllerV2;
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+
+public class OrderControllerConcreteProxy extends OrderControllerV2 {
+    private final OrderControllerV2 target;
+    private final LogTrace logTrace;
+    
+    public OrderControllerConcreteProxy(OrderControllerV2 target, LogTrace
+            logTrace) {
+        super(null);
+        this.target = target;
+        this.logTrace = logTrace;
+    }
+    
+    @Override
+    public String request(String itemId) {
+        TraceStatus status = null;
+        try {
+            status = logTrace.begin("OrderController.request()");
+            //target 호출
+            String result = target.request(itemId);
+            logTrace.end(status);
+            return result;
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 프록시를 스프링 빈으로 등록
+
+{% highlight java %}
+package com.example;
+
+import com.example.app.v2.OrderControllerV2;
+import com.example.app.v2.OrderRepositoryV2;
+import com.example.app.v2.OrderServiceV2;
+import com.example.app.v2.proxy.OrderControllerConcreteProxy;
+import com.example.app.v2.proxy.OrderRepositoryConcreteProxy;
+import com.example.app.v2.proxy.OrderServiceConcreteProxy;
+import com.example.trace.LogTrace;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class ConcreteProxyConfig {
+    @Bean
+    public OrderControllerV2 orderControllerV2(LogTrace logTrace) {
+        OrderControllerV2 controllerImpl = new OrderControllerV2(orderServiceV2(logTrace));
+        return new OrderControllerConcreteProxy(controllerImpl, logTrace);
+    }
+
+    @Bean
+    public OrderServiceV2 orderServiceV2(LogTrace logTrace) {
+        OrderServiceV2 serviceImpl = new OrderServiceV2(orderRepositoryV2(logTrace));
+        return new OrderServiceConcreteProxy(serviceImpl, logTrace);
+    }
+    
+    @Bean
+    public OrderRepositoryV2 orderRepositoryV2(LogTrace logTrace) {
+        OrderRepositoryV2 repositoryImpl = new OrderRepositoryV2();
+        return new OrderRepositoryConcreteProxy(repositoryImpl, logTrace);
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example;
+
+import com.example.trace.LogTrace;
+import com.example.trace.ThreadLocalLogTrace;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+
+//@Import({AppV1Config.class, AppV2Config.class})
+//@Import(InterfaceProxyConfig.class)
+@Import(ConcreteProxyConfig.class)
+@SpringBootApplication(scanBasePackages = "com.example.app.v3") //컨트롤러때문에 생기는 충돌 방지
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+
+    @Bean
+    public LogTrace logTrace() {
+        return new ThreadLocalLogTrace();
+    }
+}
+{% endhighlight %}
+
+#### 테스트
+
+- http://localhost:8082/v2/request?itemId=test에 접속해보자.
+>[a226db90] OrderController.request()  
+>[a226db90] |-->OrderService.orderItem()  
+>[a226db90] | |-->OrderRepository.save()  
+>[a226db90] | |<--OrderRepository.save() time=1011ms  
+>[a226db90] |<--OrderService.orderItem() time=1012ms  
+>[a226db90] OrderController.request() time=1013ms
+
+### 인터페이스 기반 프록시와 클래스 기반 프록시
+
+#### 인터페이스 기반 프록시 vs 클래스 기반 프록시
+
+- 인터페이스가 없어도 클래스 기반으로 프록시를 생성할 수 있다.
+- 클래스 기반 프록시는 해당 클래스에만 적용할 수 있다.
+- 인터페이스 기반 프록시는 인터페이스만 같으면 모든 곳에 적용할 수 있다.
+- 클래스 기반 프록시는 상속을 사용하기 때문에 몇가지 제약이 있다.
+    - 부모 클래스의 생성자를 호출해야 한다.
+    - 클래스에 final 키워드가 붙으면 상속이 불가능하다.
+    - 메서드에 final 키워드가 붙으면 해당 메서드를 오버라이딩 할 수 없다.
+- 인터페이스 기반의 프록시는 상속이라는 제약에서 자유롭다. 
+    - 프로그래밍 관점에서도 인터페이스를 사용하는 것이 역할과 구현을 명확하게 나누기 때문에 더 좋다.
+    - 다만, 인터페이스 기반 프록시는 인터페이스가 필요하다.
+    - 인터페이스가 없으면 인터페이스 기반 프록시를 만들 수 없다.
+- 인터페이스 기반 프록시는 캐스팅 관련해서 단점이 있다.
+- 필요에 의해서 적용할 프록시 방식을 선택하는 것이 좋다.
+    - 변경할 가능성이 있다면 인터페이스를 도입하는 것이 좋다.
+    - 변경할 가능성이 거의 없다면 구체 클래스를 바로 사용하는 것이 좋다.
+- 인터페이스를 적용하는 것은 필수가 아니다.
+
+#### 결론
+
+- 실무에서는 인터페이스도 사용하고, 인터페이스 없이 구체 클래스를 사용하기도 한다.
+- 그래서 2가지 상황에 대해서 유연하게 대처할 수 있어야 한다.
+
+#### 너무 많은 프록시 클래스
+
+- 현재까지 배운 것으로만 프록시를 사용하기에는 프록시 클래스를 너무 많이 만들어야 했다.
+    - 만약 프록시를 적용해야 하는 클래스가 100개라면 프록시 클래스도 100개가 되어야 한다.
+- 적용할 클래스만 다른 것이지 적용되는 프록시의 역할이 동일하다면 클래스를 일일이 만드는 것은 비효율적이다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)

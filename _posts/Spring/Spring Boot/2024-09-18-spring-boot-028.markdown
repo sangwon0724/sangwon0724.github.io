@@ -98,6 +98,198 @@ flowchart LR
 - application.yaml을 생성하여 `server.port`를 8082로 변경
 - com.example 패키지 아래에 app 패키지 생성
 
+#### chapter1 모듈의 소스 가져오기
+
+- 추후 로그 추적기 기능을 붙이기 위해 chapter1 모듈의 로그 관련 소스를 일부 가져온다.
+
+{% highlight java %}
+package com.example.trace;
+
+import java.util.UUID;
+
+public class TraceId {
+    private String id; //트랜잭션 ID
+    private int level; //메소드의 깊이
+
+    public TraceId() {
+        this.id = createId();
+        this.level = 0;
+    }
+
+    private TraceId(String id, int level) {
+        this.id = id;
+        this.level = level;
+    }
+
+    /**
+     * 랜덤 문자열을 생성하여 트랜잭션 ID로 설정한다.
+     - UUID는 너무 길어서 앞 8자리만 사용
+     - 보통은 8자리만 사용해도 충분하다.
+     */
+    private String createId() {
+        return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    /**
+     * 하위의 TraceId를 반환한다.
+     */
+    public TraceId createNextId() {
+        return new TraceId(id, level + 1);
+    }
+
+    /**
+     * 상위의 TraceId를 반환한다.
+     */
+    public TraceId createPreviousId() {
+        return new TraceId(id, level - 1);
+    }
+
+    /**
+     * 깊이가 0단계인지 확인한다.
+     */
+    public boolean isFirstLevel() {
+        return level == 0;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.trace;
+
+public class TraceStatus {
+    private TraceId traceId; // 트랜잭션 ID 및 메소드 호출의 깊이 정보
+    private Long startTimeMs; //로그 출력 시각
+    private String message; //출력할 메시지
+    
+    public TraceStatus(TraceId traceId, Long startTimeMs, String message) {
+        this.traceId = traceId;
+        this.startTimeMs = startTimeMs;
+        this.message = message;
+    }
+    
+    public Long getStartTimeMs() {
+        return startTimeMs;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public TraceId getTraceId() {
+        return traceId;
+    }
+}
+
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.trace;
+
+public interface LogTrace {
+    TraceStatus begin(String message);
+    void end(TraceStatus status);
+    void exception(TraceStatus status, Exception e);
+}
+
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.trace;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ThreadLocalLogTrace implements LogTrace {
+    private static final String START_PREFIX = "-->";
+    private static final String COMPLETE_PREFIX = "<--";
+    private static final String EX_PREFIX = "<X-";
+    private ThreadLocal<TraceId> traceIdHolder = new ThreadLocal<>();
+    
+    @Override
+    public TraceStatus begin(String message) {
+        syncTraceId();
+        TraceId traceId = traceIdHolder.get();
+        Long startTimeMs = System.currentTimeMillis();
+        log.info(
+            "[{}] {}{}",
+            traceId.getId(),
+            addSpace(START_PREFIX, traceId.getLevel()),
+            message
+        );
+        return new TraceStatus(traceId, startTimeMs, message);
+    }
+    
+    @Override
+    public void end(TraceStatus status) {
+        complete(status, null);
+    }
+    
+    @Override
+    public void exception(TraceStatus status, Exception e) {
+        complete(status, e);
+    }
+    
+    private void complete(TraceStatus status, Exception e) {
+        Long stopTimeMs = System.currentTimeMillis();
+        long resultTimeMs = stopTimeMs - status.getStartTimeMs();
+        TraceId traceId = status.getTraceId();
+        if (e == null) {
+            log.info(
+                "[{}] {}{} time={}ms",
+                traceId.getId(),
+                addSpace(COMPLETE_PREFIX, traceId.getLevel()),
+                status.getMessage(),
+                resultTimeMs
+            );
+        } else {
+            log.info(
+                "[{}] {}{} time={}ms ex={}",
+                traceId.getId(),
+                addSpace(EX_PREFIX, traceId.getLevel()),
+                status.getMessage(),
+                resultTimeMs,
+                e.toString()
+            );
+        }
+        releaseTraceId();
+    }
+    
+    private void syncTraceId() {
+        TraceId traceId = traceIdHolder.get();
+        if (traceId == null) {
+            traceIdHolder.set(new TraceId());
+        } else {
+            traceIdHolder.set(traceId.createNextId());
+        }
+    }
+    
+    private void releaseTraceId() {
+        TraceId traceId = traceIdHolder.get();
+        if (traceId.isFirstLevel()) {
+            traceIdHolder.remove(); //쓰레드 로컬 제거
+        } else {
+            traceIdHolder.set(traceId.createPreviousId());
+        }
+    }
+    
+    private static String addSpace(String prefix, int level) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            sb.append( (i == level - 1) ? "|" + prefix : "| ");
+        }
+        return sb.toString();
+    }
+}
+{% endhighlight %}
+
 #### v1 - 인터페이스와 구현 클래스
 
 ##### 패키지 생성
