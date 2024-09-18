@@ -1,16 +1,19 @@
 ---
 layout: post
 title:  "[고급편] 데코레이터 패턴"
-date:   2024-09-16 14:00:00 +0900
+date:   2024-09-18 14:00:00 +0900
 categories: Spring&nbsp;Boot
 tags: []
 published: false
 ---
 
-### xxx
+### 데코레이터 패턴
 
-{% highlight java %}
-{% endhighlight %}
+- 프록시를 사용하여 새로운 기능을 추가하는 것을 목적으로 하는 패턴
+
+### 데코레이터 패턴 - 예제 코드1
+
+### 데코레이터 패턴 - 예제 코드2
 
 ### 출처
 

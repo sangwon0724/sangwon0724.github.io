@@ -1,0 +1,669 @@
+---
+layout: post
+title:  "[고급편] 프록시 패턴"
+date:   2024-09-18 21:46:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 프록시
+
+#### 클라이언트와 서버
+
+- 기본 개념
+    - 클라이언트
+        - 서버에 필요한 것을 요청하는 측
+    - 서버
+        - 클라이언트의 요청을 처리하는 측
+- 클라이언트와 서버 개념에서 일반적으로 클라이언트가 서버를 직접 호출하고, 처리 결과를 직접 받는다.
+    이것을 `직접 호출`이라 한다.
+```mermaid
+flowchart LR
+    A[Client] ----> B[Server]
+```
+
+- 그런데 클라이언트가 요청한 결과를 서버에 직접 요청하는 것이 아니라,  
+어떤 대리자를 통해서 대신 간접적으로 서버에 요청할 수 있다.
+- 여기서 대리자를 영어로 프록시(Proxy)라고 한다.
+
+```mermaid
+flowchart LR
+    A[Client] ----> B[Proxy]
+    B ----> C[Server]
+```
+
+#### 프록시의 기능
+
+- 접근 제어, 캐싱
+    - 내 요청의 결과를 프록시가 이미 가지고 있다면 직접 요청보다 빠르게 결과를 얻을 수 있다.
+- 부가 기능 추가
+    - 프록시가 결과를 반환하는 경우 단순히 결과만 반환하는 것이 아니라,  
+    값을 추가 가공한다거나 특수 플래그를 추가하는 등의 추가 효과를 얻을 수 있다.
+- 프록시 체인
+    - 대리자는 하나만 있어야 하는 건 아니다.
+    - 대리자는 또 다른 대리자를 불러서 다른 업무를 처리하게 할 수도 있다.
+```mermaid
+flowchart LR
+    A[Client] ----> B[Proxy1]
+    B ----> C[Proxy2]
+    C ----> D[Server]
+```
+
+#### 프록시가 가능한 객체
+
+- 객체에서 프록시가 되려면, 클라이언트는 서버와 프록시 중 어디에 요청을 한 것인지 몰라야 한다.
+- 그렇기 때문에 서버와 프록시는 같은 인터페이스를 사용해야 한다.
+- 클라이언트가 사용하는 서버 객체를 프록시 객체로 변경해도 클라이언트 코드를 변경하지 않고 동작할 수 있어야 한다.
+- 런타임(애플리케이션 실행 시점)에 클라이언트 객체에 DI를 사용해서 객체 의존관계를 변경해도  
+클라이언트 코드를 전혀 변경하지 않아도 된다.
+- 클라이언트 입장에서는 객체 의존관계의 변경 사실 자체를 몰라야 한다.
+- DI를 사용하면 클라이언트 코드의 변경 없이 유연하게 프록시를 주입할 수 있다
+
+#### 프록시의 주요 기능
+
+- 프록시를 통해서 할 수 있는 일은 크게 2가지로 구분할 수 있다.
+- 접근 제어
+    - 권한에 따른 접근 차단
+    - 캐싱
+    - 지연 로딩
+- 부가 기능 추가
+    - 원래 서버가 제공하는 기능에 더해서 부가 기능을 수행한다.
+    - 예시 :  요청 값이나, 응답 값을 중간에 변형한다.
+    - 에시 : 실행 시간을 측정해서 추가 로그를 남긴다.
+
+### 프록시 패턴
+
+- 프록시 객체를 제공함으로써 클라이언트가 실제 객체에 직접 접근하지 않도록 제어하여 객체의 접근을 관리하고 권한 검사 등을 수행하는 패턴
+
+### 프록시 패턴 적용 유형
+
+- 프록시 패턴은 아래와 같이 3가지 유형에 적용할 수 있다.
+- 유형
+    - v1
+        - 인터페이스와 구현 클래스
+        - 스프링 빈으로 수동 등록
+    - v2
+        - 인터페이스 없는 구체 클래스
+        - 스프링 빈으로 수동 등록
+    - v3
+        - 컴포넌트 스캔으로 스프링 빈 자동 등록
+- 실무에서는 3가지 유형 모두 사용한다.
+- 간단한 예제를 만들어서 3가지 유형에 프록시를 적용하는 방법에 대해서 알아보자.
+
+#### 모듈 생성
+
+- 루트 모듈에 프록시를 위한 모듈인 chapter2를 생성하자.
+- demo 우클릭 → 새로 만들기 → 모듈... → "chapter2" 입력 → 생성
+- 자동 생성된 Main 클래스를 Chapter2Application으로 이름 변경
+- application.yaml을 생성하여 `server.port`를 8082로 변경
+- com.example 패키지 아래에 app 패키지 생성
+
+#### v1 - 인터페이스와 구현 클래스
+
+##### 패키지 생성
+
+- app 패키지 아래에 v1 패키지 생성
+
+##### 리포지토리
+
+{% highlight java %}
+package com.example.app.v1;
+
+public interface OrderRepositoryV1 {
+    void save(String itemId);
+}
+{% endhighlight %}
+
+
+{% highlight java %}
+package com.example.app.v1;
+
+public class OrderRepositoryV1Impl implements OrderRepositoryV1 {
+    @Override
+    public void save(String itemId) {
+        //저장 로직
+        if (itemId.equals("ex")) {
+            throw new IllegalStateException("예외 발생!");
+        }
+        sleep(1000);
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+##### 서비스
+
+{% highlight java %}
+package com.example.app.v1;
+
+public interface OrderServiceV1 {
+    void orderItem(String itemId);
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.app.v1;
+
+public class OrderServiceV1Impl implements OrderServiceV1 {
+    private final OrderRepositoryV1 orderRepository;
+    public OrderServiceV1Impl(OrderRepositoryV1 orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+    @Override
+    public void orderItem(String itemId) {
+        orderRepository.save(itemId);
+    }
+}
+{% endhighlight %}
+
+##### 컨트롤러
+
+{% highlight java %}
+package com.example.app.v1;
+
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * - 3.0 미만 : @Controller 또는 @RequestMapping이 있어야 스프링 컨트롤러로 인식
+ * - 3.0 이상 : @Controller 또는 @RestController가 있어야 스프링 컨트롤러로 인식
+ */
+//@RequestMapping
+@RestController
+@ResponseBody
+public interface OrderControllerV1 {
+    @GetMapping("/v1/request")
+    String request(@RequestParam("itemId") String itemId);
+    
+    @GetMapping("/v1/no-log")
+    String noLog();
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.app.v1;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class OrderControllerV1Impl implements OrderControllerV1 {
+    private final OrderServiceV1 orderService;
+    public OrderControllerV1Impl(OrderServiceV1 orderService) {
+        this.orderService = orderService;
+    }
+    @Override
+    public String request(String itemId) {
+        orderService.orderItem(itemId);
+        return "ok";
+    }
+    @Override
+    public String noLog() {
+        return "ok";
+    }
+}
+{% endhighlight %}
+
+##### 스프링 빈으로 수동 등록
+
+{% highlight java %}
+package com.example;
+
+import com.example.app.v1.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppV1Config {
+    @Bean
+    public OrderControllerV1 orderControllerV1() {
+        return new OrderControllerV1Impl(orderServiceV1());
+    }
+
+    @Bean
+    public OrderServiceV1 orderServiceV1() {
+        return new OrderServiceV1Impl(orderRepositoryV1());
+    }
+
+    @Bean
+    public OrderRepositoryV1 orderRepositoryV1() {
+        return new OrderRepositoryV1Impl();
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+
+@Import(AppV1Config.class)
+@SpringBootApplication
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+}
+{% endhighlight %}
+
+##### 테스트
+
+- http://localhost:8082/v1/request?itemId=test로 접속해보자.
+- http://localhost:8082/v1/no-log로 접속해보자.
+
+#### v2 - 인터페이스 없는 구체 클래스
+
+##### 패키지 생성
+
+- app 패키지 아래에 v2 패키지 생성
+
+##### 리포지토리
+
+{% highlight java %}
+package com.example.app.v2;
+
+public class OrderRepositoryV2 {
+    public void save(String itemId) {
+        //저장 로직
+        if (itemId.equals("ex")) {
+            throw new IllegalStateException("예외 발생!");
+        }
+        sleep(1000);
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+##### 서비스
+
+{% highlight java %}
+package com.example.app.v2;
+
+public class OrderServiceV2 {
+    private final OrderRepositoryV2 orderRepository;
+
+    public OrderServiceV2(OrderRepositoryV2 orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    public void orderItem(String itemId) {
+        orderRepository.save(itemId);
+    }
+}
+{% endhighlight %}
+
+##### 컨트롤러
+
+{% highlight java %}
+package com.example.app.v2;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+public class OrderControllerV2 {
+    private final OrderServiceV2 orderService;
+
+    public OrderControllerV2(OrderServiceV2 orderService) {
+        this.orderService = orderService;
+    }
+
+    @GetMapping("/v2/request")
+    public String request(String itemId) {
+        orderService.orderItem(itemId);
+        return "ok";
+    }
+
+    @GetMapping("/v2/no-log")
+    public String noLog() {
+        return "ok";
+    }
+}
+{% endhighlight %}
+
+##### 스프링 빈으로 수동 등록
+
+{% highlight java %}
+package com.example;
+
+import com.example.app.v2.OrderControllerV2;
+import com.example.app.v2.OrderRepositoryV2;
+import com.example.app.v2.OrderServiceV2;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppV2Config {
+    @Bean
+    public OrderControllerV2 orderControllerV2() {
+        return new OrderControllerV2(orderServiceV2());
+    }
+
+    @Bean
+    public OrderServiceV2 orderServiceV2() {
+        return new OrderServiceV2(orderRepositoryV2());
+    }
+
+    @Bean
+    public OrderRepositoryV2 orderRepositoryV2() {
+        return new OrderRepositoryV2();
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+
+@Import({AppV1Config.class, AppV2Config.class})
+@SpringBootApplication
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+}
+{% endhighlight %}
+
+##### 테스트
+
+- http://localhost:8082/v2/request?itemId=test로 접속해보자.
+- http://localhost:8082/v2/no-log로 접속해보자.
+
+#### v3 - 컴포넌트 스캔으로 스프링 빈 자동 등록
+
+##### 패키지 생성
+
+- app 패키지 아래에 v3 패키지 생성
+
+##### 리포지토리
+
+{% highlight java %}
+package com.example.app.v3;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class OrderRepositoryV3 {
+    public void save(String itemId) {
+        //저장 로직
+        if (itemId.equals("ex")) {
+            throw new IllegalStateException("예외 발생!");
+        }
+        sleep(1000);
+    }
+    
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+##### 서비스
+
+{% highlight java %}
+package com.example.app.v3;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class OrderServiceV3 {
+    private final OrderRepositoryV3 orderRepository;
+
+    public OrderServiceV3(OrderRepositoryV3 orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+    
+    public void orderItem(String itemId) {
+        orderRepository.save(itemId);
+    }
+}
+{% endhighlight %}
+
+##### 컨트롤러
+
+{% highlight java %}
+package com.example.app.v3;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+public class OrderControllerV3 {
+    private final OrderServiceV3 orderService;
+
+    public OrderControllerV3(OrderServiceV3 orderService) {
+        this.orderService = orderService;
+    }
+
+    @GetMapping("/v3/request")
+    public String request(String itemId) {
+        orderService.orderItem(itemId);
+        return "ok";
+    }
+    
+    @GetMapping("/v3/no-log")
+    public String noLog() {
+        return "ok";
+    }
+}
+{% endhighlight %}
+
+##### 테스트
+
+- http://localhost:8082/v3/request?itemId=test로 접속해보자.
+- http://localhost:8082/v3/no-log로 접속해보자.
+
+### 요구사항 분석
+
+- 프록시 패턴을 적용하는 케이스를 알아보기 위해 가상의 요구사항을 추가해보자.
+- 요구사항 목록
+    - 원본 코드를 전혀 수정하지 않고, 로그 추적기를 적용해라.
+    - 특정 메서드는 로그를 출력하지 않는 기능
+        - 보안상 일부는 로그를 출력하면 안된다.
+    - 다음과 같은 다양한 케이스에 적용할 수 있어야 한다.
+        - v1
+            - 인터페이스가 있는 구현 클래스에 적용
+        - v2
+            - 인터페이스가 없는 구체 클래스에 적용
+        - v3
+            - 컴포넌트 스캔 대상에 기능 적용
+
+### 프록시 패턴 - 예제 코드1
+
+- 프록시 패턴을 적용해보기 전에 일반적인 코드로 작성하면 어떻게 동작하는지 확인해보자.
+
+#### Subject
+
+- 간단하게 operation 메소드만 추가한다.
+
+{% highlight java %}
+package com.example.pureproxy.proxy;
+
+public interface Subject {
+    String operation();
+}
+{% endhighlight %}
+
+#### RealSubject
+
+- Subject 인터페이스를 구현한다.
+- operation에는 무언가에 대한 동작이 1초가 걸린다는 가정하에 코드를 작성한다.
+
+{% highlight java %}
+package com.example.pureproxy.proxy;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class RealSubject implements Subject {
+    @Override
+    public String operation() {
+        log.info("실제 객체 호출");
+        sleep(1000);
+        return "data";
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+{% endhighlight %}
+
+#### ProxyPatternClient
+
+- Subject 인터페이스에 의존하고, Subject를 호출하는 클라이언트 코드
+
+{% highlight java %}
+package com.example.pureproxy.proxy;
+
+public class ProxyPatternClient {
+    private Subject subject;
+
+    public ProxyPatternClient(Subject subject) {
+        this.subject = subject;
+    }
+
+    public void execute() {
+        subject.operation();
+    }
+}
+{% endhighlight %}
+
+#### ProxyPatternTest
+
+- 테스트를 생성한다.
+- 한 번의 호출에 1초가 소모되므로 총 3초의 시간이 걸린다.
+
+{% highlight java %}
+package com.example.pureproxy.proxy;
+
+import org.junit.jupiter.api.Test;
+
+public class ProxyPatternTest {
+    @Test
+    void noProxyTest() {
+        RealSubject realSubject = new RealSubject();
+        ProxyPatternClient client = new ProxyPatternClient(realSubject);
+        client.execute();
+        client.execute();
+        client.execute();
+    }
+}
+{% endhighlight %}
+
+- noProxyTest 실행 로그
+>21:34:05.376 [Test worker] INFO com.example.pureproxy.proxy.RealSubject -- 실제 객체 호출  
+>21:34:06.388 [Test worker] INFO com.example.pureproxy.proxy.RealSubject -- 실제 객체 호출  
+>21:34:04.361 [Test worker] INFO com.example.pureproxy.proxy.RealSubject -- 실제 객체 호출
+
+#### 의문점
+
+- 만약 excute 실행 시 데이터를 반환하는데 이 데이터가 항상 동일하다면 어떨까?
+    - 변하지 않은 동일한 데이터를 반환하는데 시간도 동일하게 소요된다면 비효율적이다.
+    - 그래서 변하지 않는 데이터라면 어딘가에 보관해두고 이미 조회한 데이터를 사용하는 것이 성능상 좋지 않을까?
+- 우리는 이렇게 데이터를 어딘가에 보관해두고 이미 조회한 데이터를 사용하는 것을 캐시라고 한다.
+- 프록시 패턴의 주요 기능은 접근 제어이다.
+    - 이 때, 캐시도 접근 자체를 제어하는 기능 중 하나이다.
+
+### 프록시 패턴 - 예제 코드2
+
+- 이번에는 실제로 프록시 패턴을 적용해보자.
+
+#### CacheProxy
+
+- 프록시도 실제 객체와 그 모양이 같아야 하기 때문에 Subject 인터페이스를 구현했다.
+- 클라이언트가 프록시를 호출하면 프록시가 최종적으로 실제 객체를 호출해야 한다.
+    - 즉, 내부에 실제 객체의 참조를 가지고 있어야 한다.
+    - 이렇게 프록시가 호출하는 대상을 `target`이라고 한다.
+- operation 메서드
+    - 구현한 코드를 보면 cacheValue에 값이 없으면 실제 객체인 target을 호출해서 값을 구한다.
+    - 그리고 구한 값을 cacheValue에 저장하고 반환한다.
+    - 만약 cacheValue 에 값이 있으면 실제 객체를 전혀 호출하지 않고, 캐시 값을 그대로 반환한다.
+    - 따라서 처음 조회 이후에는 캐시 역할을 하는 cacheValue에서 매우 빠르게 데이터를 조회할 수 있다.
+
+{% highlight java %}
+package com.example.pureproxy.proxy;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class CacheProxy implements Subject {
+    private Subject target;
+    private String cacheValue;
+
+    public CacheProxy(Subject target) {
+        this.target = target;
+    }
+
+    @Override
+    public String operation() {
+        log.info("프록시 호출");
+        if (cacheValue == null) {
+            cacheValue = target.operation();
+        }
+        return cacheValue;
+    }
+}
+{% endhighlight %}
+
+#### ProxyPatternTest
+
+- 프록시 패턴을 적용한 cacheProxyTest 메서드를 추가해보자.
+
+{% highlight java %}
+@Test
+void cacheProxyTest() {
+    Subject realSubject = new RealSubject();
+    Subject cacheProxy = new CacheProxy(realSubject);
+    ProxyPatternClient client = new ProxyPatternClient(cacheProxy);
+    client.execute();
+    client.execute();
+    client.execute();
+}
+{% endhighlight %}
+
+- cacheProxyTest 실행 로그
+>21:44:26.978 [Test worker] INFO com.example.pureproxy.proxy.CacheProxy -- 프록시 호출  
+>21:44:26.982 [Test worker] INFO com.example.pureproxy.proxy.RealSubject -- 실제 객체 호출  
+>21:44:27.987 [Test worker] INFO com.example.pureproxy.proxy.CacheProxy -- 프록시 호출  
+>21:44:27.987 [Test worker] INFO com.example.pureproxy.proxy.CacheProxy -- 프록시 호출
+
+- 프록시 패턴을 적용했더니 기존 로직보다 실행 시간이 빨라진 것을 확인할 수 있다.
+- 패턴 적용 전
+    - 약 3초 소요
+- 패턴 적용 후
+    - 최초 실행 시에만 1초 소요
+    - 이후에는 거의 즉시 반환한다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
