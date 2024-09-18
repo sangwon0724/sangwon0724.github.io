@@ -1,0 +1,217 @@
+---
+layout: post
+title:  "[고급편] 데코레이터 패턴"
+date:   2024-09-18 23:34:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 데코레이터 패턴
+
+- 프록시를 사용하여 새로운 기능을 추가하는 것을 목적으로 하는 패턴
+
+### 데코레이터 패턴 - 예제 코드1
+
+- 데코레이터 패턴을 적용해보기 전에 일반적인 코드로 작성하면 어떻게 동작하는지 확인해보자.
+
+#### Component
+
+- 간단하게 operation 메소드만 추가한다.
+
+{% highlight java %}
+package com.example.pureproxy.decorator;
+
+public interface Component {
+    String operation();
+}
+{% endhighlight %}
+
+#### RealComponent
+
+- Component 인터페이스를 구현한다.
+- operation에는 단순하게 데이터를 반환하는 로직을 작성한다.
+
+#### DecoratorPatternClient
+
+- Component 인터페이스에 의존하는 클라이언트 코드
+
+{% highlight java %}
+package com.example.pureproxy.decorator;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class DecoratorPatternClient {
+    private Component component;
+    
+    public DecoratorPatternClient(Component component) {
+        this.component = component;
+    }
+
+    public void execute() {
+        String result = component.operation();
+        log.info("result={}", result);
+    }
+}
+{% endhighlight %}
+
+#### DecoratorPatternTest
+
+- 테스트를 생성한다.
+{% highlight java %}
+package com.example.pureproxy.decorator;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class DecoratorPatternTest {
+    @Test
+    void noDecorator() {
+        Component realComponent = new RealComponent();
+        DecoratorPatternClient client = new DecoratorPatternClient(realComponent);
+        client.execute();
+    }
+}
+{% endhighlight %}
+
+- noDecorator 실행 로그
+>com.example.pureproxy.decorator.RealComponent -- RealComponent 실행  
+>com.example.pureproxy.decorator.DecoratorPatternClient -- result=data
+
+### 데코레이터 패턴 - 예제 코드2
+
+- 이번에는 실제로 데코레이터 패턴을 적용해보자.
+- 응답 메시지를 꾸며주는 데코레이터를 생성하고 적용할 것이다.
+- 데코레이터 적용 시 런타임 객체 의촌 관게는 아래와 같이 바뀐다.
+```mermaid
+flowchart LR
+    A[Client] ----> B[messageDecorator]
+    B ----> C[reaalComponent]
+```
+
+#### MessageDecorator
+
+- 응답 값을 꾸며주는 데코레이터 프록시
+- Component 인터페이스를 구현한다.
+- 프록시가 호출해야 하는 대상을 component에 저장한다.
+
+{% highlight java %}
+package com.example.pureproxy.decorator;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MessageDecorator implements Component {
+    private Component component;
+
+    public MessageDecorator(Component component) {
+        this.component = component;
+    }
+
+    @Override
+    public String operation() {
+        log.info("MessageDecorator 실행");
+        String result = component.operation();
+        String decoResult = "*****" + result + "*****";
+        log.info("MessageDecorator 꾸미기 적용 전={}, 적용 후={}", result, decoResult);
+        return decoResult;
+    }
+}
+{% endhighlight %}
+
+#### DecoratorPatternTest
+
+- 데코레이터 적용 결과를 확인하기 위해 DecoratorPatternTest에 메서드를 추가하자.
+- client → messageDecorator → realComponent 순서로 객체 의존 관계를 생성한다.
+
+{% highlight java %}
+@Test
+void decorator1() {
+    Component realComponent = new RealComponent();
+    Component messageDecorator = new MessageDecorator(realComponent);
+    DecoratorPatternClient client = new DecoratorPatternClient(messageDecorator);
+    client.execute();
+}
+{% endhighlight %}
+
+- decorator1 실행 로그
+>com.example.pureproxy.decorator.MessageDecorator -- MessageDecorator 실행  
+>com.example.pureproxy.decorator.RealComponent -- RealComponent 실행  
+>com.example.pureproxy.decorator.MessageDecorator -- MessageDecorator 꾸미기 적용 전=data, 적용 후=*****data*****  
+>com.example.pureproxy.decorator.DecoratorPatternClient -- result=*****data*****
+
+- 실행 결과를 보면 MessageDecorator가 RealComponent를 호출하고 반환한 응답 메시지를 꾸며서 반환한 것을 확인할 수 있다.
+
+### 데코레이터 패턴 - 예제 코드3
+
+- 데코레이터는 하나만 적용할 수 있는게 아닌 복수로 적용할 수 있다.
+- 이번에는 실행 시간을 측정하는 기능의 데코레이터를 생성하고 적용도 해보자.
+- 데코레이터 적용 시 런타임 객체 의촌 관게는 아래와 같이 바뀐다.
+```mermaid
+flowchart LR
+    A[Client] ----> B[timeDecorator]
+    B ----> C[messageDecorator]
+    C ----> D[reaalComponent]
+```
+
+#### TimeDecorator
+
+- 실행 기능을 측정하는 데코레이터다.
+- 대상을 호출하기 전에 시간을 가지고 있다가, 대상의 호출이 끝나면 호출 시간을 로그로 남겨준다.
+
+{% highlight java %}
+package com.example.pureproxy.decorator;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class TimeDecorator implements Component {
+    private Component component;
+
+    public TimeDecorator(Component component) {
+        this.component = component;
+    }
+
+    @Override
+    public String operation() {
+        log.info("TimeDecorator 실행");
+        long startTime = System.currentTimeMillis();
+
+        String result = component.operation();
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("TimeDecorator 종료 resultTime={}ms", resultTime);
+        return result;
+    }
+}
+{% endhighlight %}
+
+#### DecoratorPatternTest
+
+- 데코레이터 적용 결과를 확인하기 위해 DecoratorPatternTest에 메서드를 추가하자.
+- client → timeDecorator → messageDecorator → realComponent 순서로 객체 의존 관계를 생성한다.
+
+{% highlight java %}
+@Test
+void decorator2() {
+    Component realComponent = new RealComponent();
+    Component messageDecorator = new MessageDecorator(realComponent);
+    Component timeDecorator = new TimeDecorator(messageDecorator);
+    DecoratorPatternClient client = new DecoratorPatternClient(timeDecorator);
+    client.execute();
+}
+{% endhighlight %}
+
+- decorator2 실행 로그
+>com.example.pureproxy.decorator.TimeDecorator -- TimeDecorator 실행  
+>com.example.pureproxy.decorator.MessageDecorator -- MessageDecorator 실행  
+>com.example.pureproxy.decorator.RealComponent -- RealComponent 실행  
+>com.example.pureproxy.decorator.MessageDecorator -- MessageDecorator 꾸미기 적용 전=data, 적용 후=*****data*****  
+>com.example.pureproxy.decorator.TimeDecorator -- TimeDecorator 종료 resultTime=2ms  
+>com.example.pureproxy.decorator.DecoratorPatternClient -- result=*****data*****
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)

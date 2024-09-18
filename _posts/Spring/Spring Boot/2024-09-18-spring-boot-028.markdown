@@ -540,7 +540,7 @@ public class RealSubject implements Subject {
 
 #### ProxyPatternClient
 
-- Subject 인터페이스에 의존하고, Subject를 호출하는 클라이언트 코드
+- Subject 인터페이스에 의존하는 클라이언트 코드
 
 {% highlight java %}
 package com.example.pureproxy.proxy;
