@@ -1,0 +1,849 @@
+---
+layout: post
+title:  "[고급편] 동적 프록시 기술"
+date:   2024-09-20 01:13:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+---
+
+### 동적 프록시
+
+- 프록시를 사용하면 기존 코드를 변경하지 않고, 로그 추적기라는 부가 기능을 적용할 수 있다.
+    - 하지만 프록시를 적용할 대상 클래스의 수만큼  프록시 클래스를 만들어야 한다는 엄청난 문제점이 있다.
+- 자바가 기본으로 제공하는 프록시 생성 오픈소스 기술을 활용하면 프록시 객체를 동적으로 만들어낼 수 있다.
+    - JDK 동적 프록시 기술이나 CGLIB 같은 기술들이 해당한다.
+    - 프록시 클래스를 지금처럼 계속 만들지 않아도 된다.
+    - 프록시를 적용할 코드를 하나만 만들어두고 동적 프록시 기술을 사용해서 프록시 객체를 생성하면 된다.
+- 이번 게시글에서 언급하는 2가지 기술을 위해 미리 2개의 패키지를 생성한다.
+    - JDK 동적 프록시
+        - jdkdynamic
+    - CGLIB
+        - cglib
+
+### 리플렉션
+
+- 동적 프록시에는 일반적으로 2가지 기술을 사용한다.
+    - JDK 동적 프록시
+    - CGLIB
+- 이 중 JDK 동적 프록시를 이해하기 위해서는 먼저 자바의 리플렉션 기술을 이해해야 한다.
+- 리플렉션 기술을 사용하면 클래스나 메서드의 메타정보를 동적으로 획득하고, 코드도 동적으로 호출할 수 있다.
+- JDK 동적 프록시를 이해하기 위해서는 리플렉션에 대해서 어느 정도는 이해가 필요하다.
+
+#### 리플렉션을 적용하지 않은 경우
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+@Slf4j
+public class ReflectionTest {
+    @Test
+    void reflection0() {
+        ReflectionExample target = new ReflectionExample();
+        //로직 (1) 시작
+        log.info("start");
+        String result1 = target.callA();
+        log.info("result={}", result1);
+        //로직 (1) 종료
+
+        //로직 (2) 시작
+        log.info("start");
+        String result2 = target.callB();
+        log.info("result={}", result2);
+        //로직 (2) 종료
+    }
+
+    @Slf4j
+    static class ReflectionExample {
+        public String callA() {
+            log.info("callA");
+            return "A";
+        }
+
+        public String callB() {
+            log.info("callB");
+            return "B";
+        }
+    }
+}
+{% endhighlight %}
+
+- 로직 (1)과 로직 (2)는 메소드 실행 도중에 출력하는 로그나 반환하는 값만 다를 뿐 흐름자체는 동일하다.
+    1. "start" 출력
+    2. ReflectionExample 내부의 메소드 실행 및 결과 저장
+    3. 2번에서 호출한 메소드의 반환값 출력
+- 이 부분에서 ReflectionExample 내부의 클래스를 호출하는 부분만 동적으로 처리할 수 있다면 공통화할 수 있다.
+- 이 때 리플렉션을 적용하면 메소드를 동적으로 호출할 수 있다.
+    - 리플렉션은 클래스나 메서드의 메타정보를 사용해서 동적으로 호출하는 메서드를 변경할 수 있다.
+- 리플렉션을 적용한다면 아래와 같은 형식으로 변경된다.
+{% highlight java %}
+log.info("start");
+String result = xxx(); //호출 대상이 다름, 동적 처리 필요
+log.info("result={}", result);
+{% endhighlight %}
+
+#### 리플렉션 1차 적용
+
+- Class.forName을 통해 클래스 메타 정보를 가져올 수 있다.
+    - 인자로는 리플렉트로 실행할 메소드를 가지고 있는 클래스명을 지정하면 된다.
+    - 기본적으로 `패키지_경로.클래스명`만 입력하면 된다.
+    - 만약에 내부 클래스일 경우에는 `패키지_경로.클래스명$내부_클래스명`으로 입력하면 된다.
+- Class 클래스의 getMethod 메소드로 메소드 메타 정보를 가져올 수 있다.
+- Method 클래스의 invoke 메소드로 메소드 메타 정보를 통해 실제 메소드를 실행할 수 있다.
+
+{% highlight java %}
+@Test
+void reflection1() throws Exception {
+    //클래스 정보
+    Class reflectClass = Class.forName("com.example.jdkdynamic.ReflectionTest$ReflectionExample");
+    ReflectionExample target = new ReflectionExample();
+    
+    //callA 메서드 정보
+    Method methodCallA = reflectClass.getMethod("callA");
+    Object result1 = methodCallA.invoke(target);
+    log.info("result1={}", result1);
+    
+    //callB 메서드 정보
+    Method methodCallB = reflectClass.getMethod("callB");
+    Object result2 = methodCallB.invoke(target);
+    log.info("result2={}", result2);
+}
+{% endhighlight %}
+
+- 위 테스트를 실제 실행해보면 로직이 잘 동작하는 것을 알 수 있다.
+- 리플렉션을 적용하기 전에는 거의 동일하지만 사소한 부분이 달라서 결국은 다른 2개의 로직이었다.
+    - 리플렉션을 통해서 하나의 로직을 반복하여 적용할 수 있게 되었다.
+    - 이것은 같은 로직에 대해서 추상화를 진행할 수 있다는 것을 의미한다.
+
+#### 리플렉션 2차 적용
+
+- 이번에는 리플렉션을 사용해서 메타 정보로 추상화를 진행했다.
+- 테스트를 실행해보면 리플렉션을 통해 하나의 추상화 메소드로 2개의 다른 메소드를 실행할 수 있는 것을 확인할 수 있다.
+
+{% highlight java %}
+@Test
+void reflection2() throws Exception {
+    Class reflectClass = Class.forName("com.example.jdkdynamic.ReflectionTest$ReflectionExample");
+    ReflectionExample target = new ReflectionExample();
+
+    Method methodCallA = reflectClass.getMethod("callA");
+    dynamicCall(methodCallA, target);
+
+    Method methodCallB = reflectClass.getMethod("callB");
+    dynamicCall(methodCallB, target);
+}
+
+/**
+    * 리플렉션을 사용해서 메타 정보로 추상화
+*/
+private void dynamicCall(Method method, Object target) throws Exception {
+    log.info("start");
+    Object result = method.invoke(target);
+    log.info("result={}", result);
+}
+{% endhighlight %}
+
+- 구분을 위해서 굳이 Method를 따로 꺼내서 썼다.
+- 아래와 같이 변경하면 정말로 추상화 메소드 하나로 끝낼 수 있다는 걸 알 수 있다.
+{% highlight java %}
+@Test
+void reflection2() throws Exception {
+    Class reflectClass = Class.forName("com.example.jdkdynamic.ReflectionTest$ReflectionExample");
+    ReflectionExample target = new ReflectionExample();
+
+    /*
+    Method methodCallA = reflectClass.getMethod("callA");
+    dynamicCall(methodCallA, target);
+
+    Method methodCallB = reflectClass.getMethod("callB");
+    dynamicCall(methodCallB, target);
+    */
+
+    dynamicCall(reflectClass.getMethod("callA"), target);
+    dynamicCall(reflectClass.getMethod("callB"), target);
+}
+{% endhighlight %}
+
+#### 리플렉션의 문제점
+
+- 리플렉션을 사용하면 클래스와 메서드의 메타 정보를 사용해서 애플리케이션을 동적으로 유연하게 만들 수 있는 것은 분명하다.
+- 하지만 리플렉션 기술은 런타임에 동작하기 때문에, 컴파일 시점에 오류를 잡을 수 없다.
+- 그래서 존재하지 않는 메소드를 지정해도 컴파일 오류가 발생하지 않는다.
+    - 즉, 오류가 발생하면 런타임에 발생한다.
+    - 예시 : `getMethod("callC")`
+- 그래서 리플렉션은 프레임워크 개발이나 또는 매우 일반적인 공통 처리가 필요할 때에만 부분적으로 주의해서 사용해야 한다.
+
+### JDK 동적 프록시 - 소개
+
+- JDK 동적 프록시는 인터페이스를 기반으로 프록시를 동적으로 만들어주는 기술이다.
+- 인터페이스 기반으로 프록시를 생성하기 때문에 당연히 인터페이스가 필수다.
+
+#### InvocationHandler
+
+- JDK 동적 프록시에 적용할 로직은 기본적으로 InvocationHandler 인터페이스를 구현해서 작성한다.
+- 제공되는 파라미터
+    - `Object proxy`
+        - 프록시 자신
+    - `Method method`
+        - 호출한 메서드
+    - `Object[] args`
+        - 메서드를 호출할 때 전달한 인수
+{% highlight java %}
+package java.lang.reflect;
+
+public interface InvocationHandler {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
+}
+{% endhighlight %}
+
+### JDK 동적 프록시 - 예제 코드
+
+#### AInterface
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+public interface AInterface {
+    String call();
+}
+{% endhighlight %}
+
+#### AImpl
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class AImpl implements AInterface {
+    @Override
+    public String call() {
+        log.info("A 호출");
+        return "a";
+    }
+}
+{% endhighlight %}
+
+#### BInterface
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+public interface BInterface {
+    String call();
+}
+{% endhighlight %}
+
+#### BImpl
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class BImpl implements BInterface {
+    @Override
+    public String call() {
+        log.info("B 호출");
+        return "b";
+    }
+}
+{% endhighlight %}
+
+#### 적용할 프록시
+
+- 간단하게 실행 시간을 측정하는 프록시다.
+- InvocationHandler를 구현해서 작성한다.
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+import lombok.extern.slf4j.Slf4j;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+@Slf4j
+public class TimeInvocationHandler implements InvocationHandler {
+    private final Object target;
+
+    public TimeInvocationHandler(Object target) {
+        this.target = target;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        log.info("TimeProxy 실행");
+        long startTime = System.currentTimeMillis();
+
+        Object result = method.invoke(target, args);
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("TimeProxy 종료 resultTime={}", resultTime);
+        return result;
+    }
+}
+{% endhighlight %}
+
+#### 테스트 생성 및 실행
+
+{% highlight java %}
+package com.example.jdkdynamic;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import java.lang.reflect.Proxy;
+
+@Slf4j
+public class JdkDynamicProxyTest {
+    @Test
+    void dynamicA() {
+        AInterface target = new AImpl();
+        TimeInvocationHandler handler = new TimeInvocationHandler(target);
+        AInterface proxy = (AInterface) Proxy.newProxyInstance(AInterface.class.getClassLoader(), new Class[]{AInterface.class}, handler);
+        proxy.call();
+        log.info("targetClass={}", target.getClass());
+        log.info("proxyClass={}", proxy.getClass());
+    }
+
+    @Test
+    void dynamicB() {
+        BInterface target = new BImpl();
+        TimeInvocationHandler handler = new TimeInvocationHandler(target);
+        BInterface proxy = (BInterface) Proxy.newProxyInstance(BInterface.class.getClassLoader(), new Class[]{BInterface.class}, handler);
+        proxy.call();
+        log.info("targetClass={}", target.getClass());
+        log.info("proxyClass={}", proxy.getClass());
+    }
+}
+{% endhighlight %}
+
+- dynamicA 실행 로그
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 실행  
+>com.example.jdkdynamic.AImpl -- A 호출  
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 종료 resultTime=0  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- targetClass=class com.example.jdkdynamic.AImpl  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- proxyClass=class jdk.proxy3.$Proxy11
+
+- dynamicB 실행 로그
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 실행  
+>com.example.jdkdynamic.BImpl -- B 호출  
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 종료 resultTime=0  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- targetClass=class com.example.jdkdynamic.BImpl  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- proxyClass=class jdk.proxy3.$Proxy11
+
+- dynamicA와 dynamicB를 한꺼번에 실행한 로그
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 실행  
+>com.example.jdkdynamic.AImpl -- A 호출  
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 종료 resultTime=1  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- targetClass=class com.example.jdkdynamic.AImpl  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- proxyClass=class jdk.proxy3.$Proxy11  
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 실행  
+>com.example.jdkdynamic.BImpl -- B 호출  
+>com.example.jdkdynamic.TimeInvocationHandler -- TimeProxy 종료 resultTime=1  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- targetClass=class com.example.jdkdynamic.BImpl  
+>com.example.jdkdynamic.JdkDynamicProxyTest -- proxyClass=class jdk.proxy3.$Proxy12
+
+#### 테스트 결과
+
+- dynamicA와 dynamicB를 확인해보면 AImpl과 BImpl에 대해서 각각 프록시를 생성하지 않았다.
+- TimeInvocationHandler라는 하나의 프록시만 있어도 여러 개의 클래스에 동적으로 적용할 수 있는 것을 확인할 수 있다.
+- 만약 프록시를 적용해야할 클래스가 100개나 있어도 적용하는 코드가 100번 반복될 뿐 별도의 프록시를 100개를 만들지는 않아도 된다.
+    - 그저 공통되는 로직을 가진 프록시만 만들면 된다.
+
+### JDK 동적 프록시 - 적용1
+
+- 이번에는 JDK 동적 프록시를 실제 애플리케이션에 적용해보자.
+- 이 때를 위해서 chpater2 모듈에 인터페이스 기반으로 v1 애플리케이션을 만들어 뒀다.
+
+#### 프록시
+
+- LogTrace를 적용할 수 있는 프록시를 생성하자.
+
+{% highlight java %}
+package com.example.handler;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class LogTraceBasicHandler implements InvocationHandler {
+    private final Object target;
+    private final LogTrace logTrace;
+
+    public LogTraceBasicHandler(Object target, LogTrace logTrace) {
+        this.target = target;
+        this.logTrace = logTrace;
+    }
+    
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        TraceStatus status = null;
+        try {
+            String message = method.getDeclaringClass().getSimpleName() + "." + method.getName() + "()";
+            status = logTrace.begin(message);
+            Object result = method.invoke(target, args); //로직 호출
+            logTrace.end(status);
+            return result;
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 프록시를 스프링 빈으로 등록
+
+- 방금 생성한 프록시를 스프링 빈으로 등록하자.
+
+{% highlight java %}
+package com.example;
+
+import com.example.app.v1.*;
+import com.example.handler.LogTraceBasicHandler;
+import com.example.trace.LogTrace;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.lang.reflect.Proxy;
+
+@Configuration
+public class DynamicProxyBasicConfig {
+    @Bean
+    public OrderControllerV1 orderControllerV1(LogTrace logTrace) {
+        OrderControllerV1 orderController = new OrderControllerV1Impl(orderServiceV1(logTrace));
+        OrderControllerV1 proxy =
+            (OrderControllerV1) Proxy.newProxyInstance(
+                OrderControllerV1.class.getClassLoader(),
+                new Class[]{OrderControllerV1.class},
+                new LogTraceBasicHandler(orderController, logTrace)
+            );
+        return proxy;
+    }
+
+    @Bean
+    public OrderServiceV1 orderServiceV1(LogTrace logTrace) {
+        OrderServiceV1 orderService = new OrderServiceV1Impl(orderRepositoryV1(logTrace));
+        OrderServiceV1 proxy =
+            (OrderServiceV1) Proxy.newProxyInstance(
+                OrderServiceV1.class.getClassLoader(),
+                new Class[]{OrderServiceV1.class},
+                new LogTraceBasicHandler(orderService, logTrace)
+            );
+        return proxy;
+    }
+
+    @Bean
+    public OrderRepositoryV1 orderRepositoryV1(LogTrace logTrace) {
+        OrderRepositoryV1 orderRepository = new OrderRepositoryV1Impl();
+        OrderRepositoryV1 proxy =
+            (OrderRepositoryV1) Proxy.newProxyInstance(
+                OrderRepositoryV1.class.getClassLoader(),
+                new Class[]{OrderRepositoryV1.class},
+                new LogTraceBasicHandler(orderRepository, logTrace)
+            );
+        return proxy;
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example;
+
+import com.example.trace.LogTrace;
+import com.example.trace.ThreadLocalLogTrace;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+
+//@Import({AppV1Config.class, AppV2Config.class})
+//@Import(InterfaceProxyConfig.class)
+//@Import(ConcreteProxyConfig.class)
+@Import(DynamicProxyBasicConfig.class)
+@SpringBootApplication(scanBasePackages = "com.example.app.v3") //컨트롤러때문에 생기는 충돌 방지
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+
+    @Bean
+    public LogTrace logTrace() {
+        return new ThreadLocalLogTrace();
+    }
+}
+{% endhighlight %}
+
+#### 테스트
+
+- http://localhost:8082/v1/request?itemId=test로 접속해보자.
+>[ce40bb4d] OrderControllerV1.request()  
+>[ce40bb4d] |-->OrderServiceV1.orderItem()  
+>[ce40bb4d] | |-->OrderRepositoryV1.save()  
+>[ce40bb4d] | |<--OrderRepositoryV1.save() time=1002ms  
+>[ce40bb4d] |<--OrderServiceV1.orderItem() time=1002ms  
+>[ce40bb4d] OrderControllerV1.request() time=1003ms
+
+- 로그가 잘 출력되는 것을 확인할 수 있다.
+- 다만 여기에는 함정이 있다.
+
+- 이번에는 http://localhost:8082/v1/no-log로 접속해보자.
+>[4b93ec21] OrderControllerV1.noLog()  
+>[4b93ec21] OrderControllerV1.noLog() time=0ms
+
+- 로그를 남기지 않는 경우를 만들기 위해서 no-log를 만들었는데  
+프록시가 무조건 적용되다보니 로그도 무조건 출력되는 문제가 있다.
+
+### JDK 동적 프록시 - 적용2
+
+- 이번에는 메소드 이름을 기준으로 특정 조건을 만족할 때만 로그를 남기는 기능을 개발해보자.
+
+#### 프록시
+
+- 직전의 LogTraceBasicHandler와 비교했을 때 큰 틀은 변한 것이 없다.
+- 다만 파라미터에 비교할 패턴 목록이 추가되었고,  
+프록시 실행 시 현재 실행되는 target의 메소드명이 패턴과 매칭되는지 확인하는 로직이 추가되었다.
+- PatternMatchUtils.simpleMatch를 사용해서 단순한 매칭 로직을 쉽게 적용할 수 있다.
+    - `xxx`
+        - xxx가 정확히 일치하면 참
+    - `xxx*`
+        - xxx로 시작하면 참
+    - `*xxx`
+        - xxx로 끝나면 참
+    - `*xxx*`
+        - xxx가 있으면 참
+
+{% highlight java %}
+package com.example.handler;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import org.springframework.util.PatternMatchUtils;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class LogTraceFilterHandler implements InvocationHandler {
+    private final Object target;
+    private final LogTrace logTrace;
+    private final String[] patterns;
+
+    public LogTraceFilterHandler(Object target, LogTrace logTrace, String... patterns) {
+        this.target = target;
+        this.logTrace = logTrace;
+        this.patterns = patterns;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        //메소드 이름 필터
+        String methodName = method.getName();
+        //메소드의 이름이 지정된 패턴 목록 중에서 매칭되는 게 없다면 로그 출력 없이 메소드를 바로 실행한다.
+        if (!PatternMatchUtils.simpleMatch(patterns, methodName)) {
+            return method.invoke(target, args);
+        }
+
+        TraceStatus status = null;
+        try {
+            String message = method.getDeclaringClass().getSimpleName() + "." + method.getName() + "()";
+            status = logTrace.begin(message);
+            Object result = method.invoke(target, args); //로직 호출
+            logTrace.end(status);
+            return result;
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 프록시를 스프링 빈으로 등록
+
+- 방금 생성한 프록시를 스프링 빈으로 등록하자.
+
+{% highlight java %}
+package com.example;
+
+import com.example.app.v1.*;
+import com.example.handler.LogTraceFilterHandler;
+import com.example.trace.LogTrace;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.lang.reflect.Proxy;
+
+@Configuration
+public class DynamicProxyFilterConfig {
+    private static final String[] PATTERNS = {"request*", "order*", "save*"};
+
+    @Bean
+    public OrderControllerV1 orderControllerV1(LogTrace logTrace) {
+        OrderControllerV1 orderController = new OrderControllerV1Impl(orderServiceV1(logTrace));
+        OrderControllerV1 proxy =
+            (OrderControllerV1) Proxy.newProxyInstance(
+                OrderControllerV1.class.getClassLoader(),
+                new Class[]{OrderControllerV1.class},
+                new LogTraceFilterHandler(orderController, logTrace, PATTERNS)
+            );
+        return proxy;
+    }
+    
+    @Bean
+    public OrderServiceV1 orderServiceV1(LogTrace logTrace) {
+        OrderServiceV1 orderService = new OrderServiceV1Impl(orderRepositoryV1(logTrace));
+        OrderServiceV1 proxy =
+                (OrderServiceV1) Proxy.newProxyInstance(
+                    OrderServiceV1.class.getClassLoader(),
+                    new Class[]{OrderServiceV1.class},
+                    new LogTraceFilterHandler(orderService, logTrace, PATTERNS)
+                );
+        return proxy;
+    }
+
+    @Bean
+    public OrderRepositoryV1 orderRepositoryV1(LogTrace logTrace) {
+        OrderRepositoryV1 orderRepository = new OrderRepositoryV1Impl();
+        OrderRepositoryV1 proxy =
+            (OrderRepositoryV1) Proxy.newProxyInstance(
+                OrderRepositoryV1.class.getClassLoader(),
+                new Class[]{OrderRepositoryV1.class},
+                new LogTraceFilterHandler(orderRepository, logTrace, PATTERNS)
+            );
+        return proxy;
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example;
+
+import com.example.trace.LogTrace;
+import com.example.trace.ThreadLocalLogTrace;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+
+//@Import({AppV1Config.class, AppV2Config.class})
+//@Import(InterfaceProxyConfig.class)
+//@Import(ConcreteProxyConfig.class)
+//@Import(DynamicProxyBasicConfig.class)
+@Import(DynamicProxyFilterConfig.class)
+@SpringBootApplication(scanBasePackages = "com.example.app.v3") //컨트롤러때문에 생기는 충돌 방지
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+
+    @Bean
+    public LogTrace logTrace() {
+        return new ThreadLocalLogTrace();
+    }
+}
+{% endhighlight %}
+
+#### 테스트
+
+- http://localhost:8082/v1/request?itemId=test로 접속해보자.
+>[7c4e1e12] OrderControllerV1.request()  
+>[7c4e1e12] |-->OrderServiceV1.orderItem()  
+>[7c4e1e12] | |-->OrderRepositoryV1.save()  
+>[7c4e1e12] | |<--OrderRepositoryV1.save() time=1006ms  
+>[7c4e1e12] |<--OrderServiceV1.orderItem() time=1006ms  
+>[7c4e1e12] OrderControllerV1.request() time=1009ms
+- 아까와 동일하게 로그가 잘 출력된다.
+
+- 이번에는 http://localhost:8082/v1/no-log로 접속해보자.
+    - 로그가 전혀 출력되지 않는다.
+    - 비교할 패턴 목록에 `noLog` 메소드가 해당되는 것이 없다.
+    - 그래서 LogTraceFilterHandler의 invoke를 확인하면 알 수 있듯이 로그 출력없이 바로 실행된다.
+
+### JDK 동적 프록시 - 한계
+
+- JDK 동적 프록시에는 한계가 존재한다.
+- JDK 동적 프록시 자체가 인터페이스 기반이다 보니 인터페이스를 구현하지 않은 클래스에는 프록시를 적용할 수 없다.
+- 만약 인터페이스를 구현하지 않은 클래스에도 프록시를 적용하고 싶다면 CGLIB라는 라이브러리를 사용해야 한다.
+    - CGLIB는 바이트코드를 조작하는 특별한 라이브러리다.
+
+### CGLIB - 소개
+
+- CGLIB(Code Generator Library)는 바이트코드를 조작해서 동적으로 클래스를 생성하는 기술을 제공하는 라이브러리다.
+- CGLIB를 사용하면 인터페이스가 없어도 구체 클래스만 가지고 동적 프록시를 만들어낼 수 있다.
+- CGLIB는 원래는 외부 라이브러리인데, 스프링 프레임워크가 스프링 내부 소스 코드에 포함했다.
+    - 즉, 스프링을 사용한다면 별도의 외부 라이브러리를 추가하지 않아도 사용할 수 있다.
+- CGLIB를 직접 사용하는 경우는 거의 없다.
+    - 스프링의 ProxyFactory라는 것이 CGLIB를 편리하게 사용하게 도와주기 때문이다.
+    - 다만, CGLIB가 무엇인지 대략 개념은 알고 있어야 한다.
+
+#### MethodInterceptor
+
+- CGLIB에 적용할 로직은 기본적으로 MethodInterceptor 인터페이스를 구현해서 작성한다.
+- 제공되는 파라미터
+    - `obj`
+        - CGLIB가 적용된 객체
+    - `method`
+        - 호출된 메서드
+    - `args`
+        - 메서드를 호출하면서 전달된 인수
+    - `proxy`
+        - 메서드 호출에 사용
+{% highlight java %}
+package org.springframework.cglib.proxy;
+
+public interface MethodInterceptor extends Callback {
+    Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable;
+}
+{% endhighlight %}
+
+### CGLIB - 예제 코드
+
+#### 공통 예제 코드
+
+- 추후 다양한 상황을 설명하기 위해서 먼저 공통으로 사용할 예제 코드를 생성한다.
+- 종류
+    - 인터페이스와 구현이 있는 해당 인터페이스를 구현한 클래스
+        - ServiceInterface
+        - ServiceImpl
+    - 구체 클래스만 있는 클래스
+        - ConcreteService
+
+{% highlight java %}
+package com.example.common;
+
+public interface ServiceInterface {
+    void save();
+    void find();
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.common;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ServiceImpl implements ServiceInterface {
+    @Override
+    public void save() {
+        log.info("save 호출");
+    }
+    @Override
+    public void find() {
+        log.info("find 호출");
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example.common;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ConcreteService {
+    public void call() {
+        log.info("ConcreteService 호출");
+    }
+}
+{% endhighlight %}
+
+#### 프록시
+
+- 단순히 실행 시간을 출력하는 프록시다.
+- intercept 메소드 내부의 `proxy.invoke`를 통해 메소드를 동적으로 호출한다.
+    - `method.invoke`를 호출해도 되긴 하다.
+    - 다만 CGLIB에서는 `proxy.invoke`를 사용하는 것을 권장한다. (성능이 더 좋음)
+
+{% highlight java %}
+package com.example.cglib;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+@Slf4j
+public class TimeMethodInterceptor implements MethodInterceptor {
+    private final Object target;
+
+    public TimeMethodInterceptor(Object target) {
+        this.target = target;
+    }
+
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        log.info("TimeProxy 실행");
+        long startTime = System.currentTimeMillis();
+
+        Object result = proxy.invoke(target, args);
+
+        long endTime = System.currentTimeMillis();
+        long resultTime = endTime - startTime;
+        log.info("TimeProxy 종료 resultTime={}", resultTime);
+        return result;
+    }
+}
+{% endhighlight %}
+
+#### 테스트 생성 및 실행
+
+- CGLIB는 Enhancer 를 사용해서 프록시를 생성한다.
+- CGLIB는 구체 클래스를 상속 받아서 프록시를 생성할 수 있다.
+    - enhancer.setSuperclass를 통해 어떤 구체 클래스를 상속 받을지 지정한다.
+- enhancer.setCallback을 통해 프록시에 적용할 실행 로직을 할당한다.
+- enhancer.create()를 통해 프록시를 생성한다.
+- setSuperclass라는 메소드명을 통해서 CGLIB는 상속을 통해 프록시를 만든다는 것을 알 수 있다.
+
+{% highlight java %}
+package com.example.cglib;
+
+import com.example.common.ConcreteService;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.cglib.proxy.Enhancer;
+
+@Slf4j
+public class CglibTest {
+    @Test
+    void cglib() {
+        ConcreteService target = new ConcreteService();
+
+        Enhancer enhancer = new Enhancer(); //CGLIB를 만드는 코드
+        enhancer.setSuperclass(ConcreteService.class);
+        enhancer.setCallback(new TimeMethodInterceptor(target));
+
+        ConcreteService proxy = (ConcreteService)enhancer.create();
+        log.info("targetClass={}", target.getClass());
+        log.info("proxyClass={}", proxy.getClass());
+        proxy.call();
+    }
+}
+{% endhighlight %}
+
+- cglib 실행 로그
+>com.example.cglib.CglibTest -- targetClass=class com.example.common.ConcreteService  
+>com.example.cglib.CglibTest -- proxyClass=class com.example.common.ConcreteService$$EnhancerByCGLIB$$9ab33585  
+>com.example.cglib.TimeMethodInterceptor -- TimeProxy 실행  
+>com.example.common.ConcreteService -- ConcreteService 호출  
+>com.example.cglib.TimeMethodInterceptor -- TimeProxy 종료 resultTime=15
+
+### CGLIB - 적용
+
+- CGLIB를 사용하면 인터페이스가 없는 chpater2 모듈의 v2 애플리케이션에 동적 프록시를 적용할 수 있다.
+- 다만 지금 당장 적용하기에는 몇가지 제약이 있다.
+    - v2 애플리케이션에 기본 생성자를 추가해야 한다.
+    - setter를 통해 의존관계를 주입해야 한다.
+- 추후 학습할 ProxyFactory를 사용한다면 위의 제약도 해결하면서 편리하게 CGLIB를 적용할 수 있다.
+    - 그렇기 때문에 지금 당장 적용하지는 않을 것이다.
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
