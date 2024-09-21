@@ -4,7 +4,6 @@ title:  "[고급편] 스프링이 지원하는 프록시"
 date:   2024-09-21 14:03:00 +0900
 categories: Spring&nbsp;Boot
 tags: []
-published: false
 ---
 
 ### 프록시 팩토리 - 소개
