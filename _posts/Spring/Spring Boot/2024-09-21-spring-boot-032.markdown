@@ -12,7 +12,7 @@ tags: []
     - 상황에 따라 다른 기술을 적용해야 한다.
         - 인터페이스가 있는 경우
             - JDK 동적 프록시
-        - 인터페이스가 없는 겨우
+        - 인터페이스가 없는 경우
             - CGLIB
     - JDK 동적 프록시와 CGLIB를 함께 사용해야 한다면 각 기술마다 프록시를 관리해야 한다.
         - JDK 동적 프록시
@@ -33,7 +33,7 @@ flowchart LR
 
 - 스프링은 InvocationHandler와 MethodInterceptor를 중복으로 생성해야 하는 문제점을 해결하기 위해 Advice라는 개념을 도입했다.
 - 이를 통해 개발자는InvocationHandler나 MethodInterceptor를 신경쓰지 않고, Advice 만 만들면 된다.
-- 프록시 팩토리를 사용하면 Advice 를 호출하는 전용 InvocationHandler, MethodInterceptor를 내부에서사용한다.
+- 프록시 팩토리를 사용하면 Advice 를 호출하는 전용 InvocationHandler와 MethodInterceptor를 내부에 서사용한다.
 - Advice는 프록시에 적용하는 부가 기능 로직이다.
 - Advice는 InvocationHandler와 MethodInterceptor를 추상적으로 개념화한 것이다.
 - Advice는 `org.aopalliance.intercept` 패키지에서 제공한다.
@@ -46,7 +46,7 @@ flowchart LR
 {% highlight java %}
 package org.aopalliance.intercept;
 public interface MethodInterceptor extends Interceptor {
- Object invoke(MethodInvocation invocation) throws Throwable;
+    Object invoke(MethodInvocation invocation) throws Throwable;
 }
 {% endhighlight %}
 
