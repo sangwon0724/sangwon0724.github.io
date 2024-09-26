@@ -1,0 +1,186 @@
+---
+layout: post
+title:  "[고급편] @Aspect AOP"
+date:   2024-09-26 23:04:00 +0900
+categories: Spring&nbsp;Boot
+tags: []
+published: false
+---
+
+### @Aspect 프록시 - 적용
+
+- 스프링 애플리케이션에 프록시를 적용하려면 어드바이저를 만들어서 스프링 빈으로 등록하면 된다.
+    - 그 이후의 작업은 자동 프록시 생성기가 모두 자동으로 처리한다.
+- 자동 프록시 생성기는 스프링 빈으로 등록된 어드바이저들을 찾고,  
+포인트컷이 매칭되는 스프링 빈들에 자동으로 프록시를 적용해준다
+- 스프링은 @Aspect 애노테이션으로 매우 편리하게 포인트컷과 어드바이스로 구성되어 있는 어드바이저를 생성해주는 기능을 지원한다.
+- @Aspect는 AOP(관점 지향 프로그래밍)를 가능하게 하는 AspectJ 프로젝트에서 제공한다.
+    - 이 애노테이션을 사용해서 스프링이 편리하게 프록시를 만들어준다.
+
+#### 어드바이저
+
+- `@Aspect`
+    - 애노테이션 기반 프록시를 적용할 때 필요하다.
+- `@Around("execution(* com.example.app..*(..))")`
+    - @Around 의 값에 포인트컷 표현식을 넣는다.
+    - 표현식은 AspectJ 표현식을 사용한다.
+    - @Around 의 메서드는 어드바이스(Advice)가 된다.
+- `ProceedingJoinPoint joinPoint`
+    - 어드바이스에서 살펴본 `MethodInvocation invocation`과 유사한 기능이다.
+    - 내부에 실제 호출 대상, 전달 인자, 그리고 어떤 객체와 어떤 메서드가 호출되었는지 정보가 포함되어 있다.
+- `joinPoint.proceed()`
+    - 실제 호출 대상(target)을 호출한다.
+
+{% highlight java %}
+package com.example.aspect;
+
+import com.example.trace.LogTrace;
+import com.example.trace.TraceStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+
+@Slf4j
+@Aspect
+public class LogTraceAspect {
+    private final LogTrace logTrace;
+    public LogTraceAspect(LogTrace logTrace) {
+        this.logTrace = logTrace;
+    }
+    @Around("execution(* com.example.app..*(..))")
+    public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
+        TraceStatus status = null;
+
+        // log.info("target={}", joinPoint.getTarget()); //실제 호출 대상
+        // log.info("getArgs={}", joinPoint.getArgs()); //전달인자
+        // log.info("getSignature={}", joinPoint.getSignature()); //join point 시그니처
+        
+        try {
+            String message = joinPoint.getSignature().toShortString();
+            status = logTrace.begin(message);
+            Object result = joinPoint.proceed(); //비즈니스 로직 호출
+            logTrace.end(status);
+            return result;
+        } catch (Exception e) {
+            logTrace.exception(status, e);
+            throw e;
+        }
+    }
+}
+{% endhighlight %}
+
+#### 환경설정
+
+- @Aspect 애노테이션가 있어도 스프링 빈으로 등록을 해줘야 한다.
+- 스프링 빈 등록 방법
+    - 환경설정 파일을 별도로 만들고 @SpringBootApplication쪽에서 @Import 사용하기
+    - @Aspect가 있는 클래스에 @Component 애노테이션 추가하기
+
+{% highlight java %}
+package com.example.config;
+
+import com.example.aspect.LogTraceAspect;
+import com.example.trace.LogTrace;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@Import({AppV1Config.class, AppV2Config.class})
+public class AopConfig {
+    @Bean
+    public LogTraceAspect logTraceAspect(LogTrace logTrace) {
+        return new LogTraceAspect(logTrace);
+    }
+}
+{% endhighlight %}
+
+{% highlight java %}
+package com.example;
+
+import com.example.config.*;
+import com.example.trace.LogTrace;
+import com.example.trace.ThreadLocalLogTrace;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+
+//@Import({AppV1Config.class, AppV2Config.class})
+//@Import(InterfaceProxyConfig.class)
+//@Import(ConcreteProxyConfig.class)
+//@Import(DynamicProxyBasicConfig.class)
+//@Import(DynamicProxyFilterConfig.class)
+//@Import(ProxyFactoryConfigV1.class)
+//@Import(ProxyFactoryConfigV2.class)
+//@Import(BeanPostProcessorConfig.class)
+//@Import(AutoProxyConfig.class)
+@Import(AopConfig.class)
+@SpringBootApplication(scanBasePackages = "com.example.app.v3") //컨트롤러때문에 생기는 충돌 방지
+public class Chapter2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Chapter2Application.class, args);
+    }
+
+    @Bean
+    public LogTrace logTrace() {
+        return new ThreadLocalLogTrace();
+    }
+}
+{% endhighlight %}
+
+#### 테스트
+
+- 3가지 애플리케이션에 모두 접속해보면 로그가 잘 출력되는 것을 확인할 수 있다.
+    - http://localhost:8082/v1/request?itemId=test
+    - http://localhost:8082/v2/request?itemId=test
+    - http://localhost:8082/v3/request?itemId=test
+
+### @Aspect 프록시 - 설명
+
+- 자동 프록시 생성기는 어드바이저를 자동으로 찾아와서 필요한 곳에 프록시를 생성하고 적용해준다.
+- 이에 추가로 @Aspect를 찾아서 이것을 어드바이저로 만들어준다.
+
+#### @Aspect를 어드바이저로 변환해서 저장하는 과정
+
+1. 실행
+    - 스프링 애플리케이션 로딩 시점에 자동 프록시 생성기를 호출한다.
+2. 모든 @Aspect 빈 조회
+    - 자동 프록시 생성기는 스프링 컨테이너에서 @Aspect 애노테이션이 붙은 스프링 빈을 모두 조회한다.
+3. 어드바이저 생성
+    - @Aspect 어드바이저 빌더를 통해 @Aspect 애노테이션 정보를 기반으로 어드바이저를 생성한다.
+4. @Aspect 기반 어드바이저 저장
+    - 생성한 어드바이저를 @Aspect 어드바이저 빌더 내부에 저장한다.
+
+#### 자동 프록시 생성기의 작동 과정
+
+1. 생성
+    - 스프링 빈 대상이 되는 객체를 생성한다.
+    - @Bean이나 컴포넌트 스캔을 모두 포함한다.
+2. 전달
+    - 생성된 객체를 빈 저장소에 등록하기 직전에 빈 후처리기에 전달한다.
+3. 어드바이저 조회
+    - Advisor 빈 조회
+        - 스프링 컨테이너에서 어드바이저 빈을 모두 조회한다.
+    - @Aspect Advisor 조회
+        - @Aspect 어드바이저 빌더 내부에 저장된 어드바이저를 모두 조회한다.
+4. 프록시 적용 대상 체크
+    - 3번의 2가지 케이스에서 조회한 어드바이저에 포함되어 있는 포인트컷을 통해 해당 객체에 대한 프록시 적용 여부를 판단한다.
+    - 이 때, 객체의 클래스 정보는 물론이고, 해당 객체의 모든 메서드를 포인트컷에 하나하나 모두 매칭해본다.
+    - 조건이 몇 가지인지 상관없이 조건이 하나라도 만족하면 프록시 적용 대상이 된다.
+5. 프록시 생성
+    - 프록시 적용 대상이면 프록시를 생성하고 프록시를 반환한다.
+        - 즉, 프록시를 스프링 빈으로 등록한다.
+    - 프록시 적용 대상이 아니라면 원본 객체를 반환한 후에 스프링 빈으로 등록한다.
+6. 빈 등록
+    - 반환된 객체는 스프링 빈으로 등록된다.
+
+#### 횡단 관심사 (cross-cutting concerns)
+
+- 애플리케이션의 여러 기능들 사이에 걸쳐서 들어가는 관심사를 의미한다.
+
+
+### 출처
+
+- [스프링-핵심-원리-고급편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B3%A0%EA%B8%89%ED%8E%B8)
