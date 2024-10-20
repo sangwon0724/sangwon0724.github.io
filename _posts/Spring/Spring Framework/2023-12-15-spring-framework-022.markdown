@@ -2,7 +2,7 @@
 layout: post
 title:  "설정 파일 분리하기"
 date:   2023-12-15 14:52:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 ---
 
 ### 설정 값 분리의 필요성

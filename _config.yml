@@ -67,8 +67,7 @@ category_depth:
     - Student
     - Study
   Spring:
-    - Spring&nbsp;Boot
-    - Spring&nbsp;Framework
+    - Spring&nbsp;MVC
     - Spring&nbsp;Security
     - MyBatis
     - JPA

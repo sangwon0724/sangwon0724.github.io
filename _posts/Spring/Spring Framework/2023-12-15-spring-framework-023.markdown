@@ -2,7 +2,7 @@
 layout: post
 title:  "어노테이션 목록"
 date:   2023-12-15 14:55:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 ---
 
 ### MVC - 컨트롤러

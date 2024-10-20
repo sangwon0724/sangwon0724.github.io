@@ -2,7 +2,7 @@
 layout: post
 title:  "JUnit"
 date:   2023-12-15 16:17:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: [테스트, JUnit]
 ---
 

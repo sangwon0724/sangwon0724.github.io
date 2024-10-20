@@ -2,7 +2,7 @@
 layout: post
 title:  "API 연동하기"
 date:   2023-12-16 16:08:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: [API, 통신, 네이버, 연동]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "빈 스코프 - 싱글톤 스코프"
 date:   2023-12-15 11:49:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: [디자인 패턴, 싱글톤 패턴, 싱글톤]
 ---
 

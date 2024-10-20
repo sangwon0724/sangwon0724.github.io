@@ -2,7 +2,7 @@
 layout: post
 title:  "[고급편] 템플릿 콜백 패턴"
 date:   2024-09-16 14:02:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: []
 ---
 

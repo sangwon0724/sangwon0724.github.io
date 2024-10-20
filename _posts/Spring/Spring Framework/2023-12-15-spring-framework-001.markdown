@@ -2,7 +2,7 @@
 layout: post
 title:  "스프링 프레임워크에 대하여"
 date:   2023-12-15 11:34:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 ---
 
 ### 기본 소개

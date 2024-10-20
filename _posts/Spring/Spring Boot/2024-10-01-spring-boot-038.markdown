@@ -2,7 +2,7 @@
 layout: post
 title:  "[고급편] 스프링 AOP - 실전 예제"
 date:   2024-10-01 16:45:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: []
 ---
 

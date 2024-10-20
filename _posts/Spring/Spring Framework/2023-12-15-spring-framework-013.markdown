@@ -2,7 +2,7 @@
 layout: post
 title:  "쿠키"
 date:   2023-12-15 13:12:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: [쿠키]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "세션"
 date:   2023-12-15 13:13:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: [세션]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "[스프링 MVC 1편] xxx"
 date:   2024-10-01 16:27:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: []
 published: false
 ---

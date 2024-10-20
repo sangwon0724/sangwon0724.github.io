@@ -2,7 +2,7 @@
 layout: post
 title:  "[고급편] 동적 프록시 기술"
 date:   2024-09-20 01:13:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: []
 ---
 

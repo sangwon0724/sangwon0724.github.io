@@ -2,7 +2,7 @@
 layout: post
 title:  "스프링 3대 요소 - 관점 지향 프로그래밍 (AOP)"
 date:   2023-12-15 13:08:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: [스프링 3대 요소, 관점 지향 프로그래밍, AOP]
 ---
 

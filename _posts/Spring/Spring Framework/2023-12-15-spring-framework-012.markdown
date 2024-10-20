@@ -2,7 +2,7 @@
 layout: post
 title:  "PSA (Portable Service Abstraction)"
 date:   2023-12-15 13:11:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 ---
 
 ### PSA란?

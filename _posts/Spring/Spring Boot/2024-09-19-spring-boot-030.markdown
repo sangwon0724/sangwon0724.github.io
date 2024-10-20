@@ -2,7 +2,7 @@
 layout: post
 title:  "[고급편] 인터페이스 기반 프록시와 클래스 기반 프록시"
 date:   2024-09-19 00:37:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: []
 ---
 

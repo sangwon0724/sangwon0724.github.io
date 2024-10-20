@@ -2,7 +2,7 @@
 layout: post
 title:  "컴포넌트 스캔"
 date:   2023-12-15 13:01:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: [컴포넌트 스캔]
 ---
 

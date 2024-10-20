@@ -2,7 +2,7 @@
 layout: post
 title:  "설정 파일 - root-context.xml"
 date:   2023-12-15 14:34:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 ---
 
 ### 설정 파일 - root-context.xml

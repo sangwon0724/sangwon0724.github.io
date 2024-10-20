@@ -2,7 +2,7 @@
 layout: post
 title:  "Call Server To Server"
 date:   2023-12-15 16:03:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: [API, 통신]
 ---
 

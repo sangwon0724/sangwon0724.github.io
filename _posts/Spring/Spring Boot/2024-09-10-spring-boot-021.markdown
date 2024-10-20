@@ -2,7 +2,7 @@
 layout: post
 title:  "[고급편] 개발자는 반복하는 일을 싫어한다."
 date:   2024-09-10 21:46:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: []
 ---
 

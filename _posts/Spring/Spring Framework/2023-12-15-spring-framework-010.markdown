@@ -2,7 +2,7 @@
 layout: post
 title:  "스프링 3대 요소 - 의존성 주입 (DI)"
 date:   2023-12-15 13:05:00 +0900
-categories: Spring&nbsp;Framework
+categories: Spring&nbsp;MVC
 tags: [스프링 3대 요소, 의존성 주입, DI]
 ---
 

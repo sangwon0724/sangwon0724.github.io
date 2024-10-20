@@ -2,7 +2,7 @@
 layout: post
 title:  "Swagger"
 date:   2023-12-16 15:00:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: [테스트, Swagger]
 ---
 

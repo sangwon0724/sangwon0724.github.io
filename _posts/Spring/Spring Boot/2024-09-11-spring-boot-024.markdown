@@ -2,7 +2,7 @@
 layout: post
 title:  "[고급편] 쓰레드 로컬 (Thread Local)"
 date:   2024-09-11 21:55:00 +0900
-categories: Spring&nbsp;Boot
+categories: Spring&nbsp;MVC
 tags: []
 ---
 
