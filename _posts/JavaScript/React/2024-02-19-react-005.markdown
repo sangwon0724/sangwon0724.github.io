@@ -36,7 +36,7 @@ categories: React
 - 속성명을 카멜 케이스로 작성한다.
 - 큰따옴표 대신에 중괄호를 쓰고, 그 안에 객체를 생성하고, 그 안에 스타일을 명시한다.
 
-{% highlight jsx %}
+{% highlight react %}
 <h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
 {% endhighlight %}
 
@@ -203,7 +203,7 @@ CSS 클래스명이 서로 중첩되는 현상을 미연에 방지해 주는 기
 }
 {% endhighlight %}
 
-{% highlight jsx %}
+{% highlight react %}
 /* MemberInfo.jsx */
 
 import style from './MemberInfo.module.css'
@@ -213,7 +213,7 @@ const MemberInfo = (props) => {
       <>
         <h1 className={`${style.sample1} ${style.sample2}`}>{props.children}</h1>
         <h1 className={[style.sample1, style.sample2].join(" ")}>자식 엘리먼트의 갯수는 {props.children.length ?? 0}개입니다.</h1>
-        <h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
+        <h1 style={{backgroundColor: blue;}}>스타일 적용하기 !!!</h1>
       </>
     );
 };
@@ -247,7 +247,7 @@ export default MemberInfo;
     - classNames({ foo: true, bar: true }); => 'foo bar'
     - classNames(null, false, 'foo', undefined, 0, 1, { bar: null }, ''); => 'foo 1'
 
-{% highlight jsx %}
+{% highlight react %}
 //import classNames from 'classnames';
 import classNames from 'classnames/bind';
 import style from './MemberInfo.module.css'
@@ -261,7 +261,7 @@ const MemberInfo = (props) => {
         <h1 className={classNames(style.sample1, style.sample2)}>{props.children}</h1>
         <h1 className={cx('sample1', { 'sample2': isActive })}>{props.children}</h1>
         <h1>자식 엘리먼트의 갯수는 {props.children.length ?? 0}개입니다.</h1>
-        <h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
+        <h1 style={{backgroundColor: blue;}}>스타일 적용하기 !!!</h1>
       </>
     );
 };
@@ -344,7 +344,7 @@ export default MemberInfo;
     - 태그명에는 html 태그명을 명시한다.
 - 예시
 
-{% highlight jsx %}
+{% highlight react %}
 import styled, { css } from "styled-components";
 
 const Button1 = styled.button`
@@ -371,7 +371,7 @@ export default Sample;
 - 기존에 생성한 스타일 컴포넌트를 상속받아서 추가로 스타일을 작성하는 방법이다.
 - `styled.[태그명]`CSS 스타일`;` 
 - 예시
-{% highlight jsx %}
+{% highlight react %}
 import styled, { css } from "styled-components";
 
 const Button1 = styled.button`
@@ -403,7 +403,7 @@ export default Sample;
 
 - 컴포넌트를 통해 넘어온 props에 따라 서로 다른 스타일을 적용하는 방법
 - 예시
-{% highlight jsx %}
+{% highlight react %}
 import styled, { css } from "styled-components";
 
 const Button3 = styled.button`
@@ -430,7 +430,7 @@ export default Sample;
 - 특정 조건의 만족 여부에 따라서 추가 스타일을 지정하는 방법
 - props의 값을 생략하면 true라고 간주한다.
 - 예시
-{% highlight jsx %}
+{% highlight react %}
 import styled, { css } from "styled-components";
 
 const Button4 = styled.button`
