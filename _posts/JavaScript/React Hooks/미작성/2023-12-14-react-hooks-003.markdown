@@ -27,7 +27,7 @@ published: false
 
 #### 사용 방법
 
-{% highlight jsx %}
+{% highlight react %}
 
 {% endhighlight %}
 
