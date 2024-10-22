@@ -10,16 +10,25 @@ tags: []
 
 - [스프링 이니셜라이저](https://start.spring.io/)를 통해 프로젝트를 생성하자.
     - 프로젝트 선택
-    -   Project: Gradle - Groovy Project
-    -   Language: Java
-    -   Spring Boot: 3.x.x
+      - Project
+        - Gradle - Groovy Project
+      - Language
+        - Java
+      - Spring Boot
+        - 3.x.x
     - Project Metadata
-        - Group: hello
-        - Artifact: thymeleaf-basic
-        - Name: thymeleaf-basic
-        - Package name: hello.thymeleaf
-        - Packaging: Jar (주의!)
-        - Java: 17 또는 21
+        - Group
+          - hello
+        - Artifact
+          - thymeleaf-basic
+        - Name
+          - thymeleaf-basic
+        - Package name
+          - hello.thymeleaf
+        - Packaging
+          - Jar (주의!)
+        - Java
+          - 17 또는 21
     - Dependencies
         - Spring Web
         - Thymeleaf

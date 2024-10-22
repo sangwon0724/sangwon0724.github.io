@@ -4,7 +4,6 @@ title:  "[스프링 MVC 1편] 서블릿"
 date:   2024-10-21 19:56:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
-published: false
 ---
 
 ### 프로젝트 생성
@@ -12,16 +11,25 @@ published: false
 - 본격적으로 서블릿을 이해하기 위해 프로젝트를 생성해보자.
 - [스프링 이니셜라이저](https://start.spring.io/)를 통해 프로젝트를 생성하자.
     - 프로젝트 선택
-    -   Project: Gradle - Groovy Project
-    -   Language: Java
-    -   Spring Boot: 3.x.x
+        - Project
+            - Gradle - Groovy Project
+        - Language
+            - Java
+        - Spring Boot
+            - 3.x.x
     - Project Metadata
-        - Group: hello
-        - Artifact: servlet
-        - Name: servlet
-        - Package name: hello.servlet
-        - Packaging: War (주의!)
-        - Java: 17 또는 21
+        - Group
+            - hello
+        - Artifact
+            - servlet
+        - Name
+            - servlet
+        - Package name
+            - hello.servlet
+        - Packaging
+            - War (주의!)
+        - Java
+            - 17 또는 21
     - Dependencies
         - Spring Web
         - Lombok
@@ -310,7 +318,7 @@ import java.io.IOException;
 /**
  * 1. 파라미터 전송 기능
  * http://localhost:8080/request-param?username=hello&age=20
- * <p>
+ * 
  * 2. 동일한 파라미터 전송 가능
  * http://localhost:8080/request-param?username=hello&username=kim&age=20
  */
@@ -550,7 +558,7 @@ public class ResponseHeaderServlet extends HttpServlet {
 
         //[response-headers]
         response.setHeader("Content-Type", "text/plain;charset=utf-8");
-        response.setHeader("Cache-Control", "no-cache, no-store, mustrevalidate");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("my-header","hello");
 
