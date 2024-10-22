@@ -37,8 +37,10 @@ categories: React
 - 큰따옴표 대신에 중괄호를 쓰고, 그 안에 객체를 생성하고, 그 안에 스타일을 명시한다.
 
 {% highlight react %}
-<h1 style={{backgroundColor: 'blue',}}>스타일 적용하기 !!!</h1>
+{% raw %}
+<h1 style={{backgroundColor: blue;}}>스타일 적용하기 !!!</h1>
 {% endhighlight %}
+{% endraw %}
 
 #### .css 파일 사용하기
 
