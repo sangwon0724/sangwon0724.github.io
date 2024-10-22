@@ -12,6 +12,7 @@ categories: React&nbsp;Native
 
 ### 스타일 적용하기
 
+{% raw %}
 1. const styles  = StyleSheet.create({});라고 선언되있다고 가정한다.
 2. App()의 return에 있는 태그들에 style 속성을 추가한다.
 3. 코드를 작성한다.
@@ -19,6 +20,7 @@ categories: React&nbsp;Native
 >>예시) &lt;View style={styles.yellowView} />
 >방법 2: style 속성에 {{속성명1 : x, 속성명2 : y, ...}}라고 작성한다.
 >>예시) &lt;View style={{flex : 1, backgoundColor : "blue"}} />
+{% endraw %}
 
 ### flex
 
