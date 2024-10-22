@@ -39,8 +39,8 @@ categories: React
 {% highlight react %}
 {% raw %}
 <h1 style={{backgroundColor: blue;}}>스타일 적용하기 !!!</h1>
-{% endhighlight %}
 {% endraw %}
+{% endhighlight %}
 
 #### .css 파일 사용하기
 
