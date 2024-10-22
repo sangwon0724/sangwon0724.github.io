@@ -1,0 +1,970 @@
+---
+layout: post
+title:  "[스프링 MVC 1편] 스프링 MVC - 웹 페이지 만들기"
+date:   2024-10-22 16:33:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+---
+
+### 프로젝트 생성
+
+- 스프링 MVC의 웹 관련 기능을 이해하기 위해 프로젝트를 생성해보자.
+- [스프링 이니셜라이저](https://start.spring.io/)를 통해 프로젝트를 생성하자.
+    - 프로젝트 선택
+    -   Project: Gradle - Groovy Project
+    -   Language: Java
+    -   Spring Boot: 3.x.x
+    - Project Metadata
+        - Group: hello
+        - Artifact: item-service
+        - Name: item-service
+        - Package name: hello.itemservice
+        - Packaging: Jar (주의!)
+        - Java: 17 또는 21
+    - Dependencies
+        - Spring Web
+        - Thymeleaf
+        - Lombok
+
+#### Welcome 페이지 추가
+
+- `src/main/resources/static/index.html`
+
+{% highlight html %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  </head>
+  <body>
+    <ul>
+      <li>상품 관리
+        <ul>
+          <li><a href="/basic/items">상품 관리 - 기본</a></li>
+        </ul>
+      </li>
+    </ul>
+  </body>
+</html>
+{% endhighlight %}
+
+### 요구사항 분석
+
+- 간단한 상품 관리 서비스를 만들어보자.
+- 상품 도메인 모델
+    - 상품 ID
+    - 상품명
+    - 가격
+    - 수량
+- 상품 관리 기능
+    - 상품 목록
+    - 상품 상세
+    - 상품 등록
+    - 상품 수정
+
+### 상품 도메인 개발
+
+#### 상품 객체
+
+{% highlight java %}
+package hello.itemservice.domain.item;
+
+import lombok.Data;
+
+@Data
+public class Item {
+    private Long id;
+    private String itemName;
+    private Integer price;
+    private Integer quantity;
+    
+    public Item() {
+    }
+    
+    public Item(String itemName, Integer price, Integer quantity) {
+        this.itemName = itemName;
+        this.price = price;
+        this.quantity = quantity;
+    }
+}
+{% endhighlight %}
+
+#### 상품 저장소
+
+{% highlight java %}
+package hello.itemservice.domain.item;
+
+import org.springframework.stereotype.Repository;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+public class ItemRepository {
+    private static final Map<Long, Item> store = new HashMap<>(); //저장소, static 사용
+    private static long sequence = 0L; //시퀀스 번호 생성기, static 사용
+    
+    //상품 저장
+    public Item save(Item item) {
+        item.setId(++sequence);
+        store.put(item.getId(), item);
+        return item;
+    }
+    
+    //단일 상품 조회
+    public Item findById(Long id) {
+        return store.get(id);
+    }
+    
+    //모든 상품 조회
+    public List<Item> findAll() {
+        return new ArrayList<>(store.values());
+    }
+    
+    //상품 정보 수정
+    public void update(Long itemId, Item updateParam) {
+        Item findItem = findById(itemId);
+        findItem.setItemName(updateParam.getItemName());
+        findItem.setPrice(updateParam.getPrice());
+        findItem.setQuantity(updateParam.getQuantity());
+    }
+
+    //저장소 초기화
+    public void clearStore() {
+        store.clear();
+    }
+}
+{% endhighlight %}
+
+#### 상품 저장소 테스트
+
+- Ctrl + Shift + T를 통해서 테스트를 생성하자.
+
+{% highlight java %}
+package hello.itemservice.domain.item;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+
+class ItemRepositoryTest {
+    ItemRepository itemRepository = new ItemRepository();
+    
+    @AfterEach
+    void afterEach() {
+        itemRepository.clearStore(); //저장소 초기화
+    }
+    
+    @DisplayName("상품 저장 테스트")
+    @Test
+    void save() {
+        //given
+        Item item = new Item("itemA", 10000, 10);
+        //when
+        Item savedItem = itemRepository.save(item);
+        //then
+        Item findItem = itemRepository.findById(item.getId());
+        assertThat(findItem).isEqualTo(savedItem);
+    }
+    
+    @DisplayName("모든 상품 조회 테스트")
+    @Test
+    void findAll() {
+        //given
+        Item item1 = new Item("item1", 10000, 10);
+        Item item2 = new Item("item2", 20000, 20);
+        itemRepository.save(item1);
+        itemRepository.save(item2);
+        //when
+        List<Item> result = itemRepository.findAll();
+        //then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result).contains(item1, item2);
+    }
+    
+    @DisplayName("상품 정보 수정 테스트")
+    @Test
+    void updateItem() {
+        //given
+        Item item = new Item("item1", 10000, 10);
+        Item savedItem = itemRepository.save(item);
+        Long itemId = savedItem.getId();
+        //when
+        Item updateParam = new Item("item2", 20000, 30);
+        itemRepository.update(itemId, updateParam);
+        Item findItem = itemRepository.findById(itemId);
+        //then
+        assertThat(findItem.getItemName()).isEqualTo(updateParam.getItemName());
+        assertThat(findItem.getPrice()).isEqualTo(updateParam.getPrice());
+        assertThat(findItem.getQuantity()).isEqualTo(updateParam.getQuantity());
+    }
+}
+{% endhighlight %}
+
+### 상품 서비스 HTML
+
+#### 부트스트랩
+
+1. `https://getbootstrap.com/docs/5.0/getting-started/download/`로 이동
+2. Compiled CSS and JS 영역의 Download 버튼을 선택해서 파일 다운로드
+3. 압축 해제
+4. `bootstrap.min.css`를 복사해서 `src/main/resources/static/css` 경로에 추가하기
+
+#### 상품 목록
+
+- `src/main/resources/static/html/items.html`
+
+{% highlight html %}
+
+{% endhighlight %}
+
+#### 상품 목록
+
+- `src/main/resources/static/html/items.html`
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container" style="max-width: 600px">
+      <div class="py-5 text-center">
+        <h2>상품 목록</h2>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary float-end"
+                  onclick="location.href='addForm.html'" type="button">상품 등록
+          </button>
+        </div>
+      </div>
+      <hr class="my-4">
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>상품명</th>
+              <th>가격</th>
+              <th>수량</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="item.html">1</a></td>
+              <td><a href="item.html">테스트 상품1</a></td>
+              <td>10000</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td><a href="item.html">2</a></td>
+              <td><a href="item.html">테스트 상품2</a></td>
+              <td>20000</td>
+              <td>20</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+#### 상품 상세
+
+- `src/main/resources/static/html/item.html`
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 상세</h2>
+      </div>
+      <div>
+        <label for="itemId">상품 ID</label>
+        <input type="text" id="itemId" name="itemId" class="form-control"
+               value="1" readonly>
+      </div>
+      <div>
+        <label for="itemName">상품명</label>
+        <input type="text" id="itemName" name="itemName" class="form-control"
+               value="상품A" readonly>
+      </div>
+      <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" name="price" class="form-control"
+               value="10000" readonly>
+      </div>
+      <div>
+        <label for="quantity">수량</label>
+        <input type="text" id="quantity" name="quantity" class="form-control"
+               value="10" readonly>
+      </div>
+      <hr class="my-4">
+      <div class="row">
+        <div class="col">
+          <button class="w-100 btn btn-primary btn-lg"
+                  onclick="location.href='editForm.html'" type="button">상품 수정</button>
+        </div>
+        <div class="col">
+          <button class="w-100 btn btn-secondary btn-lg"
+                  onclick="location.href='items.html'" type="button">목록으로</button>
+        </div>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+#### 상품 등록 폼
+
+- `src/main/resources/static/html/addForm.html`
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 등록 폼</h2>
+      </div>
+      <h4 class="mb-3">상품 입력</h4>
+      <form action="item.html" method="post">
+        <div>
+          <label for="itemName">상품명</label>
+          <input type="text" id="itemName" name="itemName" class="form-control" placeholder="이름을 입력하세요">
+        </div>
+        <div>
+          <label for="price">가격</label>
+          <input type="text" id="price" name="price" class="form-control"
+                 placeholder="가격을 입력하세요">
+        </div>
+        <div>
+          <label for="quantity">수량</label>
+          <input type="text" id="quantity" name="quantity" class="form-control" placeholder="수량을 입력하세요">
+        </div>
+        <hr class="my-4">
+        <div class="row">
+          <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">상품 등
+              록</button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='items.html'" type="button">취소</button>
+          </div>
+        </div>
+      </form>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+#### 상품 수정 폼
+
+- `src/main/resources/static/html/editForm.html`
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 수정 폼</h2>
+      </div>
+      <form action="item.html" method="post">
+        <div>
+          <label for="id">상품 ID</label>
+          <input type="text" id="id" name="id" class="form-control" value="1"
+                 readonly>
+        </div>
+        <div>
+          <label for="itemName">상품명</label>
+          <input type="text" id="itemName" name="itemName" class="form-control" value="상품A">
+        </div>
+        <div>
+          <label for="price">가격</label>
+          <input type="text" id="price" name="price" class="form-control"
+                 value="10000">
+        </div>
+        <div>
+          <label for="quantity">수량</label>
+          <input type="text" id="quantity" name="quantity" class="form-control" value="10">
+        </div>
+        <hr class="my-4">
+        <div class="row">
+          <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">저장</
+            button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='item.html'" type="button">취소</button>
+          </div>
+        </div>
+      </form>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+### 상품 목록 - 타임리프
+
+#### 컨트롤러
+
+- 컨트롤러 로직은 itemRepository에서 모든 상품을 조회한 다음에 모델에 담는다. 그리고 뷰 템플릿을 호출한다
+- @RequiredArgsConstructor를 통해서 final 이 붙은 멤버변수만 사용해서 생성자를 자동으로 만들어준다.
+- @PostConstruct를 통해서 테스트용 데이터를 추가한다.
+    - @PostConstruct는 해당 빈의 의존관계가 모두 주입되고 나면 호출된다.
+
+{% highlight java %}
+package hello.itemservice.web.item.basic;
+
+import hello.itemservice.domain.item.Item;
+import hello.itemservice.domain.item.ItemRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import jakarta.annotation.PostConstruct;
+import java.util.List;
+
+@Controller
+@RequestMapping("/basic/items")
+@RequiredArgsConstructor
+public class BasicItemController {
+    private final ItemRepository itemRepository;
+    
+    /**
+     * 테스트용 데이터 추가
+     */
+    @PostConstruct
+    public void init() {
+        itemRepository.save(new Item("testA", 10000, 10));
+        itemRepository.save(new Item("testB", 20000, 20));
+    }
+
+    //상품 목록
+    @GetMapping
+    public String items(Model model) {
+        List<Item> items = itemRepository.findAll();
+        model.addAttribute("items", items);
+        return "basic/items";
+    }
+}
+{% endhighlight %}
+
+#### 타임리프 적용
+
+- `src/main//resources/static/html/items.html`를 복사해서 `src/main//resources/templates/basic/items.html`로 추가한다.
+- 그런 다음에 items.html을 아래와 같이 수정한다.
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container" style="max-width: 600px">
+      <div class="py-5 text-center">
+        <h2>상품 목록</h2>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary float-end"
+                  onclick="location.href='addForm.html'"
+                  th:onclick="|location.href='@{/basic/items/add}'|"
+                  type="button">상품 등록</button>
+        </div>
+      </div>
+      <hr class="my-4">
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>상품명</th>
+              <th>가격</th>
+              <th>수량</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="item : ${items}">
+              <td><a href="item.html" th:href="@{/basic/items/{itemId}(itemId=${item.id})}" th:text="${item.id}">회원id</a></td>
+              <td><a href="item.html" th:href="@{|/basic/items/${item.id}|}" th:text="${item.itemName}">상품명</a></td>
+              <td th:text="${item.price}">10000</td>
+              <td th:text="${item.quantity}">10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+#### 타임리프 간단히 알아보기
+
+- html 태그에 `xmlns:th="http://www.thymeleaf.org"`를 추가하면 해당 페이지에는 타임리프가 적용된다.
+- 타임리프 동작 방식
+    - 해당 html 파일에 타임리프가 적용됬다면 th:xxx로 속성을 사용할 수 있다.
+    - th:xxx는 랜더링 시에 xxx라는 속성으로 변환된다.
+    - 만약 해당 html 파일 내부에 xxx와 th:xxx가 있다면 타임리프가 더 상위로 적용되서 최종적으로는 th:xxx가 적용된다.
+    - th:xxx는 서버 사이드에서 랜더링된다.
+    - 참고로 th:xxx는 정규 html의 속성이 아니기 때문에 html 파일을 직접 열어서 확인해보면 th:xxx 속성은 동작하지 않는 것을 학인할 수 있다.
+- URL 링크 표현식
+    - `@{...}`처럼 사용한다.
+    - URL 링크 표현식을 사용하면 서블릿 컨텍스트를 자동으로 포함한다.
+    - 경로 변수를 사용할 수 있다.
+        - `th:href="@{/basic/items/{itemId}(itemId=${item.id})}"`
+        - URL 경로에서 경로 변수를 사용할 위치에 `{}`로 감싼 변수명을 명시한다.
+        - 그리고 경로 마지막에 `()`를 명시하고 그 안에 `속성명=값`처럼 경로 변수의 값을 정의한다.
+            - 경로 변수는 여러 개 사용할 수 있다.
+            - 각 경로 변수는 쉼표로 구분한다.
+    - 경로 변수를 간략하게 처리할 수도 있다.
+        - `th:href="@{|/basic/items/${item.id}|}"`
+- 리터럴 대체
+    - `|...|`처럼 사용한다.
+    - 타임리프에서 문자와 표현식 등은 분리되어 있기 때문에 더해서 사용해야 한다.
+        - `<span th:text="'Welcome to our application, ' + ${user.name} + '!'">`
+    - 다음과 같이 리터럴 대체 문법을 사용하면, 더하기 없이 편리하게 사용할 수 있다.
+        - `<span th:text="|Welcome to our application, ${user.name}!|">`
+- 반복문
+    - `th:each="변수명 : ${컬렉션명}"`처럼 사용한다.
+    - 컬렉션명에는 말 그대로 컬렉션의 이름이 들어간다.
+        - 컨트롤러 단에서 모델에 추가한 이름 그대로 적용된다.
+    - 변수명은 말 그대로 변수명이다.
+        - 일반적인 자바의 for-each를 생각하면 된다.
+        - `변수명.속성명`으로 값을 꺼내서 쓸 수 있다.
+    - 하위 태그도 함께 반복된다.
+        - 예시 : tr에 th:each 사용 시 tr과 tr 아래의 td도 함께 반복
+- 변수 표현식
+    - `${...}`처럼 사용한다.
+    - 모델에 포함된 값이나, 타임리프 변수로 선언한 값을 조회할 수 있다.
+    - 프로퍼티 접근법을 사용한다.
+        - 에시 : item.getPrice()
+- 내용 변경
+    - `th:text=${...}`처럼 사용한다.
+    - 기존 html 태그의 값을 덮어씌운다.
+    - 만약 `<td th:text="${item.price}">10000</td>`이 있을 때 item.price의 값이 0이라면 최종 출력은 0이 된다.
+- 조건문
+    - `th:if="조건문"`처럼 사용한다.
+    - th:if 내부의 조건문의 결과가 참일 때만 해당 영역이 랜더링된다.
+
+### 상품 상세
+
+#### 컨트롤러
+
+- 스프링 부트 3.2 이상이면 아래 컨트롤러 메소드에서 오류가 발생할 것이다.
+- 스프링 부트 3.2부터 자바 컴파일러에 `-parameters` 옵션을 넣어주어야 애노테이션의 이름을 생략할 수 있다.
+
+{% highlight java %}
+//단일 상품 조화
+@GetMapping("/{itemId}")
+public String item(@PathVariable Long itemId, Model model) {
+    Item item = itemRepository.findById(itemId);
+    model.addAttribute("item", item);
+    return "basic/item";
+}
+{% endhighlight %}
+
+#### 타임리프 적용
+
+- `src/main//resources/static/html/item.html`를 복사해서 `src/main//resources/templates/basic/item.html`로 추가한다.
+- 그런 다음에 item.html을 아래와 같이 수정한다.
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 상세</h2>
+      </div>
+      <div>
+        <label for="itemId">상품 ID</label>
+        <input type="text" id="itemId" name="itemId" class="form-control"
+               value="1" th:value="${item.id}" readonly>
+      </div>
+      <div>
+        <label for="itemName">상품명</label>
+        <input type="text" id="itemName" name="itemName" class="form-control"
+               value="상품A" th:value="${item.itemName}" readonly>
+      </div>
+      <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" name="price" class="form-control"
+               value="10000" th:value="${item.price}" readonly>
+      </div>
+      <div>
+        <label for="quantity">수량</label>
+        <input type="text" id="quantity" name="quantity" class="form-control"
+               value="10" th:value="${item.quantity}" readonly>
+      </div>
+      <hr class="my-4">
+      <div class="row">
+        <div class="col">
+          <button class="w-100 btn btn-primary btn-lg"
+                  onclick="location.href='editForm.html'"
+                  th:onclick="|location.href='@{/basic/items/{itemId}/edit(itemId=${item.id})}'|" type="button">상품 수정</button>
+        </div>
+        <div class="col">
+          <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='items.html'" th:onclick="|location.href='@{/basic/items}'|" type="button">목록으로</button>
+        </div>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+### 상품 등록 폼
+
+#### 컨트롤러
+
+{% highlight java %}
+//상품 등록
+@GetMapping("/add")
+public String addForm() {
+    return "basic/addForm";
+}
+{% endhighlight %}
+
+#### 타임리프 적용
+
+- `src/main//resources/static/html/addForm.html`를 복사해서 `src/main//resources/templates/basic/addForm.html`로 추가한다.
+- 그런 다음에 addForm.html을 아래와 같이 수정한다.
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 등록 폼</h2>
+      </div>
+      <h4 class="mb-3">상품 입력</h4>
+      <form action="item.html" th:action method="post">
+        <div>
+          <label for="itemName">상품명</label>
+          <input type="text" id="itemName" name="itemName" class="form-control" placeholder="이름을 입력하세요">
+        </div>
+        <div>
+          <label for="price">가격</label>
+          <input type="text" id="price" name="price" class="form-control"
+                 placeholder="가격을 입력하세요">
+        </div>
+        <div>
+          <label for="quantity">수량</label>
+          <input type="text" id="quantity" name="quantity" class="form-control" placeholder="수량을 입력하세요">
+        </div>
+        <hr class="my-4">
+        <div class="row">
+          <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">상품 등
+              록</button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='items.html'" th:onclick="|location.href='@{/basic/items}'|" type="button">취소</button>
+          </div>
+        </div>
+      </form>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+### 상품 등록 처리 - @ModelAttribute
+
+- 상품 등록 폼에서 전달된 데이터로 실제 상품을 등록해보자.
+- 데이터는 상품 등록 폼에서 POST 방식으로 서버에 데이터를 전달한다.
+    - `POST localhost:8080/basic/items/add`
+    - `content-type: application/x-www-form-urlencoded`
+
+#### 컨트롤러 v1
+
+- 테스트 시 실제로 상품이 잘 저장되는 것이 확인된다.
+- 다만 @RequestParam으로 변수를 하나하나 받아서 Item을 생성하는 과정이 불편하다.
+
+{% highlight java %}
+//상품 등록 v1
+@PostMapping("/add")
+public String addItemV1(@RequestParam String itemName, @RequestParam int price, @RequestParam Integer quantity, Model model) {
+    Item item = new Item();
+    item.setItemName(itemName);
+    item.setPrice(price);
+    item.setQuantity(quantity);
+    itemRepository.save(item);
+    model.addAttribute("item", item);
+    return "basic/item";
+}
+{% endhighlight %}
+
+#### 컨트롤러 v2
+
+- 이번에는 addItemV1을 주석 처리한 후에 아래 코드를 적용해보자.
+- @ModelAttribute을 통해서 전달된 데이터가 자동으로 Item에 대입되도록 수정했다.
+- @ModelAttribute를 사용했기 때문에 자동으로 model에 "item"이라고 추가된다.
+
+{% highlight java %}
+/**
+    * 상품 등록 v2
+    * @ModelAttribute("item") Item item
+    * model.addAttribute("item", item); 자동 추가
+*/
+@PostMapping("/add")
+public String addItemV2(@ModelAttribute("item") Item item, Model model) {
+    itemRepository.save(item);
+    //model.addAttribute("item", item); //자동 추가, 생략 가능
+    return "basic/item";
+}
+{% endhighlight %}
+
+#### 컨트롤러 v3
+
+- 이번에는 addItemV2을 주석 처리한 후에 아래 코드를 적용해보자.
+- @ModelAttribute에서 속성명을 빼버렸고, 또한 파라미터에서 Model 자체를 빼버렸다.
+    - 그래도 잘 동작하면서 모델에 item으로 등록된 것을 확인할 수 있다.
+    - 핸들러 어댑터쪽에서 자동으로 모델에 클래스명으로 Item을 등록했다.
+        - 기본은 클래스명으로 등록이지만 대신에 첫글자는 소문자로 변환해서 등록한다.
+
+{% highlight java %}
+/**
+    * 상품 등록 v3
+    * @ModelAttribute name 생략 가능
+    * model.addAttribute(item); 자동 추가, 생략 가능
+    * 생략시 model에 저장되는 name은 클래스명 첫글자만 소문자로 등록 Item -> item
+*/
+@PostMapping("/add")
+public String addItemV3(@ModelAttribute Item item) {
+    itemRepository.save(item);
+    return "basic/item";
+}
+{% endhighlight %}
+
+#### 컨트롤러 v4
+
+- 이번에는 addItemV3을 주석 처리한 후에 아래 코드를 적용해보자.
+- @ModelAttribute 자체를 생략해버렸지만 핸들러 어댑터가 알아서 잘 처리해준다.
+
+{% highlight java %}
+/**
+    * 상품 등록 v4
+    * @ModelAttribute 자체 생략 가능
+    * model.addAttribute(item) 자동 추가
+*/
+@PostMapping("/add")
+public String addItemV4(Item item) {
+    itemRepository.save(item);
+    return "basic/item";
+}
+{% endhighlight %}
+
+### 상품 수정
+
+#### 컨트롤러 (GET)
+
+{% highlight java %}
+//상품 수정
+@GetMapping("/{itemId}/edit")
+public String editForm(@PathVariable Long itemId, Model model) {
+    Item item = itemRepository.findById(itemId);
+    model.addAttribute("item", item);
+    return "basic/editForm";
+}
+{% endhighlight %}
+
+#### 타임리프 적용
+
+- `src/main//resources/static/html/editForm.html`를 복사해서 `src/main//resources/templates/basic/editForm.html`로 추가한다.
+- 그런 다음에 editForm.html을 아래와 같이 수정한다.
+
+{% highlight html %}
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <link href="../css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>상품 수정 폼</h2>
+      </div>
+      <form action="item.html" th:action method="post">
+        <div>
+          <label for="id">상품 ID</label>
+          <input type="text" id="id" name="id" class="form-control" value="1" th:value="${item.id}" readonly>
+        </div>
+        <div>
+          <label for="itemName">상품명</label>
+          <input type="text" id="itemName" name="itemName" class="form-control" value="상품A" th:value="${item.itemName}">
+        </div>
+        <div>
+          <label for="price">가격</label>
+          <input type="text" id="price" name="price" class="form-control"
+                 th:value="${item.price}">
+        </div>
+        <div>
+          <label for="quantity">수량</label>
+          <input type="text" id="quantity" name="quantity" class="form-control" th:value="${item.quantity}">
+        </div>
+        <hr class="my-4">
+        <div class="row">
+          <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">저장</
+            button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='item.html'" th:onclick="|location.href='@{/basic/items/{itemId}(itemId=${item.id})}'|" type="button">취소</button>
+          </div>
+        </div>
+      </form>
+    </div> <!-- /container -->
+  </body>
+</html>
+{% endhighlight %}
+
+#### 컨트롤러 (POST)
+
+- 상품 정보를 수정한 뒤에 해당 상품의 상세 페이지로 리다이렉트하게 했다.
+- 상품 수정 페이지로 이동하기 위한 경로 변수는 리다이렉트할 때도 사용할 수 있다.
+
+{% highlight java %}
+//상품 수정
+@PostMapping("/{itemId}/edit")
+public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+    itemRepository.update(itemId, item);
+    return "redirect:/basic/items/{itemId}";
+}
+{% endhighlight %}
+
+### PRG (Post/Redirect/Get)
+
+- 사실 지금까지 개발한 상품 등록 처리 컨트롤러는 심각한 분제가 있다.
+    - 등록한 후에 새로고침을 진행하면 계속 상품이 추가로 등록된다.
+- 이는 상품 등록 후 보여지는 페이지가 POST로 상품을 등록하면서 진입한 페이지에서 새로고침하기 때문에 발생한 문제다.
+- 이를 해결 하기 위해서는 상품을 등록하고 난 다음에 다른 페이지로 리다이렉트 시키면 된다.
+- 리다이렉트하게 되면 리다이렉트 대상 페이지를 GET을 접근하게 되면서 해당 페이지에서 새로고침하게 되도 조회만 하기 때문에 문제가 발생하지 않는다.
+- 이처럼 상품을 등록(POST) 후 리다이렉트(REDIRECT)시켜서 조회(GET) 페이지로 보내는 방식을 Post/Redirect/Get, 줄여서 PRG라고 한다.
+
+#### 컨트롤러 v5
+
+- addItemV4을 주석 처리한 후에 아래 코드를 적용해보자.
+
+{% highlight java %}
+/**
+    * PRG - Post/Redirect/Get
+*/
+@PostMapping("/add")
+public String addItemV5(Item item) {
+    itemRepository.save(item);
+    return "redirect:/basic/items/" + item.getId();
+}
+{% endhighlight %}
+
+### RedirectAttributes
+
+- PRG 방식을 통해 상품을 저장하고 상품 상세 화면이로 리다이렉트를 시켰다.
+    - 이는 개발적인 관점에서는 맞다.
+    - 다만 사용자 입장에서는 저장이 잘 된 것인지 아닌지 확신이 들지 않는다.
+- 이번에는 이런 부가적인 사항도 만족시켜보자.
+
+#### 컨트롤러 v6
+
+- addItemV5을 주석 처리한 후에 아래 코드를 적용해보자.
+
+{% highlight java %}
+/**
+    * RedirectAttributes
+*/
+@PostMapping("/add")
+public String addItemV6(Item item, RedirectAttributes redirectAttributes) {
+    Item savedItem = itemRepository.save(item);
+    redirectAttributes.addAttribute("itemId", savedItem.getId());
+    redirectAttributes.addAttribute("status", true);
+    return "redirect:/basic/items/{itemId}";
+}
+{% endhighlight %}
+
+- RedirectAttributes라는 것이 추가되었다.
+    - RedirectAttributes는 리다이렉트될 때 전달할 값을 정의할 수 있게 해준다.
+    - 또한 RedirectAttributes를 사용하면 정의한 속성을 리다이렉트할 때 경로 변수로 사용할 수 있다.
+    - 추가적으로 URL 인코딩도 해준다.
+- itemId를 통해 해당 상품의 고유번호를 찾아냈다.
+- status를 통해 해당 상품이 잘 저장됬다는 것을 명시했다.
+
+#### 뷰 템플릿 메시지 추가
+
+- 이번에는 다시 `src/main//resources/templates/basic/item.html`에 가서 적당한 위치에 해당 내용을 추가해주자.
+
+{% highlight hteml %}
+<h2 th:if="${param.status}" th:text="'저장 완료!'"></h2>
+{% endhighlight %}
+
+- 서버를 다시 실행해서 상품을 등록해보면 해당 메시지가 잘 보이는 것을 알 수 있다.
+
+### 출처
+
+- [스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-mvc-1)
