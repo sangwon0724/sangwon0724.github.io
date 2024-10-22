@@ -4,6 +4,7 @@ title:  "[스프링 MVC 1편] 스프링 MVC - 구조 이해"
 date:   2024-10-21 23:59:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
+published: false
 ---
 
 ### 스프링 MVC 전체 구조

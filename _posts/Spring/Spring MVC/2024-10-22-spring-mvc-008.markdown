@@ -4,6 +4,7 @@ title:  "[스프링 MVC 2편] 타임리프 - 기본 기능"
 date:   2024-10-22 23:57:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
+published: false
 ---
 
 ### 프로젝트 생성
