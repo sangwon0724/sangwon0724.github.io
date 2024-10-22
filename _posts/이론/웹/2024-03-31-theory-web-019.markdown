@@ -49,7 +49,7 @@ categories: 이론&nbsp;-&nbsp;웹
 
 ### 실무 예시 (리액트 + 스프링부트)
 
-{% highlight react %}
+{% highlight jsx %}
 async function getPost(id){
     return await fetch("http://localhost:8080/posts/" + id,{
         method: "GET",

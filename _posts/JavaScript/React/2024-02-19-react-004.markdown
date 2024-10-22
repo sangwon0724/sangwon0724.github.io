@@ -22,7 +22,7 @@ categories: React
 - 전달된 props의 사용법은 자바스크립트 함수에 인수를 전달하는 문법과 동일하다.
 - props는 객체 형태로 전달되기 때문에 props의 값을 참조하기 위해서는 자바스크립트의 속성 접근자(.)를 사용해야 한다.
 - 예시
-{% highlight react %}
+{% highlight jsx %}
 /* Member.js */
 
 const MemberInfo = (props) => {
@@ -32,7 +32,7 @@ const MemberInfo = (props) => {
 export default MemberInfo;
 {% endhighlight %}
 
-{% highlight react %}
+{% highlight jsx %}
 /* App.js */
 
 const App = () => {
@@ -46,7 +46,7 @@ export default App;
 
 - props로 여러 데이터를 전달하기 위해서는 해당 컴포넌트에 여러 개의 속성을 지정하면 된다.
 - 예시
-{% highlight react %}
+{% highlight jsx %}
 /* Member.js */
 const MemberInfo = (props) => {
   return (
@@ -60,7 +60,7 @@ const MemberInfo = (props) => {
 export default MemberInfo;
 {% endhighlight %}
 
-{% highlight react %}
+{% highlight jsx %}
 /* App.js */
 const App = () => {
   return <MemberInfo username="홍길동" age="28"/>;
@@ -74,7 +74,7 @@ export default App;
 - 속성이 늘어날 수록 `props.속성명`이라고 명시하는 부분이 많아진다.
   - 이를 위해 ES6의 문법인 구조 분해 할당을 사용하기도 한다.
 - 예시
-{% highlight react %}
+{% highlight jsx %}
 /* Member.js */
 
 const MemberInfo = ({username, age}) => {
@@ -89,7 +89,7 @@ const MemberInfo = ({username, age}) => {
 export default MemberInfo;
 {% endhighlight %}
 
-{% highlight react %}
+{% highlight jsx %}
 /* App.js */
 
 const App = () => {
@@ -104,7 +104,7 @@ export default App;
 - 부모 컴포넌트에서 props로 사용할 값을 넘기지 않으면 해당 부분은 공백으로 표시된다.
 - 위의 문제를 막기 위해 자식 컴포넌트에서 defaultProps로 기본값을 설정한다.
 
-{% highlight react %}
+{% highlight jsx %}
 /* Member.js */
 
 const MemberInfo = ({username, age}) => {
@@ -124,7 +124,7 @@ MemberInfo.defaultProps = {
 export default MemberInfo;
 {% endhighlight %}
 
-{% highlight react %}
+{% highlight jsx %}
 /* App.js */
 
 const App = () => {
@@ -142,7 +142,7 @@ export default App;
   - 단순한 `<div></div>`같은 HTML 요소는 children의 length에 포함되지 않는다.
 - 예시
 
-{% highlight react %}
+{% highlight jsx %}
 /* Member.js */
 
 const MemberInfo = (props) => {
@@ -157,7 +157,7 @@ const MemberInfo = (props) => {
 export default MemberInfo;
 {% endhighlight %}
 
-{% highlight react %}
+{% highlight jsx %}
 /* App.js */
 
 const App = () => {
@@ -221,7 +221,7 @@ function Add(a, b) {
 
 - 클래스 컴포넌트가 상속받고 있는 Component는 상태를 변경하는 setState라는 메소드가 존재한다.
 - 예시 (흔한 예제인 카운터 컴포넌트)
-{% highlight react %}
+{% highlight jsx %}
 /* Counter.js */
 
 import React from 'react';

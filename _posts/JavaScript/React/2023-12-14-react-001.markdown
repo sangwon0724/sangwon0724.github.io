@@ -59,7 +59,7 @@ categories: React
 - JSX 코드는 웹 브라우저에서 실행되기 전 Babel과 같은 도구를 사용하여 표준 자바스크립트 문법으로 변환되어야 한다.
 
 - JSX 코드 예시
-{% highlight react %}
+{% highlight jsx %}
 function App() {
   return (
     <div>

@@ -14,7 +14,7 @@ categories: React
 - JSX 코드는 웹 브라우저에서 실행되기 전 Babel과 같은 도구를 사용하여 표준 자바스크립트 문법으로 변환되어야 한다.
 
 - JSX 코드 예시
-{% highlight react %}
+{% highlight jsx %}
 function App() {
   return (
     <div>
@@ -42,7 +42,7 @@ function App() {
 - &lt;img>나 &lt;br>요소와 같은 빈 요소(void elements)도 반드시 슬래시(/)를 사용하여  
 self-closing을 해 줘야만 오류가 발생하지 않는다.
 
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   return (
     <div>
@@ -58,7 +58,7 @@ export default function App() {
 React에서는 반드시 컴포넌트의 최상위 요소가 하나만 존재하도록 강제하고 있다.
 - 아래 코드에서는 &lt;h1>과 &lt;p>요소 이렇게 2개의 최상위 요소가 존재하기 때문에, 오류가 발생한다.
 
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   return (
       <h1>h1 태그 내용</h1>
@@ -72,7 +72,7 @@ export default function App() {
 - React DOM에 의해 관리되는 모든 요소들은 최종적으로 id 속성값이 root인 &lt;div>요소 안에 렌더링된다.
     - 이 때의 &lt;div>같은 노드를 `루트 DOM 노드`라고 부른다.
 
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   return (
     <div>
@@ -86,7 +86,7 @@ export default function App() {
 - 하지만 React v16부터는 이러한 불필요한 &lt;div>요소의 사용을 방지하고자 Fragment라는 기능을 추가되었다.
 - 아래 코드처럼 &lt;fragment>요소를 최상위 요소로 사용하면 별도의 요소를 추가하지 않고도 여러 자식 요소들을 그룹화 할 수 있다.
 - &lt;fragment>요소는 HTML 페이지에는 실제 렌더링되지 않기 때문에 최종 결과물에 불필요한 요소가 추가되지 않는다.
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   return (
     <fragment>
@@ -100,7 +100,7 @@ export default function App() {
 - &lt;fragment>요소는 아래 코드처럼 축약형 문법으로도 사용할 수 있다.
 - 그러나 Fragment의 축약형 문법에서는 키(key)와 속성(attribute)을 사용할 수 없다.
 
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   return (
     <>
@@ -116,7 +116,7 @@ export default function App() {
 - JSX 구문에는 자바스크립트 표현식을 그대로 사용할 수 있다.
 - 그러나 자바스크립트 표현식을 사용할 때는 반드시 중괄호({})로 감싸줘야지 정상적으로 컴파일된다.
 
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   const name = "홍길동";
   return <h1>Hello, {name}</h1>;
@@ -130,7 +130,7 @@ export default function App() {
 - `//내용` 방식이든 `/* 내용 방식 */` 방식이든 중괄호 안에 작성해야 한다.
     - 그렇지 않으면 오류가 발생한다.
 
-{% highlight react %}
+{% highlight jsx %}
 export default function App() {
   return (
     <>

@@ -24,7 +24,7 @@ categories: React
         - 만약에 이벤트 핸들러 뒤에 ()를 붙이게 되면 해당 페이지가 랜더링될 때마다 해당 이벤트 핸들러가 실행된다.
         - `<button onClick={handleClick}>이벤트 실행</button>`
 
-{% highlight react %}
+{% highlight jsx %}
 const Sample = () => {
   const handleClick = () => {
     alert("버튼을 클릭했습니다!");
@@ -38,7 +38,7 @@ export default Sample;
 
 - 인라인 방식으로 이벤트 핸들러의 선언과 전달을 동시에 할 수 있다.
 
-{% highlight react %}
+{% highlight jsx %}
 function Sample(){
     return (
         <>
@@ -60,7 +60,7 @@ function Sample(){
 - 이벤트 핸들러는 React 컴포넌트 내부에서 선언된다.
 - 즉, 컴포넌트의 props에 접근할 수 있다.
 
-{% highlight react %}
+{% highlight jsx %}
 /* Sample.jsx */
 
 const Sample = (props) => {
@@ -87,7 +87,7 @@ export default Sample;
 - React에서는 이벤트가 발생할 경우 이벤트가 시작된 요소로부터 상위 방향으로 이벤트가 순서대로 전파된다.
 - React에서 이벤트 핸들러(event handler)는 모든 하위 요소에서 발생한 이벤트를 수신할 수 있다.
 - 예시
-{% highlight react %}
+{% highlight jsx %}
 const Sample = (props) => {
   return (
       <>
@@ -108,7 +108,7 @@ export default Sample;
 - 이벤트 핸들러는 전달받은 이벤트 객체를 사용하여 이벤트의 전파를 중지할 수 있다.
     - <b>stopPropagation() 메소드를 사용한다.</b>
 - 예시
-{% highlight react %}
+{% highlight jsx %}
 const Sample = (props) => {
   return (
       <>
@@ -135,7 +135,7 @@ export default Sample;
     - React
         - preventDefault() 메소드를 호출한다.
 - 예시
-{% highlight react %}
+{% highlight jsx %}
 const Sample = (props) => {
   return (
       <>

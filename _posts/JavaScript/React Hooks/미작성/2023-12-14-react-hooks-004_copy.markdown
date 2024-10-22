@@ -22,7 +22,7 @@ published: false
 
 #### 사용 방법
 
-{% highlight react %}
+{% highlight jsx %}
 
 {% endhighlight %}
 
