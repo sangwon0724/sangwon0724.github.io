@@ -334,7 +334,7 @@ implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' //스프링부트 3.
 
 #### 회원 등록 폼 (src/main/webapp/jsp/members/new-form.jsp)
 
-{% highlight html %}
+{% highlight jsp %}
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -352,7 +352,7 @@ implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' //스프링부트 3.
 
 #### 회원 저장 (src/main/webapp/jsp/members/save.jsp)
 
-{% highlight html %}
+{% highlight jsp %}
 <%@ page import="hello.servlet.domain.member.MemberRepository" %>
 <%@ page import="hello.servlet.domain.member.Member" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -384,7 +384,7 @@ implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' //스프링부트 3.
 
 #### 회원 목록 (src/main/webapp/jsp/members.jsp)
 
-{% highlight html %}
+{% highlight jsp %}
 <%@ page import="java.util.List" %>
 <%@ page import="hello.servlet.domain.member.MemberRepository" %>
 <%@ page import="hello.servlet.domain.member.Member" %>
@@ -508,7 +508,7 @@ public class MvcMemberFormServlet extends HttpServlet {
 {% endhighlight %}
 
 - JSP (src/main/webapp/WEB-INF/views/new-form.jsp)
-{% highlight html %}
+{% highlight jsp %}
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
@@ -574,7 +574,7 @@ public class MvcMemberSaveServlet extends HttpServlet {
 {% endhighlight %}
 
 - JSP (src/main/webapp/WEB-INF/views/save-result.jsp)
-{% highlight html %}
+{% highlight jsp %}
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
@@ -629,7 +629,7 @@ public class MvcMemberListServlet extends HttpServlet {
 {% endhighlight %}
 
 - JSP (src/main/webapp/WEB-INF/views/members.jsp)
-{% highlight html %}
+{% highlight jsp %}
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
