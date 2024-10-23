@@ -1,0 +1,77 @@
+---
+layout: post
+title:  "[스프링 MVC 2편] 메시지, 국제화"
+date:   2024-10-23 23:00:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+published: false
+---
+
+### 프로젝트 설정
+
+- [스프링 이니셜라이저](https://start.spring.io/)를 통해 프로젝트를 생성하자.
+    - 프로젝트 선택
+      - Project
+        - Gradle - Groovy Project
+      - Language
+        - Java
+      - Spring Boot
+        - 3.x.x
+    - Project Metadata
+        - Group
+          - hello
+        - Artifact
+          - message
+        - Name
+          - message
+        - Package name
+          - hello.message
+        - Packaging
+          - Jar (주의!)
+        - Java
+          - 17 또는 21
+    - Dependencies
+        - Spring Web
+        - Thymeleaf
+        - Lombok
+
+#### 추가 설정
+
+- 이전 프로젝트인 `form`에서 일부 소스를 가져오자.
+    - .java 파일의 패키지는 form 부분을 message으로 변경하자.
+    - [참고](https://sangwon0724.github.io/posts/spring-mvc-009/)
+- 가져올 목록
+    - src/main
+        - java/hello/itemservice
+            - domain/item
+                - Item.java
+                - ItemRepository.java
+        - web/item/basic
+            - BasicItemController.java
+    - resources
+        - static
+            - css
+                - bootstrap.min.css
+            - index.html
+    - templates/basic
+        - addForm.html
+        - editForm.html
+        - item.html
+        - items.html
+- 마지막으로 메시지, 국제화 예제에 집중하기 위해서 복잡한 체크, 셀렉트 박스 관리 기능은 모두 제거하자.
+    - java
+    - html
+
+### 메시지, 국제화 소개
+
+### 스프링 메시지 소스 설정
+
+### 스프링 메시지 소스 사용
+
+### 웹 애플리케이션에 메시지 적용하기
+
+### 웹 애플리케이션에 국제화 적용하기
+
+### 출처
+
+- [스프링 MVC 2편 - 백엔드 웹 개발 활용 기술](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-mvc-2)
