@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "[실무편] 마이크로미터, 프로메테우스, 그라파나"
-date:   2024-10-27 07:00:00 +0900
+title:  "[실무편] 액츄에이터"
+date:   2025-02-01 07:00:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
 published: false

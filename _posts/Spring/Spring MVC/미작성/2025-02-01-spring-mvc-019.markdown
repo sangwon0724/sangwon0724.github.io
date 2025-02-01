@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "[스프링 DB 1편] 자바 예외 이해"
-date:   2024-10-27 07:00:00 +0900
+title:  "[스프링 DB 1편] JDBC 이해"
+date:   2025-02-01 07:00:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
 published: false
