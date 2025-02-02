@@ -1,0 +1,259 @@
+---
+layout: post
+title:  "[스프링 DB 1편] 커넥션풀과 데이터소스 이해"
+date:   2025-02-02 15:03:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+---
+
+### 커넥션 풀 이해
+
+#### 데이터베이스 커넥션을 얻는 과정
+
+1. 애플리케이션 로직은 DB 드라이버를 통해 커넥션을 조회한다.
+2. DB 드라이버는 DB와 TCP/IP 커넥션을 연결한다.
+    - 이 과정에서 `3 way handshake`같은 TCP/IP 연결을 위한 네트워크 동작이 발생한다.
+3. DB 드라이버는 TCP/IP 커넥션이 연결되면 ID, PW와 기타 부가정보를 DB에 전달한다.
+4. DB는 ID, PW를 통해 내부 인증을 완료하고, 내부에 DB 세션을 생성한다.
+5. DB는 커넥션 생성이 완료되었다는 응답을 보낸다.
+6. DB 드라이버는 커넥션 객체를 생성해서 클라이언트에 반환한다.
+
+#### 데이터베이스 커넥션을 얻는다는 것은 힘든 과정이다.
+
+- 앞선 6가지나 되는 과정을 통해서 커넥션을 새로 만든다는 것은 과정도 복잡하고 시간도 많이 소요된다.
+- DB는 물론이고 애플리케이션 서버에서도 TCP/IP 커넥션을 새로 생성하기 위한 리소스를 매번 사용해야 한다.
+- 진짜 문제는 사용자가 애플리케이션을 사용할 때 발생한다.
+    - SQL을 실행하는 시간 뿐만 아니라 커넥션을 새로 만드는 시간이 추가되기 때문에 결과적으로 응답 속도에 영향을 준다.
+    - 이것은 사용자에게 좋지 않은 경험을 줄 수 있다.
+- DB마다 커넥션을 생성하는 시간은 다르다.
+    - 시스템 상황마다 다르지만 MySQL 계열은 수 ms(밀리초) 정도로 매우 빨리 커넥션을 확보할 수 있다.
+    - 반면에 수십 밀리초 이상 걸리는 데이터베이스들도 있다.
+
+#### 커넥션 풀의 등장
+
+- 이러한 데이터베이스 커넥션에 대한 문제를 해결하기 위해 등장한 것이 `커넥션 풀`이다.
+- `커넥션 풀`은 애플리케이션 서버 내에서 DB 커넥션 정보를 보관하는 저장소다.
+- `커넥션 풀`은 필요한 만큼 DB 커넥션을 확보에서 보관하고 있는다.
+- 커넥션 풀에 DB 커넥션이 존재하는지 확인 및 휙득하고 사용 완료하면 반환하는 방식이다.
+    - 애플리케이션 로직에서 DB 드라이버로 커넥션을 바로 요청하는 방식이 아니다.
+    - 주의해야할 점은 커넥션을 종료하는 것이 아니라 커넥션이 살아있는 상태로 `커넥션 풀`에 반환해야 한다.
+- 서비스의 특징이나 서버 스펙에 따라 다르지만 보통은 커넥션 풀에 보관할 수 있는 DB 커넥션의 최대 개수를 10개로 지정한다.
+- 커넥션 풀은 개념적으로 매우 단순하다.
+    - 그래서 직접 구현해서 튜닝하기도 편한 쪽에 속한다.
+    - 그래도 사용도 편리하고 성능도 뛰어난 오픈소스를 사용하는 것이 좋다.
+        - 예시 : `commons-dbcp2`, `tomcat-jdbc pool`, `HikariCP`
+- 성능과 사용의 편리함 측면에서 최근에는 `hikariCP`를 주로 사용한다.
+    - 스프링 부트 2.0 부터는 기본 커넥션 풀로 `hikariCP`를 제공한다.
+    - 성능, 사용의 편리함, 안전성 측면에서 이미 검증이 되어있다.
+    - 실무에서도 레거시 프로젝트가 아닌 이상 대부분 `hikariCP`를 사용한다.
+
+### DataSource 이해
+
+- DB 커넥션은 JDBC DriverManager나 커넥션 풀을 사용하는 등 얻을 수 있는 방법이 다양하다.
+- 그런데 만약에 JDBC DriverManager를 사용하다가 커넥션 풀을 통해 DB 커넥션을 얻게 방법을 바꾸려하면 어떻게 될까?
+    - 애플리케이션 로직에서 DB 커넥션을 얻는 코드를 변경해야 한다.
+    - 사용법도 조금씩인 다를 것이기 때문에 사용법도 확인해봐야 한다.
+
+#### 데이터 소스 등장
+
+- 그래서 자바에서는 `javax.sql.DataSource`라는 인터페이스를 제공한다.
+    - 커넥션을 휙득하는 방법을 추상화하는 인터페이스다.
+- 커넥션 조회를 하는 것이 핵심 기능이다.
+    - 다른 기능도 존재하기는 하는데 커넥션 조회가 핵심이다.
+- 대부분의 커넥션 풀은 `DataSource` 인터페이스를 구현해두었다.
+    - 그래서 커넥션 풀 기술을 변경하고 싶으면 해당 구현체로 바꾸기만 하면 된다.
+- 다만 `DriverManager`는 `DataSource` 인터페이스를 사용하지 않는다.
+    - 그래서 `DriverManager`는 직접 사용해야 한다.
+    - 아니면 스프링에서 제공하는 `DriverManagerDataSource`라는 클래스를 사용하면 된다.
+
+### DataSource 예제1 - DriverManager
+
+#### DriverManager 테스트
+
+- 기존에 개발했던 `DriverManager`를 통해서 커넥션을 획득하는 방법을 확인해보자.
+
+{% highlight java %}
+package hello.jdbc.connection;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import static hello.jdbc.connection.ConnectionConst.*;
+
+@Slf4j
+public class ConnectionTest {
+    @Test
+    void driverManager() throws SQLException {
+        Connection con1 = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Connection con2 = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        log.info("connection={}, class={}", con1, con1.getClass());
+        log.info("connection={}, class={}", con2, con2.getClass());
+    }
+}
+{% endhighlight %}
+
+- 실행해보면 아래와 같은 실행 결과가 나온다.
+>connection=conn0: url=jdbc:h2:tcp://localhost/~/test user=SA, class=class org.h2.jdbc.JdbcConnection  
+>connection=conn1: url=jdbc:h2:tcp://localhost/~/test user=SA, class=class org.h2.jdbc.JdbcConnection
+
+#### DriverManagerDataSource 테스트
+
+- 이번에는 스프링에 제공하는 `DriverManagerDataSource`를 통해서 커넥션을 획득하는 방법을 확인해보자.
+
+{% highlight java %}
+@Test
+void dataSourceDriverManager() throws SQLException {
+    //DriverManagerDataSource - 항상 새로운 커넥션 획득
+    DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+
+    Connection con1 = dataSource.getConnection();
+    Connection con2 = dataSource.getConnection();
+    log.info("connection={}, class={}", con1, con1.getClass());
+    log.info("connection={}, class={}", con2, con2.getClass());
+}
+{% endhighlight %}
+
+- 실행해보면 아래와 같은 실행 결과가 나온다.
+>connection=conn0: url=jdbc:h2:tcp://localhost/~/test user=SA, class=class org.h2.jdbc.JdbcConnection  
+>connection=conn1: url=jdbc:h2:tcp://localhost/~/test user=SA, class=class org.h2.jdbc.JdbcConnection
+
+#### DataSource와 DriverManagerDataSource의 차이점
+
+- `DataSource`는 커넥션을 가져올 때 접속 정보를 항상 넘겨줘야 한다.
+    - `Connection con1 = DriverManager.getConnection(URL, USERNAME, PASSWORD);`
+    - `Connection con2 = DriverManager.getConnection(URL, USERNAME, PASSWORD);`
+- `DriverManagerDataSource`는 처음 생성할 때만 넘기면 된다.
+    - `DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);`
+    - `Connection con1 = dataSource.getConnection();`
+    - `Connection con2 = dataSource.getConnection();`
+
+### DataSource 예제2 - 커넥션 풀
+
+- 이번에는 `DataSource`를 통해 커넥션 풀을 사용하는 예제를 알아보자.
+    - `com.zaxxer.hikari.HikariDataSource`를 사용하면 된다.
+
+{% highlight java %}
+@Test
+void dataSourceConnectionPool() throws SQLException, InterruptedException {
+    //커넥션 풀링: HikariProxyConnection(Proxy) -> JdbcConnection(Target)
+    HikariDataSource dataSource = new HikariDataSource();
+    dataSource.setJdbcUrl(URL); //JDBC URL 지정
+    dataSource.setUsername(USERNAME); //사용자명 지정
+    dataSource.setPassword(PASSWORD); //비밀번호 지정
+    dataSource.setMaximumPoolSize(10); //커넥션 풀의 최대 사이즈 지정
+    dataSource.setPoolName("MyPool"); //풀 이름 지정
+    useDataSource(dataSource);
+    Thread.sleep(1000); //커넥션 풀에서 커넥션 생성 시간 대기
+}
+{% endhighlight %}
+
+- 실행해보면 아래와 같은 실행 결과가 나온다.
+>MyPool - Starting...  
+>MyPool - Added connection conn0: url=jdbc:h2:tcp://localhost/~/test user=SA  
+>MyPool - Start completed.  
+>connection=HikariProxyConnection@873175411 wrapping conn0: url=jdbc:h2:tcp://localhost/~/test user=SA, class=class com.zaxxer.hikari.pool.HikariProxyConnection  
+>connection=HikariProxyConnection@1495608502 wrapping conn1: url=jdbc:h2:tcp://localhost/~/test user=SA, class=class com.zaxxer.hikari.pool.HikariProxyConnection
+
+- 커넥션 풀에서 커넥션을 생성하는 작업은 애플리케이션 실행 속도에 영향을 주지 않기 위해 별도의 쓰레드에서 작동한다.
+    - 별도의 쓰레드에서 동작하기 때문에 테스트가 먼저 종료되어 버린다.
+    - 위 코드처럼 Thread.sleep 을 통해 대기 시간을 주어야 쓰레드 풀에 커넥션이 생성되는 로그를 확인할 수 있다
+
+#### logback.xml
+
+- 스프링 부트 3.1 이상에서는 히카리 커넥션 풀을 테스트하는 `dataSourceConnectionPool()`를 실행하면 간략한 로그만 출력된다.
+    - 자세한 로그를 보려면 `resources` 폴더에 `logback.xml` 파일을 추가하자.
+
+{% highlight xml %}
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp-
+                %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+{% endhighlight %}
+
+### DataSource 적용
+
+- 이번에는 애플리케이션에 `DataSource`를 적용해보자.
+- 기존 코드 유지 및 비교를 위해 V0으로 만들어진 2개의 파일을 복사해서 V1으로 만들자.
+    - MemberRepositoryV0 => MemberRepositoryV1
+    - MemberRepositoryV0Test => MemberRepositoryV1Test
+
+#### 생성자 주입
+
+- `DataSource`를 선언하고 생성자를 통해 주입받는 코드를 만들어주자.
+    - 외부에서 DataSource 를 주입 받아서 사용한다.
+    - 이제 직접 만든 DBConnectionUtil을 사용하지 않아도 된다.
+- DataSource 는 표준 인터페이스다.
+    - 그래서 `DriverManagerDataSource`에서 `HikariDataSource`로 변경되어도 해당 코드를 변경하지 않아도 된다.
+
+{% highlight java %}
+private final DataSource dataSource;
+    
+public MemberRepositoryV1(DataSource dataSource) {
+    this.dataSource = dataSource;
+}
+{% endhighlight %}
+
+#### DB 커넥션 얻기
+
+- DB 커넥션을 얻을 때 `DataSource`를 통해 얻도록 수정해주자.
+
+{% highlight java %}
+//DB 접속 정보 가져오기
+private Connection getConnection() throws SQLException {
+    Connection con = dataSource.getConnection();
+    log.info("get connection={}, class={}", con, con.getClass());
+    return con;
+}
+{% endhighlight %}
+
+#### DB 커넥션 종료하기
+
+- `JdbcUtils`를 통해 DB 커넥션을 종료하도록 수정해주자.
+   -  `JdbcUtils`는 스프링이 제공하는 JDBC를 편리하게 다룰 수 있는 메소드들을 제공하는 유틸리티 클래스다.
+- `JdbcUtils`를 사용하면 커넥션을 좀 더 편리하게 닫을 수 있다.
+
+{% highlight java %}
+//DB 접속 종료시키기
+private void close(Connection con, Statement stmt, ResultSet rs) {
+    JdbcUtils.closeResultSet(rs);
+    JdbcUtils.closeStatement(stmt);
+    JdbcUtils.closeConnection(con);
+}
+{% endhighlight %}
+
+#### 테스트
+
+- 이번에는 MemberRepositoryV1Test로 이동해서 테스트 코드를 고쳐보자.
+    - 리포지토리를 가져오는 코드만 변경하면 된다.
+- `@BeforeEach`를 통해서 테스트가 실행되기 전에 MemberRepositoryV1에 의존관계 주입이 발생하도록 했다.
+
+{% highlight java %}
+//기존
+//MemberRepositoryV0 repository = new MemberRepositoryV0();
+
+MemberRepositoryV1 repository;
+
+@BeforeEach
+void beforeEach() throws Exception {
+    //커넥션 풀링: HikariProxyConnection -> JdbcConnection
+    HikariDataSource dataSource = new HikariDataSource();
+    dataSource.setJdbcUrl(URL);
+    dataSource.setUsername(USERNAME);
+    dataSource.setPassword(PASSWORD);
+    repository = new MemberRepositoryV1(dataSource);
+}
+{% endhighlight %}
+
+### 출처
+
+- [스프링 DB 1편 - 데이터 접근 핵심 원리](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-1)
