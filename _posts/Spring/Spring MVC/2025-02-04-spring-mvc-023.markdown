@@ -1,0 +1,495 @@
+---
+layout: post
+title:  "[스프링 DB 1편] 자바 예외 이해"
+date:   2025-02-04 00:20:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+---
+
+### 예외 계층
+
+스프링이 제공하는 예외 추상화를 이해하기 위해서는  
+먼저 자바의 기본 예외에 대한 이해가 필요하다.
+
+아래 이미지는 자바의 예외 계층을 나타낸다.
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_013.png"/>
+
+- `Object`
+    - 예외도 객체다.
+    - 모든 객체의 최상위 부모는 Object이기 때문에 예외의 최상위 부모도 Object다.
+`Throwable`
+    - 최상위 예외
+    - 하위에 `Exception`과 `Error`가 있다.
+- `Error`
+    - 애플리케이션에서 복구 불가능한 시스템 예외
+        - 메모리 부족이나 심각한 시스템 오류가 해당한다.
+    - 애플리케이션 개발자는 이 예외를 잡으려고 해서는 안된다.
+    - 상위 예외를 catch로 잡으면 그 하위 예외까지 함께 잡는다.
+        - 그래서 애플리케이션 로직에서는 Throwable 예외도 잡으면 안 된다.
+        - 왜냐하면 Error 예외도 함께 잡을 수 있기 때문이다.
+        - 애플리케이션 로직은 이런 이유로 Exception 부터 필요한 예외로 생각하고 잡으면 된다.
+    - Error도 언체크 예외이다.
+- `Exception`
+    - 체크 예외
+    - 애플리케이션 로직에서 사용할 수 있는 실질적인 최상위 예외
+    - `Exception`과 그 하위 예외는 모두 컴파일러가 체크하는 체크 예외다.
+        - 단 `RuntimeException`은 예외다.
+- `RuntimeException`
+    - 언체크 예외
+        - 컴파일러가 체크 하지 않는 언체크 예외다.
+    - RuntimeException 과 그 자식 예외는 모두 언체크 예외다.
+    - 런타임동안 발생하는 예외
+    - `RuntimeException`의 이름을 따라서 해당 예외외 그 하위 언체크 예외를 `런타임 예외`라고 많이 부른다.
+
+### 예외 기본 규칙
+
+#### 예외를 처리하는 기본 원리
+
+예외는 기본적으로 폭탄 돌리기같은 원리를 가진다.  
+처리할 수 없으면 밖으로 던져야 한다.
+
+#### 예외를 처리하는 경우
+
+1. 컨트롤러에서 서비스를 호출한다.
+2. 서비스에서 리포지토리를 호출한다.
+3. 리포지토리에서 예외가 발생한다.
+4. 리포지토리가 자신을 호출한 서비스에게 예외를 던진다.
+5. 서비스에서 해당 예외에 대한 처리를 진행한다.
+6. 서비스에서 예외를 처리했기 때문에 서비스는 컨트롤러에게 정상 흐름을 반환한다.
+
+#### 예외를 처리하지 않는 경우
+
+
+1. 컨트롤러에서 서비스를 호출한다.
+2. 서비스에서 리포지토리를 호출한다.
+3. 리포지토리에서 예외가 발생한다.
+4. 리포지토리가 자신을 호출한 서비스에게 예외를 던진다.
+5. 서비스가 자신을 호출한 컨트롤러에게 예외를 던진다.
+
+#### 예외에 대한 기본 규착
+
+- 예외는 잡아서 처리하거나 던져야 한다.
+- 예외를 잡거나 던질 때 지정한 예외뿐만 아니라 그 예외의 자식들도 함께 처리된다.
+    - catch와 throws를 의미한다.
+
+#### 예외를 처리하지 않고 계속 예외를 던지면 어떻게 될까?
+
+- 자바 `main()` 쓰레드의 경우 예외 로그를 출력하면서 시스템이 종료된다.
+- 웹 애플리케이션의 경우 여러 사용자의 요청을 처리하기 때문에 하나의 예외 때문에 시스템이 종료되면 안된다.
+    - WAS가 해당 예외를 받아서 처리하는데, 주로 사용자에게 개발자가 지정한 오류 페이지를 보여준다.
+
+### 체크 예외 기본 이해
+
+- `Exception`과 그 하위 예외는 모두 컴파일러가 체크하는 체크 예외다.
+    - 단 `RuntimeException`은 예외로 한다.
+- 체크 예외는 잡아서 처리하거나, 또는 밖으로 던지도록 선언해야한다.
+    - 그렇지 않으면 컴파일 오류가 발생한다.
+
+#### 테스트
+
+- 체크 예외를 이해하기 위한 테스트 코드를 작성해보자.
+
+{% highlight java %}
+package hello.jdbc.exception.basic;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
+
+@Slf4j
+public class CheckedTest {
+    @Test
+    void checked_catch() {
+        Service service = new Service();
+        service.callCatch();
+    }
+
+    @Test
+    void checked_throw() {
+        Service service = new Service();
+        assertThatThrownBy(() -> service.callThrow())
+        .isInstanceOf(MyCheckedException.class);
+    }
+    
+    //Exception을 상속받은 예외는 체크 예외가 된다.
+    static class MyCheckedException extends Exception {
+        public MyCheckedException(String message) {
+            super(message);
+        }
+    }
+    
+    //Checked 예외는 예외를 잡아서 처리하거나, 던지거나 둘중 하나를 필수로 선택해야 한다.
+    static class Service {
+        Repository repository = new Repository();
+        
+        /**
+         * 예외를 잡아서 처리하는 코드
+         */
+        public void callCatch() {
+            try {
+                repository.call();
+            } catch (MyCheckedException e) {
+                //예외 처리 로직
+                log.info("예외 처리, message={}", e.getMessage(), e);
+            }
+        }
+        
+        /**
+         * 체크 예외를 밖으로 던지는 코드
+         * 체크 예외는 예외를 잡지 않고 밖으로 던지려면 throws 예외를 메서드에 필수로 선언해야한다.
+         */
+        public void callThrow() throws MyCheckedException {
+            repository.call();
+        }
+    }
+    
+    //테스트용 리포지토리
+    static class Repository {
+        public void call() throws MyCheckedException {
+            throw new MyCheckedException("ex");
+        }
+    }
+}
+{% endhighlight %}
+
+`Exception`을 상속받은 `MyCheckedException`를 정의했다.  
+이제 `Exception`에 대해서 처리하면 `MyCheckedException`도 처리 대상이 된다.  
+또한 `Exception`를 상속받았기 때문에 `MyCheckedException`은 체크 예외가 된다.
+
+`checked_catch()`를 확인해보자.  
+내부에 예외에 대해서 처리하는 로직이 존재한다.  
+그래서 정상 흐름을 반환하게 된다.
+
+`checked_throw()`를 확인해보자.  
+내부에 예외에 대해서 처리하는 로직이 존재하지 않는다.  
+그래서 다시 예외를 던지게 된다.
+
+#### 체크 예외의 특징
+
+- 사용 방식
+    - 체크 예외는 예외를 잡아서 처리할 수 없을 때, 예외를 밖으로 던지는 `throws 예외`를 필수로 선언해야 한다.
+- 장점
+    - 개발자가 실수로 예외를 누락하지 않도록 컴파일러를 통해 문제를 잡아준다.
+    - 훌륭한 안전 장치 역할을 해준다.
+- 단점
+    -  실제로는 개발자가 모든 체크 예외를 반드시 잡거나 던지도록 처리해야 한다.
+        - 그래서 사용하기 너무 번거롭다.
+    - 크게 신경쓰고 싶지 않은 예외까지 모두 챙겨야 한다.
+    - 의존관계에 따른 단점도 존재한다.
+
+### 언체크 예외 기본 이해
+
+- `RuntimeException`과 그 하위 예외는 언체크 예외로 분류된다.
+- 언체크 예외는 컴파일러가 체크하지 않는 예외를다.
+    - 언체크 예외는 체크 예외와 기본적으로는 동일하다.
+    - 다만 예외를 던지는 throws 를 선언하지 않고, 생략 할 수 있다.
+    - 이 경우 자동으로 예외를 던진다.
+
+#### 테스트
+
+- 언체크 예외를 이해하기 위한 테스트 코드를 작성해보자.
+
+{% highlight java %}
+package hello.jdbc.exception.basic;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@Slf4j
+public class UncheckedTest {
+    @Test
+    void unchecked_catch() {
+        Service service = new Service();
+        service.callCatch();
+    }
+    
+    @Test
+    void unchecked_throw() {
+        Service service = new Service();
+        assertThatThrownBy(() -> service.callThrow())
+        .isInstanceOf(MyUncheckedException.class);
+    }
+
+    //RuntimeException을 상속받은 예외는 언체크 예외가 된다.
+    static class MyUncheckedException extends RuntimeException {
+        public MyUncheckedException(String message) {
+            super(message);
+        }
+    }
+
+    //UnChecked 예외는 예외를 잡거나, 던지지 않아도 된다.
+    //예외를 잡지 않으면 자동으로 밖으로 던진다.
+    static class Service {
+        Repository repository = new Repository();
+        /**
+         * 필요한 경우 예외를 잡아서 처리하면 된다.
+         */
+        public void callCatch() {
+            try {
+                repository.call();
+            } catch (MyUncheckedException e) {
+                //예외 처리 로직
+                log.info("예외 처리, message={}", e.getMessage(), e);
+            }
+        }
+        /**
+         * 예외를 잡지 않아도 된다. 자연스럽게 상위로 넘어간다.
+         * 체크 예외와 다르게 throws 예외 선언을 하지 않아도 된다.
+         */
+        public void callThrow() {
+            repository.call();
+        }
+    }
+
+    //테스트용 리포지토리
+    static class Repository {
+        public void call() {
+            throw new MyUncheckedException("ex");
+        }
+    }
+}
+{% endhighlight %}
+
+`RuntimeException`을 상속받은 `MyUncheckedException`를 정의했다.  
+이제 `RuntimeException`에 대해서 처리하면 `MyUncheckedException`도 처리 대상이 된다.  
+또한 `RuntimeException`를 상속받았기 때문에 `MyUncheckedException`은 언체크 예외가 된다.
+
+`unchecked_catch()`를 확인해보자.  
+내부에 예외에 대해서 처리하는 로직이 존재한다.  
+이처럼 언체크 예외도 필요한 경우에는 체크 예외처럼 잡아서 처리할 수 있다.
+
+`unchecked_throw()`를 확인해보자.  
+체크 예외처럼 throws를 명시하지 않아도 된다.  
+명시하지 않아도 되는거지 명시해도 된다.  
+그저 컴파일러가 체크하지 않을 뿐이다.
+
+#### 언체크 예외의 특징
+
+- 사용 방식
+    - 언체크 예외는 예외를 잡아서 처리할 수 없을 때, 예외를 밖으로 던지는 `throws 예외`를 생략할 수 있다.
+- 장점
+    - 신경쓰고 싶지 않은 언체크 예외를 무시할 수 있다.
+    - `throws 예외` 부분을 생략할 수 있다.
+    - 신경 쓰고 싶지 않은 예외의 의존관계를 참조하지 않아도 되는 장점이 있다.
+- 단점
+    -  언체크 예외는 개발자가 실수로 예외를 누락할 수 있다.
+        - 반면에 체크 예외는 컴파일러를 통해 예외 누락을 잡아준다.
+
+### 체크 예외 활용
+
+#### 체크 예외와 언체크 예외의 활용 시점
+
+- 기본적으로은 언체크 예외인 `RuntimeException`을 사용하자.
+- 체크 예외는 비즈니스 로직 상 의도적으로 던지는 예외일 때만 사용하는 것이 좋다.
+    - 반드시 예외를 잡아서 처리해야 하는 경우에는 체크 예외가 좋다.
+    - 계좌이체 실패나 결제 시 포인트가 부족한 상황 등이 해당한다.
+    - 이런 경우에도 무조건 체크 예외를 사용해야 하는 것으 아니지만 사용하는 것이 개발자의 실수를 줄이는 방법이다.
+
+#### 체크 예외의 문제점
+
+- 웹 애플리케이션에서 오류 페이지를 본 경험이 한 번쯤은 있을 것이다.
+- 만약에 컨트롤러에서 서비스를 호출하고, 서비스에서 2개의 리포지토리를 호출했다고 가정해보자.  
+    - 이 때 각각의 리포지토리에서 체크 예외가 발생하면 무슨 일이 생길까?
+
+#### 테스트
+
+{% highlight java %}
+package hello.jdbc.exception.basic;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import java.net.ConnectException;
+import java.sql.SQLException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@Slf4j
+public class CheckedAppTest {
+    @Test
+    void checked() {
+        Controller controller = new Controller();
+        assertThatThrownBy(() -> controller.request())
+                .isInstanceOf(Exception.class);
+    }
+
+    //테스트용 컨트롤러
+    static class Controller {
+        Service service = new Service();
+        public void request() throws SQLException, ConnectException {
+            service.logic();
+        }
+    }
+
+    //테스트용 서비스
+    static class Service {
+        Repository1 repository1 = new Repository1();
+        Repository2 repository2 = new Repository2();
+        public void logic() throws SQLException, ConnectException {
+            repository1.call();
+            repository2.call();
+        }
+    }
+
+    //테스용 리포지토리 - 1
+    static class Repository1 {
+        public void call() throws ConnectException {
+            throw new ConnectException("연결 실패");
+        }
+    }
+
+    //테스용 리포지토리 - 2
+    static class Repository2 {
+        public void call() throws SQLException {
+            throw new SQLException("ex");
+        }
+    }
+}
+{% endhighlight %}
+
+#### 테스트를 통해 확인한 문제
+
+1. 복구 불가능한 예외
+    - 대부분의 예외는 복구가 불가능하다.
+    - 일부 복구가 가능한 예외도 있지만 아주 적다.
+2. 의존 관계에 대한 문제
+    - 리포지토리에서 `throws 예외`를 하게 되면 서비스를 거쳐서 컨트롤러까지 `throws 예외`를 추가해줘야 한다.
+    - 그런데 만약 명시할 예외의 종류가 바뀐다면 관련 메소드들을 모두 수정해줘야 한다.
+
+#### throws Exception
+
+- `SQLException`, `ConnectException`같은 시스템 예외는 컨트롤러나 서비스에서는  
+대부분 복구가 불가능하고 처리할 수 없는 체크 예외이다
+- 만약 2개의 예외를 던진다고 하면 아래와 같이 메소드를 정의할 것이다.
+    - `void method() throws SQLException, ConnectException { /* 비즈니스 로직 */ }`
+- 그런데 n개의 예외 대신에 최상위 예외인 `Exception`만 명시해도 된다.
+    - `void method() throws Exception { /* 비즈니스 로직 */ }`
+- 하지만 체크 예외의 최상위 타입인 `Exception`을 던지게 되면 큰 문제점이 있다.
+    - 다른 체크 예외를 체크할 수 있는 기능이 무효화된다.
+    - 중요한 체크 예외를 다 놓치게 된다.
+    - 중간에 중요한 체크 예외가 발생해도 컴파일러는 Exception 을 던지기 때문에 문법에 맞다고 판단해서 컴파일 오류가 발생하지 않는다.
+- 그래서 모든 예외를 다 던지는 것은 체크 예외를 의도한 대로 사용하는 것이 아니다.
+    - 꼭 필요한 경우가 아니면 이렇게 `Exception` 자체를 밖으로 던지는 것은 좋지 않다.
+
+### 언체크 예외 활용
+
+이번에는 언체크 예외를 활용하는 방법을 알아보자.
+
+#### 테스트
+
+{% highlight java %}
+package hello.jdbc.exception.basic;
+
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+import java.net.ConnectException;
+import java.sql.SQLException;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@Slf4j
+public class UncheckedAppTest {
+    @Test
+    void unchecked() {
+        Controller controller = new Controller();
+        assertThatThrownBy(() -> controller.request())
+        .isInstanceOf(Exception.class);
+    }
+
+    @Test
+    void printEx() {
+        Controller controller = new Controller();
+
+        try {
+            controller.request();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            log.info("ex", e);
+        }
+    }
+
+    //테스트용 컨트롤러
+    static class Controller {
+        Service service = new Service();
+        public void request() {
+            service.logic();
+        }
+    }
+
+    //테스트용 서비스
+    static class Service {
+        Repository1 repository1 = new Repository1();
+        Repository2 repository2 = new Repository2();
+        public void logic() {
+            repository1.call();
+            repository2.call();
+        }
+    }
+
+    //테스용 리포지토리 - 1
+    static class Repository1 {
+        public void call() {
+            throw new RuntimeConnectException("연결 실패");
+        }
+    }
+
+    //테스용 리포지토리 - 2
+    static class Repository2 {
+        public void call() {
+            try {
+                runSQL();
+            } catch (SQLException e) {
+                throw new RuntimeSQLException(e);
+            }
+        }
+        private void runSQL() throws SQLException {
+            throw new SQLException("ex");
+        }
+    }
+
+    static class RuntimeConnectException extends RuntimeException {
+        public RuntimeConnectException(String message) {
+            super(message);
+        }
+    }
+    
+    static class RuntimeSQLException extends RuntimeException {
+        public RuntimeSQLException() {
+        }
+        public RuntimeSQLException(Throwable cause) {
+            super(cause);
+        }
+    }
+}
+{% endhighlight %}
+
+### 런타임 예외의 문서화
+
+- 런타임 예외는 문서화를 잘해야 한다.
+- 그래야지 중요한 예외면 코드에 `throws 런타임예외`를 남겨서 중요한 예외를 인지할 수 있게 해준다.
+
+{% highlight java %}
+/**
+ * Make an instance managed and persistent.
+ * @param entity entity instance
+ * @throws EntityExistsException if the entity already exists.
+ * @throws IllegalArgumentException if the instance is not an
+ * entity
+ * @throws TransactionRequiredException if there is no transaction when
+ * invoked on a container-managed entity manager of that is of type
+ * <code>PersistenceContextType.TRANSACTION</code>
+ */
+public void persist(Object entity);
+{% endhighlight %}
+
+### 예외 포함과 스택 트레이스
+
+- 예외를 전환할 때는 꼭! 기존 예외를 포함해야 한다.
+    - 그렇지 않으면 스택 트레이스를 확인할 때 심각한 문제가 발생한다.
+- 만약 try-catch가 있는데 catch 부분이 `catch (SQLException e)`처럼 명시되어 있다고 가정해보자.
+    - 그러면 catch문 내부에서는 `throw new RuntimeSQLException(e);`처럼 기존 예외를 포함해서 예외를 던져야 한다.
+
+### 출처
+
+- [스프링 DB 1편 - 데이터 접근 핵심 원리](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-1)
