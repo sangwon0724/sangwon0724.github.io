@@ -1,0 +1,209 @@
+---
+layout: post
+title:  "[스프링 DB 2편] 데이터 접근 기술 - 스프링 데이터 JPA"
+date:   2025-02-09 18:57:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+---
+
+### 스프링 데이터 JPA 소개1 - 등장 이유
+
+당연하지만 모든 애플리케이션이 동일한 기술을 쓰지는 않을 것이다.  
+어떤 곳은 MySQL을, 어떤 곳은 mongoDB를 쓸 것이다.  
+하지만 모든 기술에 대해서 습득하는 것은 현실적으로 매우 어렵다.
+
+그래서 스프링에서는 `Spring Data`를 통해 이들을 통합하였다.  
+단순히 통합을 이루어내서 공통된 사용방법을 만들어낸 것만으로도 이미 엄청난 발전이다.  
+하지만 이에 그치지 않고 `Spring Data`는 개발자들이 원하는 기능들을 출시하였다.
+
+1. 반복되는 CRUD 쿼리들을 직접 생성한 쿼리 없이 메소드 하나로 실행할 수 있게 하였다.
+2. 동일한 인터페이스를 통해 정형화된 규격을 만들었다.
+3. 페이징 기능을 추가하여 사용하는 DBMS마다 다른 페이징 문법을 통일하였다.
+4. 메소드 이름으로 쿼리를 생성할 수 있게 되었다.
+5. 스프링 MVC에서 id 값만 넘겨도 도메인 클래스로 바인딩할 수 있게 하였다.
+
+스프링 데이터 JPA는 이런 `Spring Data`와 JPA를 접목시킨 기술이다.  
+물론 `스프링 데이터 JPA`가 편리한 기술인 것은 맞으나,  
+그것은 각 기술들을 아는 사람이 편하게 쓸 수 있게 만든 것이니  
+각 기술을 알고 있어야 한다는 것은 절대 잊지 말자.
+
+### 스프링 데이터 JPA 소개2 - 기능
+
+#### 반복되는 CRUD 해결
+
+스프링 데이터 JPA는 `save`, `delete`, `findById` 등  
+개발자가 주로 사용하는 CRUD 관련 기능들을 메소드 하나로 해결할 수 있게 하였다.  
+이제 개발자는 필요할 때 각 메소드를 실행하기만 하면 된다.
+
+#### 정형화된 인터페이스
+
+스프링 데이터 JPA에서 사용하는 리포지토리들은  
+`JpaRepository` 인터페이스를 상속받은 인터페이스로 만들면 된다.
+
+#### 메소드명으로 쿼리 만들기
+
+만약에 `Member`라는 엔티티를 사용하는 리포지토리에서  
+`List<User>findByEmailAndName(Stringemail,Stringname);`라는 메소드가 있다고 가정해보자.
+
+이를 실행하면 JPA는 1차로 이를 아래와 같은 JPQL로 만들어준다.
+`select m from Memberm where m.email=?1 and m.name=?2`
+
+#### 그 외에도 다양한 기능
+
+일일이 다 정리하기에는 지원하는 기능이 너무 많으니  
+그 외의 기능들은 문서를 찾아서 읽어 보는 것이 좋다.
+
+### 스프링 데이터 JPA 주요 기능
+
+`스프링 데이터 JPA`는 JPA를 편리하게 사용할 수 있도록 도와주는 라이브러리이다.  
+대표적으로 `공통 인터페이스 기능`과 `쿼리 메소소드` 기능을 제공한다.
+
+#### 공통 인터페이스 기능
+
+기본적으로 `JpaRepository` 인터페이스를 상속받으면 기본적인 CRUD 기능을 모두 사용할 수 있다.  
+`JpaRepository` 인터페이스에는 공통화할 수 있는 기능들은 거의 모두 포함되어 있다.
+
+`JpaRepository`를 사용하는 방법도 매우 간단하다.  
+그저 `JpaRepository`를 상속받고, 제네릭으로 관리할 엔티티와 해당 엔티티가 사용하는 PK의 자료형을 명시하면 된다.
+{% highlight java %}
+public interface ItemRepository extends JpaRepository<Item, Long> {
+}
+{% endhighlight %}
+
+`JpaRepository`를 상속받기만 하면 `스프링 데이터 JPA`가 프록시 기술을 사용해서 구현 클래스를 만들어준다.  
+그런 다음에 해당 구현 클래스의 인스턴스가 생성되서 스프링 빈으로 등록된다.
+
+#### 쿼리 메소드 기능
+
+`스프링 데이터 JPA`는 인터페이스에 메소드를 작성하기만 하면 된다.  
+그러면 메소드 이름을 분석해서 쿼리를 자동으로 만들고 실행해준다.  
+만약에 `List<Member> findByUsernameAndAgeGreaterThan(String username, int age)`라는 메소드가 있다면  
+해당 메소드명을 분석해서 파라미터로 넘긴 `username`과 이름이 동일하고 `age`보다 나이가 많은 회원을 찾는  
+JPQL을 자동으로 생성해준다.  
+다만 규칙성은 존재하기 때문에 공식 문서를 읽고 이해한 다음에 사용하자.  
+[공식 문서 1](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation)  
+[공식 문서 2](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.limit-query-result)  
+
+물론 JPQL을 직접 사용하고 싶은 경우도 있기에 그럴 때는 `@Query` 애노테이션을 통해 직접 JPQL을 실행할 수도 있다.  
+이런 경우에는 메소드명을 분석해서 JPQL을 만드는 과정은 무시된다.
+{% highlight java %}
+//쿼리 직접 실행
+@Query("select i from Item i where i.itemName like :itemName and i.price <= :price")
+List<Item> findItems(@Param("itemName") String itemName, @Param("price")
+Integer price);
+{% endhighlight %}
+
+### 스프링 데이터 JPA 설정
+
+`build.gradle`에 `스프링 데이터 JPA`에 대한 라이브러리를 추가해주자.
+{% highlight gradle %}
+//JPA, 스프링 데이터 JPA 추가
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+{% endhighlight %}
+
+해당 라이브러리에는 스프링 데이터 JPA뿐만 아니라 JPA와 JdbcTemplate도 포함되어 있다.
+
+#### 하이버네이트 버그
+
+하이버네이트 5.6.6 버전이나 5.6.7 버전을 사용하면 Like 사용 시 예외가 발생하는 경우가 있다.  
+그럴 때는 `build.gradle`에 `ext["hibernate.version"] = "5.6.5.Final"`를 추가하자.
+
+### 스프링 데이터 JPA 적용 1
+
+#### 리포지토리 만들기
+
+리포지토리를 만드는 것은 매우 간단하다.  
+아래와 같이 `JpaRepository` 인터페이스를 상속받게 하고,  
+제네릭으로 관리할 엔티티와 해당 엔티티의 PK에 해당하는 자료형을 명시하면 된다.
+{% highlight java %}
+public interface SpringDataJpaItemRepository extends JpaRepository<Item, Long> {
+}
+{% endhighlight %}
+
+참고로 `JpaRepository`의 패키지는 `org.springframework.data.jpa.repository`다.
+
+#### 쿼리 메소드 예시 1
+
+아래와 같은 메소드가 있다고 가정해보자.
+{% highlight java %}
+List<Item> findByItemNameLike(String itemName);
+{% endhighlight %}
+
+해당 메소드는 스프링 데이터 JPA에 의해서 아래와 같은 JPQL로 변환될 것이다.
+`select i from Item i where i.name like ?`
+
+#### 쿼리 메소드 예시 2
+
+아래와 같은 메소드가 있다고 가정해보자.
+{% highlight java %}
+List<Item> findByPriceLessThanEqual(Integer price);
+{% endhighlight %}
+
+해당 메소드는 스프링 데이터 JPA에 의해서 아래와 같은 JPQL로 변환될 것이다.
+`select i from Item i where i.price <= ?`
+
+#### @Query 활용하기
+
+쿼리 메소드 기능을 사용하는데 조건이 너무 많다면 메소드명이 너무 길어질 것이다.  
+그럴 때는 `@Query("select i from Item i where i.itemName like :itemName and i.price <= :price")`처럼  
+`@Query` 애노테이션을 활용해서 메소드명은 축약하고 쿼리를 직접 실행하도록 하자.
+
+### 스프링 데이터 JPA 적용 2
+
+#### 데이터 등록
+
+`JpaRepository`는 `save`나 `findById`처럼 공통화된 기본 기능들이 숨어있다.  
+이를 활용하면 등록이나 삭제를 간단하게 처리할 수 있다.
+
+직전에 `JpaRepository`를 상속받은 `SpringDataJpaItemRepository` 인터페이스를 만들었다.  
+그리고 `SpringDataJpaItemRepository` 인터페이스는 Item 엔티티를 관리한다고 정의하였다.  
+그렇다면 이 때 Item 엔티티를 DB에 등록하게 하려면 아래와 같이 작성하면 된다.
+{% highlight java %}
+private final SpringDataJpaItemRepository repository;
+
+public Item save(Item item) {
+    return repository.save(item);
+}
+{% endhighlight %}
+
+`save`라는 메소드를 구현한 적이 없지만 `JpaRepository`가 제공하는 `save` 메소드를 통해서  
+데이터 등록을 매우 쉽고 간편하게 처리할 수 있다.
+
+#### 데이터 수정
+
+데이터 수정은 JPA를 사용하기 때문에 기존과 동일하다.  
+영속성 컨텍스트에 포함된 엔티티의 값을 변경하고 트랜잭션이 종료되면  
+해당 변경 내용을 저장하는 쿼리가 발생한다.
+
+#### 단순 조회
+
+단순히 1개의 PK로 이루어진 데이터를 조회하는 것은 매우 쉽다.  
+`JpaRepository`가 제공하는 `findById` 메소드를 사용하면 된다.
+{% highlight java %}
+public Optional<Item> findById(Long id) {
+    return repository.findById(id);
+}
+{% endhighlight %}
+
+#### 조건 조회
+
+사실 스프링 데이터 JPA의 문제점은 조건 조회이다.  
+단순하게 PK 1개로만 조회한다면 그냥 `findById` 메소드를 사용하면 될 것이고,  
+아무 조건이 없다면 그냥 `findAll` 메소드를 사용하면 된다.
+
+그런데 스프링 데이터 JPA는 메소드명을 분석해서 JPQL을 생성하는 `쿼리 메소드` 방식이나,  
+아니면 `@Query` 애노테이션을 통해서 JPQL을 직접 실행하는 `네임드 쿼리` 방식을 사용한다.
+
+문제는 `쿼리 메소드`든 `네임드 쿼리`든 쿼리가 고정되어 있다는 것이다.  
+이 상태에서 조건이 존재한다면 각 경우에 해당하는 메소드들을 모두 만들어줘야 한다.
+만약 발생 가능한 조건이 겨우 2가지가 밖에 없다고 가정해보자.  
+이 때 발생할 수 있는 경우는 `선택없음`, `1`, `2`, `1, 2` 이렇게 4가지다.  
+경우의 수만 따지만 겨우 4가지지만, 이를 메소드 개수로 치환하면 메소드를 무려 4개나 만들어야 한다는 것이다.  
+이는 매우 비효율적인 행동이다.
+
+물론 스프링 데이터 JPA라는 것은 결국 라이브러리다.  
+그래서 JPA를 직접 사용해서 동적 쿼리를 만들어서 `EntityManager`와 `TypedQuery`를 통해 실행하면 된다.
+
+### 출처
+
+- [스프링 DB 2편 - 데이터 접근 활용 기술](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-2)
