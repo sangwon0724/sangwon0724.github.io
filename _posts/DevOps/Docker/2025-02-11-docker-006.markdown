@@ -1,25 +1,11 @@
 ---
 layout: post
-title:  "도커(Docker)란?"
+title:  "도커 컴포즈 (Docker Compose)"
 date:   2025-02-11 07:00:00 +0900
 categories: Docker
 tags: []
 published: false
 ---
-
-### 도커가 등장하기 이전의 개발자
-
-### 도커의 등장 배경
-
-### 도커의 특징
-
-### 도커의 장점
-
-### 도커의 단점
-
-### 도커 설치하기
-
-### 맛보기
 
 ### 출처
 
