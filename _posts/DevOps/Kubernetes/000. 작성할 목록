@@ -1,0 +1,8 @@
+1. Kubernetes 소개
+2. 파드 (Pod)
+3. 디플로이먼트 (Deployment)
+4. 서비스 (Service)
+5. 디플로이먼트와 서비스를 활용한 서버 띄우기
+6. 컨피그맵(ConfigMap)을 활용한 환경변수 관리
+7. 시크릿(Secret)을 활용한 환경변수 관리
+8. 볼륨 (Volume)
