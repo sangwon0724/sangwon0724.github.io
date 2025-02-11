@@ -2,7 +2,7 @@
 layout: post
 title:  "xxx"
 date:   2025-02-11 07:00:00 +0900
-categories: Spring&nbsp;MVC
+categories: Docker
 tags: []
 published: false
 ---
