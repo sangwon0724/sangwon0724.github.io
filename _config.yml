@@ -44,8 +44,8 @@ category_depth:
   Database:
     - SQL
     - Firebase
-  # DevOps:
-    # - Docker
+  DevOps:
+    - Docker
     # - Kubernetes
   Flutter:
     - Dart
