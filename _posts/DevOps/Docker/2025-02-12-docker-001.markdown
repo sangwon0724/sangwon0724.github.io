@@ -210,7 +210,7 @@ flowchart LR
 
 [[Docker] 도커란? - 도커 개념 정리](https://seosh817.tistory.com/345#%EB%8F%84%EC%BB%A4%EB%9E%80%3F-1)
 
-[<Docker> 도커의 구조와 장단점](https://haesoo9410.tistory.com/376)
+[&lt;Docker&gt; 도커의 구조와 장단점](https://haesoo9410.tistory.com/376)
 
 [원리부터 이해하는 도커 - 컨테이너, 가상화, 구성요소](https://www.hanbit.co.kr/channel/category/category_view.html?cms_code=CMS8893081462)
 
