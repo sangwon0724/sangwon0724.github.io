@@ -42,7 +42,7 @@ tags: []
 
 #### 테스트를 하기 전에 되짚어 보기
 
-`docker run` 명령어를 통해 MySQL 이미지를 다운받음과 동시에 컨테이너를 생성하고 실행까지 할 것이다.  
+`docker run` 명령문을 통해 MySQL 이미지를 다운받음과 동시에 컨테이너를 생성하고 실행까지 할 것이다.  
 `--name` 옵션을 사용하면 컨테이너 별칭을 지정할 수 있다.  
 `-e` 옵션을 사용하면 환경변수를 주입할 수 있다.  
 `-p` 옵션을 사용하면 호스트 포트와 컨테이너 포트를 매핑시킬 수 있다.  
@@ -51,10 +51,10 @@ tags: []
 
 #### 테스트 (컨테이너 1차 생성)
 
-1. `docker run --name mysql_volume_test -e MYSQL_ROOT_PASSWORD=mysql_password -p 3306:3306 -d -v /mysql_volume:/var/lib/mysql mysql` 명령어를 통해 MySQL 이미지를 통한 컨테이너를 생성 및 실행하자.
-2. `docker exec -it mysql_volume_test bash` 명령어를 통해 MySQL 컨테이너에 접속해보자.
+1. `docker run --name mysql_volume_test -e MYSQL_ROOT_PASSWORD=mysql_password -p 3306:3306 -d -v /mysql_volume:/var/lib/mysql mysql` 명령문을 통해 MySQL 이미지를 통한 컨테이너를 생성 및 실행하자.
+2. `docker exec -it mysql_volume_test bash` 명령문을 통해 MySQL 컨테이너에 접속해보자.
     - 성공했다면 해당 이미지의 태그명에 따라 `bash-5.1#`같이 노출된다.
-3. `mysql -u root -p` 명령어를 입력하고, 아까 환경변수로 넘긴 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
+3. `mysql -u root -p` 명령문을 입력하고, 아까 환경변수로 넘긴 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
     - 성공하면 `mysql`로 변경된다.
 4. `show databases;`를 실행해서 기본 구조를 확인해보자.
     - `database`가 아니라 `datebases`다. 끝에 `s`를 빼먹지 않도록 주의하자.
@@ -67,30 +67,30 @@ tags: []
 
 #### 테스트 (컨테이너 1차 삭제)
 
-1. `docker stop mysql_volume_test` 명령어를 실행해서 컨테이너를 중지하자.
-2. `docker rm mysql_volume_test` 명령어를 실행해서 컨테이너를 삭제하자.
+1. `docker stop mysql_volume_test` 명령문을 실행해서 컨테이너를 중지하자.
+2. `docker rm mysql_volume_test` 명령문을 실행해서 컨테이너를 삭제하자.
 3. `docker ps -a` 명령여를 실행해서 컨테이너가 잘 삭제됬는지 확인하자.
 
 #### 테스트 (컨테이너 2차 생성)
 
-1. 1차 컨테이너 생성 시 사용한 명령어를 통해 컨테이너를 다시 생성하자.
-2. `docker exec -it mysql_volume_test bash` 명령어를 통해 MySQL 컨테이너에 접속해보자.
-3. `mysql -u root -p` 명령어를 입력하고, 아까 환경변수로 넘긴 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
-4. 이제 `show databases;` 명령어를 실행해서 1차 컨테이너에서 생성한 데이터베이스가 남아있는지 확인해보자.
+1. 1차 컨테이너 생성 시 사용한 명령문을 통해 컨테이너를 다시 생성하자.
+2. `docker exec -it mysql_volume_test bash` 명령문을 통해 MySQL 컨테이너에 접속해보자.
+3. `mysql -u root -p` 명령문을 입력하고, 아까 환경변수로 넘긴 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
+4. 이제 `show databases;` 명령문을 실행해서 1차 컨테이너에서 생성한 데이터베이스가 남아있는지 확인해보자.
 
 #### 테스트 (컨테이너 2차 삭제)
 
-1. `docker stop mysql_volume_test` 명령어를 실행해서 컨테이너를 중지하자.
-2. `docker rm mysql_volume_test` 명령어를 실행해서 컨테이너를 삭제하자.
+1. `docker stop mysql_volume_test` 명령문을 실행해서 컨테이너를 중지하자.
+2. `docker rm mysql_volume_test` 명령문을 실행해서 컨테이너를 삭제하자.
 3. `docker ps -a` 명령여를 실행해서 컨테이너가 잘 삭제됬는지 확인하자.
 
 #### 테스트 (컨테이너 3차 생성)
 
 이번에는 비밀번호를 바꿔보자.
 
-1. 1차 컨테이너 생성 시 사용한 명령어에서 비밀번호만 `diffrent_password`로 바꿔서 컨테이너를 다시 생성하자.
-2. `docker exec -it mysql_volume_test bash` 명령어를 통해 MySQL 컨테이너에 접속해보자.
-3. `mysql -u root -p` 명령어를 입력하고, 이번에는 변경된 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
+1. 1차 컨테이너 생성 시 사용한 명령문에서 비밀번호만 `diffrent_password`로 바꿔서 컨테이너를 다시 생성하자.
+2. `docker exec -it mysql_volume_test bash` 명령문을 통해 MySQL 컨테이너에 접속해보자.
+3. `mysql -u root -p` 명령문을 입력하고, 이번에는 변경된 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
     - 그러면 `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`라고 오류 메시지가 반환될 것이다.
 
 분명 환경변수를 통해서 비밀번호를 `diffrent_password`로 넘겼는데 왜 로그인이 안 될까?  

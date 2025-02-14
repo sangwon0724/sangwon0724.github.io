@@ -116,7 +116,7 @@ n대의 서버 컴퓨터만큼 자바 버전을 올려줘야 할 것이다.
 - `도커 클라이언트 (Docker Client)`
     - 이름 그대로 도커를 실행하는 클라이언트
     - `docker-cli`라고 부른다.
-    -  명령어를 통해 dockerdAPI를 활용해 build, pull, run같은 명을 내린다.
+    -  명령문을 통해 dockerdAPI를 활용해 build, pull, run같은 명을 내린다.
     - `도커 데몬`과 통신한다.
 - `도커 데몬`
     - 백그라운드에서 실행되는 데몬 프로세스
@@ -179,7 +179,7 @@ flowchart LR
 10. PowerShell을 실행해서 WSL2를 기본 버전으로 설정하기
     - `wsl --set-default-version 2`를 입력
 11. Docker Desktop을 재실행해서 좌측 하단에 "Engine running" 메시지가 출력되는지 확인
-12. CMD를 실행해서 `docker version`을 입력해서 도커 명령어가 잘 실행되는지 확인하기
+12. CMD를 실행해서 `docker version`을 입력해서 도커 명령문이 잘 실행되는지 확인하기
 
 - 참고
     - WSL2가 설치되어 있지 않으면 Docker Desktop 설치 시 오류가 발생할 수 있음
