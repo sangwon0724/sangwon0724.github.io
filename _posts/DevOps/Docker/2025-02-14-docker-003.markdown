@@ -1,0 +1,122 @@
+---
+layout: post
+title:  "도커 볼륨 (Docker Volume)"
+date:   2025-02-14 14:49:00 +0900
+categories: Docker
+tags: []
+---
+
+### 컨테이너의 무상태(Stateless) 원칙으로 인한 문제점
+
+도커의 컨테이너는 기본적으로 무상태(Stateless)를 원칙으로 한다.  
+컨테이너에서 변경해야 할 부분이 생긴다면  
+해당 컨테이너를 수정하는 게 아니라, 새로운 컨테이너를 만들어서 통째로 갈아끼는 방식으로 교체를 한다.
+
+다만 이렇게 되면 문제점이 생기는 데 특히 데이터베이스에 대한 이미지의 경우에  
+컨테이너를 새로 생성하게 되면 컨테이너의 무상태 원칙때문에  
+기존에 쌓여 있던 데이터가 모두 날아가게 되버리는 것이다.
+
+그래서 컨테이너 내부에 저장된 데이터가 삭제되는 것을 방지하기 위해  
+`볼륨(Volume)`이라는 개념이 등장한다.
+
+### 도커 볼륨(Docker Volume)이란?
+
+도커 컨테이너에서 데이터를 영속적으로 저장하기 위한 방법을 의미한다.  
+컨테이너 자체도 저장 공간이 있긴 하지만 그 공간이 아니라  
+호스트 컴퓨터의 저장 공간을 공유해서 사용하는 형태이다.
+
+### 사용 방법
+
+`docker run -v [호스트 컴퓨터의 절대 경로]:[컨테이너 내부 디렉토리의 절대 경로] 이미지명:태그명`을 실행하면 된다.
+
+### 주의사항
+
+호스트 컴퓨터의 절대 경로에 명시한 디렉토리가 이미 존재한다면  
+호스트의 디렉토리가 컨테이너의 디렉토리를 덮어씌운다.
+
+호스트 컴퓨터의 절대 경로에 명시한 디렉토리가 존재하지 않는다면  
+디렉토리를 새로 만들고 컨테이너의 디렉토리에 있는 파일들을  
+호스트 컴퓨터의 디렉토리로 복사해온다.
+
+### MySQL을 통한 테스트
+
+#### 테스트를 하기 전에 되짚어 보기
+
+`docker run` 명령어를 통해 MySQL 이미지를 다운받음과 동시에 컨테이너를 생성하고 실행까지 할 것이다.  
+`--name` 옵션을 사용하면 컨테이너 별칭을 지정할 수 있다.  
+`-e` 옵션을 사용하면 환경변수를 주입할 수 있다.  
+`-p` 옵션을 사용하면 호스트 포트와 컨테이너 포트를 매핑시킬 수 있다.  
+`-d` 옵션을 사용하면 컨테이너를 백그라운드로 실행할 수 있다.  
+`-v` 옵션을 사용하면 컨테이너 내부 디렉토리의 파일을 호스트의 디렉토리에 저장할 수 있다.
+
+#### 테스트 (컨테이너 1차 생성)
+
+1. `docker run --name mysql_volume_test -e MYSQL_ROOT_PASSWORD=mysql_password -p 3306:3306 -d -v /mysql_volume:/var/lib/mysql mysql` 명령어를 통해 MySQL 이미지를 통한 컨테이너를 생성 및 실행하자.
+2. `docker exec -it mysql_volume_test bash` 명령어를 통해 MySQL 컨테이너에 접속해보자.
+    - 성공했다면 해당 이미지의 태그명에 따라 `bash-5.1#`같이 노출된다.
+3. `mysql -u root -p` 명령어를 입력하고, 아까 환경변수로 넘긴 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
+    - 성공하면 `mysql`로 변경된다.
+4. `show databases;`를 실행해서 기본 구조를 확인해보자.
+    - `database`가 아니라 `datebases`다. 끝에 `s`를 빼먹지 않도록 주의하자.
+5. `create database mydb;`를 통해 데이터베이스를 생성해보자.
+    - 생성하고 나면 `show databases;`를 통해 데이터베이스가 잘 생성됬는지 확인해보자.
+6. `CREATE TABLE mydb.tb_sample (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(1) NOT NULL, PRIMARY KEY (id));`를 통해서 임의의 테이블을 생성해보자.
+    - 생성하고 나면 `SHOW TABLE STATUS FROM mydb;`를 실행해서 테이블이 잘 생성됬는지 확인해보자.
+7. HeidiSQL이나 DBeaver같은 도구를 통해서 접속이 가능한지 확인해보자.
+    - 호스트명은 localhost로 바꾸면 된다.
+
+#### 테스트 (컨테이너 1차 삭제)
+
+1. `docker stop mysql_volume_test` 명령어를 실행해서 컨테이너를 중지하자.
+2. `docker rm mysql_volume_test` 명령어를 실행해서 컨테이너를 삭제하자.
+3. `docker ps -a` 명령여를 실행해서 컨테이너가 잘 삭제됬는지 확인하자.
+
+#### 테스트 (컨테이너 2차 생성)
+
+1. 1차 컨테이너 생성 시 사용한 명령어를 통해 컨테이너를 다시 생성하자.
+2. `docker exec -it mysql_volume_test bash` 명령어를 통해 MySQL 컨테이너에 접속해보자.
+3. `mysql -u root -p` 명령어를 입력하고, 아까 환경변수로 넘긴 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
+4. 이제 `show databases;` 명령어를 실행해서 1차 컨테이너에서 생성한 데이터베이스가 남아있는지 확인해보자.
+
+#### 테스트 (컨테이너 2차 삭제)
+
+1. `docker stop mysql_volume_test` 명령어를 실행해서 컨테이너를 중지하자.
+2. `docker rm mysql_volume_test` 명령어를 실행해서 컨테이너를 삭제하자.
+3. `docker ps -a` 명령여를 실행해서 컨테이너가 잘 삭제됬는지 확인하자.
+
+#### 테스트 (컨테이너 3차 생성)
+
+이번에는 비밀번호를 바꿔보자.
+
+1. 1차 컨테이너 생성 시 사용한 명령어에서 비밀번호만 `diffrent_password`로 바꿔서 컨테이너를 다시 생성하자.
+2. `docker exec -it mysql_volume_test bash` 명령어를 통해 MySQL 컨테이너에 접속해보자.
+3. `mysql -u root -p` 명령어를 입력하고, 이번에는 변경된 비밀번호를 입력해서 컨테이너에서 MySQL에 접근해보자.
+    - 그러면 `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`라고 오류 메시지가 반환될 것이다.
+
+분명 환경변수를 통해서 비밀번호를 `diffrent_password`로 넘겼는데 왜 로그인이 안 될까?  
+이유는 도커 볼륨을 통해서 이미 호스트 컴퓨터의 저장소에 비밀번호를 저장했기 때문이다.  
+컨테이너를 다시 생성했을 때 호스트 컴퓨터의 저장소로 연결했는데  
+이미 호스트 컴퓨터의 저장소에는 비밀번호가 `mysql_password`로 저장되어 있다.
+
+### 경로와 환경변수
+
+테스트할 때 `MYSQL_ROOT_PASSWORD`라는 변수와 `/var/lib/mysql`라는 디렉토리를 사용했다.  
+이는 MySQL 이미지를 사용할 때 비밀번호를 넘기는 변수명과  
+DB에 관련된 데이터가 저장되는 디렉토리가 이미 정의되어 있기 때문에 그대로 사용한 것이다.
+
+각 이미지마다 사용하는 환경변수명과 디렉토리명이 다르기 때문에  
+자세한 것은 도커 허브에서 각 이미지에 대한 공식 문서를 확인하면 된다.
+
+예를 들면  
+PostgreSQL의 경우에는 `POSTGRES_PASSWORD` 환경변수와 `/var/lib/postgresql/data` 디렉토리를 사용하고,  
+MongoDB의 경우에는 `MONGO_INITDB_ROOT_PASSWORD` 환경변수와 `/data/db` 디렉토리를 사용한다.
+
+#### 참고
+
+[MySQL 이미지 공식문서](https://hub.docker.com/_/mysql)  
+[PostgreSQL 이미지 공식문서](https://hub.docker.com/_/postgres)  
+[MongoDB 이미지 공식문서](https://hub.docker.com/_/mongo)
+
+### 출처
+
+[비전공자도 이해할 수 있는 Docker 입문/실전](https://www.inflearn.com/course/%EB%B9%84%EC%A0%84%EA%B3%B5%EC%9E%90-docker-%EC%9E%85%EB%AC%B8-%EC%8B%A4%EC%A0%84)
