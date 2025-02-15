@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "도커 파일을 활용한 이미지 만들기"
+title:  "도커 컴포즈 (Docker Compose)"
 date:   2025-02-11 07:00:00 +0900
 categories: Docker
 tags: []
