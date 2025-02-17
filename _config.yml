@@ -46,7 +46,7 @@ category_depth:
     - Firebase
   DevOps:
     - Docker
-    # - Kubernetes
+    - Kubernetes
   Flutter:
     - Dart
     - Flutter
