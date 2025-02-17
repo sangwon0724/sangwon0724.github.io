@@ -1,11 +1,145 @@
 ---
 layout: post
 title:  "디플로이먼트 (Deployment)"
-date:   2025-02-17 07:00:00 +0900
+date:   2025-02-17 22:12:00 +0900
 categories: Kubernetes
 tags: []
-published: false
 ---
+
+### 파드는 자동으로 배포한다.
+
+현업에서는 일반적으로 서버를 작동시킬 때 파드를 수동으로 배포하진 않는다.  
+`디플로이먼트(Deployment)`라는 걸 활용해서 파드를 자동으로 배포한다.
+
+### 디플로이먼트(Deployment)란?
+
+쿠버네티스에서 파드를 묶음으로 쉽게 관리할 수 있는 기능이다.
+
+### 디플로이먼트를 사용하는 이유
+
+- 파드의 수를 지정하는 대로 쉽게 생성할 수 있다.
+    - 3개를 요청하든 10개를 요청하든 요청하는 만큼 디플로이먼트가 파드를 알아서 생성해준다.
+- 파드가 비정상적으로 종료된다면, 디플로이먼트가 알아서 새로운 파드를 생성해서 파드의 수를 유지해준다.
+- 동일한 구성의 여러 파드를 일괄적으로 일시 중지, 삭제, 업데이트 하기 쉽다.
+
+### 디플로이먼트 구조
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_001.png"/>
+
+디플로이먼트는 여러 개의 파드를 `레플리카셋(ReplicaSet)`으로 묶어서 관리한다.  
+여기서 `레플리카셋(ReplicaSet)`은 복제본끼리의 묶음이라는 의미를 가진다.
+
+### 디플로이먼트 적용하기
+
+우선 서버를 3대 띄운다고 가정했을 때 파드를 만들기 위해 작성했던 `spring-pod.yaml`을 살펴보자.
+{% highlight yaml %}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spring-pod-1
+spec:
+  containers:
+    - name: spring-container
+      image: kubernetes-spring
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spring-pod-2
+spec:
+  containers:
+    - name: spring-container
+      image: kubernetes-spring
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spring-pod-3
+spec:
+  containers:
+    - name: spring-container
+      image: kubernetes-spring
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+{% endhighlight %}
+
+살펴봤을 때 중복되는 코드도 너무 많고, 중복되는 코드때문에 총 코드량이 너무 많아진다.  
+이를 해결하기 위해 디플로이먼트를 사용하기 위한 yaml 파일인 `spring-deployment.yaml` 파일을 작성해보자.
+
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: spring-server
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+{% endhighlight %}
+
+우선 `apiVersion`과 `kind`가 달라졌다.  
+파드에서 디플로이먼트로 바뀌었기 때문에  
+`apiVersion`은 `v1`에서 `app/v1`으로 바뀌었고  
+`kind`는 `Pod`에서 `Deployment`로 바뀌었다.
+
+`metadata`는 동일하게 해당 리소스의 이름을 적으면 된다.  
+파드의 정보를 명시하기 위한 `spring-pod.yaml`에서는 파드임을 구분하기 위해 `spring-pod-xxx`라고 작성했지만,  
+디플로이먼트의 정보를 명시하기 위한 `spring-deployment.yaml`에서는 디플로이먼트임을 구분하기 위해 `spring-deployment`라고 작성했다.
+
+`spec` 부분은 약간 어렵다.  
+`spec.replicas`는 파드의 개수를 의미한다. 이 옵션의 개수에 따라 생성되는 파드의 개수가 달라진다.  
+`spec.selector.matchLabels.app`은 원본이 되는 파드의 이름을 의미한다. 해당 파드를 복제해서 사용한다.  
+`spec.template`에는 원본이 대한 파드의 정보를 명시한다.  
+`spec.template.metadata.labels.app`에는 원본 파드의 이름을 명시한다.  
+`spec.template.spec`에는 원본 파드에 대한 정보를 명시한다. 파드에 대한 yaml 파일을 작성할 때와 동일하게 작성하면 된다.
+
+### 디플로이먼트 생성하기
+
+사실 쿠버네티스 관련 리소스를 생성하는 명령어는 동일하다.  
+`kubectl apply -f [환경설정 파일명]`을 실행하면 된다.
+
+### 디플로이먼트 관련 정보 확인하기
+
+#### 디플로이먼트 확인하기
+
+`kubectl get deployment` 명령문을 실행하면 된다.
+
+#### 레플리카셋 확인하기
+
+`kubectl get replicaset` 명령문을 실행하면 된다.
+
+#### 파드 확인하기
+
+`kubectl get pods` 명령문을 실행하면 된다.
+
+### 디플로이먼트는 파드를 생성해주기만 한다.
+
+디플로이먼트를 통해 파드를 여러 개 생성하려는 이유가 뭘까?  
+바로 트래픽이 몰리면 그 요청을 분산하기 위해 파드를 동적으로 생성하기 위해서다.  
+하지만 디플로이먼트는 단순히 파드를 생성하기만 해준다.  
+그러면 트래픽을 여러 파드에 분산하려면 어떻게 해야 할까?  
+그럴 때 사용하는 기술이 바로 쿠버네티스의 `서비스(Service)`다.
 
 ### 출처
 
