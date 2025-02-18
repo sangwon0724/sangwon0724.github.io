@@ -319,6 +319,55 @@ spec:
 특히 데이터베이스의 유저명과 비밀번호의 경우에는 중요한 값이니  
 시크릿으로 관리하도록 하자.
 
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: kubernetes-spring:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: db-port
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: db-name
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: db-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: db-password
+{% endhighlight %}
+
 ### 보안 문제
 
 MySQL의 서비스 매니페스트 파일에 보면 `spec.ports.nodePort`을 통해 외부에서 접근할 수 있게 되어있었다.  
