@@ -1,0 +1,301 @@
+---
+layout: post
+title:  "컨피그맵(ConfigMap)과 시크릿(Secret)을 활용한 환경변수 관리"
+date:   2025-02-18 19:19:00 +0900
+categories: Kubernetes
+tags: []
+---
+
+### 환경변수
+
+만약에 쿠버네티스를 사용할 때 환경변수를 등록하고 싶다면 어떻게 해야할까?  
+컨테이너에 직접 환경변수를 선언할 때는 `docker run` 명령어를 실행할 때  
+`-e` 옵션을 통해 환경변수를 선언했었다.
+
+하지만 쿠버네티스에서는 컨테이너를 파드로 감싸고,  
+여러 개의 파드를 레플리카셋으로 감싸고,  
+그 레플리카셋을 디플로이먼트가 관리하는 형태다.  
+
+컨테이너 하나 하나 환경변수를 설정하려면 가능은 하겠지만  
+컨테이너가 5개, 10개, 100개 이렇게 늘어난다면  
+현실적으로 거기에 일일이 환경변수를 설정하는 것도 문제다.
+
+이럴 때는 디플로이먼트에 환경변수를 설정해서  
+컨테이너에 일괄적으로 동일한 환경변수를 사용할 수 있게  
+설정할 수 있다.
+
+### 매니피스트 파일 활용하기
+
+#### 설정하는 방법
+
+우선 기존에 디플로이먼트를 설정하기 위한 매니페스트 파일인 `spring-deployment.yaml`을 살펴보자.
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: kubernetes-spring:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+{% endhighlight %}
+
+여기에 살펴보면 원본이 되는 컨테이너의 스펙을 지정하는 `spec.template`이 있다.  
+이 부분에 `env` 옵션을 통해서 환경변수를 지정하면 된다.
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: kubernetes-spring:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MY_ACCOUNT
+              value: spring_account
+            - name: MY_PASSWORD
+              value: spring_password
+{% endhighlight %}
+
+#### 확인하기
+
+1. `kubectl apply -f [매니페스트 파일명]`을 통해 디플로이먼트와 서비스를 생성하자.
+2. `kubectl get pods`를 통해 파드명을 확인하자.
+3. `kubectl exec -it [파드명] -- bash`를 통해 파드 내부로 접속하자.
+4. `env`를 통해 환경변수 목록을 조회하자.
+
+### 디플로이먼트에 환경 변수를 같이 작성했을 때의 문제점
+
+정말 간단하게만 생각했을 때 서버의 종류는 몇 가지일까?  
+대략적으로 개발 서버와 운영 서버 정도로 나눌 수 있을 것이다.  
+그런데 디플로이먼트에 환경변수의 값을 직접 입력하게 된다면  
+개발 서버와 운영 서버에서는 환경변수를 무조건 같은 값으로 사용할 수 밖에 없다.
+
+그래서 쿠버네티스에서는 `컨피그맵(ConfigMap)`과 `시크릿(Secret)`이란 것을 제공한다.  
+기본적으로 디플로이먼트에 환경변수를 설정하는 것은 동일하지만  
+환경변수명만 설정하는 것이고 환경변수의 값은  
+컨피그맵과 시크릿에서 동적으로 가져올 수 있게 해준다.
+
+### 컨피그맵 (ConfigMap)
+
+#### 매니페스트 파일 생성하기
+
+컨피그맵 리소스를 만들기 위해 매니페스트 파일을 생성해주자. (spring-config.yaml)
+{% highlight yaml %}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spring-config # ConfigMap 이름
+data:
+  my-account: "spring_account"
+  my-password: "spring_password"
+{% endhighlight %}
+
+리소스의 종류인 `kind`에는 `ConfigMap`을 명시하자.  
+리소스를 사용하기 위한 API 버전인 `apiVersion`에는 `v1`을 명시하자.  
+`metadata.name`에는 해당 컨피그맵의 이름을 명시해주자.  
+`data`에는 환경변수로 사용할 값을 key, value 형태로 정의해주면 된다.  
+명심해야할 점은 `data`에서 사용하는 `key`는 환경변수의 실제 이름이 아닌 것이다.  
+`data`에서 사용하는 `key`는 환경변수에 값을 넣기 위해 사용하는 일종의 변수명이다.  
+`디플로이먼트에 명시된 환경변수명 → 컨피그맵 data의 key → 컨피그맵 data의 value`처럼 이어지는 것이다.  
+참고로 값 자체는 쌍따옴표로 묶어주는 것이 좋다.  
+크게 상관없을 수도 있는데 IDE에서 경고문을 띄우면 거슬린다.
+
+#### 디플로이먼트랑 연결하기
+
+컨피그맵에 있는 값을 사용하려면 디플로이먼트랑 연결해줘야 한다.  
+디플로이먼트에서 원본 파드의 컨테이너 스펙 부분에 컨피그맵을 연결해주자.
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: kubernetes-spring:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MY_ACCOUNT
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: my-account
+            - name: MY_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: my-password
+{% endhighlight %}
+
+`spec.template.spec.containers.env` 부분이 많이 달라졌다.  
+우선 `value` 대신에 `valueFrom`이라는 것이 생겼다.  
+`valueFrom`은 값의 출처를 나타낸다.  
+컨피그맵을 사용하니 `configMapKeyRef`를 명시한다.  
+이제 `name`에는 컨피그맵의 이름을 명시하고  
+`key`에는 컨피그맵의 `data`에서 정의한 `key`를 명시하면 된다.  
+그러면 해당 환경변수에는 컨피그맵에서 정의한 값이 매핑된다.
+
+#### 매니페스트 반영하기
+
+1. `kubectl apply -f [컨피그맵 매니페스트 파일명]`를 통해 컨피그맵 리소스를 생성하자.
+2. `kubectl apply -f [디플로이먼트 매니페스트 파일명]`를 통해 디플로이먼트 리소스를 생성하자.
+3. `kubectl apply -f [서비스 매니페스트 파일명]`를 통해 서비스 리소스를 생성하자.
+
+만약에 이미 디플이먼트를 생성한 상태라면  
+`kubectl rollout restart deployment [디플로이먼트명]`를 통해 디플로이먼트를 재시작하자.
+
+#### 컨피그맵 분리하기
+
+개발서버와 운영서버의 환경변수를 다르게 하려면 어떻게 해야할까?  
+사실 방법은 간단하다. 실제로 파일을 분리하면 된다.  
+디플로이먼트에서 참조하는 것은 결국 컨피그맵의 이름이다.  
+그래서 개발서버용과 운영서버용 컨피그맵 매니페스트 파일을 분리하되,  
+컨피그맵의 이름은 동일하게 작성하고 값만 다르게 하면 된다.  
+그러면 `kubectl apply -f`를 실행할 때 컨피그맵 리소스를 생성하는 파일만  
+서버 환경에 따라 다르게 선택하면 된다.
+
+#### 컨피그맵 조회하기
+
+`kubectl get configmap` 명령문을 실행하면 된다.
+
+#### 컨피그맵 삭제하기
+
+`kubectl delete configmap [컨피그맵 이름]` 명령문을 실행하면 된다.
+
+### 시크릿 (Secret)
+
+#### 시크릿이란?
+
+시크릿도 컨피그맵처럼 환경변수를 관리하는 리소스다.  
+다만 컨피그맵과의 차이점이라면 시크릿은 비밀번호처럼 민감한 값을 관리하기 위한 리소스라는 것이다.
+
+#### 매니페스트 파일 생성하기
+
+시크릿 리소스를 만들기 위해 매니페스트 파일을 생성해주자. (spring-secret.yaml)
+{% highlight yaml %}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: spring-secret
+stringData:
+  my-password: "my-secret-password"
+{% endhighlight %}
+
+리소스의 종류인 `kind`에는 `Secret`을 명시하자.  
+리소스를 사용하기 위한 API 버전인 `apiVersion`에는 `v1`을 명시하자.  
+`metadata.name`에는 해당 서비스의 이름을 명시해주자.  
+`stringData`에는 환경변수로 사용할 값을 key, value 형태로 정의해주면 된다.  
+명심해야할 점은 `stringData`에서 사용하는 `key`는 환경변수의 실제 이름이 아닌 것이다.  
+`stringData`에서 사용하는 `key`는 환경변수에 값을 넣기 위해 사용하는 일종의 변수명이다.  
+`디플로이먼트에 명시된 환경변수명 → 서비스 stringData의 key → 서비스 stringData의 value`처럼 이어지는 것이다.  
+참고로 값 자체는 쌍따옴표로 묶어주는 것이 좋다.  
+크게 상관없을 수도 있는데 IDE에서 경고문을 띄우면 거슬린다.
+
+#### 왜 시크릿에서는 stringData일까?
+
+시크릿에서는 `data`가 아닌 `stringData`로 값을 설정한다.  
+왜냐하면 사실 시크릿은 `etcd`라는 별도의 저장소에 저장한다.  
+그런데 `etcd`에 저장되는 값은 기본적으로 Base64 인코딩을 한다.  
+그래서 원래의 값을 직접 보려면 `stringData`라는 별도의 옵션으로 값을 설정해야 한다.  
+만약에 환경변수 값을 미리 Base64 인코딩을 해두면 `data` 옵션에서도 쓸 수 있긴 하다.
+
+#### 디플로이먼트랑 연결하기
+
+컨피그맵에 있는 값을 사용하려면 디플로이먼트랑 연결해줘야 한다.  
+디플로이먼트에서 원본 파드의 컨테이너 스펙 부분에 컨피그맵을 연결해주자.
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: kubernetes-spring:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MY_ACCOUNT
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config
+                  key: my-account
+            - name: MY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: my-password
+{% endhighlight %}
+
+`spec.template.spec.containers.env` 부분을 살펴보자.  
+컨피그맵에서는  `configMapKeyRef`을 사용했었다.  
+서비스에서는 그 대신에 `secretKeyRef`를 사용하면 된다.  
+`name`과 `key`는 컨피그맵처럼 사용하면 된다.  
+`name`에는 시크릿의 이름을 명시하고,  
+`key`에는 시크릿에서 사용하는 `key`를 명시하자.
+
+#### 매니페스트 반영하기
+
+1. `kubectl apply -f [시크릿 매니페스트 파일명]`를 통해 시크릿 리소스를 생성하자.
+2. `kubectl apply -f [디플로이먼트 매니페스트 파일명]`를 통해 디플로이먼트 리소스를 생성하자.
+3. `kubectl apply -f [서비스 매니페스트 파일명]`를 통해 서비스 리소스를 생성하자.
+
+만약에 이미 디플이먼트를 생성한 상태라면  
+`kubectl rollout restart deployment [디플로이먼트명]`를 통해 디플로이먼트를 재시작하자.
+
+### 컨피그맵와 시크릿
+
+컨피그맵과 시크릿을 사용할 때는 주의할 점이 있다.  
+바로 컨피그맵과 시크릿에 같은 key가 있다면 덮어씌워진다는 것이다.  
+그래서 만약에 같은 키가 있다면 실제 사용해야 하는 리소스를 나중에 생성하도록 하자.
+
+### 출처
+
+[비전공자도 이해할 수 있는 쿠버네티스 입문/실전](https://www.inflearn.com/course/%EB%B9%84%EC%A0%84%EA%B3%B5%EC%9E%90-%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EC%9E%85%EB%AC%B8-%EC%8B%A4%EC%A0%84)
