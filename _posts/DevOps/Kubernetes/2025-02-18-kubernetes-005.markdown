@@ -1,0 +1,337 @@
+---
+layout: post
+title:  "볼륨 (Volume)"
+date:   2025-02-18 21:16:00 +0900
+categories: Kubernetes
+tags: []
+---
+
+### 도커에서의 볼륨
+
+도커에서는 컨네이터의 무상태성 때문에 컨테이너가 삭제되면 내부의 데이터도 함께 삭제됬다.  
+그래서 `볼륨(Volume)`을 통해 로컬 컴퓨터 내의 디렉토리와 컨테이너 내부의 디렉토리를 동기화해서  
+컨테이너 내부의 데이터를 영구적으로 저장할 수 있었다.
+
+### 쿠버네티스의 볼륨
+
+쿠버네티스에도 볼륨이라는 기능이 존재한다.  
+다만 차이점은 도커에서는 단위가 컨테이너였지만 쿠버네티스에서는 파드다.  
+쿠버네티스에는 기존의 파드가 새로운 파드가 교체되어 버리면 내부의 데이터가 함께 삭제되는데,  
+이를 볼륨을 통해 영속적으로 저장할 수 있다.
+
+#### 로컬 볼륨 (Local Volume)
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_003.png"/>
+
+파드 내부의 공간 일부를 볼륨으로 활용하는 방식이다.  
+별도의 볼륨 설정을 하지 않았을 때 사용되는 기본 방식이다.  
+파드가 삭제되면 기존에 저장된 데이터도 삭제되기 때문에 사용하지 않는 방식이다.
+
+#### 퍼시스턴트 볼륨 (Persistent Volume, PV)
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_004.png"/>
+
+파드 외부의 공간 일부를 볼륨으로 활용하는 방식이다.  
+쿠버네티스 내부의 공간 일부를 사용하기 때문에  
+파드가 삭제되도 데이터를 영구적으로 저장할 수 있다.  
+현업에서 주로 사용되는 방식이다.
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_005.png"/>
+
+만약 AWS EBS같은 외부 저장소를 사용한다면 위와 같은 구조가 된다.
+
+#### 퍼시스턴트 볼륨 클레임 (Persistent Volume Claim, PVC)
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_006.png"/>
+
+파드는 사실 퍼시스턴트 볼륨에 직접 연결할 수는 없다.  
+쿠버네티스에서는 `퍼시스턴트 볼륨 클레임`이라는 중개자를 통해  
+파드와 퍼시스턴트 볼륨을 연결해준다.
+
+### 매니피스트 파일 작성하기
+
+MySQL에 대한 볼륨을 생성한다는 가정하에 만들어보자.
+
+#### 퍼시스턴트 볼륨 (PV)
+
+우선 PV에 대한 매니페스트 파일을 만들어주자. (mysql-pv.yaml)
+{% highlight yaml %}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  storageClassName: my-storage
+  capacity: 
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+{% endhighlight %}
+
+- `kind`
+    - 리소스의 종류
+    - 퍼시스턴트 볼륨의 경우 `PersistentVolume` 사용
+- `apiVersion`
+    - 리소스를 사용하기 위한 API 버전
+    - 퍼시스턴트 볼륨의 경우 `v1` 사용
+- `metadata.name`
+    - 퍼시스턴트 볼륨의 이름
+- `spec`
+    - 해당 퍼시스턴트 볼륨의 정보 
+- `spec.storageClassName`
+    - 저장소의 이름
+    - PV와 PVC의 저장소명이 동일하다면 볼륨이 연결된다.
+- `spec.capacity.storage`
+    - 볼륨이 사용할 용량  
+- `spec.accessModes`
+    - 접근 유형 방식
+    - 만약 `hostPath` 방식을 사용한다면 `ReadWriteOnce`만 사용할 수 있다.
+    - `hostPath` 방식은 쿠버네티스 내부 공간을 활용하는 방식이다.
+- `spec.hostPath.path`
+    - 쿠버네티스 내부의 공간의 경로
+
+#### 퍼시스턴트 볼륨 클레임 (PVC)
+
+이제 파드와 PV의 중개자인 PVC에 대한 매니페스트 파일을 만들어주자. (mysql-pvc.yaml)
+{% highlight yaml %}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  storageClassName: my-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+{% endhighlight %}
+
+- `kind`
+    - 리소스의 종류
+    - 퍼시스턴트 볼륨 클레임의 경우 `PersistentVolumeClaim` 사용
+- `apiVersion`
+    - 리소스를 사용하기 위한 API 버전
+    - 퍼시스턴트 볼륨 클레임의 경우 `v1` 사용
+- `metadata.name`
+    - 퍼시스턴트 볼륨 클레임의 이름
+- `spec`
+    - 해당 퍼시스턴트 볼륨 클레임의 정보 
+- `spec.storageClassName`
+    - 저장소의 이름
+    - PV와 PVC의 저장소명이 동일하다면 볼륨이 연결된다.
+- `spec.accessModes`
+    - 볼륨에 접근할 때의 권한
+    - 만약 `hostPath` 방식을 사용한다면 `ReadWriteOnce`만 사용할 수 있다.
+    - `hostPath` 방식은 쿠버네티스 내부 공간을 활용하는 방식이다.
+- `spec.resources`
+    - PVC가 PV에 요청하는 리소스의 양
+- `spec.resources.requests`
+    - 필요한 최소 리소스
+- `spec.resources.storage`
+    - PVC가 PV에 요청하는 스토리지 양
+    - PV가 최소 1Gi 이상은 되어야 한다.
+
+#### 디플로이먼트
+
+컨피그맵이나 서비스에 대한 부분은 생략하고, 디플로이먼트에 대한 부분만 확인해보자.
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-db
+  template:
+    metadata:
+      labels:
+        app: mysql-db
+    spec:
+      containers:
+        - name: mysql-container
+          image: mysql
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: mysql-database
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+{% endhighlight %}
+
+ `~.containers.volumeMounts` 부분을 확인해보자.
+- `volumeMounts`
+    - 컨테이너 내에서 볼륨으로 사용할 경로
+- `volumeMounts.name`
+    - 볼륨의 저장소명
+    - `volumes.name`과 동일해야 한다.
+- `volumeMounts.mountPath`
+    - 볼륨과 연동할 컨테이너 내부의 경로
+    - MySQL의 경우 `/var/lib/mysql`에 해당한다.
+    - 각 이미지마다 경로가 다르니 자세한 것은 도커 허브에 있는 공식 문서를 참고하자.
+
+이번에는 `~.volumes`를 확인해보자.
+- `volumes`
+    - 파드가 사용할 볼륨을 지정한다.
+- `volumes.name`
+    - 볼륨의 저장소명
+    - `volumeMounts.name`과 동일해야 한다.
+- `volumes.persistentVolumeClaim.claimName`
+    - 사용할 PVC의 이름
+    - 명시한 PVC의 이름을 통해 PV와 연결된다.
+
+#### 매니페스트 반영하기
+
+1. `kubectl apply -f [시크릿 매니페스트 파일명]`를 통해 시크릿 리소스를 생성하자.
+1. `kubectl apply -f [컨피그맵 매니페스트 파일명]`를 통해 컨피그맵 리소스를 생성하자.
+1. `kubectl apply -f [PV 매니페스트 파일명]`를 통해 PV 리소스를 생성하자.
+1. `kubectl apply -f [PVC 매니페스트 파일명]`를 통해 PVC 리소스를 생성하자.
+2. `kubectl apply -f [디플로이먼트 매니페스트 파일명]`를 통해 디플로이먼트 리소스를 생성하자.
+3. `kubectl apply -f [서비스 매니페스트 파일명]`를 통해 서비스 리소스를 생성하자.
+
+만약에 이미 디플이먼트를 생성한 상태라면  
+`kubectl rollout restart deployment [디플로이먼트명]`를 통해 디플로이먼트를 재시작하자.
+
+#### DBMS 툴로 접근하기
+
+만약에 HeidiSQL같은 DBMS 툴에서 접근하고 싶다면  
+서비스 매니페스트 파일에서 `spec.ports.nodePort`에 명시한 포트로 접근하면 된다.
+
+### 스프링 부트와 MySQL 연동하기
+
+이번에는 실무처럼 스프링 부트 프로젝트와 MySQL을 연동해보자.
+
+#### 데이터 소스 연결
+
+우선 MySQL에 접속하기 위한 정보를 작성하자.
+{% highlight yaml %}
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+{% endhighlight %}
+
+각 값들은 디플로이먼트 매니페스트 파일을 통해 환경변수로 주입되게 하였다.
+
+#### 디플로이먼트 매니페스트 파일 작성하기
+
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: spring-container
+          image: kubernetes-spring:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: mysql-service
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: kub-practice
+            - name: DB_USERNAME
+              value: root
+            - name: DB_PASSWORD
+              value: mysql_password
+{% endhighlight %}
+
+여기서 특이한 점은 `DB_HOST`다.  
+`DB_HOST`는 데이터베이스의 주소를 작성한 것인데 여기에는 서비스의 이름이 들어간다.  
+이 때 다시 쿠버네티스의 서비스가 어떤 역할인지 떠올려보면 된다.  
+쿠버네티스에서는 서비스가 요청을 처리하는 역할을 한다.  
+그렇다는 것은 스프링 부트의 파드에서 MySQL의 서비스로 요청을 보내게 된다면  
+MySQL의 서비스가 그 요청을 받아서 MySQL의 파드로 요청을 전달하는 것이다.
+
+참고로 포트를 쌍따옴표로 감싼 것은 숫자를 문자로 인식하게 만들기 위해 감싼 것이다.
+
+#### 서비스 매니페스트 파일 작성하기
+
+서비스는 그냥 일반적인 서비스 리소스 작성하듯이 쓰면 된다.
+{% highlight yaml %}
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-service
+spec:
+  type: NodePort
+  selector:
+    app: backend-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
+{% endhighlight %}
+
+#### 실행해보기
+
+1. `./gradlew clean build`를 통해 스프링 부트 프로젝트를 빌드하자.
+2. `docker build -t 이미지명:태그명 .`을 통해 이미지를 빌드하자.
+3. `kubectl apply -f [디플로이먼트 매니페스트 파일명]`를 통해 디플로이먼트 리소스를 생성하자.
+4. `kubectl apply -f [서비스 매니페스트 파일명]`를 통해 서비스 리소스를 생성하자.
+5. localhost:30000에 접속해서 잘 되는지 확인해보자.
+
+#### 실제 구조
+
+위와 같은 과정을 거친다면 아래와 같은 구조가 나온다.
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_007.png"/>
+
+### 매니페스트 파일 분리
+
+개발서버와 운영서버는 사용되는 데이터베이스가 다를 것이다.  
+그러니 컨피그맵과 시크릿으로 분리해서 관리하도록 하자.
+
+특히 데이터베이스의 유저명과 비밀번호의 경우에는 중요한 값이니  
+시크릿으로 관리하도록 하자.
+
+### 보안 문제
+
+MySQL의 서비스 매니페스트 파일에 보면 `spec.ports.nodePort`을 통해 외부에서 접근할 수 있게 되어있었다.  
+이는 보안적으로 매우 큰 이슈다.
+
+이를 막기 위해서 서비스 매니페스트 파일에서 `spec.type`을 `ClusterIP`로 변경해서  
+쿠버네티스 내부에서만 통신할 수 있도록 하자.  
+이 때 서비스를 삭제하면 스프링 부트의 파드에서는 MySQL쪽 파드에 접근할 수 없다.
+
+만약에 DBMS 툴로 쿠버네티스 내부의 데이터베이스에 접근하고 싶다면  
+`kubectl port-forward pod/[파드명] [로컬에서의 포트]/[파드에서의 포트]`을 통해  
+로컬 컴퓨터에서만 해당 파드와의 연결을 허용하면 된다.
+
+### 출처
+
+[비전공자도 이해할 수 있는 쿠버네티스 입문/실전](https://www.inflearn.com/course/%EB%B9%84%EC%A0%84%EA%B3%B5%EC%9E%90-%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EC%9E%85%EB%AC%B8-%EC%8B%A4%EC%A0%84)
