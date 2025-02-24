@@ -44,6 +44,7 @@ category_depth:
   Database:
     - SQL
     - Firebase
+    - Redis
   DevOps:
     - Docker
     - Kubernetes
@@ -71,7 +72,8 @@ category_depth:
     - Study
   Spring:
     - Spring&nbsp;MVC
-    - Spring&nbsp;Security
+    # - Spring&nbsp;Security
+    # - Spring&nbsp;Batch
     - MyBatis
     - JPA
     - JSTL
