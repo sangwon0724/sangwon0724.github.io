@@ -1,21 +1,20 @@
 ---
 layout: post
-title:  "실제로 Redis 사용해보기"
-date:   2025-02-24 07:00:00 +0900
+title:  "실제로 Redis 캐시 사용해보기"
+date:   2025-02-27 16:11:00 +0900
 categories:  Redis
-published: false
 ---
 
-### Spring의 경우
+스프링 부트를 기준으로 실제 레디스 캐시를 적용해보자.
 
-#### 라이브러리 추가하기
+### 라이브러리 추가하기
 
 레디스를 사용하기 위해 build.gradle에 의존성을 추가하자.
 {% highlight gradle %}
 implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 {% endhighlight %}
 
-#### 리소스 수정하기
+### 리소스 수정하기
 
 application.properties나 application.yaml에 레디스에 대한 설정을 추가해주자.
 - `spring.data.redis.host`
@@ -28,7 +27,7 @@ application.properties나 application.yaml에 레디스에 대한 설정을 추�
     - 레디스에 대한 로그 레벨
     - 자세한 내역을 보기 위해 "trace"로 작성하자.
 
-#### 레디스 서버 연결에 대한 환경설정
+### 레디스 서버 연결에 대한 환경설정
 
 `Lettuce`라는 라이브러리를 통해 레디스와의 연결을 관리할 수 있다.  
 `RedisStandaloneConfiguration` 클래스를 통해 레디스 연결에 대한 환경설정을 진행하고,  
@@ -82,7 +81,7 @@ public LettuceConnectionFactory redisConnectionFactory() {
 }
 {% endhighlight %}
 
-#### 레디스 캐싱에 대한 환경설정
+### 레디스 캐싱에 대한 환경설정
 
 레디스 캐싱에 대한 환경설정을 하려면  
 우선 환경설정용 클래스에 `@EnableCaching` 애노테이션을 추가해서  
@@ -129,7 +128,7 @@ String으로 직렬화해서 저장하기 위한 어댑터를 등록하는 역�
 Json으로 직렬화해서 저장히기 위한 어댑터를 등록하는 역할을 한다.  
 보통 `StringRedisSerializer`와 `Jackson2JsonRedisSerializer`를 많이 사용한다.
 
-#### 캐싱 로직 적용하기
+### 캐싱 로직 적용하기
 
 스프링 부트에서 캐시를 적용하는 것은 매우 간단하다.  
 데이터를 반환하는 메소드에 `@Cacheable` 애노테이션을 적용하면 된다.
@@ -159,7 +158,7 @@ Json으로 직렬화해서 저장히기 위한 어댑터를 등록하는 역할�
 
 `cacheManager`에는 빈으로 등록한 `CacheManager` 인터페이스의 빈 이름을 작성하면 된다.
 
-#### 성능 비교해보기
+### 성능 비교해보기
 
 성능 비교를 위해 아주 간단하게 PK, 제목, 내용, 작성일 정도만 있는 테이블을 만들어서  
 100만 건 정도 데이터를 넣어보자.  
@@ -194,7 +193,7 @@ Json으로 직렬화해서 저장히기 위한 어댑터를 등록하는 역할�
 5번 호출했을 때의 응답시간의 총합을 비교해보면  
 무려 약 62.1% 정도나 빨라진 것을 알 수 있다.
 
-### NextJs의 경우
+<!-- ### NextJs의 경우
 
 #### 라이브러리 추가하기
 
@@ -204,7 +203,7 @@ Json으로 직렬화해서 저장히기 위한 어댑터를 등록하는 역할�
 
 #### 레디스 캐싱에 대한 환경설정
 
-#### 캐싱 로직 적용하기
+#### 캐싱 로직 적용하기 -->
 
 ### 캐시 is not 만능
 
