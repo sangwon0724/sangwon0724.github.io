@@ -168,6 +168,14 @@ Redis Sentinel은 장애 발생 시 운영 서비스에 영향이 없도록 도�
 기본 설정은 `config get save`를 실행하면 확인할 수 있다.  
 만약에 `x y`라고 되어있다면 x초 안에 y개의 데이터가 변경되면 저장된다는 의미를 갖고 있다.
 
+적용 방법
+- 자동
+    - Redis.conf 파일 → SAVE 옵션 설정 (시간 기준)
+- 수동
+    - redis-cli에서 BGSAVE 커맨드를 이용하여 수동으로 RDB 파일 저장
+    - SAVE 커맨드는 포그라운드에서 실행하기 때문에 절대 사용하면 안 된다.
+    - 레디스는 싱글 스레드이기 때문에 저장하는 동안 다른 작업 수행 불가
+
 #### AOF (Append Only File)
 
 모든 쓰기 명령을 로그 파일에 기록하여 복구 시 모든 명령을 재싫행하여 데이터를 복구하는 방식이다.  
@@ -178,6 +186,12 @@ Redis Sentinel은 장애 발생 시 운영 서비스에 영향이 없도록 도�
 RDB 방식보다 로딩 속도가 느리고 파일 크기가 크다.  
 게다가 RDB 방식에 비해 데이터 유실량이 적은 것이지 초 단위 데이터의 경우에는  
 AOF 방식도 데이터 유실의 가능성이 존재한다.
+
+적용 방법
+- 자동
+    - redis.conf 파일 → auto-aof-rewrite-percentage 옵션 설정 (크기 기준)
+- 수동
+    - redis-cli에서 BGREWRITEAOF 커맨드를 이용하여 수동으로 AOF 파일 재작성
 
 ### Redis 설치하기 (Windows OS 기준)
 
@@ -202,4 +216,5 @@ AOF 방식도 데이터 유실의 가능성이 존재한다.
 [NoSQL이란 무엇인지 간단하게 알아보자!](https://shuu.tistory.com/135)  
 [[Redis] 레디스란 무엇인가? - 특징, 장단점, 사용 사례](https://ittrue.tistory.com/317)  
 [Redis, 초면입니다. - 정의, 구조, 장단점, 활용 사례](https://hgggny.tistory.com/entry/Redis-%EC%B4%88%EB%A9%B4%EC%9E%85%EB%8B%88%EB%8B%A4-%EC%A0%95%EC%9D%98-%EA%B5%AC%EC%A1%B0-%EC%9E%A5%EB%8B%A8%EC%A0%90-%ED%99%9C%EC%9A%A9-%EC%82%AC%EB%A1%80)  
-[Redis를 알아보자](https://velog.io/@kimdy0915/Redis%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90)
+[Redis를 알아보자](https://velog.io/@kimdy0915/Redis%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90)  
+[[Redis] 레디스 알고 쓰자. - 정의, 저장방식, 아키텍처, 자료구조, 유효 기간](https://velog.io/@banggeunho/%EB%A0%88%EB%94%94%EC%8A%A4Redis-%EC%95%8C%EA%B3%A0-%EC%93%B0%EC%9E%90.-%EC%A0%95%EC%9D%98-%EC%A0%80%EC%9E%A5%EB%B0%A9%EC%8B%9D-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%EC%9C%A0%ED%9A%A8-%EA%B8%B0%EA%B0%84#redis-%EB%B0%B1%EC%97%85-%EB%B0%A9%EC%8B%9D-%EC%84%A4%EC%A0%95)
