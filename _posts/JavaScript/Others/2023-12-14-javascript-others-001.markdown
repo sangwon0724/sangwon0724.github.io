@@ -2,7 +2,7 @@
 layout: post
 title:  "토스트 알림"
 date:   2023-12-14 11:31:00 +0900
-categories: Sample&nbsp;Codes&nbsp;(JavaScript)
+categories: Code&nbsp;Snippet&nbsp;(JavaScript)
 ---
 
 <!-- toast alram -->
