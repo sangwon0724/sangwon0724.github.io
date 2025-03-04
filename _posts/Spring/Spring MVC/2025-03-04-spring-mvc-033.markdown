@@ -1,22 +1,344 @@
 ---
 layout: post
 title:  "[스프링 DB 2편] 스프링 트랜잭션 이해"
-date:   2025-03-04 07:00:00 +0900
+date:   2025-03-04 15:17:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
-published: false
 ---
 
 ### 스프링 트랜잭션 소개
-### 프로젝트 생성
-### 트랜잭션 적용 확인
+
+- 스프링에서는 `PlatformTransactionManager`라는 인터페이스를 통해 트랜잭션을 추상화한다.
+- 구현체도 제공하기 때문에 필요한 구현체를 스프링 빈으로 등록하고 주입받아서 사용하면 된다.
+
+#### 스프링 트랜잭션 사용 방식
+
+- 선언적 트랜잭션 관리(Declarative Transaction Management)
+    - 해당 로직에 트랜잭션을 적용한다고 선언하면 트랜잭션이 적용되는 방식
+    - `@Transactional` 애노테이션을 선언해서 트랜잭션을 적용한다.
+    - 과거에는 XML에 설정하기도 했다.
+- 프로그래밍 방식의 트랜잭션 관리(programmatic transaction management)
+    - 트랜잭션 매니저 또는 트랜잭션 템플릿 등을 사용해서 트랜잭션 관련 코드를 직접 작성하는 방식
+
+#### 선언적 트랜잭션과 AOP
+
+`@Transactional` 애노테이션을 통해서 선언적 트랜잭션 관리 방식을 사용하게 되면  
+기본적으로 프록시 방식의 AOP가 적용된된다.
+
+1. 클라이언트의 프록시 호출
+2. 프록시에서 트랜잭션 시작
+3. 트랜잭션 프록시의 트랜잭션 처리 로직에서 실제 서비스 호출
+4. 실제 서비스에서 비즈니스 로직 실행
+5. 서비스의 비즈니스 로직에서 리포지토리 호출
+6. 리포지토리에서 데이터 접근 로직 실행 및 결과 반환
+7. 서비스에서 비즈니스 로직 결과 반환
+8. 프록시에서 트랜잭션 종료
+9. 최종 결과 반환
+
+### 트랜잭션 AOP 적용 확인
+
+#### 서비스
+
+AOP가 적용되는지 확인해보기 위해 서비스를 만들어보자.
+{% highlight java %}
+@Slf4j
+static class BasicService {
+    @Transactional
+    public void test(){
+        log.info("aop test");
+    }
+}
+{% endhighlight %}
+
+#### 테스트
+
+실제로 트랜잭션이 적용되는지 확인해보자.  
+AopUtils 클래스의 isAopProxy 메소드를 통해 AOP 프록시 적용 여부를 파악할 수 있다.
+{% highlight java %}
+@Test
+void proxyCheck() {
+    log.info("aop class={}", basicService.getClass());
+    assertThat(AopUtils.isAopProxy(basicService)).isTrue();
+}
+{% endhighlight %}
+
+실제로 실행해보면 AOP 관련 클래스명이 출력된다.  
+`aop class=class hello.springtx.apply.TxBasicTest$BasicService$$SpringCGLIB$$0`
+
+그런데 아까 만든 서비스에서 `@Transactional` 애노테이션이 없으면 어떻게 될까?  
+실제로 해당 애노테이션을 주석 처리하고 테스트를 돌려보면 테스트에 실패하는 것을 알 수 있다.
+
+즉, `@Transactional` 애노테이션이 클래스 레벨이 아니라 메소드 레벨에 붙어도  
+스프링에서 해당 클래스를 AOP 적용 대상으로 인식한다는 것을 알 수 있다.
+
+### 실제 트랙잭션 적용
+
+#### 서비스
+
+실제 트랜잭션이 적용되는지 확인하기 위해 서비스를 만들어보자.
+{% highlight java %}
+@Transactional
+public void tx() {
+    log.info("call tx");
+    boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+    log.info("tx active={}", txActive);
+}
+
+public void nonTx() {
+    log.info("call nonTx");
+    boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+    log.info("tx active={}", txActive);
+}
+{% endhighlight %}
+
+#### 테스트
+
+실제 트랜잭션이 적용되는지 확인해보자.  
+TransactionSynchronizationManager 클래스의  
+isActualTransactionActive 메소드를 통해 트랜잭션 적용 여부를 확인할 수 있다.
+{% highlight java %}
+@Test
+void txTest() {
+    basicService.tx();
+    basicService.nonTx();
+}
+{% endhighlight %}
+
+실행해보면 결과값이 각각 true와 false인 것을 확인할 수 있다.  
+이를 통해 AOP 적용 여부와 트랜잭션 적용 여부는 개별적인 것을 알 수 있다.
+
 ### 트랜잭션 적용 위치
-### 트랜잭션 AOP 주의 사항 - 프록시 내부 호출1
-### 트랜잭션 AOP 주의 사항 - 프록시 내부 호출2
+
+스프링에서는 더 구체적이고 자세한 것이 높은 순위를 가진다.  
+인터페이스보다는 클래스가 높은 순위를 가지고,  
+클래스보다는 메소드가 높은 순위를 가진다.  
+테스트를 통해 실제로 확인해보자.
+
+#### 서비스
+
+{% highlight java %}
+@Slf4j
+@Transactional(readOnly = true)
+static class LevelService {
+
+    @Transactional(readOnly = false)
+    public void write() {
+        log.info("call write");
+        printTxInfo();
+    }
+
+    public void read() {
+        log.info("call read");
+        printTxInfo();
+    }
+
+    private void printTxInfo() {
+        boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+        log.info("tx active={}", txActive);
+        boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+        log.info("tx readOnly={}", readOnly);
+    }
+}
+{% endhighlight %}
+
+클래스 단위와 메소드 단위에 모두 `@Transactional` 애노테이션을 추가했다.  
+그리고 구분을 위해 클래스에는 readOnly를 true로,  
+메소드에는 readOnly를 false로 명시했다.
+
+TransactionSynchronizationManager 클래스의  
+isActualTransactionActive 메소드를 통해  
+트랜잭션 적용 여부를 확인할 수 있다.
+
+TransactionSynchronizationManager 클래스의  
+isCurrentTransactionReadOnly 메소드를 통해  
+해당 트랜잭션이 읽기 전용인지 확인할 수 있다.
+
+#### 테스트
+
+{% highlight java %}
+@Test
+void orderTest() {
+    service.write();
+    service.read();
+}
+{% endhighlight %}
+
+실행해보면 write 메소드에서는 트랜잭션이 적용되었지만  
+readOnly는 false라고 출력된다.  
+즉, 클래스보다 더 자세한 메소드에 적용한  
+`@Transactional` 애노테이션이 적용되는 것을 알 수 있다.
+
+또한 read 메소드에서는 트랜잭션이 적용되었지만  
+readOnly는 true라고 출력된다.  
+즉, 클래스에 선언해두면 메소드에서 선언하지 않아도  
+클래스의 `@Transactional` 애노테이션이 적용되는 것을 알 수 있다.
+
+### 트랜잭션 AOP 주의 사항 - 프록시 내부 호출
+
+`@Transactional` 애노테이션이 적용된 메소드를 직접 호출하면  
+당연히 트랜잭션이 적용된다.
+
+문제는 해당 메소드를 직접 호출하는 게 아니라  
+다른 서비스나 메소드를 통해서 호출하면 트랜잭션이 적용되지 않는다.
+
+#### 메소드 비교
+
+임의의 서비스를 만들어서 아래에 있는 3가지 메소드를 추가했다고 가정해보자.
+
+{% highlight java %}
+public void external() {
+    log.info("call external");
+    printTxInfo();
+    this.internal();
+}
+
+@Transactional
+public void internal() {
+    log.info("call internal");
+    printTxInfo();
+}
+
+private void printTxInfo() {
+    boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+    log.info("tx active={}", txActive);
+}
+{% endhighlight %}
+
+#### internal() 호출
+
+internal 메소드를 호출했을 때는 당연히 트랜잭션이 적용된다.  
+서비스를 호출했을 때 `@Transactional`이 있는 것을 확인하여  
+AOP를 통해 트랜잭션을 적용하기 때문이다.
+
+#### external() 호출
+
+반면에 external 메소드를 호출했을 때는 트랜잭션이 적용되지 않는다.  
+사실 이는 내부 호출은 프록시를 거치지 않기 때문에 발생한 문제다.
+
+자바에서는 별도의 참조가 없으면 표시만 되지 않을 뿐  
+앞에 자동으로 자기 자신의 인스턴스를 가리키도록 `this`가 붙는다.  
+그래서 내부 호출로 internal 메소드를 호출했기 때문에  
+프록시가 적용되지 않은 것이다.
+
+#### 해결 방법
+
+가장 간단한 방법은 문제가 되는 메소드를 별도의 클래스로 분리하는 것이다.  
+만약에 `클라이언트 → 서비스1 → 서비스2` 순서로 호출한다고 가정해보자.  
+이 때 서비스1의 메소드에는 `@Transactional` 애노테이션이 없고,  
+서비스1의 메소드에서 호출하는 서비스2의 메소드에는 `@Transactional` 애노테이션이 있다면 어떻게 될까?
+
+내부 호출 시에는 프록시를 거치지 않지만,  
+외부 호출 시에는 프록시를 거친다.  
+그래서 별도의 클래스를 호출한 것이기 때문에  
+프록시가 적용되면서 또한 트랜잭션도 적용할 수 있다.
+
+#### 참고사항
+
+스프링의 트랜잭션 AOP 기능은 `public` 메소드에만 트랜잭션을 적용하는 것이  
+기본값으로 설정되어 있다.
+
+`public` 메소드가 기본값인 것은 `@Transactional` 애노테이션이 클래스 레벨에도 추가할 수 있기 때문이다.  
+클래스 레벨에 걸게 되면 하위의 모든 메소드에 트랜잭션이 걸리게 된다.  
+그런데 `protected`나 `package-visible`에도 트랜잭션이 걸리게 되면  
+의도하지 않은 곳까지 트랜잭션이 과하게 걸리기 때문에 막아둔 것이다.
+
+원래는 `public`이 아닌 곳에 `@Transactional` 애노테이션이 붙어있으면  
+딱히 예외가 발생하지도 않고 트랜잭션 적용도 무시되자만,  
+스프링 부트 3.0부터는 트랜잭션이 적용되므로 주의해서 사용해야 한다.
+
+참고로 `private`는 애초에 외부 호출이 불가능해서 무시된다.
+
 ### 트랜잭션 AOP 주의 사항 - 초기화 시점
+
+스프링 초기화 시점에는 트랜잭션 AOP가 적용되지 않을 수 있다.  
+왜냐하면 초기화가 먼저 된 다음에 트랜잭션 AOP가 적용되기 때문이다.
+
+그래서 `@PostConstruct`를 통한 초기화 시에는 트랜잭션을 획득할 수 없다.  
+만약 초기화할 때 트랜잭션을 획득하고 싶다면  
+`@EventListener(ApplicationReadyEvent.class)`를 사용하면 된다.
+
+ApplicationReadyEvent 이벤트는 트랜잭션 AOP를 포함한 스프링이 컨테이너가 완전히 생성되고 난 다음에  
+이벤트가 붙은 메서드를 호출해준다.
+
 ### 트랜잭션 옵션 소개
-### 예외와 트랜잭션 커밋, 롤백 - 기본
-### 예외와 트랜잭션 커밋, 롤백 - 활용
+
+#### value or transactionManager
+
+트랜잭션을 사용하려면 스프링 빈에 등록된 트랜잭션 매니저 중에서  
+어떤 트랜잭션 매니저를 사용할지 정의해야 한다.  
+`value`나 `transactionManager` 중에서 아무거나 정해서 값을 지정하면 된다.
+
+값을 생략하게 되면 기본으로 등록된 트랜잭션을 매니저를 사용한다.  
+일반적으로는 생략해서 사용한다.
+
+만약에 트랜잭션 매니저가 2개 이상이라면  
+`@Transactional("memberTxManager")`처럼 사용하면 된다.
+
+#### rollbackFor
+
+스프링 트랜잭션은 예외 발생 시 아래와 같은 기본 정책을 가지고 있다.
+- 언체크 예외인 `RuntimeException`, `Error` 와 그 하위 예외가 발생하면 롤백한다.
+- 체크 예외인 `Exception`과 그 하위 예외들은 커밋한다.
+
+만약 기본 정책 외에 어떤 예외가 발생했을 때 롤백할지 지정하려면  
+`rollbackFor` 옵션을 사용하면 된다.  
+`@Transactional(rollbackFor = Exception.class)`처럼 사용하면  
+Exception 예외 발생 시 롤백하게 된다.
+
+{}를 통해 여러 개의 예외를 지정할 수 있다.
+
+참고로 `rollbackForClassName`라는 옵션도 있는데,  
+`rollbackFor`에서는 예외 클래스를 직접 지정했지만,  
+`rollbackForClassName`에서는 예외 이름을 문자로 지정한다.
+
+#### noRollbackFor
+
+`rollbackFor`의 반대되는 개념이다.  
+롤백되면 안 되는 예외를 지정한다.  
+이름으로 지정하는 `noRollbackForClassName` 옵션도 있다.
+
+#### propagation
+
+트랜잭션 전파에 대한 옵션이다.
+
+#### isolation
+
+트랜잭션 격리 수준을 지정한다.  
+보통은 DB 설정을 따르고 애플리케이션에서는 직접 지정하지는 않는다.  
+기본값은 `DEFAULT`다.
+
+`DEFAULT`
+    - 데이터베이스에서 설정한 격리 수준을 따른다.
+    - 기본값
+`READ_UNCOMMITTED`
+    - 커밋되지 않은 읽기
+`READ_COMMITTED`
+    - 커밋된 읽기
+    - 일반적으로 많이 사용한다.
+`REPEATABLE_READ`
+    - 반복 가능한 읽기
+`SERIALIZABLE`
+    - 직렬화 가능
+
+#### timeout
+
+트랜잭션 수행 시간에 대한 타임아웃을 초 단위로 지정한다.  
+기본값은 트랜잭션 시스템의 타임아웃을 사용한다.
+
+운영 환경에 따라 동작하는 경우도 있고 그렇지 않은 경우도 있기 때문에 꼭 확인하고 사용해야 한다.  
+`timeoutString`이라고 숫자 대신 문자 값으로 지정하는 옵션도 있다.
+
+#### label
+
+트랜잭션 애노테이션에 있는 값을 직접 읽어서 어떤 동작을 하고 싶을 때 사용한다.   
+일반적으로 사용하지 않는다.
+
+#### readOnly
+
+값을 true로 지정할 경우 읽기 전용 트랜잭션을 생성한다.  
+읽기 전용 트랜잭션은 읽기에서 다양한 성능 최적화를 시켜준다.
+
+readOnly의 경우 프레임워크, JDBC 드라이버, 데이터베이스에 적용된다.
 
 ### 출처
 
