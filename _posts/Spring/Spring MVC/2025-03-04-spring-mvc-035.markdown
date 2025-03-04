@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "[스프링 DB 2편] 스프링 트랜잭션 전파2 - 활용"
+date:   2025-03-04 07:00:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+published: false
+---
+
+### 트랜잭션 전파 활용1 - 예제 프로젝트 시작
+### 트랜잭션 전파 활용2 - 커밋, 롤백
+### 트랜잭션 전파 활용3 - 단일 트랜잭션
+### 트랜잭션 전파 활용4 - 전파 커밋
+### 트랜잭션 전파 활용5 - 전파 롤백
+### 트랜잭션 전파 활용6 - 복구 REQUIRED
+### 트랜잭션 전파 활용7 - 복구 REQUIRES_NEW
+
+### 출처
+
+- [스프링 DB 2편 - 데이터 접근 활용 기술](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-2)
