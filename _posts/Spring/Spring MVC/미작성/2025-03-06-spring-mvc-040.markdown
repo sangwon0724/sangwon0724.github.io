@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "[실무편] 외부설정과 프로필1"
-date:   2025-02-01 07:00:00 +0900
+date:   2025-03-06 07:00:00 +0900
 categories: Spring&nbsp;MVC
 tags: []
 published: false
