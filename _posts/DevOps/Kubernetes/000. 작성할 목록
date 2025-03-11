@@ -1,3 +1,49 @@
 상세히 공부할 목차 작성하기
 
-006. xxx
+006. namespace
+
+007. Kubernetes 네트워킹
+- 서비스 타입 (ClusterIP, NodePort, LoadBalancer)
+- Ingress 컨트롤러
+- 네트워크 정책
+
+008. Kubernetes 리소스 관리
+
+- 리소스 요청과 제한 설정
+- Horizontal Pod Autoscaler
+- 리소스 쿼터와 리밋 레인지
+
+009. Kubernetes 스케줄링
+- 노드 선택기
+- 테인트(Taints)와 톨러레이션(Tolerations)
+- 어피니티(Affinity)와 안티-어피니티(Anti-affinity)
+
+010. Kubernetes 보안
+- RBAC (Role-Based Access Control)
+- 서비스 어카운트
+- 네트워크 정책을 이용한 보안 강화
+
+011. Helm 패키지 관리자
+- Helm 차트 개념
+- Helm 차트 생성 및 배포
+- Helm 리포지토리 관리
+
+012. Kubernetes 고급 기능
+- StatefulSets
+- DaemonSets
+- Jobs와 CronJobs
+- Custom Resource Definitions (CRDs)
+
+013. Kubernetes 운영 및 유지보수
+- 클러스터 업그레이드
+- 백업 및 복구 전략
+- 트러블슈팅 기법
+
+014. CI/CD와 Kubernetes 통합
+- GitOps 개념 소개
+- Jenkins, GitLab CI, ArgoCD 등과의 통합
+
+015. 실전 Kubernetes 프로젝트
+- 마이크로서비스 아키텍처 구현
+- 서버리스 애플리케이션 배포 (Knative)
+- 멀티 클러스터 관리
