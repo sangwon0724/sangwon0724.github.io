@@ -45,9 +45,12 @@ category_depth:
     - SQL
     - Firebase
     - Redis
+    # - PostgreSQL
   DevOps:
+    # - Git
     - Docker
     - Kubernetes
+    # - Kafka
   Flutter:
     - Dart
     - Flutter
@@ -74,6 +77,7 @@ category_depth:
     - Spring&nbsp;MVC
     # - Spring&nbsp;Security
     # - Spring&nbsp;Batch
+    # - Spring&nbsp;Cloud
     - MyBatis
     - JPA
     - JSTL
