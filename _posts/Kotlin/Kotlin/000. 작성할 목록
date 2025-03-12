@@ -1,0 +1,64 @@
+참고 : https://kotlinlang.org/docs/kotlin-tour-welcome.html
+
+### Kotlin에 대하여
+
+### 일반 자료형
+- var과 val
+- 정수형, 언사인드 정수형, 실수형, 논리형, 문자형, 문자열
+
+### 컬렉션 자료형
+- List
+- Set
+- Map
+
+### Null Safety
+- Safe Call
+- Elvis 연산자 (? 연산자)
+
+### 조건문과 반복문
+- if
+- when
+- 코틀린의 범위 지정 방식
+- for
+- while
+
+### 함수
+- fun 키워드를 통한 함수 생성
+- 람다
+- 클로저
+- 확장 함수
+- infix 함수
+- inline 함수
+- 지역 함수
+
+### 클래스
+- class
+- 접근 제어
+
+### 추상화와 인터페이스
+
+### 다양한 클래스
+- data class
+- enum class
+- sealed class
+- sealed interface
+
+### Type Alias, import, 구조 분해, componentN
+
+### Jump, Label, method chaining, takeIf, takeUnless
+
+### scope function
+
+### coroutine
+
+### 제네릭
+
+### 지연과 위임
+- lateinit
+- by lazy
+
+### JMH
+
+### kotlin DSL
+
+### 애노테이션과 리플렉션

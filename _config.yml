@@ -68,11 +68,15 @@ category_depth:
     - Code&nbsp;Snippet&nbsp;(JavaScript)
   Jekyll:
     - Jekyll
+  # Kotlin:
+    # - Kotlin
   Others:
     - DevOn&nbsp;NCD
   Portfolio:
     - Student
     - Study
+  # Python:
+    # - Python
   Spring:
     - Spring&nbsp;MVC
     # - Spring&nbsp;Security
