@@ -69,14 +69,14 @@ flowchart LR
 이 때 클라이언트가 서비스 인스턴스 1을 호출하려고 하면 아래와 같이 동작한다.
 ```mermaid
 flowchart LR
-    A["클라이언트"] -.①.-> B["로드 밸런서<br/>or<br/>API 게이트웨이"]
-    B -.②.-> C["서비스 디스커버리"]
-    C -.③.-> B
+    A["클라이언트"] -."①".-> B["로드 밸런서<br/>or<br/>API 게이트웨이"]
+    B -."②".-> C["서비스 디스커버리"]
+    C -."③".-> B
     C --- D1["서비스 인스턴스 1"]
     C --- D2["서비스 인스턴스 2"]
     C --- D3["서비스 인스턴스 3"]
-    B -.④.-> D1
-    D1 -.⑤.-> A
+    B -."④".-> D1
+    D1 -."⑤".-> A
 ```
 
 1. 클라이언트가 API 게이트웨이에 요청을 전달한다.
@@ -161,10 +161,24 @@ eureka:
 
 #### build.gradle
 
- 위해서는 build.gradle에 아래와 같이 추가해주면 된다.
+유레카 서비스로 만들기 위해서는 build.gradle에 아래와 같이 의존성을 추가해주면 된다.
 
 {% highlight gradle %}
 implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+{% endhighlight %}
+
+다만 JAVA 17 버전 이상 사용 시 JVM 호환이 안 되서 문제가 생길 수 있다.  
+build.gradle에 아래의 내용을 추가해주자.
+{% highlight java %}
+ext {
+	set('springCloudVersion', "2024.0.1")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 {% endhighlight %}
 
 #### 클라이언트로 등록하기
@@ -190,7 +204,7 @@ eureka:
 - `eureka.client.register-with-eureka`
     - 유레카의 레지스트리에 등록할 것인지에 대한 여부
 - `eureka.client.fetch-registry`
-    - 유레카 서버로부터 인스턴스들의 정보를 주기적으로 가져올 것인지에 대한 여부
+    - 유레카 서버로부터 서비스 인스턴스들의 정보를 주기적으로 가져올 것인지에 대한 여부
     - true일 경우 갱신된 정보를 받는다.
 
 하지만 위처럼만 설정하면 등록하겠다고만 했지  
@@ -203,7 +217,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 {% endhighlight %}
 
 `eureka.client.service-url.defaultZone`에는 유레카 서버의 주소를 명시한다.  
@@ -300,7 +314,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 {% endhighlight %}
 
 유레카 대시보드를 확인해보면 실제로 랜덤한 이름이 부여되는 것을 확인할 수 있다.
