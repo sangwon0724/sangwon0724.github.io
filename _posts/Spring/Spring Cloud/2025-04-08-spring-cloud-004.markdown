@@ -1,0 +1,248 @@
+---
+layout: post
+title:  "MSA와 보안"
+date:   2025-04-08 07:00:00 +0900
+categories: Spring&nbsp;Cloud
+published: false
+tags: [MSA, 마이크로서비스, JWT, 시큐리티, 보안]
+---
+
+### 서비스 통신 간 보안
+
+모놀리식 아키텍처에서는 서비스를 호출하고 싶다면 단순히 호출하면 된다.  
+왜냐하면 모놀리식에서는 여러 가지의 서비스가 하나의 애플리케이션에  
+모두 포함되어 있고, DB 또한 공유하기 때문이다.
+
+하지만 MSA의 경우에는 상황이 좀 다르다.  
+MSA의 각 서비스는 사실상 각각의 서버다.  
+그래서 게이트웨이를 통해서 서비스를 호출할 수도 있지만,  
+서비스 또한 자체적인 인스턴스를 갖고 있기 때문에  
+개별적인 서비스를 직접 호출할 수도 있다.
+
+그래서 각 서비스 간의 통신이든,  
+아니면 서비스를 직접 호출하든 간에  
+모놀리스 아키텍처에서 보다는  
+더욱 많은 양의 통신이 발생한다.
+
+그렇기 때문에 MSA에서는 더더욱 보안에 신경써야 한다.
+
+### 서비스에서의 보안
+
+서비스 측에서 보안에 대해 처리하는 방법을 알아 보자.
+
+#### 스프링 시큐리티와의 연동
+
+스프링 클라우드는 스프링 진영의 기술이기 때문에  
+다른 스프링 기술과 호환이 잘 된다.
+
+보안을 위해 스프링 진영의 기술인 스프링 시큐리티를 적용해보자.  
+스프링 시큐리티에 대해서 따로 배우진 않아서,  
+하나씩 주석을 달면서 진행하였다.
+
+참고로 참고로 시큐리티 버전은 6.4.4로 진행하였다.
+
+#### build.gradle
+
+스프링 시큐리티를 사용하려면 build.gradle에 아래의 의존성을 추가해주자.
+{% highlight gradle %}
+implementation 'org.springframework.boot:spring-boot-starter-security'
+{% endhighlight %}
+
+#### 환경설정
+
+스프링 시큐리티는 브라우저에서 직접적으로 보여지기 위해 사용하는 역할이 아니라,  
+보안을 위해 서버에서 동작하는 프레임워크다.  
+그래서 환경설정에 명시한 방식에 따라 동작이 달라진다.
+
+환경설정을 위해서는 환경설정용 클래스에 `@EnableWebSecurity` 애노테이션을 추가하면 된다.  
+그 다음에는 `HttpSecurity http`를 파라미터로 받는 `SecurityFilterChain` 인터페이스를  
+빈으로 등록해주면 된다.
+
+과거에는 `WebSecurityConfigurerAdapter`를 상속받았으나,  
+5.8 버전에서 6 버전으로 마이그레이션 되면서 방식이 바뀌었다.
+
+대략 이런 느낌으로 만들면 된다.
+
+{% highlight java %}
+@Configuration
+@EnableMethodSecurity
+public class WebSecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // 필요한 내용 작성
+        return http.build();
+    }
+}
+{% endhighlight %}
+
+시큐리티의 설정은 대부분 저 클래스의 filterChain 메소드에서 이루어진다.  
+해당 게시글에서 스프링 시큐리티 관련 내용은 filterChain 메소드에 추가되는 내용이다.
+
+#### URL 패턴별 정보 설정하기
+
+`requestMatchers`라는 메소드를 통해 URL 패턴별로 구성 정보를 변경할 수 있다.  
+만약 아래와 같은 코드가 있다고 가정해보자.
+
+{% highlight java %}
+http.authorizeHttpRequests(
+    authz ->
+        authz
+        .requestMatchers("/user-service/**").permitAll()
+        .requestMatchers("/users/**").permitAll()
+        .requestMatchers("/h2-console/**").permitAll()
+);
+{% endhighlight %}
+
+메소드명 그대로 동작한다.  
+`requestMatchers` 메소드를 통해 URL 패턴을 지정하고,  
+`permitAll` 메소드를 통해 접속을 허용한다.
+
+참고로 저렇게 패턴을 지정하게 되면,  
+그 이외의 패턴에 대해서는 접근이 불가능하다.  
+실제로 중간에 있는 패턴을 주석처리해보고  
+접근을 시도해보면 권한이 없다고 HTTP 상태 코드가 반환된다.
+
+시큐리티 6 이전 버전이면 `requestMatchers` 대신에  
+`antMatchers`를 사용하면 된다.
+
+#### 프레임 처리
+
+만약 별도의 설정이 없다면  
+스프링 시큐리티는 기본적으로 
+보안 상 frame 태그와 iframe 태그를 막는다.  
+
+그런데 h2를 사용해서 콘솔 페이지로 접속하고 싶다면  
+해당 설정을 비활성화해야 한다.  
+왜냐하면 h2 콘솔은 frame 기반으로 동작하기 때문이다.
+
+frame 설정을 비활성화하고 싶다면 아래와 같은 코드를 추가하면 된다.
+
+{% highlight java %}
+// frame or iframe에 대한 허용 (사유 : h2 concole)
+http.headers(
+    headers -> headers.frameOptions(config -> config.disable())
+);
+{% endhighlight %}
+
+#### CSRF에 대한 처리
+
+CSRF란 Cross site Request forgery의 약자로,  
+사이트 간 위조 요청을 의미한다.
+
+그럼 사이트 간 위조 요청이란 무엇이냐 하면  
+특정 서버를 공격하려고 하는 공격자가 인증된 브라우저에 저장된 쿠키의 세션 정보를 활용하여  
+해당 서버에 사용자가 의도하지 않은 요청을 보내는 것을 의미한다.  
+간단히 해석하면 남의 정보 뺏어다가 요청을 그 사람인 것 마냥 요청을 보낸다는 뜻이다.
+
+스프링 시큐리티에서는 기본적으로 이러한 CSRF를 기본적으로 막도록 설정되어 있다.  
+그래서 GET 요청말고 다른 POST나 PUT같이 상태를 변경할 수 있는 요청은  
+CSRF 토큰이라는 값이 있어야지만 받아들이게 되어 있다.  
+다만 공식 문서에서도 이러한 설정을 꺼도 괜찮다고 적어둔 케이스가 있는데,  
+바로 브라우저가 아닌 클라이언트를 위한 서비스다.
+
+왜냐하면 REST API 전용 서버라면 서버에 세션 정보를 저장할 필요가 없기 때문이다.  
+REST API에서 권한이 필요한 요청을 보내려면 요청에 JWT 토큰처럼 항상 별도의 요청 정보를 담아야 한다.  
+그러면 이미 별도의 요청 정보를 매 요청마다 담아서 보내니 CSRF 토큰을 받을 필요도 없어진다.
+
+CSRF에 대한 설정을 비활성화하고 싶다면 아래와 같이 하면 된다.
+{% highlight java %}
+// csrf 토큰 사용 방지
+http.csrf(config -> config.disable());
+{% endhighlight %}
+
+#### IP 제한하기
+
+어느 IP의 요청만 받아들일지에 대한 설정도 적용할 수 있다.  
+과거 버전에서는 `antMatchers` 메소드에 바로 `hasIpAddress` 메소드를 통해 적용할 수 있었지만  
+스프링 시큐리티 6버전부터는 다른 방식을 적용해야 한다.
+
+우선 지정할 IP에 대한 정보를 명시하자.
+{% highlight java %}
+// 선언부
+public static final String ALLOWED_IP_ADDRESS = "127.0.0.1";
+public static final String SUBNET = "/32";
+public static final IpAddressMatcher ALLOWED_IP_ADDRESS_MATCHER = new IpAddressMatcher(ALLOWED_IP_ADDRESS + SUBNET);
+{% endhighlight %}
+
+그런 다음에 `AuthorizationDecision`를 반환하는 메소드를 만들자.
+{% highlight java %}
+/**
+* IP 체크
+* @param authentication
+* @param object
+* @return
+*/
+private AuthorizationDecision hasIpAddress(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
+    return new AuthorizationDecision(ALLOWED_IP_ADDRESS_MATCHER.matches(object.getRequest()));
+}
+{% endhighlight %}
+
+그런 다음에 `requestMatchers` 메소드 다음에 `access` 메소드를 통해 IP 관련 정보를 설정해주자.  
+아래는 관련된 간단한 예시다.
+{% highlight java %}
+http.authorizeHttpRequests(
+    authz ->
+        authz
+        .requestMatchers("/**").access(this::hasIpAddress)
+    );
+{% endhighlight %}
+
+#### 비밀번호 암호화
+
+스프링 시큐리티에서는 비밀번호 단방향 암호화 인터페이스인 PasswordEncoder를 지원한다.  
+HttpSecurity에서 `getSharedObject` 메소드를 통해  
+`AuthenticationManagerBuilder`라는 빌더 클래스를 가져오자.
+
+그런 다음에 해당 인터페이스를 구현한 구현체와 암호화를 진행할 서비스를 빌더에 등록하면 된다.
+{% highlight java %}
+// 선언부
+private final UserService userService;
+private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+// configure 메소드 내부
+AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+{% endhighlight %}
+
+다만 그 전에 챙겨야 하는 중요 사항이 있는데,  
+`userDetailsService` 메소드에 등록할 서비스 인터페이스는  
+스프링 시큐리티에서 제공하는 `UserDetailsService`라는 인터페이스를 상속하거나 구현해야 한다.  
+그렇게 되면 `loadUserByUsername`라는 메소드를 구현하게 되는데,  
+아래와 같이 구현하게 된다.
+{% highlight java %}
+@Override
+public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    UserEntity userEntity = userRepository.findByEmail(email);
+    if (userEntity == null) {
+        throw new UsernameNotFoundException(username);
+    }
+
+    return new User(
+        userEntity.getEmail(), 
+        userEntity.getEncryptedPwd(), 
+        true, 
+        true, 
+        true, 
+        true, 
+        new ArrayList<>()
+    );
+}
+{% endhighlight %}
+
+#### 필터 적용하기
+
+필터를 적용하는 방법은 매우 간단하다.  
+Filter 인터페이스를 구현한 필터를 `addFilter` 메소드를 통해 등록해주면 된다.
+
+{% highlight java %}
+필터_클래스 필터_인스턴스 = new 필터_클래스();
+
+//필터 적용
+http.addFilter(필터_인스턴스);
+{% endhighlight %}
+
+### 게이트웨이에서의 보안
+
+### 출처
+
+- [Spring Cloud로 개발하는 마이크로서비스 애플리케이션(MSA)](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4)

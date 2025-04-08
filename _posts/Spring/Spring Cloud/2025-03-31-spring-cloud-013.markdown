@@ -1,17 +1,13 @@
 ---
 layout: post
-title:  "Spring Cloud Bus"
+title:  "Appendix: Microservice Architecture 패턴"
 date:   2025-03-31 07:00:00 +0900
 categories: Spring&nbsp;Cloud
 published: false
 tags: [MSA, 마이크로서비스]
 ---
 
-### Spring Cloud Bus 개요
-### RabbitMQ 설치 - MacOS
-### RabbitMQ 설치 - Windows 10
-### AMQP 사용
-### Spring Cloud Bus 테스트
+### Event Sourcing + CQRS + Saga Pattern
 
 ### 출처
 

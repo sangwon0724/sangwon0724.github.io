@@ -1,21 +1,21 @@
 ---
 layout: post
-title:  "마이크로서비스 모니터링"
+title:  "장애 처리와 마이크로서비스 분산 추적"
 date:   2025-03-31 07:00:00 +0900
 categories: Spring&nbsp;Cloud
 published: false
 tags: [MSA, 마이크로서비스]
 ---
 
-### Micrometer 개요
+### CircuitBreaker와 Resilience4J의 사용
 
-### Micrometer 구현
+### Users Microservice에 CircuitBreaker 적용
 
-### Prometheus와 Grafana 개요
+### 분산 추적의 개요 Zipkin 서버 설치
 
-### Prometheus와 Grafana 설치
+### Spring Cloud Sleuth + Zipkin을 이용한 Microservice의 분산 추적 ①
 
-### Prometheus와 Grafana의 연동과 Dashboard 구성
+### Spring Cloud Sleuth + Zipkin을 이용한 Microservice의 분산 추적 ②
 
 ### 출처
 

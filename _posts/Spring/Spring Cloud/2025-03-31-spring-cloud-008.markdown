@@ -1,49 +1,31 @@
 ---
 layout: post
-title:  "데이터 동기화를 위한 Apache Kafka 활용"
+title:  "마이크로서비스 간 통신"
 date:   2025-03-31 07:00:00 +0900
 categories: Spring&nbsp;Cloud
 published: false
 tags: [MSA, 마이크로서비스]
 ---
 
-### Apache Kafka 개요
+### Communication types
 
-### Apache Kafka 설치
+### RestTemplate 사용 ①
 
-### Apache Kafka 사용 - Producer/Consumer
+### RestTemplate 사용 ②
 
-### Apache Kafka 사용 - Kafka Connect
+### FeignClient 사용 ①
 
-### Orders Microservice에서 MariaDB 연동
+### FeignClient 사용 ②
 
-### Kafka Connect 설치 ①
+### FeignClient 예외 처리 ①
 
-### Kafka Connect 설치 ②
+### FeignClient 예외 처리 ②
 
-### Kafka Source Connect 사용
+### ErrorDecoder를 이용한 예외 처리
 
-### Kafka Sink Connect 사용
+### 데이터 동기화 문제 ①
 
-### Orders Microservice와 Catalogs Microservice에 Kafka Topic의 적용
-
-### Catalogs Microservice 수정
-
-### Orders Microservice 수정
-
-### Kafka를 활용한 데이터 동기화 테스트 ①
-
-### Multi Orders Microservice 사용에 대한 데이터 동기화 문제
-
-### Kafka Connect를 활용한 단일 데이터베이스를 사용
-
-### Orders Microservice 수정 - MariaDB
-
-### Orders Microservice 수정 - Orders Kafka Topic
-
-### Orders Microservice 수정 - Order Kafka Producer
-
-### Kafka를 활용한 데이터 동기화 테스트 ②
+### 데이터 동기화 문제 ②
 
 ### 출처
 
