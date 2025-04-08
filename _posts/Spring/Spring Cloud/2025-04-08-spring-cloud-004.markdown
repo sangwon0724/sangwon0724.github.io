@@ -26,6 +26,21 @@ MSA의 각 서비스는 사실상 각각의 서버다.
 
 그렇기 때문에 MSA에서는 더더욱 보안에 신경써야 한다.
 
+### JWT (JSON Web Token)
+
+#### 정의
+
+사용자 인증 및 정보 전달을 위해 사용되는 토큰 기반 인증 방식이다.  
+JSON 형식의 데이터를 안전하게 주고받기 위해 사용되며,  
+특히 STATELESS한 애플리케이션을 구현할 때 많이 사용된다.
+
+#### build.gradle
+
+JWT를 사용하려면 build.gradle에 아래와 같은 의존성을 추가해주자.
+{% highlight gradle %}
+implementation "io.jsonwebtoken:jjwt-api:0.12.6"
+{% endhighlight %}
+
 ### 서비스에서의 보안
 
 서비스 측에서 보안에 대해 처리하는 방법을 알아 보자.
@@ -208,31 +223,151 @@ authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCr
 `userDetailsService` 메소드에 등록할 서비스 인터페이스는  
 스프링 시큐리티에서 제공하는 `UserDetailsService`라는 인터페이스를 상속하거나 구현해야 한다.  
 그렇게 되면 `loadUserByUsername`라는 메소드를 구현하게 되는데,  
-아래와 같이 구현하게 된다.
+아래와 같이 구현하면 된다.
 {% highlight java %}
 @Override
-public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    UserEntity userEntity = userRepository.findByEmail(email);
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    UserEntity userEntity = userRepository.findByEmail(username);
     if (userEntity == null) {
         throw new UsernameNotFoundException(username);
     }
 
     return new User(
-        userEntity.getEmail(), 
-        userEntity.getEncryptedPwd(), 
-        true, 
-        true, 
-        true, 
-        true, 
-        new ArrayList<>()
+        userEntity.getEmail(), // 사용자의 아이디 (예: 이메일, 로그인 ID 등)
+        userEntity.getEncryptedPwd(), // 인코딩된 비밀번호
+        true, // 계정 활성화 여부
+        true, // 계정이 만료되지 않았는지 여부
+        true, // 비밀번호가 만료되지 않았는지 여부
+        true, // 계정이 잠기지 않았는지 여부
+        new ArrayList<>() // 사용자의 권한 목록 (ex: ROLE_USER, ROLE_ADMIN)
     );
+}
+{% endhighlight %}
+
+#### 로그인 요청 시 인증 및 JWT 토큰을 반환하는 필터 만들기
+
+스프링 시큐리티의 로그인 요청을 처리하는 기본 필터인  
+`UsernamePasswordAuthenticationFilter` 클래스를 상속받은 필터를 만들어보자.
+
+{% highlight java %}
+@RequiredArgsConstructor
+@Slf4j
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+
+    @Value("${token.secret}")
+    private String secretkey; // JWT 토큰을 암호화하기 위한 key
+
+    @Value("${token.expiration_time}")
+    private Long expireTime; // JWT 토큰의 유효 시간 (단위 : 밀리초)
+
+    /**
+     * 인증 시도
+     * @param req
+     * @param res
+     * @return
+     * @throws AuthenticationException
+     */
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+        try {
+            //요청 정보에서 로그인에 필요한 정보 추출하기
+            RequestLogin creds = new ObjectMapper().readValue(req.getInputStream(), RequestLogin.class);
+
+            // 회원 정보 조회 (실제로는 존재하는지만 확인하는 짧은 쿼리를 사용하는 것을 추천)
+            UserDto user = userService.getUserDetailsByEmail(creds.getEmail());
+            if (user == null) {
+                throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+            }
+
+            // 인증을 위한 정보를 담아서 반환
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword());
+
+            return authenticationManager.authenticate(authenticationToken);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 인증 성공
+     * @param req
+     * @param res
+     * @param chain
+     * @param auth
+     * @throws IOException
+     * @throws ServletException
+     */
+    @Override
+    protected void successfulAuthentication(
+            HttpServletRequest req,
+            HttpServletResponse res,
+            FilterChain chain,
+            Authentication auth
+    ) throws IOException, ServletException {
+        // 인증 시도 정보에서 고유값 추출
+        String userName = ((User) auth.getPrincipal()).getUsername();
+
+        // 회원 정보 조회 (실제 회원 정보를 조회하는 상세한 쿼리를 사용하는 것을 추천)
+        UserDto userDetails = userService.getUserDetailsByEmail(userName);
+
+        // JWT 서명을 위한 비밀키 생성
+        byte[] secretKeyBytes = Base64.getEncoder().encode(secretkey.getBytes());
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+
+        // 현재 시간을 기반으로 발급 시간 및 만료 시간 설정
+        Instant now = Instant.now();
+
+        // JWT 토큰 생성
+        String token =
+            Jwts.builder()
+            .subject(userDetails.getUserId()) // 식별자에 고유 사용자 ID 설정
+            .issuedAt(Date.from(now)) // 발급 시간 설정
+            .expiration(Date.from(now.plusMillis(expireTime))) // 만료 시간 설정
+            .signWith(secretKey) // 서명 키 설정
+            .compact(); // 최종 JWT 문자열 생성
+
+        // 결과 데이터 설정
+        HashMap<String, Object> resultData = new HashMap<>();
+        resultData.put("message", "로그인 성공");
+        resultData.put("token", token);
+
+        // 결과 반환
+        res.addHeader("token", token);
+        res.addHeader("userId", userDetails.getUserId());
+        res.setContentType("application/json");
+        res.getWriter().write(new ObjectMapper().writeValueAsString(resultData));
+    }
+
+    /**
+     * 인증 실패
+     * @param req
+     * @param res
+     * @param failed
+     * @throws IOException
+     * @throws ServletException
+     */
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse res, AuthenticationException failed) throws IOException, ServletException {
+        // 결과 데이터 설정
+        HashMap<String, Object> resultData = new HashMap<>();
+        resultData.put("message", "로그인 실패");
+        resultData.put("token", failed.getMessage());
+
+        // 결과 반환
+        res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        res.setContentType("application/json");
+        res.getWriter().write(new ObjectMapper().writeValueAsString(resultData));
+    }
 }
 {% endhighlight %}
 
 #### 필터 적용하기
 
 필터를 적용하는 방법은 매우 간단하다.  
-Filter 인터페이스를 구현한 필터를 `addFilter` 메소드를 통해 등록해주면 된다.
+`Filter` 인터페이스를 구현한 필터를 `addFilter` 메소드를 통해 등록해주면 된다.
 
 {% highlight java %}
 필터_클래스 필터_인스턴스 = new 필터_클래스();
@@ -242,6 +377,13 @@ http.addFilter(필터_인스턴스);
 {% endhighlight %}
 
 ### 게이트웨이에서의 보안
+
+게이트웨이 측에서 보안에 대해 처리하는 방법을 알아 보자.
+
+#### 필터 만들기
+
+기존에 게이트웨이 쪽에서 적용햇던 필터를 만들었던 것처럼,  
+`AbstractGatewayFilterFactory` 클래스를 상속받은 필터 클래스를 만들어주자.
 
 ### 출처
 
