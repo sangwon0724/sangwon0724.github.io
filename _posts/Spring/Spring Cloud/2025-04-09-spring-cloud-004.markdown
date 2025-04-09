@@ -1,10 +1,9 @@
 ---
 layout: post
 title:  "MSA와 보안"
-date:   2025-04-08 07:00:00 +0900
+date:   2025-04-09 13:40:00 +0900
 categories: Spring&nbsp;Cloud
-published: false
-tags: [MSA, 마이크로서비스, JWT, 시큐리티, 보안]
+tags: [MSA, 마이크로서비스, JWT, 시큐리티, 보안, RewritePath]
 ---
 
 ### 서비스 통신 간 보안
@@ -380,10 +379,150 @@ http.addFilter(필터_인스턴스);
 
 게이트웨이 측에서 보안에 대해 처리하는 방법을 알아 보자.
 
-#### 필터 만들기
+#### JWT 토큰을 검증하는 필터 만들기
 
 기존에 게이트웨이 쪽에서 적용햇던 필터를 만들었던 것처럼,  
 `AbstractGatewayFilterFactory` 클래스를 상속받은 필터 클래스를 만들어주자.
+{% highlight java %}
+@Component
+@Slf4j
+public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
+    Environment env;
+
+    @Value("${token.secret}")
+    String secretKey;
+
+    public AuthorizationHeaderFilter(Environment env) {
+        super(Config.class);
+        this.env = env;
+    }
+
+    public static class Config {
+        // 환경설정
+    }
+
+    @Override
+    public GatewayFilter apply(Config config) {
+        return (exchange, chain) -> {
+            // 요청 가져오기
+            ServerHttpRequest request = exchange.getRequest();
+
+            // 요청 헤더에 인증에 대한 정보가 있는 지 확인
+            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                return onError(exchange, "No authorization header", HttpStatus.UNAUTHORIZED);
+            }
+
+            // 요청 헤더에서 JWT 토큰 추출
+            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            String jwt = authorizationHeader.replace("Bearer ", "");
+
+            // JWT 토큰의 유효 여부 확인
+            if (!isJwtValid(jwt)) {
+                return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
+            }
+
+            return chain.filter(exchange);
+        };
+    }
+
+    /**
+     *  에러가 발생한 경우에 대한 처리
+     * @param exchange
+     * @param err
+     * @param httpStatus
+     * @return
+     */
+    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(httpStatus);
+        log.error(err);
+
+        byte[] bytes = "The requested token is invalid.".getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+        return response.writeWith(Flux.just(buffer));
+    }
+
+    /**
+     * JWT 토큰의 유효 여부 확인
+     * @param jwt JWT 토큰
+     * @return
+     */
+    private boolean isJwtValid(String jwt) {
+        // JWT 서명을 위한 비밀키 생성
+        byte[] secretKeyBytes = Base64.getEncoder().encode(secretKey.getBytes());
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+
+        String subject;
+
+        try {
+            // JWT 토큰 번역하기
+            JwtParser jwtParser =
+                Jwts
+                .parser() // parserBuilder => parser
+                .verifyWith(secretKey) // setSigningKey => verifyWith
+                .build();
+            
+            // 고유 값 가져오기
+            subject =
+                jwtParser
+                .parseSignedClaims(jwt) // parseClaimsJws => parseSignedClaims
+                .getPayload() // getBody => getPayload
+                .getSubject();
+
+            if (subject != null && !subject.isEmpty()) {
+                return true;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return false;
+    }
+}
+{% endhighlight %}
+
+#### 필터 적용하기
+
+이제 JWT 인증이 필요한 부분에 필터를 적용해주자.
+
+{% highlight ymal %}
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      # 생략
+      routes:
+        # 생략
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+{% endhighlight %}
+
+#### RemoveRequestHeader
+
+요청 헤더의 특정 항목을 지워주는 역할을 한다.
+
+#### RewritePath
+
+MSA의 마이크로서비스는 엄연히 각각의 서비스다.  
+그런데 게이트웨이를 위해 API 주소에 별도의 주소를 추가하게 된다면  
+그건 게이트웨이에 종속이 되어 버리기 때문에 MSA 장점을 잃어버린다.
+
+그래서 존재하는 것이 RewritePath 옵션이다.  
+만약 위처럼 `RewritePath=/user-service/(?<segment>.*), /$\{segment}`라고 명시했다고 가정해보자.  
+그랬을 때 게이트웨이에 `/user-service/users`라는 API를 호출했다면,  
+기존에는 게이트웨이가 서비스에 동일한 주소를 보냈을 것이다.  
+하지만 RewritePath 옵션을 적용하게 되면  
+해당 API의 주소에서 `/user-service`를 제외하고  
+서비스에는 `/users`라는 API를 호출한다.
+
+이렇게 설정함으로써 게이트웨이의 역할도 유지하고, MSA의 장점도 유지할 수 있다.
 
 ### 출처
 
