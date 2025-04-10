@@ -208,16 +208,24 @@ http.authorizeHttpRequests(
 스프링 시큐리티에서는 비밀번호 단방향 암호화 인터페이스인 PasswordEncoder를 지원한다.  
 HttpSecurity에서 `getSharedObject` 메소드를 통해  
 `AuthenticationManagerBuilder`라는 빌더 클래스를 가져오자.
-
 그런 다음에 해당 인터페이스를 구현한 구현체와 암호화를 진행할 서비스를 빌더에 등록하면 된다.
+
 {% highlight java %}
 // 선언부
 private final UserService userService;
 private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-// configure 메소드 내부
-AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+
+// AuthenticationManager를 빈으로 등록
+@Bean
+public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    AuthenticationManagerBuilder managerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    managerBuilder
+        .userDetailsService(userService)
+        .passwordEncoder(bCryptPasswordEncoder);
+
+    return managerBuilder.build();
+}
 {% endhighlight %}
 
 다만 그 전에 챙겨야 하는 중요 사항이 있는데,  
@@ -244,6 +252,34 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
     );
 }
 {% endhighlight %}
+
+#### AuthenticationManager을 빈으로 등록하는 이유
+
+스프링 시큐리티 6 이전 버전에서는 아래와 같이 사용하기도 했다.
+{% highlight java %}
+// 선언부
+private final UserService userService;
+private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+// configure 메소드 내부
+AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+{% endhighlight %}
+
+그런데 스프링 시큐리티 6부터는 SecurityFilterChain을 구성하는 HttpSecurity 객체가  
+이미 내부적으로 AuthenticationManager를 구성되어 있다.
+즉, 수동으로 AuthenticationManager를 build()해서 따로 생성하면  
+스프링 시큐리티가 자동으로 구성하려는 AuthenticationManager와 충돌이 발생할 수 있다.
+        
+그래서 빌더를 따로 생성해보면 아래와 같은 에러 메시지가 발생하게 된다.  
+`Error creating bean with name 'org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration'`  
+해당 메시지는 스프링이 내부적으로 WebSecurityConfiguration에서 AuthenticationManager 빈을 만들려고 할 때,  
+이미 생성된 다른 인스턴스와 충돌이 생긴다는 것을 의미한다.
+
+스프링 시큐리티 6 이상의 버전의 사용하는데  
+일반적인 자료들을 보고 필터에서 쓰려고  
+configure 메소드 내부에서 빌더를 통해 AuthenticationManager의  
+인스턴스를 생성하게 되면 원인 찾기 어려운 꽤나 힘든 상황이 될 것이다...
 
 #### 로그인 요청 시 인증 및 JWT 토큰을 반환하는 필터 만들기
 
