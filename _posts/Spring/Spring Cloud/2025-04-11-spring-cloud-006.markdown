@@ -217,6 +217,11 @@ RabbitMQ의 동작 여부는 작업 관리자의 서비스 탭에서 확인할 �
 참고로 15672는 RabbitMQ가 아닌 RabbitMQ 대시보드의 포트번호다.  
 RabbitMQ의 포트번호는 5672다.
 
+#### 버전 호환
+
+RabbitMQ의 버전은 Erlang의 버전과 호환이 되어야 한다.  
+뭔가 문제가 생기면 [공식 문서](https://www.rabbitmq.com/docs/which-erlang)를 확인해보자.
+
 ### Spring Cloud Bus 연동 (Config Server, GateWay Service, MicroService)
 
 #### build.gradle

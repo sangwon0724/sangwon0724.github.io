@@ -1,0 +1,170 @@
+---
+layout: post
+title:  "설정 정보의 암호화"
+date:   2025-04-11 07:00:00 +0900
+categories: Spring&nbsp;Cloud
+tags: [MSA, 마이크로서비스]
+---
+
+### 보안 문제
+
+설정 파일을 단순히 외부 저장소의 private repository에 저장한다고 안전하지는 않다.  
+왜냐하면 설정 파일이 저장된 저장소로부터 네트워크를 통해  
+Config Server로 전송하는 데이터는 Plain Text이기 때문이다.
+
+그래서 데이터를 암호화하는 기술을 반드시 적용해야 한다.
+
+#### 어떻게 적용해야 할까?
+
+설정 정보를 암호화하려면 암호화 키를 사용해서 Config Server를 구성해야 한다.  
+그리고 Config Server로부터 설정 정보가 Config Client에 제공되기 전에는  
+복호화 키를 이용해 복호화해야한다.
+
+#### 대칭키와 비대칭키
+
+데이터를 암호화하는 방식에는 대칭키 방식과 비대칭키 방식이 있다.
+
+### 대칭키(Symmetric) 방식
+
+- 암호화와 복호화에서 사용하는 키가 동일한 방식이다.
+- 양쪽에서 사용하는 키가 같기 때문에 구현 및 관리가 간편하다.
+- 공개된 알고리즘이기 때문에 누구나 사용할 수 있다.
+
+#### 환경설정 파일
+
+Config Server 프로젝트의 application.yml에 아래의 내용을 작성해보자.
+{% highlight yaml %}
+encrypt:
+  key: abcdefghijklmnopqrstuvwxyz0123456789
+{% endhighlight %}
+
+#### 엔드 포인트 호출
+
+POST로 Config Server에서 암호화할 설정 정보를 Request Body에 담고 `/encrypt` 엔드 포인트를 호출해보자.  
+그러면 `{:}e9806ec6cbd180afec3f2feddf4c881635d5a4e471186baa8a44a86ddf76b0f8`처럼 출력되는데,  
+이게 바로 암호화된 설정 정보다.
+
+반대로 복호화하는 엔드 포인트도 제공한다.  
+방금 `/encrypt` 엔드 포인트를 호출해서 반환받은 암호화된 설정 정보를 Request Body에 담고  
+POST로 Config Server에서 `/decrypt` 엔드 포인트를 호출해보자.  
+그러면 아까 `/encrypt` 엔드 포인트를 호출할 때 RequestBody에 담았던 값이 반환된다.
+
+#### 적용해보기
+
+기존 User MicroService의 applicaion.yaml에 아래와 같은 정보가 있다고 가정해보자.
+{% highlight ymal %}
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: sa
+{% endhighlight %}
+
+이제 여기서 datasource에 대한 내용을 주석 처리하고,  
+주석 처리한 내용을 Config Server에서 사용하는 저장소에  
+`user-service.yaml`이란 파일로 추가해보자.
+
+그 다음에 Config Server의 `/encrypt` 엔드 포인트에  
+`spring.datasource.password`의 값을 RequestBody에 담아서 호출해보자.  
+그러면 암호화된 값이 나올텐데 그 값을 `'{cipher}[암호화한 값]`처럼 가공해서  
+`user-service.yaml`의 `spring.datasource.password`에 다시 설정해주면 된다.
+
+만약에 암호화된 값이 `abc`라면 `'{cipher}abc'`로 명시하면 된다.  
+반드시 앞쪽에 `{cipher}`를 추가하고 쉼표로 감싸야 한다.
+
+이제 Config Server를 재실행해서 `/user-service/default`를 호출해보면  
+아까 암호화했던 값이 복호화되서 노출되는 것을 확인할 수 있다.
+
+#### 문제점
+
+대칭키는 결국 해당 키를 사용하는 모든 서비스에서 같은 키를 사용한다는 것이다.  
+그래서 한 곳이라도 노출되면 사실상 모든 곳이 노출되는 것이라서  
+보안성 측면에서 효과가 없다.  
+그러니 만약 대칭키 방식을 사용할 때는 대칭키 관리에 각별한 주의가 필요하다.
+
+### 비대칭키(Asymmetric) 방식
+
+- 암호화와 복호화에서 사용하는 키를 다르게 쓰는 방식이다.
+- 암호화할 때 쓰는 키는 Private Key라고 한다.
+- 복호화할 때 쓰는 키는 Public Key가 사용된다.
+
+#### 관련 개념
+
+- JCE (Java Cryptography Extension)
+    - Java에서 제공하는 암호화 관련 패키지
+    - Java 11 이상 버전부터는 기본적으로 제공한다.
+    - Java 11 미만 버전부터는 관련 라이브러리를 직접 다운받아서 사용해야 한다.
+- JDK Keytool
+    - 키와 인증서를 관리하는 유틸
+    - Private Key, Public Key, 자신이 권한을 부여한 인증서 등을 관리해준다.
+    - 자료의 보장과 전자서명에 의한 인증을 관리할 수 있게 해준다.
+    - 여기서 생성된 Key와 인증서가 JKS에 저장되는 것이다.
+- JKS (Java Key Store)
+    - JCE를 이용해 만든 비대칭키를 저장하고 관리하는 저장소
+    - 파일로 생성되며, 확장자는 `.jks`다.
+
+#### 적용해보기
+
+우선 저장소 파일을 저장할 폴더를 먼저 만들고,  
+해당 폴더에서 cmd 창을 실행한다.
+
+그 다음에 아래 명령어를 실행해서 jks 파일을 생성하자.
+{% highlight cmd %}
+keytool -genkeypair -alias ecommerceEncKey -keyalg RSA -dname "C=KR" -keypass "private_key_password" -keystore ecommerceEncKey.jks -storepass "key_store_password"
+{% endhighlight %}
+
+이제 Config Server의 application.yaml을 수정하자.
+{% highlight yaml %}
+encrypt:
+  key-store:
+    location: file:///keystore/spring_cloud_msa/ecommerceEncKey.jks # C드라이브 기준 작성
+    password: key_store_password # keystore 비밀번호
+    alias: ecommerceEncKey # 별칭
+{% endhighlight %}
+
+그 다음에 Config Server의 `/encrypt` 엔드 포인트에  
+`spring.datasource.password`의 값을 RequestBody에 담아서 호출해보자.  
+그러면 암호화된 값이 나올텐데 그 값을 `'{cipher}[암호화한 값]`처럼 가공해서  
+`user-service.yaml`의 `spring.datasource.password`에 다시 설정해주면 된다.
+
+만약에 암호화된 값이 `abc`라면 `'{cipher}abc'`로 명시하면 된다.  
+반드시 앞쪽에 `{cipher}`를 추가하고 쉼표로 감싸야 한다.
+
+이제 Config Server를 재실행해서 `/user-service/default`를 호출해보면  
+아까 암호화했던 값이 복호화되서 노출되는 것을 확인할 수 있다.
+
+#### keytool 옵션 설명
+
+- `-genkeypair`
+    - 키쌍(개인키 & 공개키) 을 생성하는 옵션
+- `-alias [별칭]`
+    - 생성되는 키 쌍에 대한 별칭을 지정한다.
+    - 해당 별칭은 Key Store 에서 키 쌍 식별자로 사용한다.
+    - 업무 규칙에 맞춰서 작성하면 된다.
+- `-keyalg [알고리즘]`
+    - 키쌍을 생성할 떄 사용할 알고리즘을 지정한다.
+- `-dname`
+    - 인증서에 포함될 사용자의 이름, 조직, 지역 및 국가 정보를 지정한다.
+    - 종류
+        - CN : 도메인 이름
+        - OU : 부서명
+        - O : 회사/기관명
+        - L : 도시 이름
+        - ST : 도/시
+        - C : 국가코드 (2글자)
+- `-keypass [비밀번호]`
+    - 개인키에 대한 암호를 지정한다.
+    - 값에는 쌍따옴표를 붙인다.
+- `-keystore [파일명]`
+    - 생성될 키 쌍을 저장할 키 Key Store 파일의 경로와 이름을 지정한다.
+- `-storepass [비밀번호]`
+    - Key Store 파일에 대한 암호를 지정한다.
+    - 값에는 쌍따옴표를 붙인다.
+
+### 출처
+
+- [Spring Cloud로 개발하는 마이크로서비스 애플리케이션(MSA)](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4)
+- [[Spring Cloud] Spring Cloud Config 에 보안 기술 적용하기](https://velog.io/@choidongkuen/Spring-Cloud-Spring-Cloud-Config-%EB%B3%B4%EC%95%88-%EA%B0%95%ED%99%94%ED%95%98%EA%B8%B0)
