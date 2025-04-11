@@ -134,6 +134,8 @@ spring:
     - 비밀번호
 - `spring.cloud.config.server.git.default-label`
     - 브랜치명
+    - 별도로 설정하지 않으면 main으로 되어 있다.
+    - 만약에 `NoSuchLabelException` 터지면 여기가 문제다.
 - `spring.cloud.config.server.native.search-locations`
     - 폴더 경로
     - 끝에 s가 붙은 것을 알 수 있지만 여러 개를 지정할 수 있다.
@@ -181,11 +183,11 @@ dependencyManagement {
 `@EnableConfigServer` 애노테이션을 추가함으로써  
 해당 프로젝트가 Config Server로 동작하게 하자.
 
-### Spring Cloud Config 연동 (MicroService)
+### Spring Cloud Bus 연동 (GateWay Service, MicroService)
 
 #### build.gradle
 
-Config Server랑 연동할 마이크로서비스의 build.gradle에 아래의 의존성을 추가해주자.
+Config Server랑 연동할 서비스의 build.gradle에 아래의 의존성을 추가해주자.
 {% highlight gradle %}
 implementation 'org.springframework.cloud:spring-cloud-starter-config'
 {% endhighlight %}

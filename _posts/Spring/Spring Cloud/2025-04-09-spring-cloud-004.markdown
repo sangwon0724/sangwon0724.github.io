@@ -524,9 +524,9 @@ spring:
     name: apigateway-service
   cloud:
     gateway:
-      # 생략
+      # 중간 생략
       routes:
-        # 생략
+        # 중간 생략
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:

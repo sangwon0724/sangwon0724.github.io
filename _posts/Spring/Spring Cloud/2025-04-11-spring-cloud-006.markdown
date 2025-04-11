@@ -1,0 +1,303 @@
+---
+layout: post
+title:  "Spring Cloud Bus"
+date:   2025-04-11 15:28:00 +0900
+categories: Spring&nbsp;Cloud
+tags: [MSA, 마이크로서비스]
+---
+
+### 환경설정 값을 변경하는 방법
+
+변경된 환경설정 파일의 정보를 서버에 적용하는 방법은  
+일반적으로 아래의 3가지 방법이 있다.
+
+- 서버 재기동
+    - 직접 서버를 재기동하는 방법
+- Actuator refresh
+    - Spring Boot Actuator를 통해 서버를 재기동하는 방법
+- Spring cloud Bus
+    - 분산 시스템의 노드를 경량 메시지 브로커와 연결
+    - 상태 및 구성에 대한 변경 사항을 연결된 노드에게 전달(Broadcast)
+
+### Spring Cloud Bus
+
+#### 정의
+
+- 분산 시스템에서 구성 변경이나 이벤트를 여러 인스턴스에 전파하기 위해 사용되는 경량 메시징 시스템
+- 주로 Spring Cloud Config와 함께 사용된다.
+- 구성 변경사항을 모든 서비스 인스턴스에 자동으로 반영하는데 유용하다.
+- 메시지 브로커를 이용해서 마이크로서비스 간의 상태 변경(Event), 설정 변경(Config Refresh) 등을 전파한다.
+
+#### 특징
+
+- 경량 메시징 기반 통신
+    - AMQP(RabbitMQ), Kafka 등을 통해 이벤트를 퍼뜨림
+- 자동화된 구성 변경 반영
+    - `/actuator/bus-refresh` 요청 1번으로 전체 인스턴스에 설정 반영
+- 마이크로서비스 확장성 향상
+    - 서비스 간 직접 통신 없이 브로커 통해 간접 통신
+- 분산 이벤트 처리 기능
+    - 설정 변경 외에도 사용자 정의 이벤트 전파 가능
+- Spring Boot + Spring Cloud와 자연스러운 통합
+
+#### 장점
+
+- 설정 동기화 자동화
+    - Config 서버 설정 변경 시 모든 인스턴스 자동 반영
+- 서비스 간 느슨한 결합
+    - 서비스 간 직접 통신 없이 메시지 브로커로 간접 연결
+- 확장성 및 유연성
+    - Kafka나 RabbitMQ 기반으로 확장에 유리
+- 보안 및 접근 제어
+    - 메시지 브로커 수준에서 보안 처리 가능
+- 빠른 이벤트 전파
+    - 실시간 이벤트 전파로 빠른 반응 가능
+
+#### 단점
+
+- 브로커 설정 필요
+    - Kafka, RabbitMQ 등 외부 브로커 설치 및 운영 필요
+- 학습 곡선
+    - 개념 및 연동 설정 학습 필요
+- 불필요한 이벤트 전파 가능성
+    - 잘못 구성 시 의도치 않은 서비스에도 이벤트 전파 가능
+- 디버깅 어려움
+    - 이벤트 흐름 추적이 복잡할 수 있음
+- 운영 모니터링 필요
+    - 브로커 상태, 메시지 처리 지연 등 모니터링 필요
+
+### Spring Cloud Bus 연동 (메시지 브로커)
+
+#### build.gradle
+
+Config Server의 build.gradle에 의존성을 추가하자.
+{% highlight gradle %}
+implementation 'org.springframework.cloud:spring-cloud-bus'
+{% endhighlight %}
+
+#### 메시지 브로커
+
+MSA에서는 주로 2가지 종류의 메시지 브로커를 사용한다.  
+서비스 인스턴스의 개수에 따라 적합한 메시지 브로커를 선택해서 사용하자.
+
+- RabbitMQ
+- Kafka
+
+#### RabbitMQ
+
+- 정의
+    - AMQP(Advanced Message Queuing Protocol) 기반의 메시지 브로커
+        - `AMQP` :  메시지 지향 미들웨어를 위한 개방형 표준 응용 계층 프로토콜
+        - AMQP는 Erlang, RabbitMQ에서 사용한다.
+    - 메시지를 큐에 저장하고 순차적으로 소비자에게 전달하는 방식
+- 특징
+    - 메시지 중심 (Push 방식)
+    - 라우팅 기반 메시지 전달
+    - 메시지 저장 후 삭제 (1회성 전달)
+    - 초당 20개 이상의 메시지를 전달한다.
+    - 낮은 지연 시간
+- 장점
+    - 지연되는 시간이 적다.
+        - 메시지를 빠르게 처리한다.
+    - 재시도, Ack 기능 존재
+        - 메시지 전송에 실패해도 재시도할 수 있다.
+        - 메시지 유실 방지 기능이 우수하다.
+    - 복잡한 라우팅이 가능하다.
+        - fanout, topic 등 다양한 Exchange 타입을 지원한다.
+    - 구현이 간단하다.
+        - 사용하기 쉬운 API와 다양한 클라이언트를 지원한다.
+- 단점
+    - 대용량 처리에 불리하다.
+        - 수십만 TPS 이상의 처리에는 한계가 있다.
+    - 메시지 저장 기간 짧다.
+        - 메시지를 소비하면 큐에서 사라진다.
+        - 그래서 로그 용도로는 사용할 수 없다.
+    - 스케일 아웃에 한계가 있다.
+        - 클러스터 구성은 가능하다.
+        - 다만 Kafka보다 덜 유연하다.
+
+#### Kafka
+
+- 정의
+    - 분산 스트리밍 플랫폼
+    - 메시지를 토픽 단위로 지속적으로 기록하고, 여러 소비자가 독립적으로 처리할 수 있게 설계된 시스템
+    - 로그 저장 + 메시지 브로커 + 스트리밍 처리
+- 특징
+    - 퍼블리싱-서브스크라이브(pub-sub) 모델
+        - 한국어로 치면 게시-구독 모델이다.
+    - 고속 처리 (백만 TPS 이상)
+    - 메시지 보존 기간 설정 가능
+    - 메시지를 소비자가 pull 방식으로 가져간다.
+- 장점
+    - 고성능
+        - 대용량 메시지 처리에 탁월하다.
+    - 메시지 유지 가능
+        - 메시지 로그처럼 오래 저장할 수 있다.
+        - 정책에 따라 특정 기간만큼 보관한다.
+        - 성격에 따라 영구적으로 보관하기도 한다.
+    - 복수의 소비자에 대해서 독립적인 처리를 할 수 있다.
+        - 같은 메시지를 여러 서비스에서 동시에 처리할 수 있다.
+    - 확장성이 우수하다.
+        - 브로커나 파티션의 수를 늘려 쉽게 확장이 가능하다.
+- 단점
+    - 설정이 복잡하다.
+        - 클러스터 구성이나 Zookeeper/Quorum 등 설정이 까다롭다.
+    - 러닝커브
+        - 메시지 처리, 오프셋 관리 등 알야야 하는 내용들이 많다.
+    - 소량 트래픽에는 효율이 나쁘다.
+        - 가벼운 시스템에는 오히려 성능이 떨어질 수 있다.
+
+### RabbitMQ 설치 (Windows OS 기준)
+
+#### Erlang 설치
+
+Windows OS에서는 Erlang을 먼저 설치해야 한다.  
+RabbitMQ는 Erlang이라는 프로그래밍 언어로 만들어졌기 때문에  
+Erlang의 런타임 시스템이 필요하다.
+
+우선 [Erlang 다운로드 페이지](https://www.erlang.org/downloads)으로 접속해서  
+`Download Windows installer`를 통해 설치 프로그램을 다운받자.  
+그런 다음에 설치 파일을 실행해서 Erlang을 설치하면 된다.
+
+설치되고 나면 2가지 환경변수를 설정해야 한다.  
+우선 시스템 변수에 `ERLANG_HOME`이라는 이름으로 Erlang가 설치된 경로를 저장하자.  
+`C:\Program Files\Erlang OTP`처럼 작성하면 된다.  
+그런 다음에 시스템 변수의 path에 `%ERLANG_HOME%\bin`을 추가하면 된다.
+
+이제 cmd를 실행해서 `erl`를 입력하면  
+Erlang 셸에 들어가지면서 `Erlang/OTP 27 ~`처럼 메시지가 나올텐데  
+이러면 정상적으로 설치가 된 것이다.  
+참고로 이 경우에서 `27`이 버전 정보다.  
+만약에 Erlang 셸에서 나가고 싶다면 `q().`를 입력하면 된다.
+
+#### RabbitMQ 설치
+
+이번에는 정말로 RabbitMQ를 설치할 차례다.
+
+[RabbitMQ 다운로드 페이지](https://www.rabbitmq.com/docs/download)으로 접속해서  
+`Windows Installer`를 통해 Windows OS용 페이지로 이동하자.  
+이제 중간에 보면 `Direct Downloads`라는 항목이 있을텐데  
+여기서 설치 파일을 다운받자.  
+그런 다음에 설치 파일을 실행해서 RabbitMQ를 설치하면 된다.
+
+설치되고 나면 시스템 변수의 path에  
+RabbitMQ가 설치된 폴더의 sbin까지의 경로를 추가하면 된다.  
+`C:\Program Files\RabbitMQ Server\rabbitmq_server-4.0.8\sbin`처럼 작성하면 된다.
+
+cmd 창을 켜서 `rabbitmqctl version`를 입력했을 때  
+`4.0.8`처럼 메시지가 나올텐데  
+이러면 정상적으로 설치가 된 것이다.
+
+#### RabbitMQ 실행하기
+
+cmd 창에 명령어를 입력하면 된다.
+
+- `rabbitmq-server`
+    - Foreground로 실행된다.
+    - 창을 종료하면 서비스도 같이 종료된다.
+- `rabbitmqctl [start_app|stop]`
+    - Background로 실행된다.
+    - 별도의 명령이나 프로세스가 종료되기 전까지 실행된다.
+    - Windows OS에서 RabbitMQ 설치 후  
+    Windows 검색창에 `rabbitmq`를 검색했을 때 나오는 앱들이 해당 방식으로 동작한다.
+
+RabbitMQ의 동작 여부는 작업 관리자의 서비스 탭에서 확인할 수 있다.
+
+#### 플러그인 설치하기
+
+직접 명령어를 통해 모니터링하는 것은 어렵다.  
+플러그인을 통해 웹 페이지에서 서버의 상황을 모니터링하자.
+
+우선 cmd 창에서 `rabbitmq-plugins enable rabbitmq_management`를 실행하자.  
+그런 다음에 RabbitMQ의 서버를 재시작한다.  
+이제 `http://127.0.0.1:15672/`에 접속하면  
+웹 페이지에서 RabbitMQ의 대시보드에 들어갈 수 있다.  
+초기 계정은 username과 password 모두 guest다.
+
+참고로 15672는 RabbitMQ가 아닌 RabbitMQ 대시보드의 포트번호다.  
+RabbitMQ의 포트번호는 5672다.
+
+### Spring Cloud Bus 연동 (Config Server, GateWay Service, MicroService)
+
+#### build.gradle
+
+Config Server쪽 build.gradle에 의존성을 추가하자.
+{% highlight gradle %}
+// Config
+implementation 'org.springframework.cloud:spring-cloud-bus'
+
+// Monitoring
+implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+// RabbitMQ
+implementation 'org.springframework.boot:spring-boot-starter-amqp'
+implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
+testImplementation 'org.springframework.amqp:spring-rabbit-test'
+{% endhighlight %}
+
+#### 환경설정 파일
+
+이제 각 프로젝트의 환경설정 파일에 RabbitMQ 서버의 정보를 명시하고,  
+액츄에이터의 정보에 `busrefresh`를 추가해주자.  
+RabbitMQ 서버 정보에 대한 속성명에 대한 설명은 속성명 그대로라서 넘어간다.  
+물론 아래의 내용은 정말 연결만 한 것이고, 실제로는 다양한 속성들이 있다.
+
+{% highlight yaml %}
+spring:
+  # 중간 생략
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: health, busrefresh, refresh, metrics # busrefresh 필요
+{% endhighlight %}
+
+### Spring Cloud Bus 연동 (테스트)
+
+User MicroService쪽에 간단하게 환경변수 값을 반환하는 메소드가 있다고 가정해보자. (시큐리티쪽 세팅은 이미 했다고 치자.)
+{% highlight java %}
+@GetMapping("/spring-cloud-bus-test")
+public String springCloudBusTest(HttpServletRequest request) {
+    return String.format("whatever : %s", env.getProperty("whatever"));
+}
+{% endhighlight %}
+
+그리고 값은 아래처럼 세팅했다고 가정해보자.
+{% highlight yaml %}
+whatever: regist
+{% endhighlight %}
+
+이제 아래의 순서대로 서버를 실행하자.
+1. RabbitMQ Server
+2. Spring Cloud Config Service (포트 : 8888)
+3. Eureka Discovery Service
+4. Spring Cloud Gateway Service
+5. Users Microservice (포트 : 9001)
+
+그런 다음에 `http://localhost:9001/spring-cloud-bus-test`를 호출해보면  
+`whatever : regist`와 같은 결과값이 나온다.
+
+그러면 이제 저장소에 있는 aplication.yaml에서 `whatever`의 값을 `modify`로 바꾼 다음에,  
+다시 `http://localhost:9001/spring-cloud-bus-test`를 호출해보면  
+당연하지만 변화가 없이 동일하게 `whatever : regist`라는 결과가 나온다.
+
+이 때 `http://creamhouse:8080/user-service/actuator/busrefresh`를 POST로 호출해보자.  
+그런 다음에 다시 `http://localhost:9001/spring-cloud-bus-test`를 호출해보면  
+`whatever : modify`와 같은 결과값이 나온다.
+
+이렇게 액추에이터를 통해 연동된 Config Server에서  
+다시 환경설정 정보를 읽어들일 수 있다는 것을 알 수 있다.
+
+참고로 해당 Config Server와 연동된 마이크로서비스라면  
+어느 마이크로서비스든 상관없이 `/actuator/busrefresh`를 호출하기만 하면  
+연결된 모든 마이크로서비스에 Spring Cloug Bus를 통해 새로운 환경설정 정보가 전달된다.
+
+### 출처
+
+- [Spring Cloud로 개발하는 마이크로서비스 애플리케이션(MSA)](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4)
