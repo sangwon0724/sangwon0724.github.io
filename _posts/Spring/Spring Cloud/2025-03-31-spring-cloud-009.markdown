@@ -7,13 +7,346 @@ published: false
 tags: [MSA, 마이크로서비스]
 ---
 
-### Apache Kafka 개요
+### Apache Kafka
 
-### Apache Kafka 설치
+#### 정의
+
+- 분산 스트리밍 플랫폼
+- 메시지를 토픽 단위로 지속적으로 기록하고, 여러 소비자가 독립적으로 처리할 수 있게 설계된 시스템
+- 로그 저장 + 메시지 브로커 + 스트리밍 처리
+
+#### 특징
+
+- 높은 처리량 (High Throughput)
+    - 대량의 데이터를 실시간으로 처리할 수 있다.
+    - 메시지를 배치로 묶어 전송하고, 디스크에 순차적으로 저장하여 I/O 성능을 최적화한다.
+- 확장성 (Scalability)
+    - 필요에 따라 브로커를 추가하여 수평적으로 확장할 수 있다.
+    - 토픽을 파티션으로 분할하여 데이터를 분산 저장하고 병렬 처리할 수 있다.
+- 내결함성 (Fault Tolerance)
+    - 데이터를 여러 브로커에 복제하여 일부 브로커에 장애가 발생하더라도 데이터 손실 없이 서비스를 유지할 수 있다.
+- 데이터 지속성 (Durability)
+    - 메시지를 디스크에 저장하여 데이터의 영속성을 보장한다.
+    - 설정에 따라 데이터 보존 기간을 조절할 수 있다.
+- 실시간 스트리밍 (Real-time Streaming)
+    - 데이터 생성과 동시에 즉시 처리할 수 있는 실시간 데이터 스트리밍을 지원한다.
+- 다양한 API 지원
+    - Producer API, Consumer API, Streams API, Connect API 등 다양한 API를 제공하여 유연한 데이터 처리 및 통합을 지원한다.
+- Pub/Sub 모델
+    - Publisher Subscriber 모델은 데이터 큐를 중간에 두고 서로 간 독립적으로 데이터를 생산하고 소비한다.
+
+#### 장점
+
+- 높은 처리량 및 낮은 지연 시간
+    - 대용량 데이터 스트림을 실시간으로 처리하는 데 최적화되어 있다.
+- 확장성 및 유연성
+    - 클러스터 확장을 통해 변화하는 데이터 처리 요구사항에 유연하게 대응할 수 있다.
+- 내결함성 및 데이터 안정성
+    - 데이터 복제 및 분산 저장으로 데이터 손실 위험을 최소화하고 안정적인 서비스 운영을 보장한다.
+- 다양한 시스템과의 통합 용이성
+    - Kafka Connect API를 통해 다양한 데이터 소스 및 싱크와 쉽게 통합될 수 있다.
+- 실시간 데이터 처리
+    - 실시간 데이터 분석 및 모니터링에 유용하게 활용될 수 있다.
+
+#### 단점
+
+- 복잡한 설정 및 관리
+    - 클러스터 구성, 토픽 설정, 파티션 관리 등 설정 및 관리 작업이 복잡할 수 있다.
+- 높은 리소스 요구량
+    - 고성능을 유지하기 위해 상당한 시스템 리소스를 필요로 할 수 있다.
+    - 시스템 리소스에는 디스크 I/O, 네트워크 대역폭 등이 해당한다.
+- ZooKeeper 의존성
+    - 과거 버전에서는 Kafka 클러스터 운영을 위해 ZooKeeper를 별도로 관리해야 하는 부담이 있었다.
+    - 최근에는 KRaft 모드를 통해 이러한 의존성을 줄이는 추세다.
+- 모니터링 도구 부족
+    - 모니터링 및 관리 도구가 부족할 수 있다.
+    - 메시지 조정이 필요한 경우 성능 저하가 발생할 수 있다.
+- Message tweaking 이슈
+    - 카프카는 byte를 받고 보내기만 한다.
+    - 그런데 메시지가 수정이 필요하다면 카프카의 퍼포먼스는 급격히 감소한다.
+
+#### 관련 용어
+
+- 프로듀서 (Producer)
+    - 데이터를 생성하여 Kafka 토픽에 전송하는 애플리케이션
+- 컨슈머 (Consumer)
+    - Kafka 토픽에서 데이터를 읽어와 처리하는 애플리케이션
+- 브로커 (Broker)
+    - Kafka 서버의 노드
+    - 데이터를 저장하고 관리한다.
+    - 여러 브로커가 클러스터를 구성한다.
+- 토픽 (Topic)
+    - 메시지를 카테고리별로 구분하는 단위
+    - 프로듀서와 컨슈머가 데이터를 주고받는 채널 역할을 한다.
+- 파티션 (Partition)
+    - 토픽을 분할한 단위
+    - 데이터의 병렬 처리 및 확장성을 가능하게 한다.
+    - 각 파티션은 순서대로 정렬된 메시지 시퀀스를 가진다.
+- 주키퍼 (ZooKeeper)
+    - Kafka 클러스터의 메타데이터 관리 및 브로커 조정을 담당하는 분산 코디네이션 시스템
+    - 최근에는 KRaft로 대체되는 추세다.
+- 오프셋 (Offset)
+    - 파티션 내에서 메시지의 고유한 위치를 나타내는 정수 값
+    - 컨슈머가 데이터를 어디까지 읽었는지 추적하는 데 사용된다.
+- 프로듀서 오프셋 (Producer Offset)
+    - 프로듀서가 가장 최근에 토픽의 특정 파티션에 기록한 데이터의 오프셋
+- 컨슈머 오프셋 (Consumer Offset)
+    - 컨슈머가 해당 파티션에서 마지막으로 읽은 데이터의 오프셋
+- 컨슈머 랙 (Consumer Lag)
+    - 프로듀서 오프셋에서 컨슈머 오프셋을 뺀 값
+    - 컨슈머 랙이 클 수록 처리해야할 데이터가 많이 쌓여있다는 것을 의미한다.
+    
+#### Kafka 도입 시 고려사항
+
+- 데이터 정합성
+    - Consumer가 메시지 처리에 실패할 경우 데이터 손실 또는 중복 처리가 발생할 수 있다.
+    - 멱등성을 고려한 Consumer 구현이 필요하다.
+- Consumer Lag
+    - 프로듀서의 데이터 생산 속도가 컨슈머의 소비 속도보다 빠른 경우 Consumer Lag이 발생할 수 있다.
+    - Consumer Lag의 발생은 서비스 지연으로 이어질 수 있으므로 주의해야 한다.
+- 키 설정
+    - 파티션 키 설정을 잘못하면 특정 파티션에 트래픽이 집중되어 성능 병목이 발생할 수 있다.
+    - 분산 처리를 고려하여 적절한 키를 설정해야 한다.
+
+### Apache Kafka 설치 (Windows OS 기준, 직접 설치)
+
+#### 다운로드 및 사전 설정
+
+1. [카프카 다운로드 페이지](https://kafka.apache.org/downloads)로 이동한다.
+2. 상황에 맞는 파일을 다운로드 받는다.
+    - PC에 직접 설치 시에는 `Binary download`를 클릭하면 된다.
+    - `Supported releases`말고 `Archived releases` 쪽에 있는 것을 받자.
+3. 다운로드한 압축 파일을 원하는 장소로 옮긴다.
+    - 폴더명이 너무 길면 문제가 생길 수도 있다.
+    - C 드라이브 같은 곳에 옮기는 것이 권장된다.
+4. 압축 해제한다.
+5. 편의성을 위해 폴더명을 `kafka`로 변경하자.
+    - 선택사항
+6. kafka 폴더 내부의 config 폴더로 이동하자.
+7. server.properties에서 `log.dirs`를 수정해주자.
+    - kafka 폴더 안에 `kafka-logs`라는 폴더를 만들자. (네이밍은 알아서)
+    - `log.dirs=C:/kafka/kafka-logs`라고 작성하면 된다.
+8. 이번엔 같은 폴더에 있는 zookeeper.properties에서 `dataDir`을 수정해주자.
+    - kafka 폴더 안에 `zookeeper-data`라는 폴더를 만들자. (네이밍은 알아서)
+    - `dataDir=C:/kafka/zookeeper-data`라고 작성하면 된다.
+
+#### Kafka 실행하기
+
+1. CMD 창을 연다. (만약에 powershell이 열렸다면 cmd 명령어를 입력하면 된다.)
+2. cd 명령어를 통해 kafka가 설치된 폴더로 이동한다.
+    - `cd /kafka`
+3. `.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties` 실행하기
+    - Zookeeper 서버를 실행하는 명령어다.
+    - 별도의 CMD 창을 열어서 `netstat -na | findstr "2181"`를 실행했을 때 결과가 나오면 서버가 실행된 것이다.
+4. 새로운 CMD 창을 열기
+5. cd 명령어를 통해 kafka가 설치된 폴더로 이동하기
+6. `.\bin\windows\kafka-server-start.bat .\config\server.properties` 실행하기
+    - Kafka 서버를 실행하는 명령어다.
+    - 별도의 CMD 창을 열어서 `netstat -na | findstr "9092"`를 실행했을 때 결과가 나오면 서버가 실행된 것이다.
+
+#### 설치 테스트
+
+1. 새로운 CMD 창 열기
+2. cd 명령어를 통해 kafka가 설치된 폴더로 이동한다.
+3. `.\bin\windows\kafka-topics.bat --create --topic quickstart --bootstrap-server localhost:9092 --partitions 1` 실행하기
+    - `quickstart`라는 토픽을 생성하는 명령어다.
+4. `.\bin\windows\kafka-topics.bat --bootstrap-server localhost:9092 --list` 실행하기
+    - 토픽 목록을 확인하는 명령어다.
+5. `.\bin\windows\kafka-topics.bat --describe --topic quickstart --bootstrap-server localhost:9092`
+    - 토픽 정보를 확인하는 명령어다.
+
+#### Kafka 종료하기
+
+1. 새로운 CMD 창 열기
+2. cd 명령어를 통해 kafka가 설치된 폴더로 이동한다.
+3. `.\bin\windows\zookeeper-server-stop.bat .\config\zookeeper.properties` 실행하기
+    - ZooKeeper 서버를 종료하는 명령어다.
+4. `.\bin\windows\kafka-server-stop.bat .\config\server.properties` 실행하기
+    - Kafka 서버를 종료하는 명령어다.
 
 ### Apache Kafka 사용 - Producer/Consumer
 
-### Apache Kafka 사용 - Kafka Connect
+실제로 메시지를 발송하고 수신하는 과정을 살펴보자.
+
+1. 아까의 과정을 통해 ZooKeeper 서버와 Kafka 서버를 실행하자.
+2. 추가로 2개의 CMD 창을 띄운다.
+3. 2개의 CMD 창 모두 cd 명령어를 통해 kafka가 설치된 폴더로 이동한다.
+4. 첫번째 CMD 창에서 `quickstart` 토픽에 대한 프로듀서를 생성한다.
+    - `.\bin\windows\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic quickstart`를 실행한다.
+5. 두번째 CMD 창에서 `quickstart` 토픽에 대한 컨슈머를 생성한다.
+    - `.\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic quickstart --from-beginning`을 실행한다.
+6. 이제 첫번째 창에서 Hello를 입력해보자.
+7. 두번째 창으로 이동해보면 Hello라는 메시지가 온 것을 확인할 수 있다.
+
+### Kafka Connect (Windows OS + MySQL 기준)
+
+#### 사전 준비
+
+미리 MySQL을 설치한 다음에 mydb1이라는 DB를 만들어두자.  
+그 다음에 아래의 쿼리를 실행하자.
+{% highlight sql %}
+create table users(
+    id int auto_increment primary key,
+    user_id varchar(20),
+    pwd varchar(20),
+    name varchar(20),
+    created_at datetime default NOW()
+);
+{% endhighlight %}
+
+#### 설치하기
+
+1. CMD 창을 연다. (만약에 powershell이 열렸다면 cmd 명령어를 입력하면 된다.)
+2. `curl -O https://packages.confluent.io/archive/7.2/confluent-community-7.2.1.tar.gz` 실행하기
+3. `tar xvf confluent-community-7.2.1.tar.gz` 실행하기
+4. 압축 해제된 폴더를 C 드라이브로 이동하기
+5. 폴더명을 `kafka-connect`로 바꾸기
+6. kafka-connect 설치 경로의 `.\bin\windows\kafka-run-class.bat` 파일에서  
+`rem Classpath addition for core` 위쪽에 아래 코드 삽입하기
+{% highlight bat %}
+rem classpath addition for LSB style path
+if exist %BASE_DIR%\share\java\kafka\* (
+	call:concat %BASE_DIR%\share\java\kafka\*
+)
+{% endhighlight %}
+7. [Kafka JDBC Connector 사이트](https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc)로 이동해서 Self-Hosted에 있는 파일 다운 받기
+8. 다운받은 jdbc.zip 파일 압축 해제하기
+9. 압축 해제한 파일을 kafka-connect 폴더 아래로 이동하기
+10. jdbc 드라이버 파일들을 kafka-connect 폴더 밑의 `.\share\java\kafka`폴더 에 복사하기
+11. kafka-connect 폴더 밑의 `.\etc\kafka\connect-distributed.properties` 파일의 `plugin.path` 수정하기
+    - `plugin.path=<JDBC 커넥터 폴더>\lib`
+    - `plugin.path=C:\kafka-connect\confluentinc-kafka-connect-jdbc-10.8.3\lib`처럼 수정하면 된다.
+
+참고로 MySQL 드라이버 파일은 없어서 별도로 build.gradle을 통해 받은 다음에,  
+`사용자\.m2` 폴더에서 해당 파일을 옮겨줘야 한다.
+
+#### 실행하기
+
+1. CMD 창을 연다. (만약에 powershell이 열렸다면 cmd 명령어를 입력하면 된다.)
+2. CMD 창에서 kafka-connect 폴더로 이동하기
+3. `.\bin\windows\connect-distributed.bat .\etc\kafka\connect-distributed.properties` 실행하기
+
+#### Kafka JDBC Connector 확인하기
+
+GET으로 `http://localhost:8083/connector-plugins`를 호출하면 된다.  
+JdbcSinkConnector와 JdbcSourceConnector가 나오면 성공이다.
+
+#### Kafka Source Connector 생성
+
+POST로 ` http://localhost:8083/connectors`를 아래 데이터와 함께 호출하면 된다.
+{% highlight json %}
+{
+   "name":"my-source-connect",
+   "config":{
+      "connector.class":"io.confluent.connect.jdbc.JdbcSourceConnector",
+      "connection.url":"jdbc:mysql://localhost:3306/mydb1",
+      "connection.user":"root",
+      "connection.password":"비밀번호",
+      "mode":"incrementing",
+      "incremental.column.name":"id",
+      "table.whitelist":"users",
+      "topic.prefix":"my_topic_",
+      "tasks.max":"1"
+   }
+}
+{% endhighlight %}
+
+#### Kafka Source Connector 확인
+
+GET으로 `http://localhost:8083/connectors/my-source-connect/status`를 호출하면 된다.  
+`connector.state`에 RUNNING이라고 나오면 성공이다.
+
+#### log4j:ERROR Could not read configuration file from URL XXX
+
+1. 파일 탐색기에서 kafka-connect\bin 폴더로 이동
+2. `connect-distributed.bat`을 메모장으로 열기
+3. `file:%BASE_DIR%/config/connect-log4j.properties`를  
+`file:%BASE_DIR%/etc/kafka/connect-log4j.properties`로 변경 후 저장
+
+#### 테스트 해보기
+
+HeidiSQL같은 GUI 툴에서 아래 쿼리를 실행해보자.
+{% highlight sql %}
+INSERT users (user_id, pwd, `name`) VALUES ('1', '2', '3')
+{% endhighlight %}
+
+이제 토픽 목록을 확인해보자.  
+그러면 `my_topic_users`라는 토픽이 자동으로 생겨난 것을 확인할 수 있다.
+
+그 다음에 해당 토픽이 수신받은 메시지 목록을 확인해보면  
+아래와 같은 메시지를 받은 것을 확인할 수 있다.
+{% highlight json %}
+{
+   "schema":{
+      "type":"struct",
+      "fields":[
+         {
+            "type":"int32",
+            "optional":false,
+            "field":"id"
+         },
+         {
+            "type":"string",
+            "optional":true,
+            "field":"user_id"
+         },
+         {
+            "type":"string",
+            "optional":true,
+            "field":"pwd"
+         },
+         {
+            "type":"string",
+            "optional":true,
+            "field":"name"
+         },
+         {
+            "type":"int64",
+            "optional":true,
+            "name":"org.apache.kafka.connect.data.Timestamp",
+            "version":1,
+            "field":"created_at"
+         }
+      ],
+      "optional":false,
+      "name":"users"
+   },
+   "payload":{
+      "id":1,
+      "user_id":"1",
+      "pwd":"2",
+      "name":"3",
+      "created_at":1744762992000
+   }
+}
+{% endhighlight %}
+
+
+#### Kafka Source Connector 생성
+
+POST로 ` http://localhost:8083/connectors`를 아래 데이터와 함께 호출하면 된다.
+{% highlight json %}
+{
+   "name":"my-sink-connect",
+   "config":{
+      "connector.class":"io.confluent.connect.jdbc.JdbcSinkConnector",
+      "connection.url":"jdbc:mysql://localhost:3306/mydb",
+      "connection.user":"root",
+      "connection.password":"비밀번호",
+      "auto.create": "true",
+      "auto.evolve": "true",
+      "delete.enabled":"false",
+      "tasks.max":"1",
+      "topics":"my_topic_users"
+   }
+}
+{% endhighlight %}
+
+토픽의 이름이랑 같은 테이블을 생성한다.
+
+my_topic_users 토픽에 메시지를 밀어넣는다고 실제 테이블에 데이터가 쌓이지는 않는다.  
+그저 my_topic_users 테이블에 쌓일 뿐이다.  
+하지만 users 테이블에 데이터를 추가하면 그건 my_topic_users 토픽과 my_topic_users 테이블에 쌓인다.
 
 ### Orders Microservice에서 MariaDB 연동
 
@@ -48,3 +381,4 @@ tags: [MSA, 마이크로서비스]
 ### 출처
 
 - [Spring Cloud로 개발하는 마이크로서비스 애플리케이션(MSA)](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4)
+- [[Kafka] Install Apache Kafka on Windows PC (Kafka 윈도우 설치)](https://sjaqjnjs22.tistory.com/306)
