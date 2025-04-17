@@ -178,9 +178,9 @@ tags: [MSA, 마이크로서비스]
 6. 이제 첫번째 창에서 Hello를 입력해보자.
 7. 두번째 창으로 이동해보면 Hello라는 메시지가 온 것을 확인할 수 있다.
 
-### Kafka Connect (Windows OS + MySQL 기준)
+### Kafka Connect
 
-#### 사전 준비
+#### 사전 준비 (Windows OS + MySQL 기준)
 
 미리 MySQL을 설치한 다음에 mydb1이라는 DB를 만들어두자.  
 그 다음에 아래의 쿼리를 실행하자.
@@ -194,7 +194,7 @@ create table users(
 );
 {% endhighlight %}
 
-#### 설치하기
+#### 설치하기 (Windows OS + MySQL 기준)
 
 1. CMD 창을 연다. (만약에 powershell이 열렸다면 cmd 명령어를 입력하면 된다.)
 2. `curl -O https://packages.confluent.io/archive/7.2/confluent-community-7.2.1.tar.gz` 실행하기
