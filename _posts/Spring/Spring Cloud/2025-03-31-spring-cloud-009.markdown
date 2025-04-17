@@ -322,7 +322,7 @@ INSERT users (user_id, pwd, `name`) VALUES ('1', '2', '3')
 {% endhighlight %}
 
 
-#### Kafka Source Connector 생성
+#### Kafka Sync Connector 생성
 
 POST로 ` http://localhost:8083/connectors`를 아래 데이터와 함께 호출하면 된다.
 {% highlight json %}
@@ -348,35 +348,315 @@ my_topic_users 토픽에 메시지를 밀어넣는다고 실제 테이블에 데
 그저 my_topic_users 테이블에 쌓일 뿐이다.  
 하지만 users 테이블에 데이터를 추가하면 그건 my_topic_users 토픽과 my_topic_users 테이블에 쌓인다.
 
-### Orders Microservice에서 MariaDB 연동
+### 실제로 사용하게 된다면?
 
-### Kafka Connect 설치 ①
+주문 서비스에서 주문을 생성한다고 가정해보자.  
+주문을 생성하게 되면 주문 데이터가 생성될 것이고,  
+또한 상품 서비스에서 상품의 개수를 주문 데이터에 명시된 개수만큼 줄여야 한다.
 
-### Kafka Connect 설치 ②
+그러면 `주문 정보 생성 => 상품 정보 변경`라는 관계가 생성된다.  
+메시지가 전달되는 흐름은 이렇게 파악하면 된다.
 
-### Kafka Source Connect 사용
+이 때 메시지가 전달되는 흐름대로 생산자(Producer)와 소비자(Consumer)를 판단하면 된다.  
+시작점이 주문 서비스니 주문 서비스가 생산자가 된다.  
+종료점이 상품 서비스니 상품 서비스가 소비자가 된다.
 
-### Kafka Sink Connect 사용
+그리고 여기서 메시지가 흐르는 통로의 흐름이 토픽(Topic)이 된다고 이해하면 된다.  
+즉, 토픽의 이름은 연결된 서비스끼리 메시지가 흐르는 통로의 이름이다.
 
-### Orders Microservice와 Catalogs Microservice에 Kafka Topic의 적용
+여기서는 임시로 `example-order-topic`라는 토픽을, DB는 임베디드 H2를 사용해보자.
 
-### Catalogs Microservice 수정
+### 주문 서비스의 경우 (Producer)
 
-### Orders Microservice 수정
+#### build.gradle
 
-### Kafka를 활용한 데이터 동기화 테스트 ①
+kafka와 연동하기 위해 build.gradle에 아래와 같이 의존성을 추가하자.
+{% highlight gradle %}
+// Kafka
+implementation 'org.springframework.kafka:spring-kafka'
+testImplementation 'org.springframework.kafka:spring-kafka-test'
+{% endhighlight %}
 
-### Multi Orders Microservice 사용에 대한 데이터 동기화 문제
+#### 환경설정
 
-### Kafka Connect를 활용한 단일 데이터베이스를 사용
+서비스에서 생산자에 대한 환경설정을 할 때는 아래와 같이 작성하면 된다.
+{% highlight java %}
+/**
+ * 생산자(Producer)에 대한 환경설정
+ */
+@EnableKafka
+@Configuration
+public class KafkaProducerConfig {
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092"); // bootstrap.servers
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class); // key.serializer
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class); // value.serializer
+        return new DefaultKafkaProducerFactory<>(properties);
+    }
 
-### Orders Microservice 수정 - MariaDB
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+}
+{% endhighlight %}
 
-### Orders Microservice 수정 - Orders Kafka Topic
+우선 ProducerFactory를 통해 생산자가 kafka에 대해 연동하기 위한 정보를 작성한다.  
+`bootstrap.servers`는 kafka 서버의 IP와 포트 번호를 작성하면 된다.  
+`key.serializer`는 key를 직렬화하기 위한 클래스를 작성하면 된다.  
+`value.serializer`는 value를 직렬화하기 위한 클래스를 작성하면 된다.
 
-### Orders Microservice 수정 - Order Kafka Producer
+그 다음에는 ProducerFactory를 인자로 넣어서 KafkaTemplate 인스턴스를 반환하면 된다.  
+KafkaTemplate은 Kafka에 메시지를 발송하기 위한 매개체다.  
+RestTemplate같은 개념이라고 생각하면 된다.
 
-### Kafka를 활용한 데이터 동기화 테스트 ②
+#### 생산자 구현
+
+이제 실제로 메시지를 보내는 기능을 구현해보자.
+{% highlight java %}
+@Service
+@Slf4j
+public class KafkaProducer {
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    /**
+     * 메시지 발송
+     * @param topic 토픽
+     * @param orderDto 주문 객체
+     * @return
+     */
+    public OrderDto send(String topic, OrderDto orderDto) {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = "";
+        try {
+            jsonInString = mapper.writeValueAsString(orderDto);
+        } catch(JsonProcessingException e) {
+            log.error("[KafkaProducer > send] {}", e.getMessage());
+        }
+
+        kafkaTemplate.send(topic, jsonInString); // 메시지 발송
+
+        return orderDto;
+    }
+}
+{% endhighlight %}
+
+원리 자체는 간단하다.  
+ObjectMapper를 통해 메시지로 보낼 데이터를 문자열로 바꾸고,  
+KafkaTemplate의 send() 메소드를 통해 메시지를 발송하면 된다.
+
+#### 실제 사용
+
+메시지를 발송해야 할 곳에서 아까 정의한 메소드를 호출하자.
+{% highlight java %}
+kafkaProducer.send("example-order-topic", orderDto);
+{% endhighlight %}
+
+### 상품 서비스의 경우 (Consumer)
+
+#### build.gradle
+
+kafka와 연동하기 위해 build.gradle에 아래와 같이 의존성을 추가하자.
+{% highlight gradle %}
+// Kafka
+implementation 'org.springframework.kafka:spring-kafka'
+testImplementation 'org.springframework.kafka:spring-kafka-test'
+{% endhighlight %}
+
+#### 환경설정
+
+서비스에서 소비자에 대한 환경설정을 할 때는 아래와 같이 작성하면 된다.
+{% highlight java %}
+/**
+ * 소비자(Consumer)에 대한 환경설정
+ */
+@EnableKafka
+@Configuration
+public class KafkaConsumerConfig {
+    @Bean
+    public ConsumerFactory<String, String> consumerFactory() {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092"); // bootstrap.servers
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroupId"); // group.id
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // key.deserializer
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class); // value.deserializer
+        return new DefaultKafkaConsumerFactory<>(properties);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String>
+                kafkaListenerContainerFactory = new ConcurrentKafkaListenerContainerFactory<>();
+        kafkaListenerContainerFactory.setConsumerFactory(consumerFactory());
+        return kafkaListenerContainerFactory;
+    }
+}
+{% endhighlight %}
+
+우선 ConsumerFactory를 통해 소비자가 kafka에 대해 연동하기 위한 정보를 작성한다.  
+`bootstrap.servers`는 kafka 서버의 IP와 포트 번호를 작성하면 된다.  
+`group.id`는 그룹에 대한 고유한 아이디를 작성하면 된다.  
+`key.deserializer`는 key를 역직렬화하기 위한 클래스를 작성하면 된다.  
+`value.deserializer`는 value를 역직렬화하기 위한 클래스를 작성하면 된다.
+
+그 다음에는 ConcurrentKafkaListenerContainerFactory 인스턴스를 생성한 다음에,  
+setConsumerFactory() 메소드를 통해서 ConsumerFactory를 담는다.  
+그리고 ConcurrentKafkaListenerContainerFactory 인스턴스를 반환하면 된다.
+
+#### 소비자 구현
+
+이제 실제로 메시지를 수신했을 때 동작할 기능을 구현해보자.
+{% highlight java %}
+@Service
+@Slf4j
+public class KafkaConsumer {
+    CatalogRepository repository;
+
+    @Autowired
+    public KafkaConsumer(CatalogRepository repository) {
+        this.repository = repository;
+    }
+
+    @KafkaListener(topics = "example-order-topic")
+    public void updateQty(String kafkaMessage) {
+        log.info("Kafka Message: ->" + kafkaMessage);
+
+        Map<Object, Object> map = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            map = mapper.readValue(kafkaMessage, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            log.error("[KafkaConsumer > updateQty] {}", e.getMessage());
+        }
+
+        // 상품 번호를 통해 상품 엔티티 조회
+        CatalogEntity entity = repository.findByProductId((String)map.get("productId"));
+        if (entity != null) {
+            // 수량 변경
+            entity.setStock(entity.getStock() - (Integer)map.get("qty"));
+            repository.save(entity);
+        }
+    }
+}
+{% endhighlight %}
+
+`@KafkaListener`을 적용하면 명시한 토픽에 대해서 메시지를 받으면  
+해당 메소드에게 처리하게 된다.
+
+그러면 ObjectMapper를 통해 메시지를 역직렬화하고,  
+그 다음에 메시지에서 추출한 데이터에서  
+필요한 데이터를 뽑아다가 원하는 작업을 진행하면 된다.
+
+
+### 테스트해보기
+
+실제로 테스트를 진행해보자.
+
+기존에 아래와 같은 상품 정보가 있다고 가정해보자.
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_006.png"/>
+
+그리고 이러한 데이터를 주문 서비스에 보내서 주문을 생성하자.
+{% highlight json %}
+{
+    "productId": "CATALOG-0002",
+    "qty": 10,
+    "unitPrice": 1200
+}
+{% endhighlight %}
+
+그러면 아래와 같이 실제로 주문이 생성되고, 수량이 변경된 것을 확인할 수 있다.
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_007.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_008.png"/>
+
+### 이벤트 기반 비동기 시스템 설계 원칙
+
+각 서비스가 단일 인스턴스인 경우에는 위에 코드가 문제가 될 일은 없을 것이다.  
+하지만 서비스의 인스턴스가 2개 이상이라면 어떻게 될까?
+
+임베디드 H2말고 MySQL같은 실제로 운영에서 쓸 만한 DB로 생각해보자.  
+복제본이나 클러스터 구성같은 것은 신경쓰지 않고  
+순수하게 데이터를 저장히기 위해 DB를 1대만 쓴다고 가정해보자.
+
+만약 생산자가 소비자한테 "나 작업했어!"라고  
+특정한 토픽에 메시지를 보내게 되면  
+소비자는 "메시지가 왔군! 나도 작업을 해야겠다!"라고 반응할 것이다.  
+그런데 여기서 소비자의 작업이 데이터 저장이라면  
+생산자로부터 받은 데이터를 통해  
+소비자는 해당하는 데이터를 인스턴스의 개수만큼 저장하게 될 것이다.
+
+왜냐하면 각 인스턴스는 개별적으로 동작하기 때문이다.  
+그러면 AUTO INCREMENT때문에 PK는 다른데 나머지 데이터는 동일한  
+중복 데이터가 발생할 수 있다.
+
+#### 해결방법
+
+위와 같은 문제를 해결하려면  
+데이터를 DB에 바로 저장하는 것이 아니라  
+Kafka Sink Connect를 통해 저장하면 된다.
+
+데이터를 DB에 바로 저장하지 않고  
+토픽에 발송하게 되면  
+해당 토픽에 설정된 Kafka Sink Connect를 사용해  
+DB에 저장할 수 있다.
+
+### 주문 서비스에 Kafka Sink Connect 연동하기
+
+주문 서비스에 Kafka Sink Connect를 연동해보자.
+
+#### server.port 변경
+
+우선 서버의 포트 번호를 0번으로 바꿔서 랜덤한 번호를 부여받도록 바꾸자.
+
+#### 관련 프로젝트 실행
+
+이번 테스트는 게이트웨이를 통해  
+2개의 인스턴스를 실행해볼 것이다.
+
+게이트웨이 프로젝트와 디스커버리 프로젝트를 실행해주자.
+
+#### Kafka Sink Connect 생성
+
+POST로 ` http://localhost:8083/connectors`를 아래 데이터와 함께 호출하면 된다.
+{% highlight json %}
+{
+   "name":"my-sink-connect",
+   "config":{
+      "connector.class":"io.confluent.connect.jdbc.JdbcSinkConnector",
+      "connection.url":"jdbc:mysql://localhost:3306/mydb",
+      "connection.user":"root",
+      "connection.password":"비밀번호",
+      "auto.create": "true",
+      "auto.evolve": "true",
+      "delete.enabled":"false",
+      "tasks.max":"1",
+      "topics":"orders"
+   }
+}
+{% endhighlight %}
+
+토픽명을 실제로 사용할 테이블과 맞춰주자.
+
+#### 테스트 진행
+
+아까 사용했던 데이터를 게이트웨이를 통해 주문 서비스를 호출해서 주문을 생성해보자.
+{% highlight json %}
+{
+    "productId": "CATALOG-0002",
+    "qty": 10,
+    "unitPrice": 1200
+}
+{% endhighlight %}
+
+호출해보면 인스턴스가 2개라 데이터가 2건 쌓일 것 같은데  
+실제로 쌓인 것은 1건뿐인 것을 알 수 있다.
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_009.png"/>
 
 ### 출처
 
