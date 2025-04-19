@@ -222,10 +222,6 @@ public class Resilience4JConfig {
             .slidingWindowSize(2)
             .build();
 
-        /*
-        * TimeLimiter는 future supplier의 time limit을 정하는 API
-        * default: 1초
-        * */
         TimeLimiterConfig timeLimiterConfig =
             TimeLimiterConfig.custom()
             .timeoutDuration(Duration.ofSeconds(4))
@@ -418,7 +414,7 @@ docker run -d -p 9411:9411 openzipkin/zipkin
 서버가 정상적으로 실행된다면 콘솔에 아래와 같은 화면이 출력된다.
 <img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_010.png"/>
 
-브라우저에서 `http://localhost:9411/zipkin/`로 접속해보면  
+브라우저에서 `http://localhost:9411/zipkin/`으로 접속해보면  
 Zipkin의 분산 추적 상황을 확인할 수 있는 웹 페이지가 나온다.
 
 ### Spring Cloud Sleuth
