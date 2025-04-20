@@ -1,4 +1,8 @@
 ### Python에 대하여
+- 정의
+- 특징
+- 장점
+- 단점
 
 ### 자료형
 - 숫자형
@@ -8,23 +12,60 @@
 - 딕셔너리
 - 집합
 
-### 조건문과 반복문
+### 흐름 제어
+- if
+- for
+- while
 
 ### 함수
+- 함수
+- 전달값과 반환값
+- 기본값
+- 키워드값
+- 가변인자
+- 지역변수와 전역변수
 
 ### 클래스
+- 클래스
+- __init__
+- 멤버 변수
+- 상속
+- 다중 상속
+- 메소드 오버라이딩
+- pass
+- super
 
-### 모듈
-
-### 패키지
-
-### 파일 입출력
+### 모듈과 패키지
+- 모듈
+- 패키지
+- __all__
+- 패키지, 모듈 위치
+- pip install
+- 내장함수
+- 외장함수
 
 ### 예외 처리
+- 예외 처리
+- 에러 발생시키기
+- 사용자 정의 예외처리
+- finally
 
 ### 내장 함수
 
-### 일급함수수
+### 외장 함수
+
+### 파일 입출력
+- 표준 입출력
+- 다양한 출력 포맷
+- 파일 입출력
+- pickle
+- with
+
+### 매직 메소드
+
+### 시퀀스
+
+### 일급함수
 - 클로저
 - 데코레이터
 
@@ -34,17 +75,21 @@
 - Yield
 - Futures
 
-### 정렬과 탐색
-
-### 람다식
-
-### 이터레이터
-
-### 제네레이터
-
-### 연산자 오버로딩
-
-### 스레드
+Variable scope
+Lambda, Reduce, Map, Filter Functions
+Shallow Copy & Deep Copy
+Context Manager(1)
+Context Manager(2)
+Context Manager Annotation
+Property(1) - Underscore
+Property(2) - Getter, Setter
+Method Overriding
+Method Overloading
+Meta Class(1)
+Meta Class(2)
+Meta Class(3)
+Descriptor(1)
+Descriptor(2)
 
 ==============================
 
