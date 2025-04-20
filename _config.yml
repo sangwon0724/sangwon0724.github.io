@@ -81,7 +81,7 @@ category_depth:
     - Spring&nbsp;MVC
     # - Spring&nbsp;Security
     # - Spring&nbsp;Batch
-    # - Spring&nbsp;Cloud
+    - Spring&nbsp;Cloud
     - MyBatis
     - JPA
     - JSTL
