@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "Method Overriding + Method Overloading"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### Method Overriding + Method Overloading
+- Overriding
+- OOP
+- 다형성 예제
+- 동일 메소드 재정의
+- 네이밍으로 기능 예측
+- 코드 절약, 가독성 향상
+- 메소드 파라미터 기반 호출 방식

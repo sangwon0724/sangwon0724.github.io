@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "병행성 (Parallelism)"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### 병행성 (Parallelism)
+- Parallelism 개념
+- Process vs Thread 비교

@@ -1,0 +1,21 @@
+---
+layout: post
+title:  "Context Manager"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### Context Manager
+- Contextlib
+- enter
+- exit
+- With 기능 직접 구현
+- 전체 복습
+- 타이머 클래스 실습
+- Contextlib 구현
+
+### Context Manager Annotation
+- Decorator 사용
+- Contextlib.contextmanager
+- With 비교

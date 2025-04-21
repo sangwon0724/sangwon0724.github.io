@@ -1,0 +1,15 @@
+---
+layout: post
+title:  "Property"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### Property
+- Python Underscore
+- 다양한 언더스코어 사용
+- 접근지정자 이해
+- Pythonic Code
+- @Property
+- Getter, Setter

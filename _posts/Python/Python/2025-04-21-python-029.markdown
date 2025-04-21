@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "멀티 프로세싱"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### 멀티 프로세싱
+- 멀티 프로세싱 기본 예제
+- 기본 명령어 실습
+- Process Id
+- Process Naming
+- Parallel processing
+- 적절한 동시성 사용 타이밍
+- 도움이 될 만한 공부 주제
+- Memory Sharing
+- Share Array
+- Share Value
+- Exchanging object between processes
+- Queue
+- Pipe

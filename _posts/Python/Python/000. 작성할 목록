@@ -1,30 +1,4 @@
-
-### 매직 메소드
-### 일급함수
-- 클로저
-- 데코레이터
-
-### 병행성
-- 제네레이터
-- 코루틴
-- Yield
-- Futures
-
-Variable scope
-Lambda, Reduce, Map, Filter Functions
-Shallow Copy & Deep Copy
-Context Manager(1)
-Context Manager(2)
-Context Manager Annotation
-Property(1) - Underscore
-Property(2) - Getter, Setter
-Method Overriding
-Method Overloading
-Meta Class(1)
-Meta Class(2)
-Meta Class(3)
-Descriptor(1)
-Descriptor(2)
+xxx
 
 ==============================
 

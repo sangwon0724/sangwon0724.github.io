@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "I/O Bound"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### I/O Bound
+- I/O Bound 요청 실습
+- Synchronous 예제
+- I/O-Bound Threading 예제
+- I/O-Bound Multiprocessing 예제
+- I/O-Bound AsyncIO 예제

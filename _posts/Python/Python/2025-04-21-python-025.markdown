@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "Python GIL"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### Python GIL
+- Python GIL?
+- Gil vs Thread
+- GIL 상세한 내용

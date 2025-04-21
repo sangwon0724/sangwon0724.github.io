@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "CPU Bound"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### CPU Bound
+- CPU Bound 요청 실습
+- Synchronous 예제
+- CPU-Bound Multiprocessing 예제
+- CPU-Bound Multiprocessing 예제

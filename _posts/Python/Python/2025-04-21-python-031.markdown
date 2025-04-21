@@ -1,0 +1,12 @@
+---
+layout: post
+title:  "Blocking vs Non-Blocking IO"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### Blocking vs Non-Blocking IO
+- Blocking
+- Non-Blocking
+- Synchronous vs Asynchronous

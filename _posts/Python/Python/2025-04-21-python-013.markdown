@@ -1,7 +1,57 @@
 ---
 layout: post
-title:  "Python에 대하여"
+title:  "병행성"
 date:   2025-04-21 07:00:00 +0900
 categories: Python
 published: false
 ---
+
+■ 병행성(Concurrency)
+
+• 병행성, 흐름제어 설명
+
+• 이터레이터(Iterator)
+
+• 제네레이터(Generator)
+
+._ iter_,_next
+
+• 클래스 기반 제네레이터 구현
+
+■ 병행성(Concurrency)
+
+• 제네레이터 실습
+
+• Yield 실습
+
+• Itertools 실습
+
+■ 코루틴(Coroutine)
+
+• 흐름제어, 병행성 처리
+
+• 메인루틴 <- > 서브루틴
+
+• 쓰레드 차이 설명
+
+• 제네레이터 -> 코루틴 설명
+
+■ Futures(동시성)
+
+• 비동기 작업 처리
+
+• 파이썬 GIL 설명
+
+• 동시성 처리 실습 예제
+
+• Process, Thread 예제
+
+■ Futures(동시성)
+
+• Futures wait 예제
+
+. Futures as_completed
+
+• 동시 실행 결과 출력
+
+• 동시성 처리 응용 예제 설명

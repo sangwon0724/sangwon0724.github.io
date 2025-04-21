@@ -1,0 +1,29 @@
+---
+layout: post
+title:  "AsynclO"
+date:   2025-02-24 07:00:00 +0900
+categories: Python
+published: false
+---
+
+AsynclO 실습
+
+• 가상환경 생성
+
+• 타겟 사이트 살펴보기
+
+• 프로그램 설명
+
+· async, await 설명
+
+• 프로그램 테스트
+
+■ AsynclO 실습
+
+• BeautifulSoup 설명
+
+• 원하는 정보 가져오기
+
+• 프로그램 추가 설명
+
+• 최종 정리
