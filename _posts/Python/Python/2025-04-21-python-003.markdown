@@ -1,14 +1,32 @@
 ---
 layout: post
-title:  "Python에 대하여"
+title:  "흐름 제어"
 date:   2025-04-21 07:00:00 +0900
 categories: Python
 published: false
 ---
 
-### Python
+### 흐름 제어
 
-#### 정의
-#### 특징
-#### 장점
-#### 단점
+### if
+
+- 관계 연산자
+- 논리 연산자
+- 일반 조건문
+- 다중 조건문
+- 중첩 조건문
+
+### for
+
+- 반복문 중요성
+- 기본 for 사용
+- for문 패턴 실습
+- for-else 구문
+
+### while
+
+- while 기본 사용법
+- break, continue
+- while-else 구문
+- 무한 반복 구문
+- 기본 패턴 실습

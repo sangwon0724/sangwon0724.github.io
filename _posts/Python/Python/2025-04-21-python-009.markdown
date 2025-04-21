@@ -1,14 +1,24 @@
 ---
 layout: post
-title:  "Python에 대하여"
+title:  "파일 입출력"
 date:   2025-04-21 07:00:00 +0900
 categories: Python
 published: false
 ---
 
-### Python
-
-#### 정의
-#### 특징
-#### 장점
-#### 단점
+### 파일 입출력
+- open 함수 설명
+- Mode 설명
+- 다양한 읽기 방법
+- 다양한 쓰기 방법
+- 입출력 중요 설명
+- 표준 입출력
+- 다양한 출력 포맷
+- 파일 입출력
+- pickle
+- with
+- csv 파일 설명
+- csv.reader
+- csv.DictReader
+- csv.writer
+- csv 파일 전체 실습

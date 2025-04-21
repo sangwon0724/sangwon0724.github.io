@@ -75,8 +75,8 @@ category_depth:
   Portfolio:
     - Student
     - Study
-  # Python:
-    # - Python
+  Python:
+    - Python
   Spring:
     - Spring&nbsp;MVC
     # - Spring&nbsp;Security

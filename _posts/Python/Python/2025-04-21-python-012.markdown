@@ -1,14 +1,43 @@
 ---
 layout: post
-title:  "Python에 대하여"
+title:  "일급함수"
 date:   2025-04-21 07:00:00 +0900
 categories: Python
 published: false
 ---
 
-### Python
+■ 파이썬 일급 함수 (객체)
 
-#### 정의
-#### 특징
-#### 장점
-#### 단점
+• 파이썬 함수 특징
+
+• 익명함수(Lambda)
+
+• Callable 설명
+
+• Partial 사용법
+
+■ 클로저 기초(Closure)
+
+• 파이썬 변수 범위(Scope)
+
+• Global 선언
+
+• 클로저 사용 이유
+
+· Class -> Closure 구현
+
+■ 클로저 심화(Closure)
+
+• 클로저 사용 예제
+
+• 잘못된 클로저 사용
+
+• 클로저 정리
+
+■ 데코레이터(Decorator)
+
+• 클로저 -> 데코레이터 관계
+
+• 데코레이터 실습(1)
+
+• 데코레이터 실습(2)

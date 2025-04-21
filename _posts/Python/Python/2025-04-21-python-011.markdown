@@ -1,14 +1,23 @@
 ---
 layout: post
-title:  "Python에 대하여"
+title:  "시퀀스"
 date:   2025-04-21 07:00:00 +0900
 categories: Python
 published: false
 ---
 
-### Python
-
-#### 정의
-#### 특징
-#### 장점
-#### 단점
+- 파이썬 데이터 타입 상세 분류
+- 지능형 리스트, 튜플, 딕셔너리
+- Array 실습
+- 지능형 리스트 주의할 점
+- 튜플(Tuple) 고급 사용
+- Mutable(가변)
+- Immutable(불변)
+- Sort vs Sorted 실습
+- 해시 테이블(Hashtable)
+- Dict 생성 고급 예제
+- Setdefault 사용법
+- 해시 테이블(Hashtable)
+- Immutable Dict 생성
+- 지능형 Set
+- Set 선언 최적화
