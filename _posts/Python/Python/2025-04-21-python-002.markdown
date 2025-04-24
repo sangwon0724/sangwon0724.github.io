@@ -63,6 +63,58 @@ print(x) # 출력 : seven
 - 예약어는 사용할 수 없다.
     - `if`나 `for`같은 예약어들이 해당된다.
 
+### 자료형의 종류
+
+- 기본 자료형
+    - 정수형 (int)
+    - 정수를 표현할 때 사용
+    - 예: 1, 0, -10
+    - 1.2 float (실수형)
+    - 소수점을 포함한 숫자를 표현
+    - 예: 3.14, -0.1, 2.0
+    - 1.3 bool (불리언형)
+    - 참(True) 또는 거짓(False)만 표현
+    - 조건문에서 자주 사용됨
+    - 예: True, False
+    - 1.4 str (문자열형)
+    - 문자열(텍스트)을 표현
+    - 예: "Hello", 'Python'
+- 시퀀스 자료형
+    - 2.1 list (리스트)
+    - 순서가 있는 변경 가능한(가변) 데이터 집합
+    - 대괄호 [] 사용
+    - 예: [1, 2, 3], ["apple", "banana"]
+    - 2.2 tuple (튜플)
+    - 순서가 있는 변경 불가능한(불변) 데이터 집합
+    - 소괄호 () 사용
+    - 예: (1, 2, 3), ("a", "b")
+    - 2.3 range (범위)
+    - 정수의 연속적인 범위를 생성
+    - 주로 반복문에서 사용
+    - 예: range(5) → 0, 1, 2, 3, 4
+- 집합 자료형
+    - 3.1 set (세트)
+    - 중복을 허용하지 않으며, 순서가 없음
+    - 중괄호 {} 사용
+    - 예: {1, 2, 3}, {"apple", "banana"}
+- 매핑 자료형
+    - 4.1 dict (딕셔너리)
+    - 키-값(key-value) 쌍으로 구성된 자료형
+    - 중괄호 {} 사용
+    - 예: {"name": "Alice", "age": 25}
+- NoneType
+    - None
+    - 값이 없음을 나타냄 (null과 비슷)
+    - 예: None
+
+### 자료형 확인하기
+
+{% highlight py %}
+print(type(3)) # 출력 : <class 'int'>
+print(type(3.14)) # 출력 : <class 'float'>
+print(type("hello")) # 출력 : <class 'str'>
+{% endhighlight %}
+
 ### 숫자 자료형 (Number)
 
 #### 정의
@@ -288,6 +340,210 @@ print(text[1:1]) # 출력 : 공백
 이는 적합한 범위 지정 방식이 아니다.  
 그래서 파이썬에서는 이런 상황에 공백 문자를 반환한다.
 
+또한 인덱스를 생략할 수 있다.  
+생략을 하면 생략한 쪽으로 끝까지 슬라이싱한다.
+{% highlight py %}
+# 왼쪽 생략 (지정한 인덱스 앞까지 슬라이싱)
+print("ABCDE"[:2]) # 출력 : AB
+
+# 오른쪽 생략 (지정 인덱스 기준 오른쪽까지 슬라이싱)
+print("ABCDE"[2:]) # 출력 : CDE
+
+# 양쪽 생략 (전체)
+print("ABCDE"[:]) # 출력 : ABCDE
+{% endhighlight %}
+
+#### 문자열 포맷팅 (String Formatting)
+
+문자열을 동적으로 작성하려면 어떻게 해야할까?  
+변수가 한,두 개 정도면 더하기 연산을 해도 되겠지만  
+문자열에 포함될 변수의 개수가 많을 수록 더하기 연산이 너무 많아진다.
+
+이러한 상황을 위해 문자열 포맷팅이라는 기능이 존재한다.  
+`%`과 지정된 알파벳의 조합을 통해 변수가 들어갈 위치를 선언하고,  
+문자열과 연결될 변수를 설정해주면 선언한 순서에 따라서  
+문자열과 변수가 합쳐지게 된다.
+
+바로 예시를 알아보자.
+{% highlight py %}
+# 숫자의 경우
+a = 3
+b = "Three => %d" % a
+print(b) # 출력 : Three => 3
+
+# 문자열의 경우
+c = "Three"
+d = "3 => %s" % c
+print(d) # 출력 : 3 = > Three
+{% endhighlight %}
+
+변수를 삽입할 문자열에 변수의 위치를 명시하고,  
+문자열 뒤에 `%`와 변수명을 추가하기만 하면 된다.  
+그런데 자세히 보면 숫자와 문자열에 대한  
+변수의 위치를 표현하는 방식이 다른 것을 알 수 있다.
+
+- 종류
+    - `%s`
+        - 문자열
+        - 문자열 전용은 아니고 정수나 실수도 사용할 수 있다.
+        - 정수나 실수 대입 시 자동으로 문자열로 형변환해준다.
+    - `%c`
+        - 문자 1개
+    - `%d`
+        - 정수
+    - `%f`
+        - 실수 (정확하게는 부동소수)
+    - `%o`
+        - 8진수
+    - `%x`
+        - 16진수
+    - `%%`
+        - % 문자 자체
+        - %만 쓰면 문자열 포맷으로 인지한다.
+        - 실제로 %를 출력하려면 %%를 사용해야 한다.
+
+그런데 변수를 여러 개 사용하려면 어떻게 해야 할까?  
+그럴 땐 소괄호와 쉼표를 활용하면 된다.
+{% highlight py %}
+a = "A"
+b = "B"
+result = "%s and %s" % (a, b)
+print(result) # 출력 : A and B
+{% endhighlight %}
+
+그리고 문자열 포맷팅은 `%`말고 `format` 함수를 사용하는 방법도 있다.  
+format 함수를 사용할 경우 `%s`나 `%d`같은 문자열 포맷팅 코드를 사용하지 않아도 된다.
+{% highlight py %}
+# 순번으로 지정하는 경우
+print("{0} and {1}".format("A", "B"))
+
+# 이름으로 지정하는 경우
+print("{a} and {b}".format(a = "A", b = "B"))
+
+# 혼합하는 경우
+print("{0} and {b}".format("A", b = "B"))
+{% endhighlight %}
+
+이번에는 자릿수와 정렬에 대해서 알아보자.  
+문자열 포맷팅을 할 때 문자열의 총 자릿수라거나,  
+소수점의 몇 번째 자리까지 표시할 것인지 등 다양한 형식을 표현할 수 있다.
+{% highlight py %}
+# 문자열 10자리로 만들기 + 왼쪽 정렬 (공백 채우기)
+print("{str:<10}".format(str = "문자열"))
+
+# 문자열 10자리로 만들기 + 오른쪽 정렬 (공백 채우기)
+print("{str:>10}".format(str = "문자열"))
+
+# 문자열 10자리로 만들기 + 가운데 정렬 (공백 채우기)
+print("{str:^10}".format(str = "문자열"))
+
+# 문자열 10자리로 만들기 + 가운데 정렬 ("=" 문자열로 채우기)
+print("{str:=^10}".format(str = "문자열"))
+
+# 소수점 2번째 자리까지 표시
+print("{value:.2f}".format(value = 3.1415926535))
+
+# 문자열 10자리로 만들기 + 소수점 2번째 자리까지 표시
+print("{value:10.2f}".format(value = 3.1415926535))
+
+# {} 문자에 대해서 예외 처리
+# format 함수 사용 시 {와 }는 자동으로 바인딩되어서 별도 처리가 필요함
+print("{{}}".format())
+{% endhighlight %}
+
+#### f 문자열 포맷팅
+
+파이썬 3.6부터는 f 문자열 포맷팅 기능을 사용할 수 있다.  
+format 메소드를 직접 사용하지 않고,  
+변수를 따로 연결해주지 않아도 된다.  
+왜냐하면 표현식만 명시해두면 알아서 바인딩되기 때문이다.
+
+사용법은 간단하다.  
+문자열 앞에 f를 붙이기만 하면 된다.
+{% highlight py %}
+# 기본 사용
+year = 2025
+age = 29
+str = f"나는 {year}년에 {age}살이다."
+print(str)
+
+# 연산
+str = f"나는 {year + 1}년에 {age + 1}살이 된다."
+print(str)
+
+# 딕셔너리의 경우
+dic = {'year': 2027, 'age': 31}
+str = f"나는 {dic['year']}년에 {dic['age']}살이 된다."
+
+# 금액 포맷팅 (f 문자열만 가능)
+price = 100000000 # 1억
+str = f"{price:,}원"
+print(str)
+{% endhighlight %}
+
+#### 문자열 관련 함수
+
+{% highlight py %}
+# 문자 개수 세기 - count
+print("Hello World".count("l")) # 출력 : 3
+
+# 위치 찾기 - find
+# 맨 앞을 0으로 계산하여 순서대로 찾음
+# 없으면 -1
+print("Hello World".find('W')) # 출력 : 6
+print("Hello World".find('A')) # 출력 : -1
+
+# 위치 알려 주기 2 - index
+# 맨 앞을 0으로 계산하여 순서대로 찾음
+# 없으면 오류 발생
+print("Hello World".index('W')) # 출력 : 6
+#print("Hello World".index('A')) # 오류가 발생함
+
+# 문자열 삽입 - join
+print(",".join('ABC')) # 출력 : A,B,C
+print(",".join(['A', 'B', 'C'])) # 출력 : A,B,C
+
+# 소문자를 대문자로 바꾸기 - upper
+print("Hello World".upper()) # 출력 : HELLO WORLD
+
+# 대문자를 소문자로 바꾸기 - lower
+print("Hello World".lower()) # 출력 : hello world
+
+# 왼쪽 공백 지우기 - lstrip
+print("   Hello World   ".lstrip())
+
+# 오른쪽 공백 지우기 - rstrip
+print("   Hello World   ".rstrip())
+
+# 양쪽 공백 지우기 - strip
+print("   Hello World   ".strip())
+
+# 문자열 바꾸기 - replace
+print("   Hello World   ".replace(" ", ""))
+
+# 문자열 나누기 - split
+print("   Hello World   ".split()) # 출력 : ["Hello', 'World']
+print("A, B, C".split(",")) # 출력 : ['A', ' B', ' C']
+
+# 문자열이 알파벳으로만 구성되어 있는지 확인하기 - isalpha
+print("Python".isalpha()) # 출력 : True
+print("Python3".isalpha()) # 출력 : False
+print("Hello World".isalpha()) # 출력 : False
+
+# 문자열이 숫자로만 구성되어 있는지 확인하기 - isdigit
+print("12345".isdigit()) # 출력 : True
+print("1234a".isdigit()) # 출력 : False
+print("12 34".isdigit()) # 출력 : False
+
+# 문자열이 특정 문자(열)로 시작하는지 확인하기 - startswith
+print("Hello World".startswith("H")) # 출력 : True
+print("Hello World".startswith("d")) # 출력 : False
+
+# 문자열이 특정 문자(열)로 끝나는지 확인하기 - endswith
+print("Hello World".endswith("H")) # 출력 : False
+print("Hello World".endswith("d")) # 출력 : True
+{% endhighlight %}
+
 ### 불리언 자료형 (Boolean)
 
 불리언은 참과 거짓을 나타내는 자료형이다.  
@@ -307,57 +563,589 @@ a = None
 print(a) # 출력 : None
 {% endhighlight %}
 
+### 형변환
+
+#### 숫자에서 문자열로 변경 (str)
+
+{% highlight py %}
+a = 3
+b = str(a)
+
+print(type(a)) # 출력 : <class 'int'>
+print(type(b)) # 출력 : <class 'str'>
+{% endhighlight %}
+
 ### 리스트 (List)
 
-#### 정의
 #### 리스트 선언
+
+리스트는 `리스트명 = [요소1, 요소2, 요소3, ...]`처럼 선언하면 된다.
+{% highlight py %}
+a = list() # 빈 리스트 선언
+b = [] # 빈 리스트 선언
+c = [1, 2, 3]
+d = ['a', 'b', 'c']
+e = [1, 2, 3, ['a', 'b', 'c'], True]
+{% endhighlight %}
+
 #### 리스트 특징
+
+TODO
+
 #### 리스트 인덱싱
+
+문자열 자료형의 인덱싱과 동일하게 사용하면 된다.
+{% highlight py %}
+# 기본 인덱싱
+list = [1, 2, 3, ['a', 'b', 'c'], True]
+print(list[0]) # 출력 : 1
+print(list[1]) # 출력 : 2
+print(list[2]) # 출력 : 3
+print(list[3]) # 출력 : ['a', 'b', 'c']
+print(list[4]) # 출력 : True
+print(list[-1]) # 출력 : True
+
+# 중첩 리스트인 경우
+print(list[3][0]) # 출력 : a
+print(list[3][1]) # 출력 : b
+print(list[3][2]) # 출력 : c
+{% endhighlight %}
+
 #### 리스트 슬라이싱
+
+문자열 자료형의 슬라이싱과 동일하게 사용하면 된다.
+{% highlight py %}
+list = [1, 2, 3, 4, 5]
+print(list[0:2]) # 출력 : [1, 2]
+print(list[:2]) # 출력 : [1, 2]
+print(list[1:]) # 출력 : [2, 3, 4, 5]
+print(list[:]) # 출력 : [1, 2, 3, 4, 5]
+{% endhighlight %}
+
+#### 리스트 연산
+
+{% highlight py %}
+a = [1, 2, 3]
+b = [4, 5]
+
+# 리스트 더하기
+print(a + b) # 출력 : [1, 2, 3, 4, 5]
+
+# 리스트 반복하기
+print(a * 3) # 출력 : [1, 2, 3, 1, 2, 3, 1, 2, 3]
+
+# 리스트 길이 구하기
+print(len(a)) # 출력 : 3
+
+# 값 수정하기
+b[1] = 6
+print(b) # 출력 : [4, 6]
+
+# 요소 삭제하기
+del a[1]
+print(a) # 출력 : [1, 3]
+
+# 요소 삭제하기 (슬라이싱 활용)
+del a[:]
+print(a) # 출력 : []
+
+# 요소 존재 여부 확인
+print(3 in a) # 출력 : False
+{% endhighlight %}
+
 #### 리스트 함수
-#### 리스트 삭제
+
+{% highlight py %}
+list = [2, 1]
+
+# 요소 추가하기 - append
+# 마지막 요소 뒤에 추가된다.
+list.append(3)
+print(list) # 출력 : [2, 1, 3]
+
+# 요소 정렬하기 - sort
+list.sort()
+print(list) # 출력 : [1, 2, 3]
+
+# 요소 뒤집기 - reverse
+# 역순 정렬이 아니라 현재 요소 기준으로 뒤집는 것이다.
+list.reverse()
+print(list) # 출력 : [3, 2, 1]
+
+# 인덱스 반환 - index
+# 값이 있으면 인덱스 값을 반환한다.
+# 리스트에 없는 값을 찾으면 오류가 발생한다.
+print(list.index(2)) # 출력 : 1
+#print(list.index(0)) # 오류 발생
+
+# 요소 삽입하기 - insert
+# 지정한 위치에 삽입한다.
+list.insert(1, 3) # 1번 인덱스 위치에 요소 3을 삽입
+print(list) # 출력 : [3, 3, 2, 1]
+
+# 요소 제거 - remove
+# 지정한 값과 동일한 요소 중 첫번째 요소만 제거한다.
+list.remove(3) # 3이라는 요소 제거
+print(list) # 출력 : [3, 2, 1]
+
+# 요소 제거 및 반환 - pop
+# 마지막 요소를 리턴하고 해당 요소는 삭제한다.
+pop_value = list.pop()
+print(pop_value) # 출력 : 1
+print(list) # 출력 : [3, 2]
+
+# 요소의 개수 세기 - count
+# 리스트 안에 지정한 요소가 몇 개 존재하는지 확인한다.
+print(list.count(3)) # 출력 : 1
+
+# 리스트 확장 - extend
+# 파라미터는 리스트형만 사용할 수 있다.
+list.extend([1, 2, 3])
+print(list) # 출력 : [3, 2, 1, 2, 3]
+{% endhighlight %}
 
 ### 튜플 (Tuple)
 
-#### 정의
 #### 튜플 선언
+
+튜플은 `튜플명 = (요소1, 요소2, 요소3, ...)`처럼 선언하면 된다.
+{% highlight py %}
+a = () # 빈 튜플 선언
+b = (1,) # 1개의 요소만 가지고 있을 때는 쉼표가 있어야 한다.
+c = 1, 2, 3 # () 생략 가능
+d = (1, 2, 3)
+e = ('a', 'b', 'c')
+f = (1, 2, 3, ('a', 'b', 'c'), True)
+{% endhighlight %}
+
 #### 튜플 특징
+TODO
+
+#### 튜플 인덱싱
+
+문자열 자료형의 인덱싱과 동일하게 사용하면 된다.
+{% highlight py %}
+# 기본 인덱싱
+tuple = (1, 2, 3, ('a', 'b', 'c'), True)
+print(tuple[0]) # 출력 : 1
+print(tuple[1]) # 출력 : 2
+print(tuple[2]) # 출력 : 3
+print(tuple[3]) # 출력 : ('a', 'b', 'c')
+print(tuple[4]) # 출력 : True
+print(tuple[-1]) # 출력 : True
+
+# 중첩 튜플인 경우
+print(tuple[3][0]) # 출력 : a
+print(tuple[3][1]) # 출력 : b
+print(tuple[3][2]) # 출력 : c
+{% endhighlight %}
+
 #### 튜플 슬라이싱
+
+문자열 자료형의 슬라이싱과 동일하게 사용하면 된다.
+{% highlight py %}
+tuple = (1, 2, 3, 4, 5)
+print(tuple[0:2]) # 출력 : (1, 2)
+print(tuple[:2]) # 출력 : (1, 2)
+print(tuple[1:]) # 출력 : (2, 3, 4, 5)
+print(tuple[:]) # 출력 : (1, 2, 3, 4, 5)
+{% endhighlight %}
+
+#### 튜플 연산
+
+{% highlight py %}
+a = (1, 2, 3)
+b = (4, 5)
+
+# 튜플 더하기
+print(a + b) # 출력 : (1, 2, 3, 4, 5)
+
+# 튜플 반복하기
+print(a * 3) # 출력 : (1, 2, 3, 1, 2, 3, 1, 2, 3)
+
+# 튜플 길이 구하기
+print(len(a)) # 출력 : 3
+
+# 요소 존재 여부 확인
+print(3 in a) # 출력 : True
+{% endhighlight %}
+
 #### 튜플 함수
-#### 팩킹 & 언팩킹
 
-### 집합 (Set)
+튜플은 요솟값을 변경할수 없다.  
+그래서 리스트의 sort, insert, remove, pop 등과 같은 내장 함수가 없다.
 
-#### 정의
-#### 집합 선언
-#### 집합 특징
-#### 집합 추가
-#### 집합 관련 함수
+#### 튜플 팩킹과 튜플 언팩킹
+
+튜플을 선언할 때 아래와 같이 소괄호로 묶여 있지 않아도 튜플이 된다.  
+이렇게 소괄호를 사용하지 않았음에도 튜플로 생성되는 것을 `튜플 패킹(Tuple Packing)`이라고 한다.
+{% highlight py %}
+tuple = 1, 2
+print(type(tuple)) # 출력 : <class 'tuple'>
+{% endhighlight %}
+
+변수를 선언할 때 튜플을 사용하면 값을 동시에 저장할 수 있다.  
+이렇게 튜플에서 값을 꺼내는 방식을 `튜플 언패킹(Tuple Unpacking)`이라고 한다.
+{% highlight py %}
+a, b = (1, 2)
+print(a) # 출력 : 1
+print(b) # 출력 : 2
+{% endhighlight %}
+
+`*`를 사용하면 튜플 언패킹을 진행할 때  
+단일 요소와 튜플로 분리해서 값을 저장할 수 있다.
+{% highlight py %}
+tuple = (1, 2, 3, 4, 5)
+a, b, *c = tuple
+print(a) # 출력 : 1
+print(b) # 출력 : 2
+print(c) # 출력 : (3, 4, 5)
+{% endhighlight %}
 
 ### 딕셔너리
 
-#### 정의
 #### 딕셔너리 선언
+
+딕셔너리는 `{Key1: Value1, Key2: Value2, Key3: Value3, ...}`처럼 선언하면 된다.
+{% highlight py %}
+a = {} # 빈 딕셔너리 선언
+b = {'name' : '홍길동', 'age': 30}
+c = {'name' : '홍길동', 'age': 30, 'hobbies': ["게임", "음악 감상"]}
+{% endhighlight %}
+
 #### 딕셔너리 특징
-#### 딕셔너리 수정
+TODO
+
+#### 딕셔너리 CRUD
+
+{% highlight py %}
+member = {'name' : '홍길동', 'age': 30, 'hobbies': ["게임", "음악 감상"]}
+
+# 요소 추가하기
+member['height'] = 180.5
+print(member) # 출력 : {'name': '홍길동 ', 'age': 30, 'hobbies': ['게임 ', '음악 감상'], "height': 180.5}
+
+# 요소 읽기
+# 해당하는 Key가 없으면 오류가 발생한다.
+print(member['hobbies']) # 출력 : ['게임 ', '음악 감상']
+
+# 요소 수정하기
+member['age'] = 29
+print(member) # 출력 : {'name': '홈길동 ', 'age': 29, 'hobbies': ['게임 ', "음악 감상 '], 'height': 180.5}
+
+# 요소 삭제하기
+del member['hobbies]
+print(member) # 출력 : {'name' : '홍길동 ', 'age': 29, 'height': 180.5}
+{% endhighlight %}
+
+#### 딕셔너리 연산
+
+{% highlight py %}
+member = {'name' : '홍길동', 'age': 30}
+
+# 요소 존재 여부 확인
+print('height' in member) # 출력 : False
+{% endhighlight %}
+
 #### 딕셔너리 함수
-#### 딕셔너리 중요성
+
+{% highlight py %}
+member = {'name' : '홍길동', 'age': 30}
+
+# key 목록 가져오기 - keys
+# 파이썬 3.0 미만 => 리스트 반환
+# 파이썬 3.0 이상 => dict_keys 반환
+print(member.keys()) # 출력 : dict_keys(['name', 'age'])
+
+# value 목록 가져오기 - values
+# 파이썬 3.0 미만 => 리스트 반환
+# 파이썬 3.0 이상 => dict_values 반환
+print(member.values()) # 출력 : dict_values(['홍길동', '30'])
+
+# Key-Value 쌍 목록 가져오기 - items
+# 파이썬 3.0 미만 => 리스트 반환
+# 파이썬 3.0 이상 => dict_items 반환
+print(member.items()) # 출력 : dict_items([('name', '홍길동'), ('age', '30')])
+
+# Key를 통해 Value 가져오기 - get
+# 딕셔너리명[key 이름]을 하는 것과 동일하다.
+# 해당하는 Key가 없으면 None을 반환한다.
+print(member.get('age')) # 출력 : 30
+
+# Key를 통해 Value 가져오기 - get에 기본값 적용하기
+# 해당하는 Key가 없을 때 None 대신에 미리 지정한 기본값을 반환하게 한다.
+print(member.get('gender', 'Male')) # 출력 : Male
+
+# 딕셔너리 초기화
+member.clear()
+print(member) # 출력 : {}
+{% endhighlight %}
+
+### 집합 (Set)
+
+#### 집합 선언
+
+{% highlight py %}
+a = set() # 빈 집합 선언
+b = set([1, 2, 3])
+c = set((4, 5, 6))
+d = set({'a' : 1, 'b': 2, 'c': 3})
+e = set("Hello")
+
+print(a) # 출력 : set()
+print(b) # 출력 : {1, 2, 3}
+print(c) # 출력 : {4, 5, 6}
+print(d) # 출력 : {'c', 'b', 'a'}
+print(e) # 출력 : {'e', 'o', 'l', 'H'}
+{% endhighlight %}
+
+#### 집합 특징
+TODO
+- 중복을 허용하지 않는다.
+- 순서가 없다.
+
+#### 집합 구하기기
+
+{% highlight py %}
+a = set([1, 2, 3, 4, 5, 6])
+b = set([4, 5, 6, 7, 8, 9])
+
+# 교집합 구하기
+print(a & b) # 출력 : 
+print(a.intersection(b)) # 출력 : 
+
+# 합집합 구하기
+# 중복되는 값은 1개씩만 표현된다.
+print(a | b) # 출력 : 
+print(a.union(b)) # 출력 : 
+
+# 차집합 구하기
+print(a - b) # 출력 : 
+print(a.difference (b)) # 출력 : 
+{% endhighlight %}
+
+#### 집합 관련 함수
+
+{% highlight py %}
+set = set([1, 2, 3])
+
+# 요소 1개 추가하기 - add
+set.add(4)
+print(set) # 출력 : {1, 2, ,3, 4}
+
+# 요소 여러 개 추가하기 - update
+set.update([5, 6, 7])
+print(set) # 출력 : {1, 2, 3, 4, 5, 6, 7}
+
+# 특정 값 제거하기 - remove
+set.remove(4)
+print(set) # 출력 : {1, 2, 3, 5, 6, 7}
+{% endhighlight %}
 
 ### 연산자
 
 #### 산술 연산자
+
+{% highlight py %}
+a = 10
+b = 3
+
+# 더하기
+print(a + b) # 출력 : 13
+
+# 뺴기
+print(a - b) # 출력 : 7
+
+# 곱하기
+print(a * b) # 출력 : 30
+
+# 나누기
+print(a / b) # 출력 : 3.3333333333333335
+
+# 나누기 (몫만 가져오기)
+print(a // b) # 출력 : 3
+
+# 나누기 (나머지만 가져오기)
+print(a % b) # 출력 : 1
+
+# 누승
+print(a ** b) # 출력 : 1000
+{% endhighlight %}
+
 #### 관계 연산자
+
+{% highlight py %}
+a = 10
+b = 3
+
+# 같은지 비교
+print("10 == 3 =>", a == b) # 출력 : 10 == 3 => False
+
+# 다른지 비교
+print("10 != 3 =>", a != b) # 출력 : 10 != 3 => True
+
+# A > B 비교
+print("10 > 3 =>", a > b) # 출력 : 10 > 3 => True
+
+# A >= B 비교
+print("10 >= 3 =>", a >= b) # 출력 : 10 >= 3 => True
+
+# A < B 비교
+print("10 < 3 =>", a < b) # 출력 : 10 < 3 => False
+
+# A <= B 비교
+print("10 <= 3 =>", a <= b) # 출력 : 10 <= 3 => False
+{% endhighlight %}
+
 #### 논리 연산자
+
+{% highlight py %}
+# A and B (A와 B가 모두 참일 때 참)
+print(True and True) # 출력 : True
+print(True and False) # 출력 : False
+print(False and True) # 출력 : False
+print(False and False) # 출력 : False
+
+# A or B (A나 B 둘 중 하나라도 참일 때 참)
+print(True or True) # 출력 : True
+print(True or False) # 출력 : True
+print(False or True) # 출력 : True
+print(False or False) # 출력 : False
+
+# not A (A가 거짓일 때 참)
+print(not True) # 출력 : False
+print(not False) # 출력 : True
+{% endhighlight %}
+
 #### 삼항 연산자
+
+`[참일 때의 결과] if [조건] else [거짓일 때의 결과]`처럼 사용한다.
+
+다른 언어의 경우에는 `[조건] ? [참일 때의 결과] : [거짓일 때의 결과]`처럼  
+사용하는 경우가 많다보니 헷갈릴 수도 있다.
+
+만약 삼항 연산자 썼는데 오류가 난다면  
+`조건 ? A : B`거나 `조건 if A else B`로 썼을 확률이 높으니  
+잘 확인하고 사용하자.
+
+{% highlight py %}
+a = "A" if 1 == 1 else "B"
+b = "A" if 1 == 2 else "B"
+
+print(a) # 출력 : "A"
+print(b) # 출력 : "B"
+{% endhighlight %}
+
 #### 비트 연산자
+
+개인적으로 아직은 많이 쓸 일이 없어서 생략
+
 #### 복합 대입 연산자
+
+복합 대입 연산자는 연산과 할당을 합친 연산자다.
+{% highlight py %}
+print("some_value => 7")
+
+# 연산자 : a += b
+# 실제 동작 : a = a + b
+some_value = 7
+some_value += 7
+print("some_value += 7 => ", some_value) # 출력 : some_value += 7 => 14
+
+# 연산자 : a -= b
+# 실제 동작 : a = a - b
+some_value = 7
+some_value -= 7
+print("some_value -= 7 => ", some_value) # 출력 : some_value -= 7 => 0
+
+# 연산자 : a *= b
+# 실제 동작 : a = a * b
+some_value = 7
+some_value *= 7
+print("some_value *= 7 => ", some_value) # 출력 : some_value *= 7 => 49
+
+# 연산자 : a /= b
+# 실제 동작 : a = a / b
+some_value = 7
+some_value /= 2
+print("some_value /= 2 => ", some_value) # 출력 : some_value /= 2 => 3.5
+
+# 연산자 : a //= b
+# 실제 동작 : a = a // b
+some_value = 7
+some_value //= 2
+print("some_value //= 2 => ", some_value) # 출력 : some_value //= 2 => 3
+
+# 연산자 : a %= b
+# 실제 동작 : a = a % b
+some_value = 7
+some_value %= 2
+print("some_value %= 2 => ", some_value) # 출력 : some_value %= 2 => 1
+
+# 연산자 : a **= b
+# 실제 동작 : a = a ** b
+some_value = 7
+some_value **= 2
+print("some_value **= 2 => ", some_value) # 출력 : some_value **= 2 => 49
+
+# 아래는 생략
+
+# 연산자 : a &= b
+# 실제 동작 : a = a & b
+
+# 연산자 : a |= b
+# 실제 동작 : a = a | b
+
+# 연산자 : a^= b
+# 실제 동작 : a = a ^ b
+
+# 연산자 : a <<= b
+# 실제 동작 : a = a << b
+
+# 연산자 : a >>= b
+# 실제 동작 : a = a >>b
+{% endhighlight %}
+
 #### 멤버 연산자
+
+`[찾을 요소] [연산자] [변수명]`처럼 사용한다.
+
+{% highlight py %}
+list = [1, 2, 3]
+
+# 포함 여부 검사 - in
+print(1 in list) # 출력 : True
+print(7 in list) # 출력 : False
+
+# 미포함 여부 검사 - not in
+print(1 not in list) # 출력 : False
+print(7 not in list) # 출력 : True
+{% endhighlight %}
+
 #### 아이디 연산자
+
+{% highlight py %}
+# 객체의 고유값(레퍼런스)를 반환하는 함수
+# 파이썬이 객체를 구별하기 위해 부여하는 일련번호
+# 숫자로서의 의미는 없다.
+# 동일한 객체 여부를 판별할 때 사용한다.
+# 상황에 따라 값이 달라진다. (정수는 고정된 값 사용)
+a = 7
+id = id(a)
+print(f"id = {id}") # 출력 : id = 11792328
+
+# 동일 객체끼리 비교하는지 확인 - is
+
+# 다른 객체끼리 비교하는지 확인 - not is
+{% endhighlight %}
+
 #### 연산 우선 순위
 
 <!--
-형변환
-https://wikidocs.net/230522
-https://wikidocs.net/13
-https://wikidocs.net/20670
+1. 형변환
+2. 아이디 연산자 + 연산 우선 순위
+3. 각 자료형별 특징
+
+참고
+https://wikidocs.net/20708
 -->
