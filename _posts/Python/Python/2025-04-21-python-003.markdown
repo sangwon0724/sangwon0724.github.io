@@ -8,7 +8,22 @@ published: false
 
 ### 흐름 제어
 
+파이썬에서는 조건에 맞게 실행하거나,  
+같은 코드를 반복적으로 실행하는 등  
+흐름을 제어하는 문법을 제공한다.
+
 ### if
+
+{% highlight py %}
+x = 10
+if x > 5:
+    print("x는 5보다 큽니다.")
+elif x == 5:
+    print("x는 5입니다.")
+else:
+    print("x는 5보다 작습니다.")
+
+{% endhighlight %}
 
 - 관계 연산자
 - 논리 연산자
