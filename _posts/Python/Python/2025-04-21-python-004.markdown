@@ -6,9 +6,9 @@ categories: Python
 published: false
 ---
 
-### 함수
+### 함수란
 
-- 함수란
+
 - 함수 중요성
 - 함수 선언 및 사용
 - 전달값과 반환값
