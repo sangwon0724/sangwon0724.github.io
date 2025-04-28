@@ -1,9 +1,8 @@
 ---
 layout: post
 title:  "모듈과 패키지"
-date:   2025-04-28 07:00:00 +0900
+date:   2025-04-28 22:41:00 +0900
 categories: Python
-published: false
 ---
 
 ### 모듈 (Module)
@@ -333,7 +332,15 @@ main.py
     └── sub1
        ├── __init__.py
        └── sub1_util1.py
-            └── sub1_fun (함수)
+            └── fun1 (함수)
+            └── fun2 (함수)
+       └── sub1_util2.py
+            └── fun3 (함수)
+            └── fun4 (함수)
+    └── sub2
+       ├── __init__.py
+       └── sub2_util.py
+            └── fun5 (함수)
 ```
 
 프로젝트 안에 util 폴더를 만들고,  
@@ -435,38 +442,90 @@ print("초기화...") # 초기화 코드 예시
 
 #### \_\_all\_\_
 
-같은 경로에 있는 모듈을 불러올 때와 다르게  
-패키지 내에 있는 모듈을 불러올 때는 `*`를 사용하는 방법이 다르다.
+만약 아래와 같은 상황이 있다면 어떤 모듈들이 불러와질까?
 {% highlight py %}
-# /util/sub1/sub1_util1.py
-def fun1():
-    print("util > sub1 > sub_util1.py > fun1 호출")
-
 # main.py
-from util.sub1.sub1_util1 import *
-fun1() # 오류 발생
+from util.sub1 import *
 {% endhighlight %}
 
-패키지 내의 모듈에 대해서 `*`를 사용하려면  
+당연히 util.sub1 하위에 있는  
+sub1_util1 모듈과 sub1_util2 모듈이 불러와질 것이다.  
+그런데 이 때 `*`을 사용했을 때  
+sub1_util1 모듈만 불러오게 하고 싶다면 어떻게 해야할까?
+
+`*`을 사용했을 때 불러올 모듈의 목록을 정의하고 싶다면   
 해당 경로에 있는 `__init__.py`에서 `__all__`이라는 변수에  
 사용할 모듈대상명 목록을 저장해줘야 한다.
 {% highlight py %}
 # /util/sub1/__init__.py.py
-__all__ = ['fun1']
+__all__ = ["sub1_util1"]
 {% endhighlight %}
 
-이제 다시 main.py에서 `*`를 통해서 실행해보면  
-정상적으로 실행되는 것을 알 수 있다.
+이제 main.py에서 아래와 같이 수정해보자.
+{% highlight py %}
+from util.sub1 import *
 
-TODO : 내용이 다름 => `__all__` 없어도 된다고 나옴 (ChatGPT)
-TODO : *를 안 쓰는 게 낫다고 알려주기
+sub1_util1.fun1()
+sub1_util1.fun2()
+sub1_util2.fun3() # 오류 발생
+sub1_util2.fun4() # 오류 발생
+{% endhighlight %}
 
-TODO:
-https://wikidocs.net/1418 => .와 ..에 대해서 작성하기
+이제 실제로 실행해보면  
+sub1_util1 모듈만 불러온 것을 알 수 있다.
 
-TODO : pip install 작성하기
+이렇게 `__all__`을 쓰면 `*`을 사용했을 때  
+불러올 패키지 목록을 정의할 수 있다.  
+다만 `*`를 사용할 경우에는  
+어떤 모듈 목록들을 불러왔는지 알기 어려우니  
+직접 불러오는 방식을 사용하도록 하자.
 
-#### pip install
+#### relative 패키지
+
+만약 `util.sub2.sub2_util.py`에서  
+`util.sub1.sub1_util1.py`의 fun1 함수를 불러오려면 어떻게 해야할까?  
+아래와 같이 직접 명시해도 되긴 하다.
+{% highlight py %}
+import util.sub1.sub1_util1 as sub1_util1
+
+def fun5():
+    print("util > sub2 > sub2_util.py > fun1 호출")
+    sub1_util1.fun1()
+{% endhighlight %}
+
+실제로 main.py에서 호출해도 잘 동작한다.
+{% highlight py %}
+from util.sub1 import *
+from util.sub2.sub2_util import *
+
+sub1_util1.fun1()
+sub1_util1.fun2()
+#sub1_util2.fun3()
+#sub1_util2.fun4()
+print("================================")
+fun5()
+{% endhighlight %}
+
+하지만 경로를 아래처럼도 바꿀 수 있다.
+{% highlight py %}
+# util.sub2.sub2_util.py
+from ..sub1 import sub1_util1
+
+def fun5():
+    print("util > sub2 > sub2_util.py > fun1 호출")
+    sub1_util1.fun1()
+{% endhighlight %}
+
+여기서 경로 표현식이라는 것이 쓰이는데  
+그 역할은 아래와 같다.
+- `..`
+    - 부모 디렉터리 (= 상위 경로)
+- `.`
+    - 현재 디렉터리
+
+그래서 `from ..sub1 import sub1_util1`의 경우에는  
+부모 디렉터리에 있는 sub1이라는 패키지에서  
+sub1_util1이라는 모듈을 불러오라는 뜻이 된다.
 
 ### 출처
 
