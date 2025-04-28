@@ -1,0 +1,473 @@
+---
+layout: post
+title:  "모듈과 패키지"
+date:   2025-04-28 07:00:00 +0900
+categories: Python
+published: false
+---
+
+### 모듈 (Module)
+
+#### 모듈이란?
+
+- 함수, 변수, 클래스를 모아 놓은 파이썬 파일
+- 다른 파이썬 프로그램에서 불러와 사용할 수 있도록 만든 파이썬 파일
+- 다른 사람들이 이미 만들어 놓은 모듈을 사용할 수도 있고 우리가 직접 만들어 사용할 수도 있다.
+
+#### 모듈 만들기
+
+모듈은 아까 말했듯이 파이썬 파일이다.  
+작성하고자 아는 내용을 파일 안에 작성하기만 하면 된다.
+
+예시로 a와 b라는 매개변수를 넘기면 a + b를 반환하는 sum이라는 함수가 있다고 가정해보자.
+{% highlight py %}
+def add(a: int, b: int) -> int:
+    return a + b;
+{% endhighlight %}
+
+이제 이 함수를 `module_test.py`라는 파일에 따로 저장해보자.  
+그러면 간단한 모듈이 완성되었다.
+
+#### 모듈 불러오기 (import 모듈명)
+
+모듈을 불러오는 것은 `import 모듈명`처럼 명시하면 된다.  
+여기서 모듈명이라고 함은 파일명에서 확장자를 제외한 이름이다.  
+파일명이 `module_test.py`라면 `module_test`까지만 사용하는 것이다.
+
+`main.py`에서 아까 만든 `module_test`라는 모듈의 sum이라는 함수를 호출해보자.  
+호출하는 것은 `모듈명.모듈대상명`처럼 호출하면 된다.  
+모듈 대상은 함수, 변수, 클래스를 의미한다.
+
+{% highlight py %}
+import module_test
+
+return_value = module_test.sum(1, 2)
+print(return_value)
+{% endhighlight %}
+
+#### 모듈 불러오기 (from 모듈명 import 모듈대상)
+
+일일이 모듈명까지 붙이는 것은 번거롭다.  
+그럴 때는 `from 모듈명 import 모듈대상명`처럼 모듈을 직접 불러오면 된다.  
+아까의 예시를 조금 수정해보자.
+{% highlight py %}
+from module_test import sum
+
+return_value = sum(1, 2)
+print(return_value)
+{% endhighlight %}
+
+아까와 동일한 내용의 코드지만 모듈명을 생략함으로써  
+좀 더 모듈 대상을 편리하게 호출할 수 있게 되었다.
+
+#### 모듈 불러오기 (from 모듈명 import A, B)
+
+방금처럼 호출하면 하나의 모듈대상만 포함할 수 있다.  
+그렇다면 하나의 모듈에서 여러 개의 모듈 대상을 불러오려면 어떻게 해야할까?
+
+우선 아까의 `module_test.py`를 살짝 고쳐보자.
+{% highlight py %}
+def sum1(a, b):
+  return a + b
+
+def sum2(a, b):
+  return a + b
+{% endhighlight %}
+
+이제 실제로 module_test의 sum1과 sum2를 불러와보자.  
+만약 단순하게 호출하려면 그냥 from-import를 두 번 하거나,  
+import만 해서 모듈명을 붙이는 방법이 있다.
+{% highlight py %}
+from module_test import sum1
+from module_test import sum2
+
+return_value = sum1(1, 2)
+print(return_value)
+
+return_value = sum2(1, 2)
+print(return_value)
+{% endhighlight %}
+
+하지만 위처럼 하는 것은 모듈 대상이 많을 수록 코드가 많아진다.  
+그럴 때는 모듈 대상을 쉼표로 묶어버리면 된다.
+{% highlight py %}
+from module_test import sum1, sum2
+
+return_value = sum1(1, 2)
+print(return_value)
+
+return_value = sum2(1, 2)
+print(return_value)
+{% endhighlight %}
+
+- 장점
+    - 명확성
+        - 코드 읽을 때 어떤 함수나 클래스를 사용하는지 바로 알 수 있다.
+    - 네임스페이스 오염 방지
+        - 필요한 것만 가져오기 때문에, 다른 모듈과 이름 충돌할 확률이 낮다.
+    - 자동 완성 지원
+        - IDE에서 코드 작성할 때, 가져온 대상만 제안해줘서 편리하다.
+        - VS Code, PyCharm 등이 해당된다.
+- 단점
+    - 많은 대상 가져올 때 불편하다.
+        - 가져와야 할 게 많으면 일일이 다 적어야 해서 코드가 길어질 수 있다.
+
+#### 모듈 불러오기 (from 모듈명 import *)
+
+아니면 그냥 `*`를 통해 전체를 불러와도 된다.
+{% highlight py %}
+from module_test import *
+
+return_value = sum1(1, 2)
+print(return_value)
+
+return_value = sum2(1, 2)
+print(return_value)
+{% endhighlight %}
+
+- 장점
+    - 간결함
+        - 한번에 모듈 안에 있는 모든 것을 가져올 수 있어서 코드가 짧아진다.
+    - 빠른 실험에 좋다.
+        - 간단한 테스트를 진행할 때는 `from-import *`가 편하다.
+- 단점
+    - 코드 가독성 저하
+        - 어떤 함수나 클래스가 어디서 온 건지 알기 어렵다.
+    - 네임스페이스 오염
+        - 모듈 안의 모든 이름이 현재 스코프에 풀린다.
+        - 다른 모듈이나 직접 정의한 이름과 충돌할 수 있다.
+    - IDE 지원 약화
+        - 자동 완성, 타입 힌트 등이 제대로 작동하지 않을 수 있다.
+
+#### 모듈대상명이 겹치면 어떻게 될까?
+
+간단하게 2개의 파일을 만들어보자.
+{% highlight py %}
+# module1.py에 작성
+def fun():
+  print("fun 호출 - 모듈 1")
+
+# module2.py에 작성
+def fun():
+  print("fun 호출 - 모듈 2")
+{% endhighlight %}
+
+그 다음에 `main.py`에서 2개의 모듈을 모두 불러와보자.  
+우선 직전에 사용했던 from-import를 사용해보자.
+{% highlight py %}
+from module1 import fun
+from module2 import fun
+
+fun()
+{% endhighlight %}
+
+위 상황에서 실제로 호출되는 것은  
+module1의 fun과 module2의 fun 중 어느 쪽일까?  
+정답은 module2의 fun이 호출된다.  
+왜냐하면 같은 모듈명으로 호출할 경우 나중에 불러온 쪽을 사용하기 때문이다.
+
+그렇다면 import만 사용하는 경우에는 어떨까?
+{% highlight py %}
+import module1
+import module2
+
+module1.fun()
+module2.fun()
+{% endhighlight %}
+
+import만 사용하는 경우에는 당연히 `모듈명.모듈대상명`을 호출하면 된다.  
+다만 이렇게 되면 모듈명이 길 수록 코드의 길이가 길어지는 단점이 있다.  
+이럴 때 사용하는 것이 `as` 키워드다.
+
+#### as 키워드로 이름 바꾸기
+
+실제로는 더 긴 이름들도 많겠지만 이전의 `module_test`를 예시로 알아보자.
+{% highlight py %}
+import module_test
+
+return_value = module_test.sum1(1, 2)
+print(return_value)
+{% endhighlight %}
+
+위에서 `module_test.sum1`처럼 호출한 것처럼 `모듈명.모듈대상명`으로 호출해야 한다.  
+그런데 `module_test.sum1`도 사실 짧은 편에 속한다.  
+만약 모듈명도 길고 모듈대상명도 길다면 어떻게 될까?  
+정말 코드가 밑도 끝도 없이 길어질 수도 있다.
+
+이럴 때 사용하는 것이 as 키워드다.  
+as 키워드를 사용하면 모듈명이나 모듈대상명을 다른 이름으로 바꿀 수 있다.
+
+우선 import만 사용한 경우를 알아보자.
+{% highlight py %}
+import module_test as mt
+
+return_value = mt.sum1(1, 2)
+print(return_value)
+{% endhighlight %}
+
+as 키워드를 통해 `module_test`라는 모듈명이 `mt`로 줄어든 것을 확인할 수 있다.  
+이를 통해 `mt.sum1`처럼 모듈대상을 호출하는 코드도 짧아졌다.  
+다만 이 경우에는 모둘대상명이 긴 것에 대해서는 대응할 수 없고,  
+from 키워드도 같이 사용할 수 없다.
+
+그렇다면 import, from, as를 같이 사용한다면 어떨까?  
+우선 `module_test.py`에 적당한 함수를 추가해보자.
+{% highlight py %}
+def long_long_long_long_long_long_long_name_function():
+  print("이름이 무척이나 긴 함수를 호출")
+{% endhighlight %}
+
+그 다음에 import, from, as를 같이 사용해보자.
+{% highlight py %}
+from module_test import long_long_long_long_long_long_long_name_function as long_fun
+
+long_fun()
+{% endhighlight %}
+
+import, from, as를 같이 사용하면 이름이 무척이나 긴 모듈대상명도 축약해서 사용할 수 있다.  
+호출 코드가 짧아지는 것은 맞지만, 다만 모듈을 불러오는 부분 자체의 코드는 긴 것 또한 사실이다.
+
+그래서 상황에 맞게 사용하는 것이 좋다.  
+모듈 자체를 많이 사용한다면 `import-as`를 통해 모듈명의 길이를 줄이고,  
+불러온 모듈에서 특정 대상만 많이 사용한다면 `import-from-as`를 통해 모듈대상명의 길이를 줄이자.
+
+#### \_\_name\_\_
+
+`module_test.py`에 아래의 코드를 추가해보자.
+{% highlight py %}
+print("module_test 호출")
+{% endhighlight %}
+
+그 다음에 `main.py`를 실행해보자.  
+그러면 실행한 것은 `main.py`인데  
+"module_test 호출"이라는 문자열이 출력되는 것을 알 수 있다.  
+왜냐하면 모듈을 불러오기 위해 import를 하는 과정에는  
+해당 모듈을 실행하는 과정이 포함되어 있기 때문이다.
+
+이를 방지하기 위해서는  
+파이썬에서 내부적으로 사용하는 특별한 변수인 `__name__`을 사용하면 된다.  
+`__name__`에는 현재 실행되는 파일일 경우에는 `__main__`이 저장되고,  
+모듈로 불러온다면 `module_test`처럼 모듈명이 저장된다.
+
+만약 모듈로 `module_test`를 불러왔을 때 print가 동작하지 않게 하려면  
+`module_test.py`를 아래와 같이 수정하면 된다.
+{% highlight py %}
+def sum1(a, b):
+  return a + b
+
+def sum2(a, b):
+  return a + b
+
+def long_long_long_long_long_long_long_name_function():
+  print("이름이 무척이나 긴 함수를 호출")
+
+# 해당 부분
+if(__name__ == "__main__"):
+    print("module_test 호출")
+{% endhighlight %}
+
+위처럼 수정하면 `module_test.py`를 직접 실행했을 때만 print가 실행되고,  
+모듈로 불러왔을 때는 실행되지 않는다.  
+예제를 위해 print로만 예시를 들긴 했지만,  
+위처럼 사용한다면 명시한 코드들은 모두 해당된다.
+
+#### 다른 경로에 있는 모듈 불러오기
+
+사실 이전까지 모듈을 불러온 것은 같은 경로에 있는 파일만 불러왔다.  
+그렇다면 다른 경로에 있는 파일을 불러오려면 어떻게 해야 할까?
+
+우선 sys 모듈을 사용하는 방법이 있다.  
+sys 모듈은 파이썬을 설치할 때 함께 설치되는 라이브러리 모듈이다.  
+sys 모듈을 사용하면 파이썬 라이브러리가 설치되어 있는 디렉터리를 확인할 수 있다.  
+`sys.path`를 print를 통해서 출력해보면 파이썬 라이브러리가 설치되어 있는 디렉터리 목록을 확인할 수 있다.  
+sys.path에 포함된 경로들에 있는 파이썬 모듈들은 import를 통해 바로 호출할 수 있다.
+{% highlight py %}
+print(sys.path)
+{% endhighlight %}
+
+다른 경로에 있는 모듈을 불러오려면 sys.path에 해당 경로를 추가해줘야 한다.  
+그 다음에는 이전처럼 import를 하면 된다.
+{% highlight py %}
+# 경로 추가
+import sys
+sys.path.append("/중간_경로/other_module")
+
+# 모듈 불러오기
+from other_module import other_fun
+
+# 외부 함수 호출
+other_fun()
+{% endhighlight %}
+
+또 다른 방법으로는 환경 변수를 사용하는 방법이 있다.  
+`PYTHONPATH` 환경 변수에 경로를 추가하면 sys 모듈을 사용하지 않고  
+바로 import해서 다른 경로에 있는 모듈을 사용할 수 있다.
+{% highlight cmd %}
+# Windows OS
+set PYTHONPATH=경로
+
+# Mac OS, Linux OS, Unix OS
+export PYTHONPATH=경로
+{% endhighlight %}
+
+### 패키지 (Package)
+
+#### 패키지란?
+
+- 관련있는 모듈의 집합
+- 파이썬 모듈을 계층적 구조로 관리할수 있게 해준다.
+    - 여기서 계층적 구조라함은 디렉터리 구조를 의미한다.
+
+#### 패키지 만들기
+
+만약에 유틸리티용 패키지를 추가한다고 가정해보자.  
+그렇다면 프로젝트 구조는 아래와 같이 될 것이다.
+```bash
+main.py
+└── util
+    ├── __init__.py
+    ├── util1.py
+    ├── util2.py
+    ├── util3.py
+    ├── ...
+    └── sub1
+       ├── __init__.py
+       └── sub1_util1.py
+            └── sub1_fun (함수)
+```
+
+프로젝트 안에 util 폴더를 만들고,  
+간단하게 `__init__.py`와 `util1.py`정도만 만들자.  
+`__init__.py`는 우선은 빈 파일로 만들고  
+`util1.py`에는 아래의 내용을 넣어두자.
+{% highlight py %}
+def fun():
+    print("util > fun 호출")
+{% endhighlight %}
+
+그 다음에는 `PYTHONPATH` 환경 변수에 해당 경로를 추가하자.
+{% highlight cmd %}
+set PYTHONPATH=/중간_경로/util
+{% endhighlight %}
+
+#### 패키지 함수 실행
+
+패키지 안의 함수를 실행하는 방법은 3가지가 있다.
+
+첫번쨰는 import만 사용해서 전체 경로로 불러오는 방법이다.
+{% highlight py %}
+# 모듈 불러오기
+import util.util1
+
+# 모듈 호출하기 (전체 경로 명시)
+util.util1.fun()
+{% endhighlight %}
+
+두번째는 from-import를 통해서 모듈을 불러오는 방법이다.
+{% highlight py %}
+# 모듈 불러오기
+from util import util1
+
+# 모듈 호출하기 (모듈명 명시)
+util1.fun()
+{% endhighlight %}
+
+세번째는 from-import를 통해서 함수만 불러오는 방법이다.
+{% highlight py %}
+# 모듈 불러오기
+from util.util1 import fun
+
+# 모듈 호출하기 (모듈대상명만 명시)
+fun()
+{% endhighlight %}
+
+여기서 중요한 점은 `import a.b.c`처럼 명시했을 때,  
+`c`는 반드시 모듈 또는 패키지여야 한다.  
+모듈대상은 마지막 자리에 올 수 없다.
+
+#### \_\_init\_\_.py란?
+
+- 해당 디렉터리가 패키지의 일부임을 알려 주는 역할을 하는 파일.
+- 하위 디렉토리마다 `__init__.py` 파일이 하나씩 있어야 한다.
+    - `__init__.py` 파일이 없다면 파이썬에서 해당 경로를 패키지로 인지하지 못 한다.
+    - 다만 파이썬 3.3 버전부터는 `__init__.py`가 없어도 패키지로 인지하기는 한다.
+    - 그래도 하위 호환을 위해서 안전하게 `__init__.py`를 추가하도록 하자.
+- `__init__.py`는 패키지와 관련된 설정이나 초기화 코드를 포함하는 역할을 할 수 있다.
+
+#### \_\_init\_\_.py 활용하기
+
+패키지에서 사용되는 공통 변수 및 함수를 정의할 수 있다.
+{% highlight py %}
+# /util/__init__.py
+TEMP = "무언가"
+def printTemp():
+    print(f"TEMP : {TEMP}")
+
+# main.py
+import util
+print(util.TEMP)
+util.printTemp()
+{% endhighlight %}
+
+패키지 내의 모듈을 미리 import할 수도 있다.  
+이전의 디렉토리 구조에서 sub1_fun 함수를 import한다고 가정해보자.  
+그러면 아래와 같이 호출할 수 있다.
+{% highlight py %}
+# /util/__init__.py
+from .sub1.sub1_util1 import sub1_fun
+TEMP = "무언가"
+def printTemp():
+    print(f"TEMP : {TEMP}")
+{% endhighlight %}
+
+초기화 코드를 작성할 수도 있다.
+{% highlight py %}
+# /util/__init__.py
+from .sub1.sub1_util1 import sub1_fun
+TEMP = "무언가"
+def printTemp():
+    print(f"TEMP : {TEMP}")
+print("초기화...") # 초기화 코드 예시
+{% endhighlight %}
+초기화 코드는 패키지를 처음 import 하거나,  
+해당 패키지 하위 모듈의 함수를 import할 떄 실행된다.  
+단, 둘 중 어느 경우라도 초기화 코드는 딱 1번만 실행된다.
+
+#### \_\_all\_\_
+
+같은 경로에 있는 모듈을 불러올 때와 다르게  
+패키지 내에 있는 모듈을 불러올 때는 `*`를 사용하는 방법이 다르다.
+{% highlight py %}
+# /util/sub1/sub1_util1.py
+def fun1():
+    print("util > sub1 > sub_util1.py > fun1 호출")
+
+# main.py
+from util.sub1.sub1_util1 import *
+fun1() # 오류 발생
+{% endhighlight %}
+
+패키지 내의 모듈에 대해서 `*`를 사용하려면  
+해당 경로에 있는 `__init__.py`에서 `__all__`이라는 변수에  
+사용할 모듈대상명 목록을 저장해줘야 한다.
+{% highlight py %}
+# /util/sub1/__init__.py.py
+__all__ = ['fun1']
+{% endhighlight %}
+
+이제 다시 main.py에서 `*`를 통해서 실행해보면  
+정상적으로 실행되는 것을 알 수 있다.
+
+TODO : 내용이 다름 => `__all__` 없어도 된다고 나옴 (ChatGPT)
+TODO : *를 안 쓰는 게 낫다고 알려주기
+
+TODO:
+https://wikidocs.net/1418 => .와 ..에 대해서 작성하기
+
+TODO : pip install 작성하기
+
+#### pip install
+
+### 출처
+
+- [프로그래밍 시작하기 : 파이썬 입문 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9E%85%EB%AC%B8-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)
