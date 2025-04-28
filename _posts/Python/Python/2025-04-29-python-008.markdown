@@ -1,0 +1,461 @@
+---
+layout: post
+title:  "내장 함수와 외장 함수"
+date:   2025-04-29 02:15:00 +0900
+categories: Python
+---
+
+### 내장 함수 (Built-in Functions)
+
+#### 내장 함수란?
+
+내장 함수는 파이썬이 기본적으로 제공하는 함수다.  
+별도의 import 없이 바로 사용할 수 있다.  
+제공되는 종류가 매우 많으며,  
+기본적인 프로그래밍 작업을 쉽게 할 수 있도록 도와준다.
+
+이전의 게시글들에서 이미 내장 함수를 사용해봤는데,  
+기존에 사용하던 출력을 위한 `print()`나,  
+입력을 위한 `input()`이나,  
+형변환을 위한 `str()` 등이  
+모두 내장 함수에 속한다.
+
+#### 내장 함수 종류
+
+{% highlight py %}
+# 절댓값 구하기 - abs
+print("=========== abs ============")
+print(abs(-7)) # 출력 : 7
+
+# 컬렉션의 참/거짓 구하기 - all
+# 컬렉션은 리스트, 튜플, 문자열, 딕셔너리, 집합 등이 해당한다.
+# 컬렉션의 데이터가 모두 참이어야지 True를 반환한다.
+# 컬렉션이 비어있어도 True를 반환한다.
+print("=========== all ============")
+print(all([1, 2, 3])) # 출력 : True
+print(all([1, 0, 1])) # 출력 : False, 0이 거짓이다.
+print(all(['A', '', 'B'])) # 출력 : False, ''이 거짓이다.
+print(all([])) # 출력 : True, 컬렉션이 비어있으면 True를 반환한다.
+
+# 컬렉션의 참/거짓 구하기 - any
+# 컬렉션의 데이터 중 하나라도 참이면 True를 반환한다.
+#   => 모두 False여야 False를 반환한다.
+# 컬렉션이 비어있어도 True를 반환한다.
+print("=========== any ============")
+print(any([1, 2, 3])) # 출력 : True
+print(any([1, 0, 1])) # 출력 : True
+print(any(['A', '', 'B'])) # 출력 : True
+print(any(['', '', ''])) # 출력 : False
+print(any([])) # 출력 : True, 컬렉션이 비어있으면 True를 반환한다.
+
+# 유니코드 숫자 값을 입력받아 그 코드에 해당하는 문자를 반환 - char
+print("=========== char ============")
+print(chr(97)) # 출력 : 'a'
+
+# 객체가 지닌 변수나 함수 목록을 반환 - dir
+print("=========== dir ============")
+print(dir([1, 2, 3])) # 리스트가 사용할 수 있는 함수 목록을 반환한다.
+
+# 몫과 나머지 한꺼번에 계산하기
+print("=========== divmod ============")
+print(divmod(7, 3)) # 출력 : (2, 1)
+print(7 // 3) # 출력 : 2
+print(7 % 3) # 출력 : 1
+
+# 순서가 있는 컬렉션을 열거형 객체로 반환 - enumerate
+# 순서가 있는 컬렉션은 리스트, 튜플, 문자열이 해당한다.
+print("=========== enumerate ============")
+for i, name in enumerate(['A', 'B', 'C']):
+  print(f"{i} : {name}")
+
+# 문자열로 된 계산식의 결과 반환 - eval
+print("=========== eval ============")
+print(eval("1 + 2")) # 출력 : 3
+print(eval("'Hello' + ' ' + 'World'")) # 출력 : Hello World
+print(eval("abs(-7)")) # 출력 : 7
+
+# 조건에 맞는 데이터 걸러내기 - filter
+# 인자로 넘긴 함수의 결과가 true인 데이터만 남긴다.
+# 결과를 사용하려면 list 메소드를 사용하는 것이 좋다.
+# 람다를 사용하는 방법도 있다.
+print("=========== filter ============")
+def isZero(num):
+  return num == 0
+# 기본 사용법
+print(list(filter(isZero, [0, 1, 0, 1, 0]))) # 출력 : [0, 0, 0]
+# 람다를 사용하는 경우
+print(list(filter(lambda num:num==0, [0, 1, 0, 1, 0]))) # 출력 : [0, 0, 0]
+
+# 10진수를 16진수로 형변환하기 - hex
+print("=========== hex ============")
+print(hex(377)) # 출력 : 0x179
+
+# 객체의 고유 주솟값 반환 - id
+# 값이 변하지 않는 불변 객체일 경우에는 주솟값이 고정되어 있다.
+print("=========== id ============")
+print(id(7))
+print(id([1, 2, 3]))
+
+# 입력 값 받기 - input
+print("=========== input ============")
+print(input("입력 받기 : ")) # 입력한 값 출력
+
+# 문자열이나 실수를 정수로 바꾸기 - int
+# 문자열일 경우에는 소수점을 사용할 수 없다.
+# 소수점 뒤쪽은 버려진다.
+# 인자를 하나 추가해서 몇 진수인지 나타낼 수 있다.
+print("=========== int ============")
+print(int('7')) # 출력 : 7
+print(int(3.14)) # 출력 : 3
+print(int(7.77)) # 출력 : 7
+print(int('111', 2)) # 출력 : 7, 2진수 111은 10진수로 7이다.
+
+# 해당 클래스의 인스턴스인지 확인하기 - isinstance
+print("=========== isinstance ============")
+class Person:
+  def __init__(self):
+    print("Person 인스턴스 생성")
+class NotPerson:
+  def __init__(self):
+    print("NotPerson 인스턴스 생성")
+person = Person()
+not_person = NotPerson()
+print(isinstance(person, Person)) # 출력 : True
+print(isinstance(not_person, Person)) # 출력 : False
+
+# 컬렉션의 길이 구하기 - len
+print("=========== len ============")
+print(len("Hello World")) # 출력 : 11
+print(len([1, 2, 3])) # 출력 ㅣ 3
+print(len([])) # 출력 : 0
+
+# 반복 가능한 데이터를 입력받아서 리스트로 반환하기 - list
+print("=========== list ============")
+print(list("Hello World")) # 출력 : ['H', 'e', 'l', 'l', 'o', '', 'W', 'o', 'r', 'l', 'd']
+print(list((1, 2, 3))) # 출력 : [1, 2, 3]
+
+# 컬렉션 데이터 일괄 가공하기 - map
+# 인자로 넘긴 함수의 반환 값을 수집한다.
+# 결과를 사용하려면 list 메소드를 사용하는 것이 좋다.
+# 람다를 사용하는 방법도 있다.
+print("=========== map ============")
+def x2(num):
+  return num * 2
+# 기본 사용법
+print(list(map(x2, [1, 3, 5]))) # 출력 : [2, 6, 10]
+# 람다를 사용하는 경우
+print(list(map(lambda num:num*2, [1, 3, 5]))) # 출력 : [2, 6, 10]
+
+# 컬렉션 데이터에서 가장 큰 값 반환하기 - max
+print("=========== max ============")
+print(max([1, 2, 3, 4, 5])) # 출력 : 5
+print(max("Python")) # 출력 : 'y'
+
+# 컬렉션 데이터에서 가장 작은 값 반환하기 - min
+print("=========== min ============")
+print(min([1, 2, 3, 4, 5])) # 출력 : 1
+print(min("Python")) # 출력 : 'P'
+
+# 정수를 8진수로 바꾸기 - oct
+print("=========== oct ============")
+print(oct(100)) # 출력 : 0o144
+
+# 파일 객체 리턴하기 - open
+# w : 쓰기 모드로 파일 열기
+# r : 읽기 모드로 파일 열기
+# a : 추가 모드로 파일 열기
+# b : 바이너리 모드로 파일 열기
+# 읽기 방법은 여러 모드를 합쳐서 사용할 수 있다.
+# 읽기 방법 생략 시 기본 값 : 읽기 모드 (r)
+print("=========== open ============")
+# open("파일명", "rb") # 바이너리 읽기 모드
+
+# 문자의 유니코드 숫자 값 반환 - ord
+# 한글자 단위로만 가능하다.
+print("=========== ord ============")
+print(ord("Y")) # 출력 : 89
+
+# x의 y 제곱한 값 반환 - pow
+print("=========== pow ============")
+print(pow(7, 3)) # 출력 : 343, 7의 세제곱
+
+# 입력 받은 숫자에 따른 범위 객체 반환 - range
+# range(stop) : 0 ~ (stop - 1)
+# range(start, stop) : start ~ (stop - 1), 1씩 증가
+# range(start, stop, step) : start ~ (stop - 1)은 동일하나 step씩 증가
+print("=========== range ============")
+print(list(range(5))) # 출력 : [0, 1, 2, 3, 4]
+print(list(range(2, 5))) # 출력 : [2, 3, 4]
+print(list(range(-1, -3))) # 출력 : [], 범위에 해당하는 값이 없음
+print(list(range(0, 5, 2))) # 출력 : [0, 2, 4]
+print(list(range(-1, 5, 2))) # 출력 : [-1, 1, 3]
+print(list(range(-1, -5, -1))) # 출력 : [-1, -2, -3, -4], step에 음수 사
+
+# 반올림 - round
+# 소수점 몇 번째자리까지 표시할지 지정 가능
+# n 지정 시 n + 1 자리에서 행
+# n에는 음수도 지정할 수 있다.
+# 생략 시 정수로 처리한다.
+print("=========== round ============")
+print(round(3.745)) # 출력 : 4
+print(round(3.745, 0)) # 출력 : 4.0
+print(round(3.745, 1)) # 출력 : 3.7
+print(round(3.745, 2)) # 출력 : 3.75
+print(round(13.745, -1)) # 출력 : 10.0
+
+# 컬렉션 정렬하기 - sorted
+# 내장 함수인 sorted는 정렬한 결과를 리스트로 반환한다.
+# 리스트 자료형의 sort 함수는 원본 데이터를 정렬한다.
+print("=========== sorted ============")
+print(sorted([3, 1, 2])) # 출력 : [1, 2, 3]
+
+# 문자열로 바꾸기 - str
+print("=========== str ============")
+print(str(3.14)) # 출력 : 3.14
+
+# 컬렉션 데이터의 합 반환 - sum
+print("=========== sum ============")
+print(sum([1, 2, 3, 4, 5])) # 출력 : 15
+
+# 반복 가능한 데이터를 입력받아서 튜플로 반환 - tuple
+print("=========== tuple ============")
+print(tuple("Hello World")) # 출력 : ('H', 'e', 'l', 'l', 'o', '', 'W', 'o', 'r', 'l', 'd')
+print(tuple((1, 2, 3))) # 출력 : (1, 2, 3)
+
+# 자료형 확인하기 - type
+print("=========== type ============")
+print(type(123)) # 출력 : <class 'int'>
+print(type(3.14)) # 출력 : <class 'float'>
+print(type("Hello World")) # 출력 : <class 'str'>
+
+# 동일한 개수의 요소를 가진 컬렉션들을 묶어서 반환 - zip
+# 요소의 개수가 다르다면 짧은 쪽이 기존이 된다.
+#   => [1, 2, 3]과 [4, 5]일 경우 [(1, 4), (2, 5)]가 된다.
+# 요소의 개수가 다른데 길이를 맞추고 싶다면 itertools.zip_longest()를 사용하면 된다.
+print("=========== zip ============")
+# 여러 컬렉션을 병렬적으로 처리하는 경우
+names = ['철수', '영희', '민수']
+scores = [90, 85, 95]
+for name, score in zip(names, scores):
+    print(f"{name}의 점수는 {score}점입니다.")
+# 여러 컬렉션을 동시에 순회하는 경우
+list1 = [1, 2, 3]
+list2 = [4, 5, 6]
+for a, b in zip(list1, list2):
+    print(a + b)
+# 딕셔너리를 만드는 경우
+keys = ['key1', 'key2', 'key3']
+values = ['value1', 'value2', 'value3']
+my_dict = dict(zip(keys, values))
+print(my_dict) # 출력 : {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'}
+{% endhighlight %}
+
+### 외장 함수 (External Functions)
+
+외장 함수는 파이썬 표준 라이브러리나  
+외부 라이브러리에 포함된 함수다.  
+내장 함수와 달리 사용하기 전에  
+import를 통해 모듈이나 패키지를 가져와야 사용할 수 있다.
+
+모듈에 대해 공부하기 위해 사용했던 sys가 여기에 해당한다.
+
+#### 자주 사용하는 외장 함수
+
+- datetime
+    - 사용 용도
+        - 날짜와 시간 처리
+    - 예시
+        - `datetime.datetime.now()`
+            - 현재 날짜와 시간
+        - `datetime.date.today()`
+            - 오늘 날짜
+        - `datetime.timedelta`
+            - 날짜/시간의 차이 계산
+- math
+    - 사용 용도
+        - 수학 함수 (제곱근, 삼각함수 등)
+    - 예시
+        - `math.sqrt(x)`
+            - 제곱근
+        - `math.sin(x)`, `math.cos(x)`, `math.tan(x)`
+            - 삼각함수
+        - `math.pow(x, y)`
+            - 거듭 제곱
+        - `math.pi`
+            - 원주율
+- os
+    - 사용 용도
+        - 운영체제 기능 제어
+        - 운영체제 기능에는 파일, 디렉토리, 환경변수 등이 해당한다.
+    - 예시
+        - `os.getcwd()`
+            - 현재 작업 디렉토리 반환
+        - `os.listdir(path)`
+            - 디렉토리 안 파일 목록 반환
+        - `os.mkdir(path)`
+            - 디렉토리 생성
+        - `os.remove(path)`
+            - 파일 삭제
+- pickel
+    - 파이썬 객체를 파일로 저장하거나 복원
+- random
+    - 사용 용도
+        - 난수 생성 및 무작위 선택
+    - 예시
+        - `random.random()`
+            - 0~1 난수 반환
+        - `random.randint(a, b)`
+            - a~b 난수 정수 반환
+        - `random.choice(seq)`
+            - 리스트 등에서 랜덤 선택
+        - `random.shuffle(seq)`
+            - 리스트 요소 무작위 섞기
+- re
+    - 사용 용도
+        - 정규 표현식을 이용한 문자열 검색, 치환 등을 지원
+    - 예시
+        - `re.search(pattern, string)`
+            - 패턴 검색
+        - `re.match(pattern, string)`
+            - 문자열 처음부터 패턴 검색
+        - `re.findall(pattern, string)`
+            - 모든 패턴 일치 결과 반환
+- requests (별도 설치 필요)
+    - 사용 용도
+        - HTTP 요청 처리
+    - 예시
+        - `requests.get(url)`
+            - HTTP GET 요청
+        - `requests.post(url, data)`
+            - HTTP POST 요청
+    - 특이사항
+        - 위쪽의 다른 함수와 달리 별도로 설치해야 한다.
+- shut
+    - 사용 용도
+        - 파일과 디렉토리 복사, 이동, 삭제를 지원
+    - 예시
+        - `shutil.copy(src, dst)`
+            - 파일 복사
+        - `shutil.move(src, dst)`
+            - 파일/폴더 이동
+        - `shutil.rmtree(path)`
+            - 폴더 삭제
+- sys
+    - 사용 용도
+        - 파이썬 시스템 관련 기능
+    - 예시
+        - `sys.argv`
+            - 명령줄 인수 목록 반환
+        - `sys.exit()`
+            - 프로그램 종료
+        - `sys.path`
+            - 모듈 검색 경로 반환
+- tempfile
+    - 사용 용도
+        - 임시 파일 및 임시 디렉토리를 생성
+    - 예시
+        - `tempfile.TemporaryFile()`
+            - 임시 파일 생성
+        - `tempfile.NamedTemporaryFile()`
+            - 이름이 있는 임시 파일 생성
+        - `tempfile.TemporaryDirectory()`
+            - 임시 폴더 생성
+- time
+    - 사용 용도
+        - 시간 관련 처리
+    - 예시
+        - `time.time()`
+            - 현재 시간(초 단위) 반환
+        - `time.sleep(seconds)`
+            - 프로그램 일시 정지
+        - `time.strftime(format, t)`
+            - 시간 포맷팅
+
+### 내장 라이브러리와 외장 라이브러리
+
+#### 라이브러리(Library)란?
+
+- 다양한 함수, 클래스, 모듈을 모아둔 코드 모음집
+- 구조나 형태에 대한 제한이 없다.
+
+#### 모듈, 패키지, 라이브러리
+
+앞서 설명한 외장 함수의 경우에  
+import를 통해서 별도의 모듈을 불러와서  
+함수를 사용하는 것을 알 수 있다.
+
+그렇다면 여기서 모듈과 패키지에 대해서 다시 알아보자.  
+모듈은 1개의 파일이다.  
+그리고 패키지는 디렉터리 구조를 가지는 모듈의 모음이다.
+
+그럼 여기서 드는 의문점은  
+"라이브러리는 모듈인가 패키지인가?"다.  
+정답은 "둘 다 해당한다."이다.
+
+왜냐하면 라이브러리의 정의를 다시 확인해보면  
+구조나 형태에 대한 제한이 없다는 것이다.  
+즉, 모듈 1개만 있어도 라이브러리가 될 수 있고  
+디렉터리 구조를 가지고 있어도 라이브러리가 될 수 있다.
+
+예시를 들어보자.  
+모듈 중에서 math나 sys의 경우에는 1개의 파일에 작성되어 있다.  
+이 경우에는 모듈형 라이브러리에 해당한다.  
+os나 http의 경우에는 패키지로 구성되어 있다.  
+이 경우에는 패키지형 라이브러리에 속한다.
+
+#### 내장 라이브러리 (Built-in Library)
+
+math나 sys는  
+파이썬을 설치할 때 함께 설치되는  
+`내장 모듈`이다.
+
+import로 불러와야 하는 것 뿐이지  
+결국 파이썬을 설치하면  
+별도의 설치 없이도 사용할 수 있다.
+
+이러한 라이브러리들을 `내장 라이브러리`라고 한다.
+
+#### 외장 라이브러리 (External Library)
+
+request는  
+파이썬을 설치할 때 함께 설치되지 않는다.
+
+이러한 별도의 라이브러리들은  
+pip라는 것을 통해서 따로 설치를 해줘야 한다.
+
+이러한 라이브러리들을 `외장 라이브러리`라고 한다.
+
+#### pip (Python Package Installer)
+
+pip는 파이썬의 외장 라이브러리를 설치/관리하는 프로그램이다.  
+파이썬 3.4 이상 설치 시 기본으로 함께 설치된다.  
+pip를 통해 설치한 라이브러리는  
+import를 통해 바로 사용할 수 있다.
+
+파이썬 3.3 이하 설치 시 pip를 사용하려면  
+별도로 설치해야 한다.  
+다만 3.3 이하는 공식적으로 지원이 종료되었기 때문에  
+pip 설치 자체가 불안정할 수 있다.
+
+만약 파이썬 3.3 이하를 사용한다면  
+`get-pip.py 설치`로 검색해서  
+pip를 설치하자.
+
+#### pip 명령어
+
+pip 명령어는 터미널을 통해 입력하면 된다.
+
+- `pip install 패키지명`
+    - 패키지 설치
+- `pip uninstall 패키지명`
+    - 패키지 삭제
+- `pip list`
+    - 설치된 패키지 목록 확인
+- `pip show 패키지명`
+    - 특정 패키지 정보 확인
+- `pip freeze`
+    - 현재 설치된 패키지 목록(버전 포함) 출력
+
+### 출처
+
+- [프로그래밍 시작하기 : 파이썬 입문 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9E%85%EB%AC%B8-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)
