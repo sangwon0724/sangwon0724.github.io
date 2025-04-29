@@ -1,0 +1,234 @@
+---
+layout: post
+title:  "파일 입출력"
+date:   2025-04-30 00:34:00 +0900
+categories: Python
+---
+
+### 사용자 입출력
+
+이전까지 입출력은 사용자가 무언가를 입력하면  
+그 데이터를 받아서 처리한 뒤 결과를 출력했다.
+
+input() 함수를 통해 사용자로부터 입력을 받았고,  
+print() 함수를 통해 결과를 출력했다.
+
+### 파일 입출력
+
+입출력에는 사용자 입출력말고도 파일을 통한 입출력 방법도 있다.  
+이번에는 파일을 통한 입출력 방법을 알아 보자.
+
+#### open 함수
+
+우선 에디터에서 아래의 코드를 실행해보자.
+{% highlight py %}
+f = open("무언가.txt", mode='w')
+f.close()
+{% endhighlight %}
+
+그런 다음에 에디터를 확인해보면  
+프로그램을 실행한 디렉터리에 새로운 파일이 생겨난 것을 알 수 있다.
+
+open은 아래와 같이 사용하는 내장 함수다.  
+파일을 열고 해당 파일 객체를 돌려준다.  
+파일을 열 수 없으면 OSError가 발생한다.
+{% highlight py %}
+# 실제로는 더 다양한 옵션이 있다.
+파일_객체 = open(파일명, 모드)
+{% endhighlight %}
+
+모드에는 아래와 같은 종류가 있다.
+- `r (Read)`
+    - 읽기 모드
+    - 파일이 존재하는 경우에만 사용할 수 있다.
+    - mode 생략 시 기본값
+- `w (Write)`
+    - 쓰기 모드
+    - 파일이 이미 존재한다면 원래 있던 내용이 모두 사라진다.
+    - 파일이 존재하지 않는다면 새로운 파일이 생성된다.
+- `a (Add)`
+    - 추가 모드
+    - 파일 끝에 새로운 내용을 추가한다.
+- `x (eXclusive)`
+    - 생성 모드
+    - 새로운 파일을 생성한다.
+    - 파일이 이미 존재한다면 실패한다.
+    - 파이썬 3.3 이상부터 사용할 수 있다.
+- `b (Binary)`
+    - 바이너리 모드
+    - 이미지같은 파일에 대해서 사용한다.
+- `t (Text)`
+    - 텍스트 모드
+    - mode 생략 시 기본값
+- `+`
+    - 읽기/쓰기 겸용 모드
+
+모드는 `rt`나 `wb`처럼 여러 가지를 함께 사용할 수도 있다.  
+만약 `rt`라면 텍스트 읽기 모드가 되는 것이고,  
+`wb`라면 바이너리 쓰기 모드가 되는 것이다.
+
+#### 파일 경로
+
+파일 경로를 표시할 때는 `C:/test/테스트.txt`처럼 `슬래시(/)`를 사용할 수 있다.  
+슬래시 대신에 `역슬래시(\)`를 사용할 수도 있다.  
+다만 역슬래시를 사용하는 경우에는 역슬래시를 2번 사용하거나,  
+아니면 문자열 앞에 r을 붙여서 `r문자(Raw String)`으로 만들어줘야 한다.  
+그렇지 않으면 `C:\no_escape\테스트.txt`처럼 되었을 때  
+문자열 특성 상 도중에 있는 `\n`이 줄바꿈 문자로 해석되기 때문이다.
+
+#### 다양한 읽기 방법
+
+파일 내용을 읽는 방법에는 여러 가지가 있다.
+{% highlight py %}
+# 읽기 모드로 파일 객체 생성
+f = open('sample.txt', 'r', encoding='utf-8')
+
+# 파일 전체 읽기
+data = f.read()
+
+# 한 줄씩 읽기
+line = f.readline()
+
+# 모든 줄을 리스트로 읽기
+lines = f.readlines()
+
+# 파일 객체 닫기
+f.close()
+{% endhighlight %}
+
+#### 다양한 쓰기 방법
+
+파일 내용을 쓰는 방법에도 여러 가지가 있다.
+{% highlight py %}
+# 쓰기 모드로 파일 객체 생성
+f = open('sample.txt', 'w', encoding='utf-8')
+
+# 문자열 하나를 파일에 쓰기
+f.write('Hello, World!\n')
+
+# 문자열 리스트를 파일에 쓰기
+f.writelines(['Line1\n', 'Line2\n'])
+
+# 파일 객체 닫기
+f.close()
+{% endhighlight %}
+
+#### with
+
+- 파일을 열고 작업한 후 자동으로 닫아주는 문법이다.
+- 가장 안전한 파일 입출력 방식이다.
+- with 블록을 벗어나면 자동으로 close() 함수가 호출된다.
+- 사용법
+    - open() 함수 앞에 `with` 키워드를 붙인다.
+    - 해당 파일에 대해 처리할 코드를을 if문처럼 with-open문 하위에 작성한다.
+
+{% highlight py %}
+with open('sample.txt', 'r', encoding='utf-8') as f:
+    data = f.read()
+
+{% endhighlight %}
+
+#### 입출력 관련 주의 사항
+
+- 반드시 `파일객체.close()`를 통해 파일을 닫아야 한다.
+    - 파일을 닫아야 리소스가 해제된다.
+- 예외 처리를 하는 것이 좋다.
+    - 읽을 파일이 없거나, 읽기 도중 오류가 발생할 수 있다.
+    - `try-except`문을 사용하자.
+- with문을 사용하자.
+    - with문을 사용하면 파일을 자동으로 닫아준다.
+
+### pickle
+
+#### pickle이란?
+
+- 파이썬 객체를 파일에 저장하거나 파일에서 객체를 복원할 때 사용한다.
+- 파일에 저장할 때 바이너리 쓰기 모드(wb)로 열어야 한다.
+
+#### 사용법
+
+{% highlight py %}
+# 모듈 불러오기
+import pickle
+
+# 파일에 작성할 데이터
+data = {'a': [1,2,3], 'b': (4,5,6)}
+
+# 파일 쓰기
+with open('data.pkl', 'wb') as f:
+    pickle.dump(data, f)
+
+# 파일 읽기
+with open('data.pkl', 'rb') as f:
+    loaded_data = pickle.load(f)
+{% endhighlight %}
+
+#### 주의사항
+
+pickle은 보안 문제가 있을 수 있으니  
+신뢰할 수 있는 소스만 사용해야 한다.
+
+### CSV (Comma-Separated Values) 파일
+
+#### CSV 파일이란?
+
+- 쉼표(,)로 구분된 데이터 파일이다.
+- 주로 데이터 저장/전달에 많이 사용된다.
+- 첫번째 줄에는 각 데이터가 어떤 것에 대한 데이터인지 작성한다.
+- 두번째 줄부터는 실제 데이터를 작성한다.
+- csv 파일에 대해 처리할 때는 cvs라는 모듈을 추가로 사용한다.
+
+#### csv 파일 예시
+
+```
+name,age,grade
+John,20,A
+Jane,22,B
+```
+
+#### csv 파일 읽기
+
+{% highlight py %}
+import csv
+
+with open('students.csv', newline='', encoding='utf-8') as f:
+    # csv.reader를 통해 csv 파일 읽기
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+
+{% endhighlight %}
+
+#### csv 파일 쓰기
+
+{% highlight py %}
+import csv
+
+with open('students.csv', 'w', newline='', encoding='utf-8') as f:
+    # csv.writer 통해 csv 파일 쓰기 객체 생성하기
+    writer = csv.writer(f)
+    # writer.writerow를 통해 csv 파일에 행 데이터 추가하기
+    # writer.writerow()는 한 줄 쓰기
+    # writer.writerows()는 여러 줄 쓰기.
+    writer.writerow(['name', 'age', 'grade'])
+    writer.writerow(['John', 20, 'A'])
+    writer.writerow(['Jane', 22, 'B'])
+{% endhighlight %}
+
+#### csv.DictReader
+
+csv 파일의 첫번째 줄은 각 데이터가 어떠한 것에 대한 데이터인지를 명시한다.  
+이를 통해 csv 파일을 읽어서 딕셔너리를 만들 수 있다.
+{% highlight py %}
+import csv
+
+with open('students.csv', newline='', encoding='utf-8') as f:
+    # csv.DictReader를 통해 딕셔너리 형태로 읽기
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(row['name'], row['age'])
+{% endhighlight %}
+
+### 출처
+
+- [프로그래밍 시작하기 : 파이썬 입문 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9E%85%EB%AC%B8-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)
