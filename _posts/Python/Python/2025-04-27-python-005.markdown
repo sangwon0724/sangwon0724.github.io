@@ -94,7 +94,7 @@ class Person:
 클래스를 사용할 때는 `변수명 = 클래스명()`처럼 사용하면 된다.  
 클래스 내의 메소드를 호출할 때는 `변수명.메소드명(매개변수)`처럼 사용하면 된다.
 
-#### \_\_init\_\_
+#### \_\_init\_\_ 메소드
 
 클래스는 각 객체들의 공통점을 모아서 만든 설계도다.  
 그렇다면 해당 설계도를 통해서 각 객체마다의 데이터를 담게하려면 어떻게 해야 할까?
@@ -365,14 +365,277 @@ d.show()
 다중 상속의 경우에는 어떤 부모 클래스의 메소드가 호출될지에 대한 순서를 알기가 어렵다.  
 그러니 다중 상속을 할 때는 애초에 겹치는 메소드명이 없게 설계하는 것이 좋다.
 
-<!--
-@TODO
-- 클래스 => __str__
-- 클래스 => __repr__
-- 클래스 메소드 => @classmethod, self 대신에 cls(클래스)를 받음, 데코레이터
-- 스태틱 메소드 => @staticmethod, self 대신에 inst(인스턴스)를 받음, 데코레이터
--->
+### 접근 제어자 (Access Modifier)
+
+#### 접근 제어자란?
+
+- 클래스 내의 속성에 접근을 제한하는 역할을 하는 문법을 뜻한다.
+- 정보 은닉을 구현하기 위해 사용한다.
+- 접근 제어자의 종류는 public, protected, private가 있다.
+- 부를 때는 `접근 제어자` + `명칭`으로 부른다.
+    - `public` + `method` = `public method`
+    - `private` + `member` = `private member`
+
+#### public
+
+public은 접근을 완전히 허용하는 방식이다.  
+평소처럼 `count`나 `sum()`과 같이  
+평범하게 이름을 지으면 그게 public이다.
+
+public은 외부에 전부 공개된다.  
+그래서 같은 패키지인지 다른 패키지인지 상관없이  
+어디에서도 접근할 수 있다.
+
+#### protected
+
+protected는 접근을 부분 허용하는 방식이다.  
+앞에 `_`를 붙이면 protected가 된다.  
+protected는 상속의 개념이 적용됬을 때 사용할 수 있다.
+
+protected member는 부모 클래스에서는 public으로,  
+부모 클래스 외에는 private로 취급한다.
+
+다른 언어에서는 protected를 적용했을 때  
+실제로 해당 클래스를 상속받은 클래스나  
+같은 패키지의 클래스에서만 접근할 수 있도록 한다.  
+다만 파이썬에서는 실제로 접근을 제어하지는 않고,  
+protected임을 명시하는 정도로만 사용한다.
+
+#### private
+
+private는 접근을 완전히 제어하는 방식이다.  
+해당 클래스 내부에서만 접근하게 한다.  
+그래서 클래스 내부의 public method를 통해서  
+private member의 값을 반환하거나 수정하는 방식을 사용한다.  
+이 점을 통해 주로 클래스 내부에서만 사용되어야 하는 속성이나 메소드를 정의할 때 사용한다.
+
+다만 다른 언어와 다르게 파이썬에서는 완전히 막는 것은 아니다.  
+파이썬 인터프린터는 `네임 맹글링(Name Mangling)`이라는 매커니즘을 통해서  
+실제 속성이나 메소드명을 `_클래스명__멤버명`처럼 변경한다.  
+그래서 `클래스명.__멤버명`처럼은 호출할 수는 없어도  
+인스턴스 멤버나 인스턴스 메소드라면  
+`객체명._클래스명__멤버명`처럼 호출하면 private member에도 접근할 수 있다.  
+클래스 변수는 네임 맹글링으로도 접근할 수가 없다.
+
+### 클래스 심화
+
+#### \_\_str\_\_ 메소드
+
+만약에 아래와 같은 클래스가 있다고 가정해보자.
+{% highlight py %}
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+{% endhighlight %}
+
+이 때 아래와 같이 객체를 직접 출력하면 어떻게 될까?
+{% highlight py %}
+p = Person("홍길동", 30)
+print(p) # 출력 : <__main__.Person object at 0x76a3dec07440>
+{% endhighlight %}
+
+그러면 `<__main__.Person object at 0x76a3dec07440>`처럼  
+해당 객체가 어떤 클래스인지가 출력된다.  
+그런데 만약 객체를 print()로 출력하려고 했을 때  
+객체가 가진 데이터를 보여주고 싶다면 어떻게 해야할까?
+
+그럴 때 사용하는 것이 `__str__` 함수다.  
+`__str__` 함수는 객체를 직접 출력했을 때 동작할 코드를 작성할 수 있다.  
+아까의 클래스를 아래와 같이 수정해보자.
+{% highlight py %}
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"이름: {self.name}, 나이: {self.age}"
+{% endhighlight %}
+
+그런 다음에 다시 객체를 직접 출력해보면  
+해당 객체가 가지고 있던 데이터를 포맷팅해서 출력하는 것을 확인할 수 있다.
+{% highlight py %}
+p = Person("홍길동", 30)
+print(p) # 출력 : '이름 : 홍길동, 나이 : 30'
+{% endhighlight %}
+
+참고로 `__str__` 메소드는 `print(p)`나 `str(p)`처럼  
+"문자열을 출력"하려는 경우에 호출된다.  
+그리고 만약 `__str__`이 정의되어 있지 않다면  
+다음에 소개할 `__repr__`이 자동으로 대신 호출된다.
+
+#### \_\_repr\_\_ 메소드
+
+`__repr__` 메소드도 `__str__` 메소드처럼 객체의 문자열 표현을 정의하기 위한 메소드다.  
+다만 `__str__` 메소드는 데이터를 보기 쉽게 확인하기 위한 문자열을 반환했다면,  
+`__repr__` 메소드는 실제 코드처럼 보이게 하는 객체를 다시 생성할 수 있는 문자열을  
+반환하는 것이 목적이다.  
+보통 객체를 디버깅용으로 표현할 때 사용한다.
+
+아까의 클래스를 아래와 같이 수정해보자.
+{% highlight py %}
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def __str__(self):
+        return f"이름: {self.name}, 나이: {self.age}"
+    def __repr__(self):
+        return f"Person('{self.name}', {self.age})"
+{% endhighlight %}
+
+이제 print 메소드와 repr 메소드를 통해 `__repr__` 메소드를 호출해보자.
+{% highlight py %}
+p = Person("홍길동", 30)
+print(repr(p)) # 출력 : Person('홍길동', 30)
+{% endhighlight %}
+
+참고로 `__repr__` 메소드는 `repr(obj)`나 인터프린터에서 객체 입력 시 호출된다.  
+또한 `__repr__` 메소드를 별도로 정의하지 않아도 기본값으로 항상 존재한다.
+
+#### 클래스 메소드 (Class Method)
+
+private member는 인스턴스 변수나 인스턴스 메소드였다면  
+권장되는 방법은 아니지만 네임 맹글러를 통해서 접근할 수 있긴 하다.  
+다만 클래스 변수가 private member였다면 네임 맹글러로도 접근할 수 없다.
+
+그렇다면 정상적인 방법으로 private member에 접근하려면 어떻게 해야 할까?  
+그럴 때 사용하는 것이 바로 클래스 메소드다.
+
+인스턴스 메소드는 관례에 의해서 self라는 매개변수를 받았었다.  
+이 때의 self는 객체 자신을 가리켰었다.  
+이와 다르게 클래스 메소드는 관례에 의해서 cls라는 매겨변수를 받는다.  
+이 때의 cls는 클래스를 가리킨다.
+
+아까의 클래스를 아래와 같이 수정해보자.
+{% highlight py %}
+class Person:
+    __count = 0 # private 클래스 변수
+    def __init__(self, name, age, birthdate):
+        self.name = name
+        self.age = age
+        self.__birthdate = birthdate # private 인스턴스 변수
+        __count += 1
+    def __str__(self):
+        return f"이름: {self.name}, 나이: {self.age}"
+    def __repr__(self):
+        return f"Person('{self.name}', {self.age})"
+{% endhighlight %}
+
+만약 이와 같이 클래스가 변경되었을 때  
+`__count`와 `__birthdate`를 출력하려면 어떻게 해야할까?  
+우선은 print()를 통해 출력을 시도해보자.
+{% highlight py %}
+p = Person("홍길동", 30, "1974-03-02")
+print(p.__birthdate) # 오류 발생
+print(p.__count) # 오류 발생
+{% endhighlight %}
+
+실제로 실행을 해보면  
+`'Person' object has no attribute '속성명'`처럼 출력된다.  
+이는 private 접근 제어자때문에 접근을 하지 못 하다보니  
+없는 속성이라고 판단한 것이다.  
+이제 실제로 접근하기 위해서 클래스 메소드를 사용해보자.
+
+클래스 메소드는 `애노테이션(Annotation)`이라는 것과 함께 사용한다.  
+`@classmethod`라는 애노테이션을 추가해서  
+해당 메소드가 클래스 메소드라는 것을 인지시키고,  
+매개변수로는 cls(클래스)를 받으면 된다.
+
+이전의 클래스를 아래와 같이 수정해보자.
+{% highlight py %}
+class Person:
+    __count = 0 # private 클래스 변수
+    def __init__(self, name, age, birthdate):
+        self.name = name
+        self.age = age
+        self.__birthdate = birthdate # private 인스턴스 변수
+        Person.__count += 1
+    def __str__(self):
+        return f"이름: {self.name}, 나이: {self.age}"
+    def __repr__(self):
+        return f"Person('{self.name}', {self.age})"
+    def get_birthdate(self):
+        return self.__birthdate
+    @classmethod
+    def get_count(cls):
+        return cls.__count
+{% endhighlight %}
+
+get_birthdate는 private 접근 제어자의 이해를 위해 추가해봤다.  
+`self.__속성명=값`으로 값을 저장한 경우에는 해당 인스턴스에 값을 저장한 것이다.  
+클래스 메소드는 이름 그대로 클래스를 위한 메소드라서  
+private 인스턴스 변수를 제어하려면 인스턴스 메소드를 사용해야 한다.
+
+이제 클래스 메소드에 대해 알아보자.  
+원리 자체는 단순하다.  
+`cls.속성명`을 통해 클래스 변수를 불러와서 제어하면 된다.  
+실제로 출력해보면 잘 불러오는 것을 알 수 있다.
+{% highlight py %}
+p = Person("홍길동", 30, "0000-00-00")
+print(p.get_birthdate())
+print(Person.get_count()) # 접근 방법 1 : 클래스를 통한 접근
+print(p.get_count()) # 접근 방법 2 : 객체를 통한 접근
+{% endhighlight %}
+
+출력하는 코드를 보면 클래스 메소드를 방법을 2가지로 불러오는 것을 알 수 있다.  
+우선 클래스 메소드는 기본적으로 클래스를 위한 메소드이기 때문에  
+`클래스명.메소드명`으로 호출할 수 있다.  
+재밌는 부분은 `객체명.메소드명`으로도 부를 수 있다는 것인데,  
+이것이 가능한 이유는 객체가 자신의 클래스에 대한 정보를 가지고 있기 때문이다.  
+왜냐하면 파이썬이 객체를 통해서 변수나 메소드를 호출하면  
+해당 클래스의 변수나 메소드를 찾아서 호출하기 위해 설계되어 있기 때문이다.
+
+#### 스태틱 메소드 (Static Method)
+
+스태틱 메소드는 클래스나 인스턴스와는 관계없는 유틸리티 함수다.  
+그래서 self나 cls를 매개변수로 받지 않는다.  
+주로 일반 함수와 같지만 클래스 내부에 논리적으로 묶고 싶을 때 사용한다.  
+다만 매개변수를 안 받아도 되는 것이지 받으면 안 되는 것은 아니다.  
+필요 시 클래스의 메소드가 아닌 일반적인 함수처럼 매개변수를 넘겨줄 수 있다.
+
+스태틱 메소드는 `@staticmethod` 애노테이션을 추가해서  
+함수를 정의하면 된다.
+
+이전의 클래스를 아래와 같이 수정해보자.
+{% highlight py %}
+class Person:
+    __count = 0 # private 클래스 변수
+    def __init__(self, name, age, birthdate):
+        self.name = name
+        self.age = age
+        self.__birthdate = birthdate # private 인스턴스 변수
+        Person.__count += 1
+    def __str__(self):
+        return f"이름: {self.name}, 나이: {self.age}"
+    def __repr__(self):
+        return f"Person('{self.name}', {self.age})"
+    def get_birthdate(self):
+        return self.__birthdate
+    @classmethod
+    def get_count(cls):
+        return cls.__count
+    @staticmethod
+    def sum(a, b):
+        print(a + b)
+{% endhighlight %}
+
+sum이라는 간단한 스태틱 메소드를 만들어보았다.  
+함수를 구현한 부분을 보면 알 수 있듯이  
+인스턴스나 클래스에 대한 매개변수가 존재하지 않는다.
+
+이제 실제로 호출해보자.
+{% highlight py %}
+p = Person("홍길동", 30, "0000-00-00")
+Person.sum(1, 2) # 접근 방법 1 : 클래스를 통한 접근
+p.sum(1,2) # 접근 방법 2 : 객체를 통한 접근
+{% endhighlight %}
+
+스태틱 메소드도 클래스 메소드처럼 호출할 수 있다.  
+그래서 클래스를 통해 호출할 수도 있고 객체를 통해 호출할 수도 있다.
 
 ### 출처
 
 - [프로그래밍 시작하기 : 파이썬 입문 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9E%85%EB%AC%B8-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)
+- [우리를 위한 프로그래밍 : 파이썬 중급 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%A4%91%EA%B8%89-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)
