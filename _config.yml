@@ -65,6 +65,7 @@ category_depth:
     - React&nbsp;Hooks
     - React&nbsp;Native
     - Redux
+    - Zustand
     - Code&nbsp;Snippet&nbsp;(JavaScript)
   Jekyll:
     - Jekyll

@@ -279,3 +279,45 @@ const Sample = () => {
 
 export default Sample;
 {% endhighlight %}
+
+### 객체를 변경하려면 어떻게 해야할까?
+
+객체를 변경하려면 ... 연산자를 활용하면 된다.
+
+{% highlight react %}
+import { useState } from "react";
+
+const [ userInfo, setUserInfo ] = userState({
+  name: '',
+  mobile: '',
+  email: '',
+});
+
+setUserInfo({...userInfo, email: '이메일주소'})
+{% endhighlight %}
+
+#### 실제 input과 연결해보자.
+
+input의 값을 변경했을 때 자동으로 연동되도록  
+`e.target.name`과 `e.target.value`를 활용하자.
+
+{% highlight react %}
+import { useState } from "react";
+const [input, setInput] = useState({
+  loginId: "",
+  password: ""
+});
+
+/**
+  * ID/PW 값 변경
+  * @param e Form 이벤트
+  */
+function onChange(e){
+  setInput({
+    ...input,
+    [e.target.name]: e.target.value
+  });
+};
+
+<input type="text" name="loginId" value={input.loginId} onChange={onChange}/>
+{% endhighlight %}
