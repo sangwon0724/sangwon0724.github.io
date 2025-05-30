@@ -1,0 +1,400 @@
+---
+layout: post
+title:  "create, set, get"
+date:   2025-05-30 23:00:00 +0900
+categories: Zustand
+published: false
+---
+
+### create
+
+#### 정의
+
+- Zustand 상태 저장소를 생성하는 함수
+
+#### 특징
+
+- 저장소의 초기 상태 및 상태를 변경하는 메소드를 정의하기 위해 사용된다.
+- 클로저를 활용해서 상태를 캡슐화한다.
+- 리액트 컴포넌트에서 상태를 쉽게 사용할 수 있도록 훅을 반환한다.
+- 타입스크립트를 지원한다.
+
+#### 기본 문법
+
+`create((set, get) => (...))`
+
+#### 주의점
+
+- `create`로 만든 함수는 반드시 훅처럼 사용해야 한다.
+
+#### 사용 예시
+
+{% highlight js %}
+import { create } from 'zustand'; 
+
+const useStore = create((set, get) => ({
+    count: 0,   
+}));
+{% endhighlight %}
+
+### set
+
+#### 정의
+
+- 상태를 변경하는 메소드
+
+#### 특징
+
+- 불변성을 유지하면서 상태를 업데이트한다.
+- 리액트 컴포넌트에서 저장소의 상태 값을 사용할 때,  
+`set`을 통해 상태를 업데이트하면  
+Zustand가 자동으로 해당 상태를 구독하는 컴포넌트들을 리랜더링한다.
+
+#### 기본 문법
+
+`set(updater, replace)`
+
+- updater (필수, 2가지 중 1개 전달)
+    - 현재 상태를 인자로 받아 새로운 상태 객체를 반환하는 함수
+    - 새로운 상태 객체
+- replace (선택)
+    - 기본값 (미지정 시) : 병합
+    - `true`로 설정하면 현재 상태를 완전히 교체한다.
+        - 다른 상태 값이 사라져 버릴 수 있다.
+
+#### 주의점
+
+- 비동기적으로 업데이트 되기 때문에, 연속적인 `set` 호출 시 이전 `set`의 결과가 반영되지 않을 수 있다.
+- 반드시 함수형으로 상태 값을 갱신해야 한다.
+- 리액트 컴포넌트에서 저장소의 상태 값을 사용할 때,  
+그 값이 변경되려면 `set`을 사용하는 저장소 내부 메소드를 사용해야 한다.
+
+{% highlight js %}
+// 함수형 업데이트
+set((state) => ({ count: state.count + 1 }));
+
+// 객체 직접 전달 (주의해서 사용)
+set({ count: 10 });
+{% endhighlight %}
+
+#### 사용 예시
+
+`set((state) => ({ count: state.count + 1 }))`처럼 사용할 때,  
+state에는 저장소에 있는 현재 상태값이 존재한다.  
+이를 통해 기존의 상태 값을 상황에 맞게 가공할 수 있다.
+
+{% highlight js %}
+import { create } from 'zustand'; 
+
+const useStore = create((set, get) => ({
+    count: 0,   
+    increment: () => set((state) => ({ count: state.count + 1 })),
+    decrement: () => set((state) => ({ count: state.count -1 })),
+}));
+{% endhighlight %}
+
+### get
+
+#### 정의
+
+- 현재 상태 값을 가져오는 메소드
+
+#### 특징
+
+- 저장소 내의 다른 메소드에서 현재 상태 값에 접근할 때 유용하다.
+
+#### 기본 문법
+
+`get()`
+
+#### 주의점
+
+- `get`으로 가져온 상태 값은 해당 시점의 스냅샷이다.
+- `set`으로 상태를 변경한 후 즉시 `get`을 호출하면 변경 전의 상태를 반환할 수도 있다.
+    - 이유 : `set`의 비동기 업데이트
+
+#### 사용 예시
+
+{% highlight js %}
+import { create } from 'zustand'; 
+
+const useStore = create((set, get) => ({
+    count: 0,   
+    increment: () => set((state) => ({ count: state.count + 1 })),
+    decrement: () => set((state) => ({ count: state.count -1 })),
+    print: () => console.log(`현재 count : ${get().count}`),
+}));
+{% endhighlight %}
+
+### 저장소를 불러오는 방법
+
+#### 컴포넌트 내에서 사용하는 경우
+
+{% highlight js %}
+const { isLoading, showLoading, hideLoading } = useLoadingStore();
+{% endhighlight %}
+
+위 방식은 리액트 컴포넌트 내에서 상태를 구독할 때 사용하는 방법이다.  
+이렇게 하면 컴포넌트가 useLoadingStore라는 저장소의 상태 값을 사용할 때  
+컴포넌트는 저장소의 상태 값을 자동으로 구독하고,  
+상태 값이 변경된다면 이름 감지해서 자동으로 컴포넌트가 리랜더링된다.
+
+#### 컴포넌트 외에서 사용하는 경우
+
+{% highlight js %}
+const { isLoading, showLoading, hideLoading } = useLoadingStore.getState();
+{% endhighlight %}
+
+위 방식은 리액트 컴포넌트 외에서 상태를 직접 가져올 때 사용하는 방법이다.  
+컴포넌트 외부나 리랜더링과 상관 없는 곳에서 사용된다.  
+API 유틸리티 함수, 이벤트 리스너, 외부 라이브러리 등이 해당한다.
+
+### 저장소를 선언하는 방법
+
+#### 기본 사용방식
+
+{% highlight js %}
+const { propertyA, propertyB, propertyC } = useSampleStore();
+{% endhighlight %}
+
+위는 저장소에서 상태 값 및 메소드를 가져오는 기본적인 방법이다.  
+다만 이렇게 사용하게 되면 가져온 상태 값 중에서 하나라도 변경되면  
+선언한 상태 값들 중에서 하나라도 구독 중인 모든 컴포넌틀들이 리랜더링된다.
+
+#### 선택적 구독 (selector 패턴)
+
+{% highlight js %}
+const { propertyA, propertyB, propertyC } = useSampleStore((state) => ({
+  propertyA: state.propertyA,
+  propertyB: state.propertyB,
+  propertyC: state.propertyC
+}));
+{% endhighlight %}
+
+위 방식은 selector 패턴을 통해 저장소에 대한 참조를 분리하는 방법이다.  
+이렇게 사용하게 되면 변경된 상태 값을 참조한 컴포넌트만 리랜더링된다.  
+내부적으로 shallow comparison이 적용되어 있기 때문에  
+객체 참조가 변경되지 않으면 리렌더링이 발생 하지 않는다.  
+해당 방식을 통해 불필요한 리랜더링을 방지해서 성능 최적화를 이끌어 낼 수 있다.
+
+### 스토어 레벨 API
+
+Zustand는 저장소 객체에 대한 별도의 전용 메소드를 제공한다.
+
+#### getState()
+
+- 현재 저장소의 상태 스냅샷을 반환한다.
+- 컴포넌트 외부나 리액트 훅의 규칙을 따르지 않는 곳에서 현재 상태를 즉시 읽을 때 사용한다.
+- `getState()`를 통해 가져온 상태 값은 리액트가 인식하지 못 한다.
+    - 그래서 해당 값을 사용하는 컴포넌트의 리랜더링을 발생시키지 않는다.
+
+{% highlight js %}
+import { create } from 'zustand';
+
+const useAuthStore = create((set) => ({
+  token: null,
+  user: null,
+  setToken: (token) => set({ token }),
+  setUser: (user) => set({ user }),
+}));
+
+// 컴포넌트 외부의 유틸리티 함수
+function getAuthToken() {
+  const { token } = useAuthStore.getState();
+  return token;
+}
+
+console.log("현재 토큰:", getAuthToken()); // 초기값 null
+useAuthStore.getState().setToken("my-jwt-token"); // 액션 호출
+console.log("새로운 토큰:", getAuthToken()); // 업데이트된 토큰 반환
+{% endhighlight %}
+
+#### setState(updater, replace?)
+
+- 저장소의 상태를 직접 업데이트할 때 사용한다.
+- `set`과 유사하지만 `setState`는 저장소의 인스턴스에서 직접 호출할 수 있다.
+- 인자에 들어갈 항목들은 `set`과 동일하다.
+- 호출하면 리랜더링이 되지만, 리액트가 해당 상태 변경을 추적하지 못 할 수도 있다.
+
+{% highlight js %}
+import { create } from 'zustand';
+
+const useCounterStore = create((set) => ({
+  count: 0,
+  increment: () => set((state) => ({ count: state.count + 1 })),
+  decrement: () => set((state) => ({ count: state.count - 1 })),
+}));
+
+console.log("초기 카운트:", useCounterStore.getState().count); // 0
+
+// 직접 상태를 업데이트 (partialState)
+useCounterStore.setState({ count: 10 });
+console.log("직접 업데이트 후 카운트:", useCounterStore.getState().count); // 10
+
+// 함수형 업데이트 (updater)
+useCounterStore.setState((state) => ({ count: state.count + 5 }));
+console.log("함수형 업데이트 후 카운트:", useCounterStore.getState().count); // 15
+
+// 기존 상태를 완전히 교체 (replace: true) - 주의해서 사용
+useCounterStore.setState({ message: "Hello" }, true);
+console.log("교체 후 상태:", useCounterStore.getState()); // { message: "Hello" } (count 속성은 사라짐)
+{% endhighlight %}
+
+#### subscribe(listener)
+
+- 저장소의 상태 변화를 구독한다.
+- listener에는 상태가 변경될 때마다 호출될 콜백 함수를 전달한다.
+- 리액트 컴포넌트 바깥에서도 동작한다.
+- 구독을 해제하는 함수를 반환한다.
+- 직접 상태를 추적해야 한다.
+    - 자동 리랜더링이 없다.
+- 메소리 누수를 방지하려면 구독을 해제하는 함수를 호출해야 한다.
+
+{% highlight js %}
+import { create } from 'zustand';
+
+const useThemeStore = create((set) => ({
+  theme: 'light',
+  toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
+}));
+
+// 상태 변화를 구독
+const unsubscribe = useThemeStore.subscribe(
+  (state, prevState) => {
+    console.log("테마 변경됨:", prevState.theme, "->", state.theme);
+    // 여기에 상태 변화에 따른 사이드 이펙트 로직 추가 (예: localStorage 업데이트, CSS 클래스 변경 등)
+    document.body.className = state.theme;
+  },
+  // (optional) selector 함수: 특정 부분의 상태만 구독하고 싶을 때 사용
+  (state) => state.theme // theme 속성만 변경될 때 listener 호출
+);
+
+useThemeStore.getState().toggleTheme(); // 'dark'로 변경
+useThemeStore.getState().toggleTheme(); // 'light'로 변경
+
+// 더 이상 구독이 필요 없을 때 해제
+// unsubscribe();
+{% endhighlight %}
+
+#### getInitialState()
+
+- Zustand 스토어에서 최초 생성 시 설정한 초기 상태를 반환한다.
+- `getState()`와 달리, 변경되기 전 상태를 참조할 수 있도록 설계된 기능이다.
+- 초기 상태 백업 또는 상태 초기화를 위해 사용한다.
+- 호출 시 `create()` 함수에서 정의한 초기 상태 객체를 반환한다.
+- Zustand v4 이상 버전부터 지원한다.
+
+{% highlight js %}
+import { create } from 'zustand'
+
+const useCounterStore = create((set, get) => {
+  const initialState = { count: 0 }
+
+  return {
+    ...initialState,
+    increment: () => set((state) => ({ count: state.count + 1 })),
+    decrement: () => set((state) => ({ count: state.count - 1 })),
+    reset: () => set(() => getInitialState()),
+  }
+
+  function getInitialState() {
+    return initialState
+  }
+})
+{% endhighlight %}
+
+{% highlight js %}
+const initial = useCounterStore.getInitialState();
+useCounterStore.setState(initial);  // 초기 상태로 리셋
+{% endhighlight %}
+
+#### 그 외
+
+Zustand 자체에서 기본적으로 노출하는 API는 위의 4가지다.  
+다만 Zustand의 미들웨어를 사용하게 되면 다른 메소드들이 추가된다.
+
+### 실제 사용 예시
+
+#### 저장소
+
+{% highlight js %}
+import { create } from 'zustand'
+
+/**
+ * 로딩 인디케이터의 상태에 대한 저장소
+ */
+const useLoadingStore = create(
+    (set:any, get:any) => ({
+        isLoading: false,
+        showLoading: () => set({ isLoading: true }),
+        hideLoading: () => set({ isLoading: false }),
+    })
+);
+
+export default useLoadingStore;
+{% endhighlight %}
+
+#### 컴포넌트에서 사용
+
+{% highlight react %}
+import useLoadingStore from '@store/useLoadingStore'
+import { ProgressSpinner } from 'primereact/progressspinner';
+
+/**
+ * 로딩 인디케이터
+ */
+export const LoadingIndicator = () => {
+  const { isLoading } = useLoadingStore()
+
+  if (!isLoading) return null
+
+  return (
+    <div className="fixed top-[0] left-[0] w-full h-full bg-black/50 z-50 flex items-center justify-center z-[9999]">
+      <ProgressSpinner style={{width: '5rem', height: '5rem'}} strokeWidth="5" animationDuration="1s" />
+    </div>
+  )
+}
+{% endhighlight %}
+
+#### 함수에서 사용
+
+{% highlight js %}
+import axios from "axios";
+import useLoadingStore from '@store/useLoadingStore'
+
+/**
+ * IP 조회하기
+ * @param {*} succFun 성공 시 처리할 기능
+ * @param {*} failFun 실패 시 처리할 기능
+ */
+export const getIp = async (succFun: (data:object) => void, failFun: (data:object) => void) => {
+    const { showLoading, hideLoading } = useLoadingStore.getState();
+
+    try {
+      showLoading()
+      const res = await axios.get('/myip'); // vite.config.ts에서 프록시 처리
+      hideLoading();
+  
+      if (res.data !== null) {
+        if (succFun !== null) {
+          succFun(res.data);
+        }
+      } else {
+        if (failFun !== null) {
+            failFun(res.data);
+        }
+      }
+    } catch (err:any) {
+      console.error(err);
+      let result = err?.response?.data ?? { message: "오류가 발생했습니다."};
+      console.error(result);
+      if (failFun !== null) {
+          failFun(result);
+      } else {
+        alert(result.message);
+      }
+    } finally {
+      hideLoading();
+    }
+};
+{% endhighlight %}
