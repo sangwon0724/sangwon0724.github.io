@@ -1,0 +1,131 @@
+---
+layout: post
+title:  "immer"
+date:   2025-06-16 00:06:00 +0900
+categories: Zustand
+---
+
+### immer
+
+#### 정의
+
+- 불변성을 유지하면서 복잡한 상태 객체를 쉽게 수정할 수 있도록 돕는 라이브러리
+- `draft`라는 가변적인 프록시 객체를 통해 마치 직접 객체를 수정하는 것처럼 코드를 작성할 수 있게 해준다.
+- 내부적으로는 변경된 부분만 복사하여 새로운 불변 상태를 생성한다.
+
+#### 특징
+
+- Proxy 사용
+    - `draft`라는 프록시 객체를 통해 상태 변경을 감지하고 불변성을 유지한다.
+- 불변성 자동 처리
+    - 개발자가 직접 깊은 복사를 신경 쓸 필요 없이 불변성을 유지한다.
+    - 깊은 중첩 객체도 어렵지 않게 작업할 수 있다.
+    - 상태를 직접 변경하는 것처럼 작성하지만 실제로는 불변성을 유지한다.
+- 간결한 코드
+    - `...spread` 연산자나 `Object.assign()`같은 메소드를 사용하지 않아도 된다.
+    -  `push, pop, splice` 등의 메소드를 통해 배열 및 객체에 대한 메소드를 사용할 수 있다.
+- 성능 최적화
+    - 변경된 부분만 복사하므로 불필요한 메모리 할당을 줄일 수 있다.
+    -  Copy-on-write 방식을 사용하여 변경된 부분만 복사하고, 나머지는 기존 참조를 유지하여 성능을 최적화한다.
+    -  변경되지 않은 데이터는 기존 참조를 유지하여 메모리 사용을 줄인다.
+
+#### 장점
+
+- 불변성 유지가 쉬워져 버그 발생 가능성을 줄일 수 있다.
+- 복잡한 상태 업데이트 로직을 간단하게 작성 가능할 수 있다.
+- 코드 가독성과 유지보수성이 향상된다.
+- 타입 안정성이 좋다. (TypeScript 지원)
+
+#### 단점
+
+- immer를 별도로 설치해야 한다.
+- 러닝커브는 낮은 건 맞지만. 내부 작동 방식을 이해할 필요는 있다.
+    - 가장 중요한 것은 `produce` 메소드를 이해하는 것이다.
+- 매우 단순한 상태 변경에는 오버헤드가 발생할 수 있다.
+    - 내부적으로 프록시를 사용하기 때문에 발생하는 문제다.
+    - 다만 대부분의 경우 무시할 수 있는 수준이긴 하다.
+- 매우 큰 상태 트리에서는 성능 이슈가 생길 수 있다.
+- 클래스 객체같은 일부 케이스에서 주의가 필요하다.
+    - 예시 : `[immerable] = true`
+- 프록시를 지원하지 않는 환경에서는 ES5 fallback을 사용하게 되어 성능이 떨어질 수 있다.
+    - 구형 브라우저나 리액트 네이티브같은 일부 환경이 해당한다.
+- 불변성을 완벽하게 보장하는 것은 아니다.
+    - 외부 참조에 대한 문제나 깊은 중첩 구조에서 부분 업데이트 사용 시 안정성이 떨어질 수 있다.
+
+#### 설치 방법
+
+{% highlight sh %}
+npm install immer
+{% endhighlight %}
+
+#### 기본 사용 방법 (메소드 별로 적용하기)
+
+{% highlight js %}
+import { create } from 'zustand';
+import { produce } from 'immer';
+
+const useProfileStore = create((set) => ({
+  profile: {
+    name: '',
+    details: {
+      age: 0,
+      location: {
+        city: '',
+        country: '',
+      },
+    },
+    hobbies: [],
+  },
+  updateCity: (newCity) =>
+    set(produce((state) => {
+      state.profile.details.location.city = newCity;
+    })),
+  addHobby: (hobby) =>
+    set(produce((state) => {
+      state.profile.hobbies.push(hobby);
+    })),
+}));
+
+export default useProfileStore;
+{% endhighlight %}
+
+#### 기본 사용 방법 (전체에 일괄 적용하기)
+
+{% highlight js %}
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+
+const useProfileStore = create(
+  immer(
+    (set) => ({
+      profile: {
+        name: '',
+        details: {
+          age: 0,
+          location: {
+            city: '',
+            country: '',
+          },
+        },
+        hobbies: [],
+      },
+      updateCity: (newCity) =>
+        set((state) => {
+          state.profile.details.location.city = newCity;
+        }),
+      addHobby: (hobby) =>
+        set((state) => {
+          state.profile.hobbies.push(hobby);
+        }),
+    })
+  )
+);
+
+export default useProfileStore;
+{% endhighlight %}
+
+#### 차이점 알기
+
+메소드마다 적용할 때는 `import { produce } from 'immer';`고,  
+일괄적으로 적용할 때는 `import { immer } from 'zustand/middleware/immer';`다.  
+헷갈리지 않게 주의하자.
