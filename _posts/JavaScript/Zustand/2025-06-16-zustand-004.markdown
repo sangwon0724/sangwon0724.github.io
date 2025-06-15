@@ -129,3 +129,64 @@ export default useProfileStore;
 메소드마다 적용할 때는 `import { produce } from 'immer';`고,  
 일괄적으로 적용할 때는 `import { immer } from 'zustand/middleware/immer';`다.  
 헷갈리지 않게 주의하자.
+
+### useImmer
+
+#### 정의
+
+- useState와 Immer 라이브러리를 결합한 훅
+- 복잡한 중첩 객체나 배열을 불변하게 업데이트하는 작업을 훨씬 간결하고 직관적으로 수행할 수 있게 해준다.
+
+#### 설치 방법
+
+{% highlight sh %}
+npm install use-immer
+{% endhighlight %}
+
+#### 사용 방법
+
+useState 사용하듯이 import 받아서 사용하면 된다.  
+`import { useImmer } from 'use-immer'`
+
+#### useState와 useImmer의 비교
+
+- useState를 사용하는 경우
+{% highlight js %}
+const [state, setState] = useState({
+    user: {
+        name: 'John',
+        address: {
+            city: 'Seoul',
+            zip: '12345'
+        }
+    }
+});
+
+setState(prevState => ({
+    ...prevState,
+    user: {
+        ...prevState.user,
+        address: {
+            ...prevState.user.address,
+            zip: '67890'
+        }
+    }
+}));
+{% endhighlight %}
+
+- useImmer를 사용하는 경우
+{% highlight js %}
+const [state, updateState] = useImmer({
+    user: {
+        name: 'John',
+        address: {
+            city: 'Seoul',
+            zip: '12345'
+        }
+    }
+});
+
+updateState(draft => {
+    draft.user.address.zip = '67890';
+});
+{% endhighlight %}
