@@ -1,7 +1,0 @@
-- zustand와 TypeScript
-- DevTools : 디버깅
-- 상태 설계
-- 액션 설계
-- 비동기 액션 처리
-- flux에서 영향받은 zustand 패턴
-- Slice 패턴
