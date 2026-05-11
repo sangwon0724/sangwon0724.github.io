@@ -305,7 +305,6 @@ exclude:
 
 jekyll-archives:
   enabled: [categories, tags]
-  slugify: true
   layouts:
     category: category
     tag: tag
