@@ -2,7 +2,7 @@
 layout: post
 title: "Zustand 슬라이스 패턴 (Slice Pattern)"
 date: 2026-05-11 22:42:00 +0900
-categories: Zustand
+categories: [JavaScript, Zustand]
 ---
 
 ### Zustand 슬라이스 패턴

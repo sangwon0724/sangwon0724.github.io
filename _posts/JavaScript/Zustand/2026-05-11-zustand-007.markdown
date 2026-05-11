@@ -2,7 +2,7 @@
 layout: post
 title: "Zustand 디버깅 : DevTools"
 date: 2026-05-11 21:51:00 +0900
-categories: Zustand
+categories: [JavaScript, Zustand]
 ---
 
 ### Zustand DevTools 적용
