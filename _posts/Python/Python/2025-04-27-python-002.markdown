@@ -447,7 +447,7 @@ print("{value:10.2f}".format(value = 3.1415926535))
 
 # {} 문자에 대해서 예외 처리
 # format 함수 사용 시 {와 }는 자동으로 바인딩되어서 별도 처리가 필요함
-print("{{}}".format())
+print("{% raw %}{{}}{% endraw %}".format())
 {% endhighlight %}
 
 #### f 문자열 포맷팅

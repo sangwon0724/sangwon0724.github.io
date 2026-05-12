@@ -14,11 +14,11 @@
 {% assign match_posts = '' | split: '' %}
 
 {% for category in page.categories %}
-  {% assign match_posts = match_posts | push: site.categories[category] | uniq %}
+  {% assign match_posts = match_posts | push: site.categories[category] %}
 {% endfor %}
 
 {% for tag in page.tags %}
-  {% assign match_posts = match_posts | push: site.tags[tag] | uniq %}
+  {% assign match_posts = match_posts | push: site.tags[tag] %}
 {% endfor %}
 
 {% assign match_posts = match_posts | reverse %}
