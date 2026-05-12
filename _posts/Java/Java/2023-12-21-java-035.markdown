@@ -2,7 +2,7 @@
 layout: post
 title:  "Iterator와 ListIterator"
 date:   2023-12-21 09:20:00 +0900
-categories: Java
+categories: [ Java, Java ]
 tags: [Iterator, ListIterator]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "변수"
 date:   2023-05-02 00:45:33 +0900
-categories: JavaScript
+categories: [ JavaScript, JavaScript ]
 tags: [let, const]
 ---
 

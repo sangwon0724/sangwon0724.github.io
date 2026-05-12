@@ -2,7 +2,7 @@
 layout: post
 title:  "Rest & Spread"
 date:   2023-05-02 00:45:33 +0900
-categories: JavaScript
+categories: [ JavaScript, JavaScript ]
 tags: [Rest, Spread]
 ---
 

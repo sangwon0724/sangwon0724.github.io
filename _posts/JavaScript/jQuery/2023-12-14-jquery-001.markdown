@@ -2,7 +2,7 @@
 layout: post
 title:  "jQuery에 대하여"
 date:   2023-12-14 11:38:00 +0900
-categories: jQuery
+categories: [ JavaScript, jQuery ]
 ---
 
 ### jQuery란?
