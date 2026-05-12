@@ -309,7 +309,7 @@ spec:
 
 위와 같은 과정을 거친다면 아래와 같은 구조가 나온다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_007.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_007.png" alt="Kubernetes Structure with MySQL and Spring Boot"/>
 
 ### 매니페스트 파일 분리
 

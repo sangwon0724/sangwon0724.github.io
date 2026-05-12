@@ -175,7 +175,7 @@ spec:
 
 #### 서비스 구조
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_002.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_002.png" alt="Service Structure"/>
 
 ### 서비스 적용하기
 

@@ -349,7 +349,7 @@ export const LoadingIndicator = () => {
 
   return (
     <div className="fixed top-[0] left-[0] w-full h-full bg-black/50 z-50 flex items-center justify-center z-[9999]">
-      <ProgressSpinner style={{width: '5rem', height: '5rem'}} strokeWidth="5" animationDuration="1s" />
+      {% raw %}<ProgressSpinner style={{width: '5rem', height: '5rem'}} strokeWidth="5" animationDuration="1s" />{% endraw %}
     </div>
   )
 }

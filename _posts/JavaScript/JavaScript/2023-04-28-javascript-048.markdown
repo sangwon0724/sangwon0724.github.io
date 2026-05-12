@@ -3,7 +3,7 @@ layout: post
 title:  "ES2020"
 date:   2023-05-02 00:45:33 +0900
 categories: JavaScript
-tags: ['? 연산자', '?? 연산자', 배열 메소드]
+tags: [옵셔널 체이닝, null 병합 연산자, 배열 메소드]
 ---
 
 ### ?? 연산자
