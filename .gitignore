@@ -30,6 +30,3 @@ assets/js/dist
 *~
 .DS_Store
 Thumbs.db
-
-/*.md
-!/README.md

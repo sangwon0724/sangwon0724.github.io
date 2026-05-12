@@ -1,189 +1,140 @@
 ---
-layout: page
-# The Home page layout
+layout: default
 ---
 
-<style>
-  #technical-skills-block {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr;
-    gap: 5%;
-  }
-</style>
+{% include lang.html %}
 
-<h2 id="about-me"><span class="mr-2">About Me</span><a href="#about-me" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+{% assign all_pinned = site.posts | where: 'pin', 'true' %}
+{% assign all_normal = site.posts | where_exp: 'item', 'item.pin != true and item.hidden != true' %}
 
-<h3 id="intro"><span class="mr-2">Intro</span><a href="#intro" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
-<hr>
-<p><span style="font-size: 2rem;font-weight: 800;">안녕하세요, 낭만을 즐기는 개발자 <span style="color: #3a7bd5;font-size: 2.4rem;">이상원</span>입니다.</span><br><br><br>
-<span style="font-size: 1.2rem;">
-현재 서울에서 자바 백엔드 개발자로 일하고 있습니다.<br/>
-개발자로서 새롭게 배우는 것과 깊이 배우는 것을 멈추지 않고,<br/>
-습득한 지식들과 겪었던 경험들을 토대로 퀄리티 높은 서비스를 만드는 것을 목표로 삼고<br/>
-열심히 달려나가고 있습니다.
-</span></p>
+{% assign posts = '' | split: '' %}
 
-<br>
-<br>
+<!-- Get pinned posts on current page -->
 
-<h3 id="work-experience"><span class="mr-2">Work Experience</span><a href="#work-experience" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
-<hr>
-<h4 id="주-크림하우스"><span class="mr-2">(주) 크림하우스</span><a href="#주-크림하우스" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
-<p><code class="language-plaintext highlighter-rouge">2022.11.22 ~</code> 자바 백엔드 개발자</p>
-<ul>
-  <li><strong>어르신 건강관리 기능개선</strong> : 전반적인 구조 개편 및 기능 개선을 통한 성능 향상</li>
-  <li><strong>제주유나이티드FC 홈페이지/앱 개발</strong> : 선수단 관련 API 담당, 공통된 처리를 위한 개발 가이드의 일부분을 정의</li>
-  <li><strong>데보션 앱 개발 및 개선</strong> : 앱에서 사용되는 API 전반을 담당, 앱 개선 작업 시 최적화를 통한 메모리 경량화 작업 담당</li>
-</ul>
-<h4 id="주-퀀텀에듀솔루션"><span class="mr-2">(주) 퀀텀에듀솔루션</span><a href="#주-퀀텀에듀솔루션" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4>
-<p><code class="language-plaintext highlighter-rouge">2021.02.26 ~ 2021.05.25</code> 자바 백엔드 개발자</p>
-<ul>
-  <li><strong>국가민방위재난안전교육원 운영 및 유지보수</strong> : 쿼리 튜닝 작업 담당</li>
-</ul>
+{% assign visible_start = paginator.page | minus: 1 | times: paginator.per_page %}
+{% assign visible_end = visible_start | plus: paginator.per_page %}
 
-<br>
-<br>
+{% if all_pinned.size > visible_start %}
+  {% if all_pinned.size > visible_end %}
+    {% assign pinned_size = paginator.per_page %}
+  {% else %}
+    {% assign pinned_size = all_pinned.size | minus: visible_start %}
+  {% endif %}
 
-<h3 id="skills"><span class="mr-2">Skills</span><a href="#skills" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
-<hr>
-<div id="technical-skills-block">
-  <div>
-    <h4 id="language"><span class="mr-2">Language</span></h4>
-    <ul style="padding-inline-start: 0;">
-      <li><strong>Java</strong></li>
-      <li><strong>JavaScript</strong></li>
-      <li>SQL</li>
-      <li>Dart</li>
-    </ul>
-  </div>
-  <div>
-    <h4 id="framework--library"><span class="mr-2">Framework &amp; library</span></h4>
-    <ul style="padding-inline-start: 0;">
-      <li><strong>Spring Framework/Boot</strong></li>
-      <li>React.js</li>
-      <li>Flutter</li>
-    </ul>
-  </div>
-  <div>
-    <h4 id="communication"><span class="mr-2">Communication</span></h4>
-    <ul style="padding-inline-start: 0;">
-      <li>Slack</li>
-      <li>Jira</li>
-    </ul>
-  </div>
-</div>
-
-<br>
-<br>
-
-<h2 id="contact-me"><span class="mr-2">Contact Me</span><a href="#contact-me" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
-<hr/>
-<ul>
-  <li>이메일 (구글) : <code class="language-plaintext highlighter-rouge">leews0724@gmail.com</code></li>
-  <li>이메일 (네이버) : <code class="language-plaintext highlighter-rouge">leews0724@naver.com</code></li>
-  <li>깃허브 : <a href="https://github.com/sangwon0724"><code class="language-plaintext highlighter-rouge">https://github.com/sangwon0724</code></a></li></ul>
-
-
-<br>
-<br>
-
-<h3 id="go-about"><span class="mr-2">더보기</span><a href="#go-about" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3>
-<hr>
-저에 대한 자세한 정보는 <a href="/about/">[링크]</a>를 눌러주세요!
-
-
-{% assign pinned = site.posts | where: "pin", "true" %}
-{% assign default = site.posts | where_exp: "item", "item.pin != true and item.hidden != true" %}
-
-{% assign posts = "" | split: "" %}
-
-<!-- Get pinned posts -->
-
-{% assign offset = paginator.page | minus: 1 | times: paginator.per_page %}
-{% assign pinned_num = pinned.size | minus: offset %}
-
-{% if pinned_num > 0 %}
-  {% for i in (offset..pinned.size) limit: pinned_num %}
-    {% assign posts = posts | push: pinned[i] %}
+  {% for i in (visible_start..all_pinned.size) limit: pinned_size %}
+    {% assign posts = posts | push: all_pinned[i] %}
   {% endfor %}
 {% else %}
-  {% assign pinned_num = 0 %}
+  {% assign pinned_size = 0 %}
 {% endif %}
 
-<!-- Get default posts -->
+<!-- Get normal posts on current page -->
 
-{% assign default_beg = offset | minus: pinned.size %}
+{% assign normal_size = paginator.posts | size | minus: pinned_size %}
 
-{% if default_beg < 0 %}
-  {% assign default_beg = 0 %}
-{% endif %}
+{% if normal_size > 0 %}
+  {% if pinned_size > 0 %}
+    {% assign normal_start = 0 %}
+  {% else %}
+    {% assign normal_start = visible_start | minus: all_pinned.size %}
+  {% endif %}
 
-{% assign default_num = paginator.posts | size | minus: pinned_num  %}
-{% assign default_end = default_beg | plus: default_num | minus: 1 %}
+  {% assign normal_end = normal_start | plus: normal_size | minus: 1 %}
 
-{% if default_num > 0 %}
-  {% for i in (default_beg..default_end) %}
-    {% assign posts = posts | push: default[i] %}
+  {% for i in (normal_start..normal_end) %}
+    {% assign posts = posts | push: all_normal[i] %}
   {% endfor %}
 {% endif %}
-{% if page.tags %}
-  {% for tag in page.tags %}
-    <span class="tag">{{ tag }}</span>
-  {% endfor %}
-{% endif %}
-<div id="post-list">
 
-{% for post in posts %}
+<div id="post-list" class="flex-grow-1 px-xl-1">
+  {% for post in posts %}
+    <article class="card-wrapper card">
+      <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
+        {% assign card_body_col = '12' %}
 
-  <div class="post-preview">
-    <h1>
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    </h1>
+        {% if post.image %}
+          {% assign src = post.image.path | default: post.image %}
 
-    <div class="post-content">
-      <p>
-        {% include no-linenos.html content=post.content %}
-        {{ content | markdownify | strip_html | truncate: 200 | escape }}
-      </p>
-    </div>
+          {% if post.media_subpath %}
+            {% unless src contains '://' %}
+              {% assign src = post.media_subpath
+                | append: '/'
+                | append: src
+                | replace: '///', '/'
+                | replace: '//', '/'
+              %}
+            {% endunless %}
+          {% endif %}
 
-    <div class="post-meta text-muted d-flex">
-      <div class="mr-auto">
+          {% if post.image.lqip %}
+            {% assign lqip = post.image.lqip %}
 
-        <!-- posted date -->
-        <i class="far fa-calendar fa-fw"></i>
-        {% include datetime.html date=post.date %}
+            {% if post.media_subpath %}
+              {% unless lqip contains 'data:' %}
+                {% assign lqip = post.media_subpath
+                  | append: '/'
+                  | append: lqip
+                  | replace: '///', '/'
+                  | replace: '//', '/'
+                %}
+              {% endunless %}
+            {% endif %}
 
-        <!-- categories -->
-        {% if post.categories.size > 0 %}
-          <i class="far fa-folder-open fa-fw"></i>
-          <span>
-          {% for category in post.categories %}
-            {{ category }}
-            {%- unless forloop.last -%},{%- endunless -%}
-          {% endfor %}
-          </span>
+            {% assign lqip_attr = 'lqip="' | append: lqip | append: '"' %}
+          {% endif %}
+
+          {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
+
+          <div class="col-md-5">
+            <img src="{{ src }}" alt="{{ alt }}" {{ lqip_attr }}>
+          </div>
+
+          {% assign card_body_col = '7' %}
         {% endif %}
 
-      </div>
+        <div class="col-md-{{ card_body_col }}">
+          <div class="card-body d-flex flex-column">
+            <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
 
-      {% if post.pin %}
-      <div class="pin">
-        <i class="fas fa-thumbtack fa-fw"></i>
-        <span>{{ site.data.locales[site.lang].post.pin_prompt }}</span>
-      </div>
-      {% endif %}
+            <div class="card-text content mt-0 mb-3">
+              <p>{% include post-summary.html %}</p>
+            </div>
 
-    </div> <!-- .post-meta -->
+            <div class="post-meta flex-grow-1 d-flex align-items-end">
+              <div class="me-auto">
+                <!-- posted date -->
+                <i class="far fa-calendar fa-fw me-1"></i>
+                {% include datetime.html date=post.date lang=lang %}
 
-  </div> <!-- .post-review -->
+                <!-- categories -->
+                {% if post.categories.size > 0 %}
+                  <i class="far fa-folder-open fa-fw me-1"></i>
+                  <span class="categories">
+                    {% for category in post.categories %}
+                      {{ category }}
+                      {%- unless forloop.last -%},{%- endunless -%}
+                    {% endfor %}
+                  </span>
+                {% endif %}
+              </div>
 
-{% endfor %}
+              {% if post.pin %}
+                <div class="pin ms-1">
+                  <i class="fas fa-thumbtack fa-fw"></i>
+                  <span>{{ site.data.locales[lang].post.pin_prompt }}</span>
+                </div>
+              {% endif %}
+            </div>
+            <!-- .post-meta -->
+          </div>
+          <!-- .card-body -->
+        </div>
+      </a>
+    </article>
+  {% endfor %}
+</div>
+<!-- #post-list -->
 
-</div> <!-- #post-list -->
-
-{% if paginator.total_pages > 0 %}
+{% if paginator.total_pages > 1 %}
   {% include post-paginator.html %}
 {% endif %}
