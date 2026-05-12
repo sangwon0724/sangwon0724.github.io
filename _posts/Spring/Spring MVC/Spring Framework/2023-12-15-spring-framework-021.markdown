@@ -2,7 +2,7 @@
 layout: post
 title:  "설정 파일 - servelt-context.xml"
 date:   2023-12-15 14:43:00 +0900
-categories: Spring&nbsp;MVC
+categories: [ Spring, Spring&nbsp;MVC ]
 ---
 
 ### servelt-context.xml의 역할

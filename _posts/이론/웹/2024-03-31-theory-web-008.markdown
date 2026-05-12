@@ -2,7 +2,7 @@
 layout: post
 title:  "웹 서버와 WAS"
 date:   2024-03-31 14:50:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 웹 서버

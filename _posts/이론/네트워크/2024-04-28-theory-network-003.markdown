@@ -2,7 +2,7 @@
 layout: post
 title:  "네트워크 통신 방식"
 date:   2024-04-28 18:01:00 +0900
-categories: 이론&nbsp;-&nbsp;네트워크
+categories: [ 이론, 네트워크 ]
 ---
 
 ### 통신 방식

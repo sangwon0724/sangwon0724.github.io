@@ -2,7 +2,7 @@
 layout: post
 title:  "[Spring Data JPA] Spring Data JPA에 대하여"
 date:   2024-03-11 21:34:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### Spring Data JPA란?

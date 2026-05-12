@@ -2,7 +2,7 @@
 layout: post
 title:  "상수"
 date:   2023-12-28 09:27:00 +0900
-categories:  Dart
+categories: [ Dart, Basics ]
 ---
 
 ### 상수란?

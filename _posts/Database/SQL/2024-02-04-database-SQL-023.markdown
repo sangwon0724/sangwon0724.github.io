@@ -2,7 +2,7 @@
 layout: post
 title:  "문자열 관련 함수"
 date:   2024-02-04 23:04:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### CONCAT(문자열 목록)

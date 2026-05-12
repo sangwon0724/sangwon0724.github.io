@@ -2,7 +2,7 @@
 layout: post
 title:  "쿼리 튜닝"
 date:   2024-02-09 15:38:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 실행계획을 적극적으로 확인해보자.

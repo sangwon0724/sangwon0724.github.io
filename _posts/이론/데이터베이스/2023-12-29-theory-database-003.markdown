@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터베이스 시스템"
 date:   2023-12-29 17:22:00 +0900
-categories: 이론&nbsp;-&nbsp;데이터베이스
+categories: [ 이론, 데이터베이스 ]
 ---
 
 ### 데이터베이스 시스템(DataBase System, DBS)이란?

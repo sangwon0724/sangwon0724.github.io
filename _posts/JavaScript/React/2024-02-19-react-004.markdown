@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 관리 (Props와 State)"
 date:   2024-02-19 18:49:00 +0900
-categories: React
+categories: [ JavaScript, React ]
 ---
 
 ### Props (Properties)

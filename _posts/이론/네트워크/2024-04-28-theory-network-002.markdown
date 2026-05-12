@@ -2,7 +2,7 @@
 layout: post
 title:  "네트워크의 구성"
 date:   2024-04-28 14:59:00 +0900
-categories: 이론&nbsp;-&nbsp;네트워크
+categories: [ 이론, 네트워크 ]
 ---
 
 ### 네트워크의 구성

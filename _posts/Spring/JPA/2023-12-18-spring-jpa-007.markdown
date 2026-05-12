@@ -2,7 +2,7 @@
 layout: post
 title:  "[JPA 기본] 다양한 연관관계 매핑"
 date:   2024-01-25 23:52:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 tags: [연관관계, JPA 연관관계]
 ---
 

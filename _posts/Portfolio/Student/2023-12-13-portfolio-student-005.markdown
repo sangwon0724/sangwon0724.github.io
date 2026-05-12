@@ -2,7 +2,7 @@
 layout: post
 title:  "Devlog (개발자들을 위한 개인 블로그)"
 date:   2023-12-13 11:01:00 +0900
-categories:  Student
+categories: [ Portfolio, Student]
 ---
 
 ### 개발환경, 개발인원, 개발 기간, 담당 역할

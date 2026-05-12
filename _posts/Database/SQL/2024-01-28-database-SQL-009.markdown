@@ -2,7 +2,7 @@
 layout: post
 title:  "조인 검색"
 date:   2024-01-28 16:08:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 조인(join) 검색이란?

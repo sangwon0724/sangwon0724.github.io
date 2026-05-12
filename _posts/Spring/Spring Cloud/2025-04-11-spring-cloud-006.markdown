@@ -2,7 +2,7 @@
 layout: post
 title:  "Spring Cloud Bus"
 date:   2025-04-11 15:28:00 +0900
-categories: Spring&nbsp;Cloud
+categories: [ Spring, Spring&nbsp;Cloud ]
 tags: [MSA, 마이크로서비스]
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "Redis 사용법 (기초편)"
 date:   2025-02-25 16:19:00 +0900
-categories:  Redis
+categories: [ Database, Redis ]
 ---
 
 ### 다양한 자료구조

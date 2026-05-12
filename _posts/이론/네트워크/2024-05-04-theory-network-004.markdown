@@ -2,7 +2,7 @@
 layout: post
 title:  "OSI 참조 모델"
 date:   2024-05-04 15:58:00 +0900
-categories: 이론&nbsp;-&nbsp;네트워크
+categories: [ 이론, 네트워크 ]
 ---
 
 ### OSI 참조 모델 (Open System Interconnection)

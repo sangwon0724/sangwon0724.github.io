@@ -2,7 +2,7 @@
 layout: post
 title:  "게시글 순번이 밀린 경우 수정하기"
 date:   2023-12-22 16:53:00 +0900
-categories: Jekyll
+categories: [ Jekyll, Jekyll ]
 ---
 
 번호를 변경할 항목 위에 `{:start="n"}`을 추가하면  

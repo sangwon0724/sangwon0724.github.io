@@ -2,7 +2,7 @@
 layout: post
 title:  "UNION 연산과 MINUS 연산"
 date:   2024-01-29 00:04:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### UNION 연산

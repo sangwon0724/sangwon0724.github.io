@@ -2,7 +2,7 @@
 layout: post
 title:  "인터넷 네트워크"
 date:   2024-03-17 15:57:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 인터넷 통신

@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 동기화를 위한 Apache Kafka 활용"
 date:   2025-04-18 13:29:00 +0900
-categories: Spring&nbsp;Cloud
+categories: [ Spring, Spring&nbsp;Cloud ]
 tags: [MSA, 마이크로서비스]
 ---
 

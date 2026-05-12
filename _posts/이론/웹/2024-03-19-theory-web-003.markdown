@@ -2,7 +2,7 @@
 layout: post
 title:  "HTTP 기본"
 date:   2024-03-19 22:48:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### HTTP(HyperText Transfer Protocol)란?

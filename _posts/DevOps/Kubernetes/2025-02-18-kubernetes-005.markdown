@@ -2,7 +2,7 @@
 layout: post
 title:  "볼륨 (Volume)"
 date:   2025-02-18 21:16:00 +0900
-categories: Kubernetes
+categories: [ DevOps, Kubernetes ]
 tags: []
 ---
 

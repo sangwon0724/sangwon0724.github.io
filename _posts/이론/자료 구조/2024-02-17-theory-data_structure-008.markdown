@@ -2,7 +2,7 @@
 layout: post
 title:  "정렬 (Sort)"
 date:   2024-02-17 20:58:00 +0900
-categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+categories: [ 이론, 자료&nbsp;구조 ]
 tags: [정렬]
 ---
 

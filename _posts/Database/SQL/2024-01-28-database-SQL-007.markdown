@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 삭제"
 date:   2024-01-28 15:44:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 데이터 삭제

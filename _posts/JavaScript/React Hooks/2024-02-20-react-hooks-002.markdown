@@ -2,7 +2,7 @@
 layout: post
 title:  "useState"
 date:   2024-02-20 18:52:00 +0900
-categories: React&nbsp;Hooks
+categories: [ JavaScript, React ]&nbsp;Hooks
 tags: [useState, useInput, useTabs]
 ---
 

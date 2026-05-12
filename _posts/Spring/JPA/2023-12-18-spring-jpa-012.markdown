@@ -2,7 +2,7 @@
 layout: post
 title:  "JPA Repository"
 date:   2023-12-11 22:49:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 published: false
 ---
 

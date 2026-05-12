@@ -2,7 +2,7 @@
 layout: post
 title:  "파일 입출력"
 date:   2025-04-30 00:34:00 +0900
-categories: Python
+categories: [ Python, Basics ]
 ---
 
 ### 사용자 입출력

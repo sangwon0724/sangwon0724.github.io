@@ -2,7 +2,7 @@
 layout: post
 title:  "부하 테스트를 통한 Redis 성능 확인"
 date:   2025-02-27 17:17:00 +0900
-categories:  Redis
+categories: [ Database, Redis ]
 ---
 
 ### 부하 테스트

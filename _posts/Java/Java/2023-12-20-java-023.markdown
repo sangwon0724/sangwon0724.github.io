@@ -2,7 +2,7 @@
 layout: post
 title:  "StringBuffer"
 date:   2023-12-20 13:27:00 +0900
-categories: [ Java, 기초 ]
+categories: [ Java, Basics ]
 ---
 
 ### 특징

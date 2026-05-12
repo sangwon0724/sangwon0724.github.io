@@ -2,7 +2,7 @@
 layout: post
 title: "Zustand와 TypeScript"
 date: 2026-05-11 21:28:00 +0900
-categories: Zustand
+categories: [ JavaScript, Zustand ]
 ---
 
 ### Zustand with TypeScript

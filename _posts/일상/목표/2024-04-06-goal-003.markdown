@@ -2,7 +2,7 @@
 layout: post
 title:  "2024년 목표 (1분기 정산)"
 date:   2024-04-06 16:39:00 +0900
-categories: 목표
+categories: [ 일상, 목표 ]
 tags: [목표]
 ---
 

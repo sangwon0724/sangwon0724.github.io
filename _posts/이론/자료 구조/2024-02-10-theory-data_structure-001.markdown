@@ -2,7 +2,7 @@
 layout: post
 title:  "자료구조에 대하여"
 date:   2024-02-10 17:24:00 +0900
-categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+categories: [ 이론, 자료&nbsp;구조 ]
 ---
 
 ### 자료구조란?

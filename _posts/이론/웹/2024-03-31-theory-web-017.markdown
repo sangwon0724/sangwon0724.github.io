@@ -2,7 +2,7 @@
 layout: post
 title:  "프록시 (Proxy)"
 date:   2024-03-31 18:58:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 프록시란?

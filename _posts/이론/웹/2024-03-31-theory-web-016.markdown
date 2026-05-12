@@ -2,7 +2,7 @@
 layout: post
 title:  "패킷"
 date:   2024-03-31 18:48:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 패킷이란?

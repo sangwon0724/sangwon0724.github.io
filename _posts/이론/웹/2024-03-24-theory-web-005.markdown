@@ -2,7 +2,7 @@
 layout: post
 title:  "HTTP 상태 코드"
 date:   2024-03-24 14:38:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### HTTP 상태 코드란?

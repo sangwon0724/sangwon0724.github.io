@@ -2,7 +2,7 @@
 layout: post
 title:  "변수"
 date:   2023-12-28 09:19:00 +0900
-categories:  Dart
+categories: [ Dart, Basics ]
 ---
 
 ### 변수란?

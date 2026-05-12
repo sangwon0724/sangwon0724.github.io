@@ -2,7 +2,7 @@
 layout: post
 title:  "[Spring Data JPA] 프로젝션(Projection)"
 date:   2024-03-13 21:21:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 프로젝션이란?

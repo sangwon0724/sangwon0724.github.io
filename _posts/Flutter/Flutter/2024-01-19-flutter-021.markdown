@@ -2,7 +2,7 @@
 layout: post
 title:  "내부 위젯을 확장/축소하여 확인"
 date:   2024-01-19 14:39:00 +0900
-categories:  Flutter
+categories: [ Dart, Flutter ]
 ---
 
 ### InteractiveViewer

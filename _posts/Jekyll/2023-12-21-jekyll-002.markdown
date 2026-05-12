@@ -2,7 +2,7 @@
 layout: post
 title:  "게시글 작성 방법"
 date:   2023-12-21 14:00:00 +0900
-categories: Jekyll
+categories: [ Jekyll, Jekyll ]
 ---
 
 ## 게시글 파일 만들기

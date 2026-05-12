@@ -2,7 +2,7 @@
 layout: post
 title:  "Redux에 대하여"
 date:   2023-12-14 10:46:00 +0900
-categories: Redux
+categories: [ JavaScript, Redux ]
 ---
 
 ### 리덕스란 무엇인가?

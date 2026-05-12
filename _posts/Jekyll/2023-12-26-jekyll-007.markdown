@@ -2,7 +2,7 @@
 layout: post
 title:  "테이블 작성하기"
 date:   2023-12-26 09:02:00 +0900
-categories: Jekyll
+categories: [ Jekyll, Jekyll ]
 ---
 
 ```

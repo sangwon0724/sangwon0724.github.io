@@ -2,7 +2,7 @@
 layout: post
 title:  "권한 관리"
 date:   2024-01-30 00:13:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 권한 부여

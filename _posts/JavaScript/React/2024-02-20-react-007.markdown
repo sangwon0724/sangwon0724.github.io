@@ -2,7 +2,7 @@
 layout: post
 title:  "렌더링 제어"
 date:   2024-02-20 17:34:00 +0900
-categories: React
+categories: [ JavaScript, React ]
 ---
 
 ### 조건부 렌더링

@@ -2,7 +2,7 @@
 layout: post
 title:  "IF문과 CASE 문"
 date:   2024-01-29 00:23:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### IF문

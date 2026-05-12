@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터베이스 관리 시스템"
 date:   2023-12-29 17:11:00 +0900
-categories: 이론&nbsp;-&nbsp;데이터베이스
+categories: [ 이론, 데이터베이스 ]
 ---
 
 ### 기존 파일 시스템의 문제점

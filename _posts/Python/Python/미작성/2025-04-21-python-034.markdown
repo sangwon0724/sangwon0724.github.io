@@ -2,7 +2,7 @@
 layout: post
 title:  "CPU Bound"
 date:   2025-02-24 07:00:00 +0900
-categories: Python
+categories: [ Python, Basics ]
 published: false
 ---
 

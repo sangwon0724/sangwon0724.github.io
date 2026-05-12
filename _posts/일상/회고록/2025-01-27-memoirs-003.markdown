@@ -2,7 +2,7 @@
 layout: post
 title:  "AI를 다룬다는 것의 의미"
 date:   2025-01-29 15:49:00 +0900
-categories: 회고록
+categories: [ 일상, 회고록 ]
 tags: [회고록]
 ---
 

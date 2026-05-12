@@ -2,7 +2,7 @@
 layout: post
 title:  "[QueryDSL] SQL function 호출하기"
 date:   2024-03-17 14:25:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 - QueryDSL에서도 사용 중인 DBMS에 존재하는 함수를 호출할 수 있다.

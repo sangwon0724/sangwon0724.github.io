@@ -2,7 +2,7 @@
 layout: post
 title:  "[Spring Data JPA] 쿼리 메소드 기능"
 date:   2024-03-11 22:04:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 기존 JPA의 JPQL

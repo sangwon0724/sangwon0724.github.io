@@ -2,7 +2,7 @@
 layout: post
 title:  "인덱스 (INDEX)"
 date:   2024-01-30 10:52:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 인덱스(INDEX)란?

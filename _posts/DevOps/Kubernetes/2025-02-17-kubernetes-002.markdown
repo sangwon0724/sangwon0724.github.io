@@ -2,7 +2,7 @@
 layout: post
 title:  "파드 (Pod)"
 date:   2025-02-17 21:24:00 +0900
-categories: Kubernetes
+categories: [ DevOps, Kubernetes ]
 tags: []
 ---
 

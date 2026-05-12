@@ -2,7 +2,7 @@
 layout: post
 title:  "TLS (Transport Layer Security)"
 date:   2024-03-31 19:28:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### TLS란?

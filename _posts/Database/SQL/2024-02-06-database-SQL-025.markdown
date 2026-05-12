@@ -2,7 +2,7 @@
 layout: post
 title:  "NULL 체크 함수"
 date:   2024-02-06 13:50:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### IFNULL(expr1,expr2)

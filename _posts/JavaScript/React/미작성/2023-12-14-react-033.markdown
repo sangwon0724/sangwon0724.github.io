@@ -2,7 +2,7 @@
 layout: post
 title:  "PropTypes"
 date:   2023-12-14 00:29:00 +0900
-categories: React
+categories: [ JavaScript, React ]
 published: false
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "네트워크 보안"
 date:   2024-02-14 01:27:00 +0900
-categories: 이론&nbsp;-&nbsp;네트워크
+categories: [ 이론, 네트워크 ]
 published: false
 ---
 

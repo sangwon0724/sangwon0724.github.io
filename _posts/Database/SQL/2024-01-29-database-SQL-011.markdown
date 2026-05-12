@@ -2,7 +2,7 @@
 layout: post
 title:  "DUAL 테이블"
 date:   2024-01-29 00:17:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### DUAL 테이블이란?

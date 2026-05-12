@@ -2,7 +2,7 @@
 layout: post
 title:  "테이블 생성"
 date:   2024-01-21 15:14:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 테이블 생성

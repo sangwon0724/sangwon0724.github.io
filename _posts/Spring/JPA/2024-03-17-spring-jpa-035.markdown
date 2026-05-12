@@ -2,7 +2,7 @@
 layout: post
 title:  "[QueryDSL] 사용자 정의 리포지토리"
 date:   2024-03-17 14:42:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 사용자 정의 리포지토리

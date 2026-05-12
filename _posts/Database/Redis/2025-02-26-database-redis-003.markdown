@@ -2,7 +2,7 @@
 layout: post
 title:  "Redis 캐싱 전략"
 date:   2025-02-26 14:47:00 +0900
-categories:  Redis
+categories: [ Database, Redis ]
 ---
 
 ### 캐시(Cache)와 캐싱(Caching)

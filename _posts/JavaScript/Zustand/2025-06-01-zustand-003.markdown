@@ -2,7 +2,7 @@
 layout: post
 title:  "persist"
 date:   2025-06-01 23:50:00 +0900
-categories: Zustand
+categories: [ JavaScript, Zustand ]
 ---
 
 ### 기존 저장소의 문제점

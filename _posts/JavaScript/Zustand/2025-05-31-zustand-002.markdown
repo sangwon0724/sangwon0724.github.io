@@ -2,7 +2,7 @@
 layout: post
 title:  "create, set, get"
 date:   2025-05-31 01:28:00 +0900
-categories: Zustand
+categories: [ JavaScript, Zustand ]
 ---
 
 ### create

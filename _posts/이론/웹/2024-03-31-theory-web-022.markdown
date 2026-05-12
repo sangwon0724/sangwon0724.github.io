@@ -2,7 +2,7 @@
 layout: post
 title:  "SEO (Search Engine Optimization)"
 date:   2024-03-31 23:48:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### SEO란?

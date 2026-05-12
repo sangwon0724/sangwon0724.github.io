@@ -2,7 +2,7 @@
 layout: post
 title:  "Comparable과 Comparator"
 date:   2023-12-21 09:30:00 +0900
-categories: [ Java, 기초 ]
+categories: [ Java, Basics ]
 tags: [Comparable, Comparator]
 ---
 

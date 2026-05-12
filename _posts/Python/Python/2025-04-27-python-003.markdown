@@ -2,7 +2,7 @@
 layout: post
 title:  "흐름 제어"
 date:   2025-04-27 20:17:00 +0900
-categories: Python
+categories: [ Python, Basics ]
 ---
 
 ### 흐름 제어

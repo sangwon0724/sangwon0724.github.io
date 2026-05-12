@@ -2,7 +2,7 @@
 layout: post
 title:  "실제로 Redis 캐시 사용해보기"
 date:   2025-02-27 16:11:00 +0900
-categories:  Redis
+categories: [ Database, Redis ]
 ---
 
 스프링 부트를 기준으로 실제 레디스 캐시를 적용해보자.

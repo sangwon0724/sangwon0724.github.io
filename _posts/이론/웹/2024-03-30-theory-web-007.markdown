@@ -2,7 +2,7 @@
 layout: post
 title:  "웹 브라우저 (Web Browser)"
 date:   2024-03-30 23:16:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 웹 브라우저란?

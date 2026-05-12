@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 모델링"
 date:   2023-12-30 23:06:00 +0900
-categories: 이론&nbsp;-&nbsp;데이터베이스
+categories: [ 이론, 데이터베이스 ]
 ---
 
 ## 데이터 모델링이란?

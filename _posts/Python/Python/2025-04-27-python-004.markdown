@@ -2,7 +2,7 @@
 layout: post
 title:  "함수"
 date:   2025-04-27 22:01:00 +0900
-categories: Python
+categories: [ Python, Basics ]
 ---
 
 ### 함수(Funtion)란?

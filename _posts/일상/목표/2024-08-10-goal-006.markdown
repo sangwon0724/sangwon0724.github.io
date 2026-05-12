@@ -2,7 +2,7 @@
 layout: post
 title:  "2024년 7월 돌아보기"
 date:   2024-08-10 13:45:00 +0900
-categories: 목표
+categories: [ 일상, 목표 ]
 tags: [목표]
 ---
 

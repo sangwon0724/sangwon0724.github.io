@@ -2,7 +2,7 @@
 layout: post
 title:  "관계 데이터 연산"
 date:   2024-01-01 23:00:00 +0900
-categories: 이론&nbsp;-&nbsp;데이터베이스
+categories: [ 이론, 데이터베이스 ]
 ---
 
 ## 관계 데이터 연산 (relationship data operation)

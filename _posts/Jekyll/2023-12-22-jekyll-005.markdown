@@ -2,7 +2,7 @@
 layout: post
 title:  "코드 강조 기능 사용하기"
 date:   2023-12-22 16:24:00 +0900
-categories: Jekyll
+categories: [ Jekyll, Jekyll ]
 ---
 
 ### 사용 방법

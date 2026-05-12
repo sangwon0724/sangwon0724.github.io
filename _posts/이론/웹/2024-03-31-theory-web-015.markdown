@@ -2,7 +2,7 @@
 layout: post
 title:  "가상 호스팅"
 date:   2024-03-31 18:39:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 가상 호스팅이란?

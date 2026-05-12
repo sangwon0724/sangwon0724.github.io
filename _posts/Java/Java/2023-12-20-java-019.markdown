@@ -2,7 +2,7 @@
 layout: post
 title:  "인터페이스 (interface)"
 date:   2023-12-20 11:00:00 +0900
-categories: [ Java, 기초 ]
+categories: [ Java, Basics ]
 ---
 
 ### 인터페이스(interface)란?

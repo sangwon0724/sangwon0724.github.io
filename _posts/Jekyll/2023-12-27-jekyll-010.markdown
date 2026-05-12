@@ -2,7 +2,7 @@
 layout: post
 title:  "슬라이드 적용하기"
 date:   2023-12-27 11:30:40 +0900
-categories: Jekyll
+categories: [ Jekyll, Jekyll ]
 ---
 
 ### 사용 방법

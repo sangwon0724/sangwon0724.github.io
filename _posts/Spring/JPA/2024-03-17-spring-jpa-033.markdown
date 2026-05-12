@@ -2,7 +2,7 @@
 layout: post
 title:  "[QueryDSL] 벌크 연산"
 date:   2024-03-17 14:15:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 벌크 연산

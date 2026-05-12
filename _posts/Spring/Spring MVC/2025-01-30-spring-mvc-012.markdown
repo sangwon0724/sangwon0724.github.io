@@ -2,7 +2,7 @@
 layout: post
 title:  "[스프링 MVC 2편] 검증2 - Bean Validation"
 date:   2025-01-30 17:57:00 +0900
-categories: Spring&nbsp;MVC
+categories: [ Spring, Spring&nbsp;MVC ]
 tags: []
 ---
 

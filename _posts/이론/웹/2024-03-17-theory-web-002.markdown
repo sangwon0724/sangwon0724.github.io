@@ -2,7 +2,7 @@
 layout: post
 title:  "URI와 웹 브라우저 요청 흐름"
 date:   2024-03-17 23:18:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### URI (Uniform Resource Identifier)

@@ -2,7 +2,7 @@
 layout: post
 title:  "[JPA 기본] 단방향/양방향 연관관계"
 date:   2023-12-18 21:26:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 tags: [연관관계, JPA 연관관계]
 ---
 

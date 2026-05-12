@@ -2,7 +2,7 @@
 layout: post
 title:  "[QueryDSL] 기본 문법"
 date:   2024-03-13 22:54:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### JPQL과 QueryDSL

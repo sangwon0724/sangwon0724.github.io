@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 치환"
 date:   2023-12-16 16:27:00 +0900
-categories: MyBatis
+categories: [ Spring, MyBatis ]
 tags: [CDATA]
 ---
 

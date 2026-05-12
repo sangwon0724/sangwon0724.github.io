@@ -2,7 +2,7 @@
 layout: post
 title:  "순위 구하기"
 date:   2024-01-29 10:07:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### RANK

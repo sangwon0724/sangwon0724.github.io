@@ -2,7 +2,7 @@
 layout: post
 title:  "Stack과 Queue"
 date:   2023-12-20 15:23:00 +0900
-categories: [ Java, 기초 ]
+categories: [ Java, Basics ]
 tags: [스택, 큐, Stack, Queue]
 ---
 

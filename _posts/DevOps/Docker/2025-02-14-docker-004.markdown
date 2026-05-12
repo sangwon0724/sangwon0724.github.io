@@ -2,7 +2,7 @@
 layout: post
 title:  "도커 파일 (DockerFile)"
 date:   2025-02-14 17:11:00 +0900
-categories: Docker
+categories: [ DevOps, Docker ]
 tags: []
 ---
 

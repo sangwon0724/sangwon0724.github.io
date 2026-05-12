@@ -2,7 +2,7 @@
 layout: post
 title:  "[QueryDSL] QueryDSL과 프로젝션"
 date:   2024-03-17 13:27:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 기본

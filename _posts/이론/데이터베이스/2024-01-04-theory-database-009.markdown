@@ -2,7 +2,7 @@
 layout: post
 title:  "정규화"
 date:   2024-01-04 23:57:00 +0900
-categories: 이론&nbsp;-&nbsp;데이터베이스
+categories: [ 이론, 데이터베이스 ]
 ---
 
 ### 정규화 (nomalization)

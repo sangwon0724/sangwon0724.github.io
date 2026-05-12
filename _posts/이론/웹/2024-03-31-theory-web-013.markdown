@@ -2,7 +2,7 @@
 layout: post
 title:  "웹 애플리케이션 아키텍처"
 date:   2024-03-31 16:39:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 웹 애플리케이션 아키텍처란?

@@ -2,7 +2,7 @@
 layout: post
 title:  "레코드 타입"
 date:   2023-12-28 10:43:00 +0900
-categories:  Dart
+categories: [ Dart, Basics ]
 ---
 
 ### 레코드란?

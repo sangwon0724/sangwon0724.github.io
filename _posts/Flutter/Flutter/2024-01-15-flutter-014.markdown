@@ -2,7 +2,7 @@
 layout: post
 title:  "상호작용"
 date:   2024-01-15 14:09:00 +0900
-categories:  Flutter
+categories: [ Dart, Flutter ]
 ---
 
 ### GestureDetector

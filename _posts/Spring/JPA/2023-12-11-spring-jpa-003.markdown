@@ -2,7 +2,7 @@
 layout: post
 title:  "[JPA 기본] EntityManager를 통한 기초 CRUD"
 date:   2023-12-11 22:23:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 tags: [JPA CRUD]
 ---
 

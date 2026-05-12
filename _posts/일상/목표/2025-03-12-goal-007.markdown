@@ -2,7 +2,7 @@
 layout: post
 title:  "스스로를 되돌아보기 (2025.03.12 기준)"
 date:   2025-03-12 10:45:00 +0900
-categories: 목표
+categories: [ 일상, 목표 ]
 tags: [목표]
 ---
 

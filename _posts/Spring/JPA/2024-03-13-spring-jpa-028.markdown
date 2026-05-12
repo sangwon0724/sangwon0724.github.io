@@ -2,7 +2,7 @@
 layout: post
 title:  "[QueryDSL] QueryDSL에 대하여"
 date:   2024-03-13 22:42:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### QueryDSL이란?

@@ -2,7 +2,7 @@
 layout: post
 title:  "resultMap"
 date:   2023-12-16 16:36:00 +0900
-categories: MyBatis
+categories: [ Spring, MyBatis ]
 tags: [resultMap]
 ---
 

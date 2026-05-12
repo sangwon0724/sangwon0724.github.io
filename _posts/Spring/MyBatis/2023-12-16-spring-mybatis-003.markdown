@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 연결"
 date:   2023-12-16 16:25:00 +0900
-categories: MyBatis
+categories: [ Spring, MyBatis ]
 ---
 
 ### # 사용법

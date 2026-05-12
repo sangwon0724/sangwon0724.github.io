@@ -2,7 +2,7 @@
 layout: post
 title:  "내장 함수와 외장 함수"
 date:   2025-04-29 02:15:00 +0900
-categories: Python
+categories: [ Python, Basics ]
 ---
 
 ### 내장 함수 (Built-in Functions)

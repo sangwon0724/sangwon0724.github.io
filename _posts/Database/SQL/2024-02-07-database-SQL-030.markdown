@@ -2,7 +2,7 @@
 layout: post
 title:  "BINARY 검색"
 date:   2024-02-07 09:43:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 - 기본적으로 WHERE절에서 등호나 LIKE 키워드를 통한 검색을 진행할 때는 대소문자를 구분하지 않는다.

@@ -2,7 +2,7 @@
 layout: post
 title:  "네트워크의 이해와 설정"
 date:   2024-04-28 14:21:00 +0900
-categories: 이론&nbsp;-&nbsp;네트워크
+categories: [ 이론, 네트워크 ]
 ---
 
 ### 네트워크의 정의

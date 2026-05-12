@@ -2,7 +2,7 @@
 layout: post
 title:  "HTTP 메소드"
 date:   2024-03-20 23:43:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### HTTP 메소드란?

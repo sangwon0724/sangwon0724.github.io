@@ -2,7 +2,7 @@
 layout: post
 title:  "비동기 데이터 처리하기"
 date:   2024-01-19 17:38:00 +0900
-categories:  Flutter
+categories: [ Dart, Flutter ]
 ---
 
 ### FutureBuilder (비동기)

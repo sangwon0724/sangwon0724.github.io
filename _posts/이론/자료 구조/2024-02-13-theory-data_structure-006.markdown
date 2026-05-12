@@ -2,7 +2,7 @@
 layout: post
 title:  "트리 (Tree)"
 date:   2024-02-13 23:16:00 +0900
-categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+categories: [ 이론, 자료&nbsp;구조 ]
 tags: [트리, 힙]
 ---
 

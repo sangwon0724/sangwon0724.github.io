@@ -2,7 +2,7 @@
 layout: post
 title:  "Database Lock"
 date:   2024-02-03 16:03:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### Database Lock이란?

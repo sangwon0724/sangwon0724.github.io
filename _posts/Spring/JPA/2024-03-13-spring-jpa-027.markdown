@@ -2,7 +2,7 @@
 layout: post
 title:  "[Spring Data JPA] 네이티브 쿼리 (Native Query)"
 date:   2024-03-13 22:13:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 네이티브 쿼리란?

@@ -2,7 +2,7 @@
 layout: post
 title:  "Redis의 다양한 자료구조"
 date:   2025-03-04 15:30:00 +0900
-categories:  Redis
+categories: [ Database, Redis ]
 ---
 
 ### 다양한 자료 구조

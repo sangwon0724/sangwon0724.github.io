@@ -2,7 +2,7 @@
 layout: post
 title:  "날짜 관련 함수"
 date:   2024-02-03 16:36:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 날짜

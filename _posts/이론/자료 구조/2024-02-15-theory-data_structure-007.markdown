@@ -2,7 +2,7 @@
 layout: post
 title:  "그래프 (Graph)"
 date:   2024-02-15 01:11:00 +0900
-categories: 이론&nbsp;-&nbsp;자료&nbsp;구조
+categories: [ 이론, 자료&nbsp;구조 ]
 tags: [그래프]
 ---
 

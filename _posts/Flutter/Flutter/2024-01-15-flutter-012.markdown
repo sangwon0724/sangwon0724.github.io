@@ -2,7 +2,7 @@
 layout: post
 title:  "쉬운 프로필 이미지 만들기 (CircleAvatar)"
 date:   2024-01-15 11:39:00 +0900
-categories:  Flutter
+categories: [ Dart, Flutter ]
 ---
 
 ### CircleAvatar

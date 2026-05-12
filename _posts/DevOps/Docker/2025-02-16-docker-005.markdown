@@ -2,7 +2,7 @@
 layout: post
 title:  "도커 컴포즈 (Docker Compose)"
 date:   2025-02-16 21:31:00 +0900
-categories: Docker
+categories: [ DevOps, Docker ]
 ---
 
 ### 도커 컴포즈(Docker Compose)란?

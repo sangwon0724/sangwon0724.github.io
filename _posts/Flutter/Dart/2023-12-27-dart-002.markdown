@@ -2,7 +2,7 @@
 layout: post
 title:  "null safety"
 date:   2023-12-27 15:06:00 +0900
-categories:  Dart
+categories: [ Dart, Basics ]
 ---
 
 - Dart는 강한 Null 안정성을 가지고 있다.

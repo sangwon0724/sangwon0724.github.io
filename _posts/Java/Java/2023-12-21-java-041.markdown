@@ -2,7 +2,7 @@
 layout: post
 title:  "람다 (lambda)"
 date:   2023-12-21 11:42:00 +0900
-categories: [ Java, 기초 ]
+categories: [ Java, Basics ]
 tags: [람다, lambda, 화살표]
 ---
 

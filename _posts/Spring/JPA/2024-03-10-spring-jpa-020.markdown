@@ -2,7 +2,7 @@
 layout: post
 title:  "[JPA 활용] 컬렉션 조회 최적화"
 date:   2024-03-10 15:59:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### 컬렉션 조회

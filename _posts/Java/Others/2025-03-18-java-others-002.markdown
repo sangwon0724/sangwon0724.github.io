@@ -2,7 +2,7 @@
 layout: post
 title:  "카테고리 구하기 (Nested)"
 date:   2025-03-18 14:37:00 +0900
-categories: [ Java, Code&nbsp;Snippet&nbsp;(Java) ]
+categories: [ Java, Snippets ]
 tags: [트리, 카테고리, 중첩, Nested]
 ---
 

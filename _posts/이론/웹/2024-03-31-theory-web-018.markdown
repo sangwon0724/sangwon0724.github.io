@@ -2,7 +2,7 @@
 layout: post
 title:  "웹 소켓"
 date:   2024-03-31 19:10:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 웹 소켓이란?

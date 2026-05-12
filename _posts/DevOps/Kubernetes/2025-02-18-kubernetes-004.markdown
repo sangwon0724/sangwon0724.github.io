@@ -2,7 +2,7 @@
 layout: post
 title:  "컨피그맵(ConfigMap)과 시크릿(Secret)을 활용한 환경변수 관리"
 date:   2025-02-18 19:19:00 +0900
-categories: Kubernetes
+categories: [ DevOps, Kubernetes ]
 tags: []
 ---
 

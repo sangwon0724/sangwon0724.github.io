@@ -2,7 +2,7 @@
 layout: post
 title:  "컨버터 (@Converter)"
 date:   2024-08-10 14:15:00 +0900
-categories: JPA
+categories: [ Spring, JPA ]
 ---
 
 ### @Converter

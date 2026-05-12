@@ -2,7 +2,7 @@
 layout: post
 title:  "윤년 구하기"
 date:   2023-12-15 09:37:00 +0900
-categories: [ Java, Code&nbsp;Snippet&nbsp;(Java) ]
+categories: [ Java, Snippets ]
 excerpt_separator: \n\n
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "FULLTEXT INDEXING"
 date:   2024-02-06 16:23:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### FULLTEXT INDEX

@@ -2,7 +2,7 @@
 layout: post
 title:  "디플로이먼트(Deployment)와 서비스(Service)"
 date:   2025-02-17 23:07:00 +0900
-categories: Kubernetes
+categories: [ DevOps, Kubernetes ]
 tags: []
 ---
 

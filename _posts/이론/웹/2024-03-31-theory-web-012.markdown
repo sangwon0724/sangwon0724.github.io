@@ -2,7 +2,7 @@
 layout: post
 title:  "웹 1.0, 2.0, 3.0"
 date:   2024-03-31 16:07:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 웹 버전

@@ -2,7 +2,7 @@
 layout: post
 title:  "클라우드"
 date:   2024-03-31 18:10:00 +0900
-categories: 이론&nbsp;-&nbsp;웹
+categories: [ 이론, 웹 ]
 ---
 
 ### 클라우드란?

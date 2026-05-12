@@ -2,7 +2,7 @@
 layout: post
 title:  "2024년 목표"
 date:   2023-12-30 23:19:00 +0900
-categories: 목표
+categories: [ 일상, 목표 ]
 tags: [목표]
 ---
 

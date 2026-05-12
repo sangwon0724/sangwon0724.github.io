@@ -2,7 +2,7 @@
 layout: post
 title:  "컴포넌트"
 date:   2024-02-19 17:14:00 +0900
-categories: React
+categories: [ JavaScript, React ]
 ---
 
 ### 엘리먼트 (element)

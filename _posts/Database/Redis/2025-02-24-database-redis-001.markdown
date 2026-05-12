@@ -2,7 +2,7 @@
 layout: post
 title:  "Redis(레디스)란?"
 date:   2025-02-24 16:05:00 +0900
-categories:  Redis
+categories: [ Database, Redis ]
 ---
 
 ### Redis(레디스)란?

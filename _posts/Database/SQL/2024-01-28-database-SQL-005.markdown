@@ -2,7 +2,7 @@
 layout: post
 title:  "데이터 추가"
 date:   2024-01-28 15:30:00 +0900
-categories:  SQL
+categories: [ Database, SQL ]
 ---
 
 ### 데이터 직접 삽입

@@ -2,7 +2,7 @@
 layout: post
 title:  "알림 띄우기"
 date:   2024-01-19 13:00:00 +0900
-categories:  Flutter
+categories: [ Dart, Flutter ]
 ---
 
 ### AlertDialog (다이얼로그)
