@@ -38,7 +38,7 @@ Member member = em.getReference(Member.class, "id1");
 member.getName()
 {% endhighlight %}
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_016.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_016.png" alt="" />
 
 #### 프록시 확인
 

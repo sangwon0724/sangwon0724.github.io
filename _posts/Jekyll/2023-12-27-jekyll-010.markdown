@@ -35,7 +35,7 @@ categories: [ Jekyll, Jekyll ]
   <div class="swiper-wrapper">
     <!-- 반복 시작 -->
     <div class="swiper-slide">
-        <img src="{{path}}{% if i < 10 %}{{ i | prepend: '0' }}{% else %}{{ i }}{% endif %}.{{extension}}"/>
+        <img src="{{path}}{% if i < 10 %}{{ i | prepend: '0' }}{% else %}{{ i }}{% endif %}.{{extension}}" alt="" />
     </div>
     <!-- 반복 종료 -->
   </div>

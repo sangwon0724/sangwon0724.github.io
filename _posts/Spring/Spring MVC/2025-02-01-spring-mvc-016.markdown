@@ -161,7 +161,7 @@ public MemberDto getMember(@PathVariable("id") String id) {
 - 컨트롤러 밖으로 던져진 예외를 해결하고, 동작 방식을 변경하고 싶으면 HandlerExceptionResolver를 사용하면 된다.
     - 줄여서 `ExceptionResolver`라 한다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_011.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_011.png" alt="" />
 
 - 다만 `ExceptionResolver`로 예외를 해결해도 `postHandle()`은 호출되지 않는다.
 

@@ -136,7 +136,7 @@ categories: [ 이론, 웹 ]
     - 실제로는 GET, HEAD 정도만 캐시로 사용한다.
     - POST, PATCH는 본문 내용까지 캐시 키로 고려해야 하는데, 구현하기가 쉽지 않다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/web_001.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/web_001.png" alt="" />
 
 ### HTTP API 설계
 

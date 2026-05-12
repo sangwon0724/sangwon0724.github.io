@@ -558,7 +558,7 @@ public class KafkaConsumer {
 실제로 테스트를 진행해보자.
 
 기존에 아래와 같은 상품 정보가 있다고 가정해보자.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_006.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_006.png" alt="" />
 
 그리고 이러한 데이터를 주문 서비스에 보내서 주문을 생성하자.
 {% highlight json %}
@@ -570,8 +570,8 @@ public class KafkaConsumer {
 {% endhighlight %}
 
 그러면 아래와 같이 실제로 주문이 생성되고, 수량이 변경된 것을 확인할 수 있다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_007.png"/>
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_008.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_007.png" alt="" />
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_008.png" alt="" />
 
 ### 이벤트 기반 비동기 시스템 설계 원칙
 
@@ -656,7 +656,7 @@ POST로 ` http://localhost:8083/connectors`를 아래 데이터와 함께 호출
 
 호출해보면 인스턴스가 2개라 데이터가 2건 쌓일 것 같은데  
 실제로 쌓인 것은 1건뿐인 것을 알 수 있다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_009.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_009.png" alt="" />
 
 ### Kafka Sync Connect 사용 시 주의사항
 

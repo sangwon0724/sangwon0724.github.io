@@ -47,7 +47,7 @@ tags: [연관관계, JPA 연관관계]
 - 가장 많이 사용하는 연관관계
 - <b>다대일</b>의 반대는 <b>일대다</b>
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_002.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_002.png" alt="" />
 
 {% highlight java %}
 @Entity
@@ -99,7 +99,7 @@ tx.commit();
 - 외래 키가 있는 쪽이 연관관계의 주인이 된다.
 - 양쪽을 서로 참조하도록 개발한다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_003.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_003.png" alt="" />
 
 {% highlight java %}
 @Entity
@@ -195,7 +195,7 @@ tx.commit();
 
 #### 단방향
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_004.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_004.png" alt="" />
 
 - 일대다 단방향 매핑의 단점
     - 엔티티가 관리하는 외래 키가 다른 테이블에 있음
@@ -204,7 +204,7 @@ tx.commit();
 
 #### 양방향
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_005.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_005.png" alt="" />
 
 - 일대다 양방향 매핑의 문제점
     - 공식적으로 존재하는 매핑 방법이 아니다.
@@ -225,26 +225,26 @@ tx.commit();
 
 - 다대일(@ManyToOne) 단방향 매핑과 유사하다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_006.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_006.png" alt="" />
 
 #### 대상 테이블에 외래 키 양방향
 
 - 다대일 양방향 매핑 처럼 외래 키가 있는 곳이 연관관계의 주인이다.
 - 반대편은 mappedBy를 적용한다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_007.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_007.png" alt="" />
 
 #### 대상 테이블에 외래 키 단방향
 
 - 단방향 관계는 JPA가 지원되지 않는다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_008.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_008.png" alt="" />
 
 #### 대상 테이블에 외래 키 양방향
 
 - 일대일 주 테이블에 외래 키 양방향과 매핑 방법은 같다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_009.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_009.png" alt="" />
 
 #### 정리
 
@@ -275,11 +275,11 @@ tx.commit();
 - 연결 테이블이 단순히 연결만 하고 끝나지 않는다.
     - 필요한 데이터가 추가될 수도 있다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_010.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_010.png" alt="" />
 
 - 연결 테이블을 엔티티로 승격시켜서 다대다 매핑의 한계를 극복할 수 있다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_011.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_011.png" alt="" />
 
 ### 공통 코드
 

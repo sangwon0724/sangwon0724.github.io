@@ -21,13 +21,13 @@ tags: []
 그 인터페이스는 또 구현체가 있을 것이며,  
 스프링 데이터 JPA를 사용한다면 또 그 리포지토리 인터페이스는 JpaRepository를 참조할 것이다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_015.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_015.png" alt="" />
 
 너무나도 복잡한 구조다.  
 그래서 우리는 `트레이드 오프`라는 것을 확인한다.  
 이 경우에는 서비스가 바로 스프링 데이터 JPA를 사용하게 하는 것일거다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_016.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_016.png" alt="" />
 
 사실상 개발할 때의 트레이드 오프는 이 애플리케이션의 중점은  
 `구조의 안정성`이냐 아니면 `단순한 구조와 개발의 편리성`이냐가 될 것이다.  

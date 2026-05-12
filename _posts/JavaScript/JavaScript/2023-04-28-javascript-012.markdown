@@ -14,9 +14,9 @@ tags: [정규식]
 
 - [https://regexper.com/](https://regexper.com/)
     - 정규 표현식을 시각화해서 보여주는 사이트
-- [http://gskinner.com/RegExr/](http://gskinner.com/RegExr/)
+- [https://gskinner.com/RegExr/](https://gskinner.com/RegExr/)
     - 정규 표현식을 실시간으로 테스트해볼 수 있는 사이트
-- [http://www.regexr.com/](http://www.regexr.com/)
+- [https://www.regexr.com/](https://www.regexr.com/)
     - 정규 표현식에 대한 도움말과 테스트 도구들을 제공하는 사이트 
                 
 ### 정규 표현식 생성 방법

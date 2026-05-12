@@ -18,7 +18,7 @@ categories: [ Jekyll, Jekyll ]
 
 ### 테마 선택하기
 
-1. [http://jekyllthemes.org/](http://jekyllthemes.org/)로 이동하기
+1. [https://jekyllthemes.org/](https://jekyllthemes.org/)로 이동하기
 2. 마음에 드는 테마 선택하기
   - 확인사항
     - 라이센스

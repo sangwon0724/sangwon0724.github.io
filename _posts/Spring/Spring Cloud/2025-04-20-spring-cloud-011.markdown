@@ -381,38 +381,38 @@ zip 파일이라면 내부의 `.\bin\grafana-server.exe`를 실행하면 되고,
 
 #### 데이터 소스 연동하기
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_017.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_017.png" alt="" />
 좌측 메뉴에서 `Connections` 메뉴 하위에 있는  
 `Add new connection`을 선택하자.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_018.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_018.png" alt="" />
 Prometheus를 검색해서 선택하자.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_019.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_019.png" alt="" />
 `Add new data source`를 선택하자.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_020.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_020.png" alt="" />
 `Connection`에 프로메테우스 서버의 주소를 입력하자.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_021.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_021.png" alt="" />
 이제 최하단으로 내려와서 `Save & test`를 통해 설정을 저장한 뒤,  
 위와 같이 `Successfully queried the Prometheus API.`가 나오면 성공이다.
 
 #### 대시보드 설정하기
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_022.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_022.png" alt="" />
 좌측 메뉴에서 `Dashboards`를 선택한 뒤에  
 `Create dashboard`를 선택하자.  
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_023.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_023.png" alt="" />
 `Import dashboard`를 선택하자.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_024.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_024.png" alt="" />
 1번을 통해 대시보드 저장소에서 본인이 사용하고 싶은 대시보드를 검색한다.  
 2번에 선택한 대시보드의 주소나 ID를 입력한다.  
 3번을 클릭해서 저장소 정보를 저장한다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_025.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_025.png" alt="" />
 1번을 통해 프로메테우스를 선택한다.  
 2번을 클릭해서 설정을 저장하면 성공이다.
 

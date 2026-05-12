@@ -14,7 +14,7 @@ categories: [ Spring, Others ]
 public List<HashMap<String, Object>> setThumbnail (List<HashMap<String, Object>> mapList){
     for (HashMap<String, Object> map : mapList) {
         String text = map.get("content").toString(); //게시글의 내용 가져오기
-        Pattern pattern = Pattern.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>"); //img 태그 src 추출 정규표현식
+        Pattern pattern = Pattern.compile("<img[^ alt="" >]*src=[\"']?([^>\"']+)[\"']?[^>]*>"); //img 태그 src 추출 정규표현식
         Matcher matcher = pattern.matcher(text);
 
         String thumbnail_text =  "";

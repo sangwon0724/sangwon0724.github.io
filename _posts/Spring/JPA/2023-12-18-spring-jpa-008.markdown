@@ -38,7 +38,7 @@ tags: [연관관계, JPA 연관관계]
 
 #### 조인 전략
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_012.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_012.png" alt="" />
 
 - 장점
     - 테이블 정규화
@@ -186,7 +186,7 @@ where
 
 #### 단일 테이블 전략
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_013.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_013.png" alt="" />
 
 - 장점
     - 조인이 필요 없으므로 일반적으로 조회 성능이 빠르다.
@@ -295,7 +295,7 @@ where
 
 #### 구현 클래스마다 테이블 전략
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_014.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_014.png" alt="" />
 
 - 데이터베이스 설계자와 ORM 전문가 모두 추천하지 않는 방식
 - 장점
@@ -439,7 +439,7 @@ where
 
 ### 매핑 정보 상속
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_015.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/jpa_015.png" alt="" />
 
 - 단순히 공통으로 사용될 속성들을 관리하기 위한 방법이다.
 - 상속관계 매핑이 아니다.

@@ -12,11 +12,11 @@ tags: []
 
 #### 직접 만든 MVC 프레임워크 구조
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_008.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_008.png" alt="" />
 
 #### SpringMVC 구조
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_009.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_009.png" alt="" />
 
 #### 직접 만든 프레임워크 스프링 MVC 비교
 
@@ -94,7 +94,7 @@ protected void render(ModelAndView mv, HttpServletRequest request, HttpServletRe
 
 ### 스프링 MVC 구조
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_009.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_009.png" alt="" />
 
 #### 스프링의 동작 순서
 
@@ -184,7 +184,7 @@ public class OldController implements Controller {
 
 #### OldController는 어떻게 호출될 수 있을까?
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_009.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_009.png" alt="" />
 
 - OldController가 호출되려면 2가지가 필요하다.
     - HandlerMapping(핸들러 매핑)

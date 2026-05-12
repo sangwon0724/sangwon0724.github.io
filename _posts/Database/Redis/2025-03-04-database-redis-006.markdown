@@ -13,7 +13,7 @@ categories: [ Database, Redis ]
 자료 구조 중에서는 Bitfields와 Geospatial indexes는 제외하였으며  
 명령어도 엔터프라이즈 버전 것은 제외하였다.
 
-[참고 사이트](http://redisgate.kr/redis/introduction/redis_intro.php)에서  
+[참고 사이트](https://redisgate.kr/redis/introduction/redis_intro.php)에서  
 명령어에 대한 상세정보를 추가로 확인할 수 있다.
 
 ### Strings

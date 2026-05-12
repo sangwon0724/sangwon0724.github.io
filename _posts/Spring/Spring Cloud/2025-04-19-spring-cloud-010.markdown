@@ -412,7 +412,7 @@ docker run -d -p 9411:9411 openzipkin/zipkin
 #### 서버 실행 결과
 
 서버가 정상적으로 실행된다면 콘솔에 아래와 같은 화면이 출력된다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_010.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_010.png" alt="" />
 
 브라우저에서 `http://localhost:9411/zipkin/`으로 접속해보면  
 Zipkin의 분산 추적 상황을 확인할 수 있는 웹 페이지가 나온다.
@@ -569,23 +569,23 @@ logging:
 
 그 다음에 Zipkin 페이지를 들어가보자.  
 맨 처음에 들어가면 아무 것도 나오지 않는다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_011.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_011.png" alt="" />
 
 이번엔 우측에 있는 `RUN QUERY` 버튼을 눌러보자.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_012.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_012.png" alt="" />
 
 그러면 이렇게 문제가 발생한 경우에는 아이콘과 함께 강조 표시가 있는 것을 알 수 있다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_013.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_013.png" alt="" />
 
 이번엔 우측의 `SHOW` 버튼을 눌러서 상세 페이지에 들어가보자.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_014.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_014.png" alt="" />
 
 그러면 각 Trace와 Span에 대한 정보가 간략하게 나와있는 것을 알 수 있다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_015.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_015.png" alt="" />
 
 여기서 에러 아이콘이 있는 부분을 눌러보면 상세한 내용을 확인할 수 있다.  
 우측의 정보 상세 정보 영역을 통해서 어느 부분에서 문제가 발생했는지 파악할 수 있다.
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_016.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/spring_cloud_016.png" alt="" />
 
 ### 출처
 

@@ -25,7 +25,7 @@ categories: [ Spring, eGov&nbsp;Framework ]
   2.  Target Runtime : 실행 환경 (Tomcat 서버의 버전),
     - Tomcat 서버는 나중에 연결해도 되기 때문에 None으로 설정해도 크게 상관없다.
   3. Dynamic Web Moduel version : 지원하는 servlet api version
-    -  Tomcat 서버 버전에 맞는 Servlet Spec 버전 : <a href="http://tomcat.apache.org/whichversion.html" target="_blank">참고</a>
+    -  Tomcat 서버 버전에 맞는 Servlet Spec 버전 : <a href="https://tomcat.apache.org/whichversion.html" target="_blank">참고</a>
     - 알맞지 않은 버전 사용시 환상적인 오류 축제 발생
   4. Maven Setting - Group Id : 현재 프로젝트의 최상위 패키지명
   5. Maven Setting - Artifact Id : 프로젝트명

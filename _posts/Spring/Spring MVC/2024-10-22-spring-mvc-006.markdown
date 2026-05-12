@@ -1319,7 +1319,7 @@ public class ResponseBodyController {
 
 #### @ResponseBody 사용 원리
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_010.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_010.png" alt="" />
 
 - @ResponseBody 를 사용
     - HTTP의 BODY에 문자 내용을 직접 반환

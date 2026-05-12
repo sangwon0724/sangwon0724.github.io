@@ -26,7 +26,7 @@ tags: []
 
 #### 디플로이먼트 구조
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_001.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_001.png" alt="" />
 
 디플로이먼트는 여러 개의 파드를 `레플리카셋(ReplicaSet)`으로 묶어서 관리한다.  
 여기서 `레플리카셋(ReplicaSet)`은 복제본끼리의 묶음이라는 의미를 가진다.
@@ -175,7 +175,7 @@ spec:
 
 #### 서비스 구조
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_002.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/kubernetes_002.png" alt="" />
 
 ### 서비스 적용하기
 

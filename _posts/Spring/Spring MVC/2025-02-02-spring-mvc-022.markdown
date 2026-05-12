@@ -712,7 +712,7 @@ public void accountTransfer(String fromId, String toId, int money) throws SQLExc
 
 트랜잭션 AOP가 사용된 전체 흐름을 그림으로 정리하면 아래와 같이 정리할 수 있다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_012.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_012.png" alt="" />
 
 #### 선언적 트랜잭션 관리 (Declarative Transaction Management)
 

@@ -15,7 +15,7 @@ categories: [ 이론, 웹 ]
 
 ### 브라우저의 기본 요소
 
-<img src="https://velog.velcdn.com/images%2Fthyoondev%2Fpost%2F9cf5cb0d-91bf-41ac-9693-ddf51d2f5fbd%2F1608995695700browser_structure-min.png"/>
+<img src="https://velog.velcdn.com/images%2Fthyoondev%2Fpost%2F9cf5cb0d-91bf-41ac-9693-ddf51d2f5fbd%2F1608995695700browser_structure-min.png" alt="" />
 
 ### 사용자 인터페이스
 
@@ -70,7 +70,7 @@ flowchart TD
     <body>
         <p>Hello World</p>
         <div>
-            <img src="example.png" />
+            <img src="example.png"  alt="" />
         </div>
     </body>
 </html>

@@ -15,7 +15,7 @@ tags: []
 `Bean Validation`은 특정한 구현체가 아니라 `Bean Validation 2.0(JSR-380)`이라는  
 검증 애노테이션과 여러 인터페이스의 모음으로 이루어진 기술 표준이다.
 
-- [참고1 - 공식 사이트](http://hibernate.org/validator/)
+- [참고1 - 공식 사이트](https://hibernate.org/validator/)
 - [참고2 - 공식 메뉴얼](https://docs.jboss.org/hibernate/validator/6.2/reference/en-US/html_single/)
 - [참고3 - 검증 애노테이션 모음](https://docs.jboss.org/hibernate/validator/6.2/reference/en-US/html_single/#validator-defineconstraints-spec)
 

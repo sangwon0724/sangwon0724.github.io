@@ -13,7 +13,7 @@ tags: []
 
 아래 이미지는 자바의 예외 계층을 나타낸다.
 
-<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_013.png"/>
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_013.png" alt="" />
 
 - `Object`
     - 예외도 객체다.

@@ -60,7 +60,7 @@ categories: [ 이론, 웹 ]
 
 - 클라우드 컴퓨팅을 통해 제공하는 서비스의 유형
 
-<img src="https://www.whatap.io/ko/blog/9/img/iaas_paas_saas3.webp"/>
+<img src="https://www.whatap.io/ko/blog/9/img/iaas_paas_saas3.webp" alt="" />
 
 #### IaaS(Infrastructure as a Service, 인프라 기반 서비스)
 
