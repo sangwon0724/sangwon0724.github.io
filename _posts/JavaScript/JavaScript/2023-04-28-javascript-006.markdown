@@ -2,7 +2,7 @@
 layout: post
 title:  "조건문"
 date:   2023-04-28 10:07:33 +0900
-categories: [ JavaScript, JavaScript ]
+categories: [ JavaScript, 기초 ]
 ---
 
 ### 단순 조건문

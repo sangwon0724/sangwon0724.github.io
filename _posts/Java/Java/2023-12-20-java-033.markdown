@@ -2,7 +2,7 @@
 layout: post
 title:  "Set 컬렉션"
 date:   2023-12-20 15:35:00 +0900
-categories: [ Java, Java ]
+categories: [ Java, 기초 ]
 tags: [Set]
 ---
 

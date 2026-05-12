@@ -2,7 +2,7 @@
 layout: post
 title:  "숫자 및 문자열"
 date:   2023-04-28 10:07:33 +0900
-categories: [ JavaScript, JavaScript ]
+categories: [ JavaScript, 기초 ]
 ---
 
 ### 수의 연산

@@ -2,7 +2,7 @@
 layout: post
 title:  "Object"
 date:   2023-12-20 11:39:00 +0900
-categories: [ Java, Java ]
+categories: [ Java, 기초 ]
 ---
 
 ### Object class

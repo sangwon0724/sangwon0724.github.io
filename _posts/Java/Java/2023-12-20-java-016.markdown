@@ -2,7 +2,7 @@
 layout: post
 title:  "메소드 오버라이딩 (method overriding)"
 date:   2023-12-20 10:45:00 +0900
-categories: [ Java, Java ]
+categories: [ Java, 기초 ]
 tags: [메소드 오버라이딩]
 ---
 

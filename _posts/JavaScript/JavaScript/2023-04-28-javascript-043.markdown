@@ -2,7 +2,7 @@
 layout: post
 title:  "promise"
 date:   2023-05-02 00:45:33 +0900
-categories: [ JavaScript, JavaScript ]
+categories: [ JavaScript, 기초 ]
 tags: [promise, 비동기]
 ---
 
