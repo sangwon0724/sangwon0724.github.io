@@ -2,7 +2,7 @@
 layout: post
 title: "Zustand와 Flux 아키텍처"
 date: 2026-05-11 22:34:00 +0900
-categories: [JavaScript, Zustand]
+categories: Zustand
 ---
 
 ### Flux 아키텍처와 Zustand

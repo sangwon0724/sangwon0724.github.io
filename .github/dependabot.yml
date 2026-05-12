@@ -4,8 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    commit-message:
-      prefix: "chore"
   - package-ecosystem: "npm"
     directory: "/"
     versioning-strategy: increase
@@ -16,8 +14,6 @@ updates:
         dependency-type: development
     schedule:
       interval: "weekly"
-    commit-message:
-      prefix: "chore"
   - package-ecosystem: "github-actions"
     directories:
       - "/.github/workflows/**"
@@ -27,11 +23,7 @@ updates:
           - "major"
     schedule:
       interval: "weekly"
-    commit-message:
-      prefix: "chore"
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
       interval: weekly
-    commit-message:
-      prefix: "chore"
