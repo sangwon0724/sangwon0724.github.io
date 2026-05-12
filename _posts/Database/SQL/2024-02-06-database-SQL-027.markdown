@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "COUNT(*)와 COUNT(1)과 COUNT(컬럼)"
+date:   2024-02-06 15:08:00 +0900
+categories:  SQL
+---
+
+### COUNT(*) VS COUNT(1)
+
+- 차이가 없다.
+- 동일한 수의 블록 읽기/쓰기/처리와 같은 CPU 사용 시간, 수행 시간을 갖는다.
+
+### COUNT(*) VS COUNT(컬럼)
+
+- 차이가 있다.
+- 차이점
+    - COUNT(*)
+        - NULL 값을 포함하여 카운트한다.
+    - COUNT(컬럼)
+        - NULL 값을 제외하여 카운트한다.

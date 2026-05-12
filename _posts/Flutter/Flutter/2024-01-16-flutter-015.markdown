@@ -1,0 +1,80 @@
+---
+layout: post
+title:  "위젯을 숨기는 방법"
+date:   2024-01-16 09:00:00 +0900
+categories:  Flutter
+---
+
+### Visibility
+
+- visible 속성에 따라 자식 위젯의 노출 여부를 변경한다.
+- 자식 위젯이 노출되지 않을 경우 임시 위젯으로 자식 위젯이 대체된다.
+    - 일반적으로 크기가 0인 박스 위젯으로 대체된다.
+    - 즉, 공간을 차지하지 않는다.
+- 플래그를 동적으로 변경하는 것은 하위 트리의 모든 상태가 삭제되어 하위 트리가 다시 작성될 수 있으므로 권장되지 않는다.
+    - 일반적으로 visible정도만 동적으로 변경한다.
+- 물리적 공간을 차지하면서 노출 여부가 변경된다.
+- 주로 사용하는 속성
+    - Widget child
+        - 내부에 배치할 자식 위젯
+        - 필수
+    - bool visible
+        - child의 노출 여부
+        - 기본 값 : true
+    - Widget replacement
+        - visible이 false일 경우 child 대신에 대체되는 위젯
+        - 기본 값 : const SizedBox.shrink()
+    - bool maintainState
+        - 자식 하위 트리가 표시되지 않을 때 해당 자식 하위 트리의 State 개체를 유지할지에 대한 여부
+        - 기본 값 : false
+    - bool maintainSize
+        - child의 크기만큼의 공간을 유지할지에 대한 여부
+        - 기본 값 : false
+    - bool maintainInteractivity
+        - 기본 값 : false
+- [참고](https://api.flutter.dev/flutter/widgets/Visibility-class.html)
+
+### Opacity
+
+- 자식 위젯의 투명도를 조절하는 위젯
+- 자식 위젯을 중간 버퍼에 그린 다음 부분적으로 투명한 장면으로 다시 자식 위젯을 혼합한다.
+- 자식 위젯이 투명해질뿐 기존의 영역은 계속 차지하고 있다.
+- 단일 이미지 또는 색상의 투명도를 조절할 경우에는  
+Opacity 위젯을 사용하기보다는 Color.fromRGBO(255, 0, 0, 0.5)같이 사용하는 것이 좋다.
+- 주로 사용하는 속성
+    - double opacity
+        - 투명도
+        - 범위 : 0.0 ~ 1.0
+            - 0.0에서 1.0으로 갈 수록 불투명해진다.
+        - 필수
+    - Widget? child
+        - 내부에 배치할 자식 위젯
+- [참고](https://api.flutter.dev/flutter/widgets/Opacity-class.html)
+
+{% highlight dart %}
+bool _visible = true;
+
+Opacity(
+  opacity: _visible ? 1.0 : 0.0,
+  child: const Text("Now you see me, now you don't!"),
+)
+{% endhighlight %}
+
+### Offstage
+
+- visible 속성에 따라 자식 위젯의 노출 여부를 변경한다.
+- 노출 여부와 함께 물리적으로 차지하는 공간의 크기도 변경된다.
+- 주로 사용하는 속성
+    - bool offstage
+        - 노출 여부
+        - 기본 값 : true
+    - Widget? child
+        - 내부에 배치할 자식 위젯
+- [참고](https://api.flutter.dev/flutter/widgets/Offstage-class.html)
+
+{% highlight dart %}
+Offstage(
+   offstage: true,
+   child: Text("This is Offstage Widget"),
+),
+{% endhighlight %}

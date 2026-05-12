@@ -1,0 +1,70 @@
+---
+layout: post
+title:  "배너"
+date:   2024-01-19 16:34:00 +0900
+categories:  Flutter
+---
+
+### MaterialBanner
+
+- 머티리얼 디자인의 배너를 생성하는 위젯
+- 주로 사용하는 속성
+    - Widget content
+        - 내용으로 표시할 위젯
+        - 필수
+    - List<Widget> actions
+        - 해당 배너에서 사용할 기능이 있는 위젯 목록
+        - 필수
+    - TextStyle? contentTextStyle
+        - content에서 사용하는 Text 계열 위젯의 스타일
+    - Widget? leading
+        - content 앞쪽에 붙는 위젯
+        - 주로 아이콘이나 이미지를 표시할 때 사용
+    - EdgeInsetsGeometry? leadingPadding
+        - leading에 대한 내부 여백
+    - Color? backgroundColor
+        - 배경색
+    - double? elevation
+        - 상위 MaterialBanner를 기준으로 해당 MaterialBanner를 배치할 z 좌표
+    - Color? shadowColor
+        - elevation에 대한 그림자 색상
+    - Color? surfaceTintColor
+        - elevation을 나타내기 위한 color 위에 오버레이될 색상
+    - Color? dividerColor
+        - 경계선의 색상
+    - EdgeInsetsGeometry? padding
+        - 내부 여백
+    - EdgeInsetsGeometry? margin
+        - 외부 여백
+    - bool forceActionsBelow
+        - actions를 아래쪽에 배치할 것인지에 대한 여부
+        - 기본 값 : false
+    - void Function()? onVisible
+        - MaterialBanner가 처음 노출될 때 동작할 기능
+- [참고](https://api.flutter.dev/flutter/material/MaterialBanner-class.html)
+
+{% highlight dart %}
+Builder(
+    builder: (context) {
+          return ElevatedButton(
+            child: const Text('Show MaterialBanner'),
+            onPressed: () => ScaffoldMessenger.of(context).showMaterialBanner(
+                const MaterialBanner(
+                    padding: EdgeInsets.all(20),
+                    content: Text('Hello, I am a Material Banner'),
+                    leading: Icon(Icons.agriculture_outlined),
+                    backgroundColor: Colors.green,
+                    actions: <Widget>[
+                        TextButton(
+                            onPressed: () {
+                                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                            },
+                            child: Text('DISMISS'),
+                        ),
+                    ],
+                ),
+            ),
+        );
+    },
+)
+{% endhighlight %}

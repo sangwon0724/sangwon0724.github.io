@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "백준 알고리즘 양식"
+date:   2025-04-21 23:27:00 +0900
+categories: 공부
+tags: [백준]
+---
+
+### 백준 알고리즘 Java 양식
+
+{% highlight java %}
+public class Main {
+	public static void main(String[] args) {
+		// 코드 작성
+	}
+}
+{% endhighlight %}

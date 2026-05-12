@@ -1,0 +1,89 @@
+---
+layout: post
+title: "Zustand와 Flux 아키텍처"
+date: 2026-05-11 22:34:00 +0900
+categories: Zustand
+---
+
+### Flux 아키텍처와 Zustand
+
+#### 정의
+
+- Facebook에서 제안한 단방향 데이터 흐름(Unidirectional Data Flow) 아키텍처인 Flux의 원칙을 Zustand가 어떻게 계승하고 단순화했는지에 대한 설계 방식
+- 데이터의 흐름을 예측 가능하게 만들고 애플리케이션의 상태 변화를 일관성 있게 관리하는 것을 목적으로 한다.
+
+#### 특징
+
+- 단방향 데이터 흐름
+    - Action → Store → View 순서로 데이터가 흐르며, View에서 발생한 이벤트는 다시 Action을 통해 Store를 업데이트한다.
+- 중앙 집중식 상태 관리
+    - 상태(State)와 이를 변경하는 로직(Action)을 Store라는 하나의 저장소에서 관리한다.
+- 불변성 기반 업데이트
+    - 기존 상태를 직접 수정하지 않고, 새로운 상태 객체를 생성하여 교체함으로써 변화를 감지한다.
+
+#### 장점
+
+- 데이터 흐름이 단순하여 애플리케이션의 상태를 추적하기 쉽다.
+* Redux와 비교했을 때 Dispatcher나 Reducer와 같은 복잡한 보일러플레이트가 없어 구조가 간결하다.
+- 상태 변화가 예측 가능하므로 디버깅이 용이하다.
+
+#### 단점
+
+- 단순한 컴포넌트 간 통신에는 과한 설계가 될 수 있다.
+- 프로젝트 규모가 매우 커질 경우 단방향 흐름을 유지하기 위한 엄격한 규칙 정의가 필요하다.
+
+### Flux 구성 요소와 Zustand의 매핑
+
+#### 1. Action (액션)
+
+상태를 변경하기 위해 발생하는 이벤트나 함수이다. Zustand에서는 스토어 내부에 정의된 함수들이 액션의 역할을 수행한다.
+
+{% highlight ts %}
+// Zustand에서의 Action
+const useStore = create((set) => ({
+  count: 0,
+  // 이것이 Action의 역할을 한다.
+  increase: () => set((state) => ({ count: state.count + 1 })),
+}));
+{% endhighlight %}
+
+#### 2. Store (스토어)
+
+애플리케이션의 상태와 액션을 보유하고 있는 저장소이다. Zustand의 `create` 함수로 생성된 객체가 이에 해당한다.
+
+{% highlight ts %}
+// Zustand에서의 Store
+const useStore = create((set) => ({
+  count: 0, // State
+  increase: () => set(...), // Action 로직
+}));
+{% endhighlight %}
+
+#### 3. View (뷰)
+
+상태를 화면에 렌더링하고 사용자 이벤트를 발생시키는 UI 계층이다. React 컴포넌트가 이에 해당하며, 스토어를 구독(Subscribe)하여 상태 변화를 반영한다.
+
+{% highlight tsx %}
+// Zustand에서의 View
+const CounterView = () => {
+  const count = useStore((state) => state.count);
+  const increase = useStore((state) => state.increase);
+
+  return (
+    <div>
+      <span>{count}</span>
+      <button onClick={increase}>증가</button>
+    </div>
+  );
+};
+{% endhighlight %}
+
+### Flux 패턴을 유지하기 위한 권장 사항
+
+- **상태 변경은 오직 액션을 통해서만**: 컴포넌트 내부에서 `set`을 직접 호출하기보다, 스토어에 정의된 액션 함수를 호출하는 형식을 유지한다.
+- **관심사 분리**: 상태와 관련된 복잡한 비즈니스 로직은 최대한 스토어의 액션 내부로 응집시킨다.
+- **선택적 구독**: 뷰(컴포넌트)에서는 필요한 상태만 Selector를 통해 구독하여 불필요한 리렌더링을 방지한다.
+
+### 결론
+
+Zustand는 Flux 아키텍처의 핵심 가치인 '예측 가능한 상태 관리'를 유지하면서도, 개발자가 느끼는 구현상의 번거로움을 획기적으로 줄인 라이브러리이다. Flux의 원리를 이해하고 Zustand를 사용하면 더욱 견고한 프론트엔드 아키텍처를 설계할 수 있다.

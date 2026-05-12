@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "이벤트"
+date:   2023-05-02 00:45:33 +0900
+categories: JavaScript
+tags: [이벤트]
+---
+
+### 이벤트 막기
+
+{% highlight javascript %}
+event.preventDefault(); //이벤트 실행 막기, 예시) form의 submit()
+{% endhighlight %}
+                    
+                
+### 드래그 앤 드랍
+
+{% highlight javascript %}
+<div ondrop="drop(event)" ondragover="dragEnter(event)">
+    <img id="monalisa" width="180" height="280" src="xxx.png" draggable="true" ondragstart="drag(event)">
+</div>
+<div ondrop="drop(event)" ondragover="dragEnter(event)"></div>
+
+function dragEnter(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+{% endhighlight %}
+
+### 뒤로가기 이벤트 감지
+
+{% highlight javascript %}
+    //인터넷 익스플로러에서 뒤로가기시 검색창의 유저 아이디가 존재해서 페이징 에러를 발생시킴
+    $(document).ready(function (){
+        window.onpageshow = function(event) {
+            if (
+                event.persisted || (window.performance && window.performance.navigation.type === 2)
+            ) {
+                // Back Forward Cache로 브라우저가 로딩될 경우 혹은 브라우저 뒤로가기 했을 경우
+                $("#USER_ID").val("");
+            }
+        }
+    });​
+{% endhighlight %}
+
+### 키보드 이벤트 감지
+
+- event.keyCode가 각각의 아스키 코드값과 같은 경우 이벤트를 실행
+    - Backspace : 8
+    - Tab : 9
+    - Enter : 13
+    - Shift : 16
+    - Control : 17
+    - Alt : 18
+    - Caps Lock : 20
+    - ESC : 27
+    - Space : 32
+    - 방향키 (상하좌우) : 38/40/37/39

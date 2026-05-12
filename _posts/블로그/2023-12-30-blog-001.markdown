@@ -1,0 +1,172 @@
+---
+layout: post
+title:  "게시글 작성을 위한 출처 및 참고 문헌"
+date:   2023-12-30 23:57:00 +0900
+categories: 블로그
+tags: [출처, 참고]
+---
+
+### 사이트 목록
+
+- [인프런](https://www.inflearn.com/)
+- [패스트 캠퍼스](https://fastcampus.co.kr/)
+- [노마드 코더](https://nomadcoders.co/)
+- [TCP SCHOOL](https://www.tcpschool.com/)
+
+### Java
+
+- 강의 사이트
+    - TCP SCHOOL
+        - [TCP SCHOOL > JAVA](https://www.tcpschool.com/java/intro)
+
+### JavaScript
+
+- 강의 사이트
+    - 노마드 코더
+        - [바닐라 JS로 크롬 앱 만들기](https://nomadcoders.co/javascript-for-beginners)
+        - [바닐라JS로 그림 앱 만들기](https://nomadcoders.co/javascript-for-beginners-2)
+        - [ES6의 정석](https://nomadcoders.co/es6-once-and-for-all)
+
+### jQuery
+
+### Node.js
+
+### React.js
+
+- 강의 사이트
+    - 노마드 코더
+        - [ReactJS로 영화 웹 서비스 만들기](https://nomadcoders.co/react-for-beginners)
+        - [실전형 리액트 Hooks 10개](https://nomadcoders.co/react-hooks-introduction)
+        - [https://nomadcoders.co/nwitter](https://nomadcoders.co/nwitter)
+        - [초보자를 위한 리덕스 101](https://nomadcoders.co/redux-for-beginners)
+        - [왕초보를 위한 React Native 101](https://nomadcoders.co/react-native-for-beginners)
+    - TCP SCHOOL
+        - [TCP SCHOOL > React](https://tcpschool.com/react/intro)
+
+### Spring Framework
+
+- 강의 사이트
+    - 인프런
+        - [스프링 핵심 원리 - 기본편](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%95%B5%EC%8B%AC-%EC%9B%90%EB%A6%AC-%EA%B8%B0%EB%B3%B8%ED%8E%B8)
+        - [스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8)
+        - [예제로 배우는 스프링 입문 (개정판)](https://www.inflearn.com/course/spring_revised_edition)
+        - [스프링 프레임워크 입문](https://www.inflearn.com/course/spring)
+        - [자바 ORM 표준 JPA 프로그래밍 - 기본편](https://www.inflearn.com/course/ORM-JPA-Basic)
+
+### Flutter
+
+#### Dart
+
+- 가이드 문서
+    - [https://dart-ko.dev/language](https://dart-ko.dev/language)
+- 강의 사이트
+    - 인프런
+        - [[입문] Dart 언어 4시간만에 완전정복](https://www.inflearn.com/course/dart-%EC%96%B8%EC%96%B4-%EC%9E%85%EB%AC%B8)
+- 블로그 게시글
+    - [[Dart] Future 사용법(동기/비동기 작업 클래스)](https://jinhan38.com/151)
+    - [Flutter/Dart 핵심만 쏙 - Stream](https://hack-up-busan.github.io/dart/Stream/)
+    - [[Dart]Stream](https://velog.io/@steadygo247/FlutterStream)
+    - [[Dart] Isolate 배우기](https://lucky516.tistory.com/85)
+
+### Flutter
+
+- 블로그 게시글
+    - [Flutter란 ?(by 신재원님)](https://medium.com/twolinecode/flutter%EB%9E%80-by-%EC%8B%A0%EC%9E%AC%EC%9B%90%EB%8B%98-888a4c472753)
+    - [Flutter를 쓰는 이유와 동작 원리](https://velog.io/@okko8522/Flutter%EB%A5%BC-%EC%93%B0%EB%8A%94-%EC%9D%B4%EC%9C%A0%EC%99%80-%EB%8F%99%EC%9E%91-%EC%9B%90%EB%A6%AC#flutter%EA%B0%80-%EC%8B%A4%ED%96%89%EB%90%98%EB%8A%94-%EA%B3%BC%EC%A0%95)
+    - [[Flutter] StatelessWidget, StatefulWidget](https://velog.io/@dosilv/Flutter-StatelessWidget-StatefulWidget)
+    - [Flutter 개발 시 StatefulWidget의 생명주기를 알아야하는 이유?](https://devocean.sk.com/blog/techBoardDetail.do?ID=165205&boardType=techBlog)
+    - [[Flutter]  Widget Tree / Tree 란 무엇인가?](https://jutole.tistory.com/70#Widget%20Tree-1)
+    - [[flutter] 플러터 Widget 트리, Element 트리, RenderObject 트리](https://fronquarry.tistory.com/19)
+    - [[플러터] Stateful 생명주기](https://landroid.tistory.com/9)
+    - [[Flutter] LifeCycle(생명주기)](https://velog.io/@realryankim/Flutter-LifeCycle%EC%83%9D%EB%AA%85%EC%A3%BC%EA%B8%B0#stateful-widget)
+    - [[플러터] pubspec.yaml 정리](https://landroid.tistory.com/11)
+    - [플러터(Flutter)의 pubspec.yaml](https://changjoopark.medium.com/%ED%94%8C%EB%9F%AC%ED%84%B0-flutter-%EC%9D%98-pubspec-yaml-ffa40b26296a)
+    - [[Flutter] Widget 소개 - SizedBox](https://origogi.github.io/flutter/SizedBox/)
+    - [[Flutter] Container Class](https://ahang.tistory.com/10)
+    - [[Flutter] Row - 사용법](https://jinhan38.com/129)
+    - [[Flutter] Image 이미지 box.fit 옵션 정리](https://devmg.tistory.com/181)
+    - [네트워크 이미지 렌더링을 최적화하여 메모리 사용량 절감하기](https://velog.io/@ximya_hf/optimizing-network-image-rendering-in-flutter)
+    - [[flutter] Offstage : 위젯을 사라지게 한다](https://velog.io/@iamhch/flutter-Offstage-%EC%9C%84%EC%A0%AF%EC%9D%84-%EC%82%AC%EB%9D%BC%EC%A7%80%EA%B2%8C-%ED%95%9C%EB%8B%A4)
+
+### DataBase
+
+- 강의 사이트
+    - TCP SCHOOL
+        - [TCP SCHOOL > MySQL > 문자열 함수](https://tcpschool.com/mysql/mysql_builtInFunction_string)
+- 블로그 게시글
+    - [[MYSQL] 📚 자료형 타입 종류 정리](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%EC%9E%90%EB%A3%8C%ED%98%95-%ED%83%80%EC%9E%85-%EC%A2%85%EB%A5%98-%EC%A0%95%EB%A6%AC)
+    - [MySQL 컬럼명 변경, 컬럼 타입 변경, 컬럼 추가, 컬럼 삭제](https://juyoung-1008.tistory.com/17)
+    - [테이블 조인 종류(Table Join Type)](https://sparkdia.tistory.com/17)
+    - [SQL 기본 문법: JOIN(INNER, OUTER, CROSS, SELF JOIN)](https://hongong.hanbit.co.kr/sql-%EA%B8%B0%EB%B3%B8-%EB%AC%B8%EB%B2%95-joininner-outer-cross-self-join/)
+    - [[DB] Mysql STRAIGHT_JOIN으로 튜닝하기](https://development-crow.tistory.com/33)
+    - [[Oracle SQL] UNION 과 UNION ALL 차이](https://mimah.tistory.com/entry/Oracle-SQL-UNION-%EA%B3%BC-UNION-ALL-%EC%B0%A8%EC%9D%B4)
+    - [Programming-[Backend]/SQL[SQLD]10. SQL 기본 6 - ...](https://whitepro.tistory.com/580)
+    - [[ Database ] Dual 테이블이란?](https://dadmi97.tistory.com/37)
+    - [MySQL 에서 DUAL 같은 테이블의 존재](https://yangyag.tistory.com/271)
+    - [[Mysql] Mysql 조건문 - IF 문, CASE 문](https://redcow77.tistory.com/260)
+    - [MySQL - 조건문 정리 (IF, IFNULL, ISNULL, CASE WHEN, NVL)](https://velog.io/@pm1100tm/MySQL-%EC%A1%B0%EA%B1%B4%EB%AC%B8-%EC%A0%95%EB%A6%AC)
+    - [[Mysql, Oracle, teradata] row_number() over (partition by) 활용](https://dong-guri.tistory.com/5)
+    - [MySQL - Limit와 Offset 사용법](https://chunggaeguri.tistory.com/entry/MySQL-Limit%EC%99%80-Offset-%EC%82%AC%EC%9A%A9%EB%B2%95)
+    - [[MYSQL] RANK/DENSE_RANK/ROW_NUMBER 함수](https://satisfactoryplace.tistory.com/193)
+    - [(SQL) TCL(Transaction Control Language) 이란 무엇일까?](https://rh-cp.tistory.com/41)
+    - [[MySQL] Upsert 쿼리란 무엇일까?](https://devlog-wjdrbs96.tistory.com/365)
+    - [[SQL] 뷰(view) - 뷰의 개념 / 필요성 / 장단점 / 구문 / 종류](https://reeme.tistory.com/54)
+    - [[SQL] 뷰(VIEW) 간단 정리](https://as-j.tistory.com/113)
+    - [데이터베이스 | 뷰 테이블(View table)](https://velog.io/@combi_jihoon/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EB%B7%B0-%ED%85%8C%EC%9D%B4%EB%B8%94View-table)
+    - [[MySQL] 인덱스(INDEX) 정리(효과적인 INDEX 설계)](https://spiderwebcoding.tistory.com/6)
+    - [[MySQL] - 인덱스 (INDEX) 정리 (동작 방식, 생성, 삭제, 설계)](https://rachel0115.tistory.com/entry/MySQL-%EC%9D%B8%EB%8D%B1%EC%8A%A4-INDEX-%EC%A0%95%EB%A6%AC-%EB%8F%99%EC%9E%91-%EB%B0%A9%EC%8B%9D-%EC%83%9D%EC%84%B1-%EC%82%AD%EC%A0%9C-%EC%84%A4%EA%B3%84)
+    - [[DB] MySQL 인덱스 최적화와 효율적인 활용 방법](https://velog.io/@zionedoha/MySQL-%EC%9D%B8%EB%8D%B1%EC%8A%A4-%EC%B5%9C%EC%A0%81%ED%99%94%EC%99%80-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9D%B8-%ED%99%9C%EC%9A%A9-%EB%B0%A9%EB%B2%95)
+    - [MySQL 인덱스 구조와 원리의 이해](https://jeong-pro.tistory.com/242)
+    - [[mysql] 인덱스 정리 및 팁](https://jojoldu.tistory.com/243)
+    - [[MYSQL] 📚 인덱스(index) 핵심 설계 & 사용 문법 💯 총정리](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%EC%9D%B8%EB%8D%B1%EC%8A%A4index-%ED%95%B5%EC%8B%AC-%EC%84%A4%EA%B3%84-%EC%82%AC%EC%9A%A9-%EB%AC%B8%EB%B2%95-%F0%9F%92%AF-%EC%B4%9D%EC%A0%95%EB%A6%AC)
+    - [MySQL Index 특징 및 유의사항 정리](https://bcp0109.tistory.com/365)
+    - [MySQL 실행 계획과 결과 속성 설명 (MySQL EXPLAIN Output Format)](https://kukim.tistory.com/128)
+    - [MySQL 실행 계획(좋은 쿼리는 못 만들어도 뭐같은 쿼리는 만들지 말아야지)](https://jeong-pro.tistory.com/243)
+    - [MySQL EXPLAIN 실행계획 마스터하기(feat. RealMySQL 8.0)](https://zzang9ha.tistory.com/436)
+    - [[MySQL] 실행계획2 (EXPLAIN)](https://velog.io/@ddongh1122/MySQL-%EC%8B%A4%ED%96%89%EA%B3%84%ED%9A%8D2-EXPLAIN)
+    - [[MySQL] MySQL 동시성 처리(1) - LOCK](https://chanos.tistory.com/entry/MySQL-DB%EC%9D%98-%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%A0%9C%EC%96%B4%EB%A5%BC-%EC%9C%84%ED%95%9C-Lock%EA%B3%BC-MVCC)
+    - [DB Lock에 대한 이해와 MySQL Lock의 특징](https://coding-business.tistory.com/32)
+    - [MySQL LOCK 확인 및 해제(kill) 방법](https://blog.naver.com/bsos1202/221003933887)
+    - [[mysql]날짜 관련 함수 모음](https://jang8584.tistory.com/7)
+    - [[SQL] mysql 날짜 관련 함수 정리](https://velog.io/@12aeun/SQL-mysql%EC%97%90%EC%84%9C-%EB%82%A0%EC%A7%9C-%EC%8B%9C%EA%B0%84-%EA%B3%84%EC%82%B0%ED%95%98%EA%B8%B0)
+    - [MySQL 문자열 함수 [MySQL]](https://myvelop.tistory.com/49)
+    - [자주 쓰는 MYSQL 문자열 함수](https://king-rabbit.github.io/sql/mysql-str-functions/#-%EB%AA%87%EB%B2%88%EC%A7%B8-%EC%86%8C%EC%88%98%EC%A0%90-%EC%9E%90%EB%A6%AC%EA%B9%8C%EC%A7%80%EB%A7%8C-%ED%91%9C%EC%8B%9C%ED%95%98%EA%B8%B0)
+    - [[MySQL] 형변환 CAST 함수 / CONVERT 함수 사용 방법](https://hoehen-flug.tistory.com/27)
+    - [[MySQL] CAST와 CONVERT](https://hajoung56.tistory.com/19)
+    - [[MYSQL] 📚 타입 강제 변환 (cast / convert)](https://inpa.tistory.com/entry/MYSQL-%F0%9F%93%9A-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98-cast-convert#%EC%95%94%EC%8B%9C%EC%A0%81%EC%9D%B8_%ED%98%95%EB%B3%80%ED%99%98)
+    - [MySQL Full-Text 검색 / match against](https://dogcowking.tistory.com/78)
+    - [[MySQL] FullText 검색, 여러개 Like](https://bogyum-uncle.tistory.com/182)
+    - [[MYSQL] MYSQL Partition - 테이블 분할](https://velog.io/@rdj1014/MYSQL-MYSQL-Partition-%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%B6%84%ED%95%A0)
+    - [[MySQL] 파티셔닝 개념 및 사용법](https://narup.tistory.com/168)
+    - [MySQL Partition, 제대로 이해하기 (1)](https://gngsn.tistory.com/203#google_vignette)
+    - [[MYSQL] MYSQL Partition - 테이블 분할](https://velog.io/@rdj1014/MYSQL-MYSQL-Partition-%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%B6%84%ED%95%A0)
+    - [[MySQL] 파티셔닝 개념 및 사용법](https://narup.tistory.com/168)
+    - [MySQL Partition, 제대로 이해하기 (1)](https://gngsn.tistory.com/203)
+    - [MySQL Partition, 제대로 이해하기 (2)](https://gngsn.tistory.com/204?category=851218)
+    - [[MySQL] 쿼리성능 개선하며 알게된 것 기록 📝](https://jaejade.tistory.com/128)
+    - [[MYSQL] SQL 쿼리문 최적화 - 효율적인 쿼리를 위한 팁](https://jhlee-developer.tistory.com/entry/MYSQL-SQL-%EC%BF%BC%EB%A6%AC%EB%AC%B8-%EC%B5%9C%EC%A0%81%ED%99%94-%ED%9A%A8%EC%9C%A8%EC%A0%81%EC%9D%B8-%EC%BF%BC%EB%A6%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-%ED%8C%81)
+    - [MYSQL 쿼리 실행 속도 분석 및 개선하기](https://bluemoon-clover.tistory.com/73)
+    - [[MySql] 쿼리 속도 개선 (Virtual Column 및 인덱스 적용) Or 절 여러개 예시](https://mingg123.tistory.com/257)
+    - [[번역] 속도와 성능을 위해 MySQL 쿼리를 최적화하는 방법](https://kkeolmusae.tistory.com/93)
+    - [[SQL] 쿼리 속도 향상을 위한 방법](https://velog.io/@piczo/SQL-%EC%BF%BC%EB%A6%AC-%EC%86%8D%EB%8F%84-%ED%96%A5%EC%83%81%EC%9D%84-%EC%9C%84%ED%95%9C-%EB%B0%A9%EB%B2%95)
+    - [MySQL 쓰면서 하지 말아야 할 것 17가지](https://blog.lael.be/post/370)
+- [SELECT 및 다른 명령문 최적화 하기](https://dataonair.or.kr/db-tech-reference/d-guide/dbms-2/?mod=document&uid=62469)
+- [MySQL 속도 개선 TIP](https://kimyhcj.tistory.com/entry/MySQL-%EC%86%8D%EB%8F%84-%EA%B0%9C%EC%84%A0-TIP)
+- [[MySql] JOIN 속도를 빠르게! EXPLAIN, STRAIGHT_JOIN](https://marobiana.tistory.com/35)
+
+### 이론
+
+#### 데이터베이스
+
+- 서적
+    - 데이터베이스 개론 (김연희, 한빛아카데미)
+- 블로그 게시글
+    - [[Database System] 관계 데이터 연산](https://velog.io/@hylee/DB-%EA%B4%80%EA%B3%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%97%B0%EC%82%B0#%EC%9D%BC%EB%B0%98-%EC%A7%91%ED%95%9C-%EC%97%B0%EC%82%B0%EC%9E%90)
+    - [데이터베이스 함수 종속성(Functional Dependency)](https://velog.io/@busybean3/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%ED%95%A8%EC%88%98-%EC%A2%85%EC%86%8D%EC%84%B1Functional-Dependency#5-%EB%8B%A4%EC%A4%91%EA%B0%92-%EC%A2%85%EC%86%8D-multi-valued-dependency-5)
+
+#### 자료구조
+
+- 서적
+    - C로 배우는 쉬운 자료구조 (이지영, 한빛아카데미)
+    
+### Others

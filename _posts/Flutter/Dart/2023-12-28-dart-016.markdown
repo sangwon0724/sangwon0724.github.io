@@ -1,0 +1,71 @@
+---
+layout: post
+title:  "enum"
+date:   2023-12-28 15:59:00 +0900
+categories:  Dart
+---
+
+### enum이란?
+
+- 정해진 수의 상수 값을 가지는 특별한 종류의 클래스
+- 열거 타입이라고 부른다.
+- 자동적으로 Enum 클래스를 확장한다.
+
+### 사용 방법
+
+{% highlight dart %}
+//기본 형식
+enum 이름 { 값1, 값2, 값3 }
+
+//사용 예시
+enum Color { red, green, blue}
+{% endhighlight %}
+
+### enum을 class처럼 사용하기
+
+- enum에 단순한 값이 아닌 class처럼 복합적인데이터를 가질수 있게 한다.
+- 규칙
+    - 모든 변수는 final로 선언되어야 한다.
+    - 생성자는 const로 선언되어야 한다.
+    - factory 생성자는 고정된 enum 인스턴스 중 하나만 반환할 수 있다.
+    - index, hashCode, 항등연산자(==)는 재정의할 수 없다.
+    - value라는 이름의 변수는 사용할 수 없다.
+
+{% highlight dart %}
+enum Car implements Comparable<Car> {
+  car1(maxSpeed: 60),
+  car2(maxSpeed: 70),
+  car3(maxSpeed: 80);
+    
+  const Car({
+    required this.maxSpeed,
+  });
+
+  final int maxSpeed;
+
+  @override
+  int compareTo(Car other) => this.maxSpeed - other.maxSpeed;
+}
+
+print(Car.car1.compareTo(Car.car2)); //출력 : -10
+{% endhighlight %}
+
+### enum 사용하기
+
+{% highlight dart %}
+//값 접근
+print(Car.car1.maxSpeed); //출력 : 60
+
+//값 목록 확인
+print(Car.values); //출력 : [Car.car1, Car.car2, Car.car3]
+
+//명시된 순번 확인
+print(Car.car1.index); //출력 : 0
+print(Car.car2.index); //출력 : 1
+print(Car.car3.index); //출력 : 2
+
+//해당 요소의 항목명 확인
+print(Car.car1.name); //출력 : car1
+print(Car.car2.name); //출력 : car2
+print(Car.car3.name); //출력 : car3
+{% endhighlight %}

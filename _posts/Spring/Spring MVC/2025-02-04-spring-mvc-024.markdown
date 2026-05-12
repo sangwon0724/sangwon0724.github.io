@@ -1,0 +1,227 @@
+---
+layout: post
+title:  "[스프링 DB 1편] 스프링과 문제 해결 - 예외 처리, 반복"
+date:   2025-02-04 23:47:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+---
+
+### 체크 예외와 인터페이스
+
+서비스 계층은 최대한 특정한 기술에 의존하지 않고 순수하게 유지하는 것이 좋다.  
+그러려면 예외에 대한 의존을 해결해야 하는데  
+서비스가 처리할 수는 없으니 리포지토리가 던지는 체크 예외를 언체크 예외로 바꿔서 던지면 된다.  
+그러면 서비스 계층은 해당 예외를 무시할 수 있기 때문에 특정 기술에 의존하는 부분을 제거할 수 있다.  
+그렇게 되면 서비스 계층을 순수하게 유지할 수 있다.
+
+#### 인터페이스
+
+가장 먼저 해야할 것은 인터페이스를 도입하는 것이다.  
+클래스를 바로 사용하게 되면 기술 변경에 대한 유연한 대처를 할 수가 없다.  
+하지만 인터페이스를 도입하게 되면 기술 변경에 대한 유연한 대처를 핧 수가 있다.
+
+#### 인터페이스와 체크 예외
+
+그런데 우리는 리포지토리에서 체크 예외를 던지게 했었다.  
+그렇다면 인터페이스의 메소드가 체크 예외를 던지도록 작성해야 한다.
+
+이 때 참고해야 할 것은 구현 클래스의 메소드가 던지는 예외는 인터페이스의 메소드가 던지는  
+예외와 같은 타입이거나 부모 타입이어야 한다.
+
+문제는 그렇게 되면 결국은 인터페이스든 구현체든 어딘가는 특정 기술에 종속되어 버린다.
+
+### 런타임 예외 적용
+
+#### 런타임 예외로 바꿔버리자.
+
+그렇다면 체크 예외를 언체크 예외인 런타임 예외로 바꿔버리면 된다.  
+만약에 `RuntimeException`을 상속받은 `MyDbException`이 있다고 가정해보자.  
+그러면 `MyDbException` 또한 언체크 예외이기 때문에 서비스 계층에서는 해당 예외를 무시할 수 있다.
+
+이제 리포지토리에서 `try-catch`문의 `catch`쪽에서  
+오류가 발생했을 때 아래와 같이 사용자 정의 예외를 발생시키면 된다.
+{% highlight java %}
+catch (SQLException e) {
+    throw new MyDbException(e);
+}
+{% endhighlight %}
+
+이제 서비스에서는 해당 리포지토리를 호출하기만 하면 된다.  
+그러면 이제 서비스는 특정한 기술에 의존하지 않는 순수한 비즈니스 로직만 남게 할 수 있다.
+
+만약 서비스에서 비즈니스 로직을 실행해서 리포지토리를 호출했는데 특정한 예외가 넘어온다면  
+복구를 할 수 있게 되었다.
+
+#### 남은 문제
+
+리포지토리에서 넘어오는 특정한 예외의 경우 복구를 시도할 수도 있다.  
+그런데 지금 방식은 항상 `MyDbException`이라는 예외만 넘어오기 때문에 예외를 구분할 수 없다.  
+특정 상황에는 예외를 잡아서 복구하고 싶으면 예외를 어떻게 구분할 수 있는 방법이 필요하다.
+
+### 데이터 접근 예외 직접 만들기
+
+예외를 구분할 수 있는 방법은 사실 간단하다.  
+구분할 수 있게 만드는 것이다.
+
+방금 만든 `MyDbException`를 예시로 들어보자.  
+DB 오류라는 것까지는 이해가 가능하다.  
+하지만 DB 관련 발생하는 오류가 한,두가지가 아닌데  
+이것만으로는 구분할 수가 없다.
+
+만약에 기본키가 중복된다면 어떨까?  
+현재 발생한 에러가 기본키가 중복된다는 것을 이해해야 할 것이다.  
+그렇다면 `RuntimeException`을 상속받은 `MyDbException`을 상속받은 `MyDuplicateKeyException`를 만들어보자.  
+
+이제 리포지토리에서 기본키 중복으로 인한 오류가 발생한다면 `MyDuplicateKeyException`를 서비스로 던지게 하면 된다.  
+그러면 서비스 계층에서는 저 `MyDuplicateKeyException`를 보고 "아 기본키가 중복됬구나."라고 이해할 수 있다.
+
+참고로 기본키가 중복되서 `SQLException`이 발생했을 때 반환되는 에러 코드는 DB 종류마다 다르다.  
+프로젝트에서 H2 DB를 사용한다면 `23505`를 반환할 것이다.  
+프로젝트에서 MySQL을 사용한다면 `1062` 반환할 것이다.
+
+리포지토리에서 기존에는 체크 예외를 언체크 예외로 바꾸기 위해 아래와 같이 코드를 작성했을 것이다.
+{% highlight java %}
+try {
+    //실행할 내용
+} catch (SQLException e) {
+    throw new MyDbException(e);
+} finally {
+    closeStatement(pstmt);
+    closeConnection(con);
+}
+{% endhighlight %}
+
+이제 여기서 H2 DB를 사용한다고 가정해보면 기본 키가 중복되는 문제가 발생했을 때  
+catch문의 내용을 아래와 같이 바꾸면 해당하는 사용자 정의 예외인 `MyDuplicateKeyException`을 던지게 바꿀 수 있다.
+{% highlight java %}
+//h2 db
+if (e.getErrorCode() == 23505) {
+    throw new MyDuplicateKeyException(e);
+}
+throw new MyDbException(e);
+{% endhighlight %}
+
+#### 남은 문제
+
+`SQLException`이 반환하는 에러 코드를 통해 기본키 중복 문제를 해결할 수 있었다.  
+하지만 아까 설명했듯이 DB마다 반환하는 에러 코드가 다르기 때문에  
+DB를 추후 바꿔버리면 해당 부분에서 원하는 동작이 일어나지 않게 된다.
+
+### 스프링 예외 추상화 이해
+
+앞선 문제들을 해결하기 위해 스프링은 데이터 접근과 관련된 수십 가지 예외를 추상화해서 제공한다.  
+아래 이미지는 스프링이 제공하는 데이터 접근 예외 계층에 대한 이미지다.  
+물론 실제로는 가짓수가 더 많고 아래 이미지는 간략화한 버전이다.
+
+<img src="{{site.url}}{{site.baseurl}}{{site.post_img_root}}/mvc_014.png"/>
+
+각각의 예외는 특정 기술에 종속적이지 않게 설계되어 있다.  
+그래서 스프링이 제공하는 예외를 사용하면 JDBC를 JPA를 사용하든 상관없이  
+원하는 상황에 대한 예외를 처리할 수 있다.
+
+이미지를 확인해보면 스프링이 제공하는 추상화된 데이터 접근 관련 예외들은  
+`DataAccessException`라는 예외를 상속받은 것을 알 수 있다.  
+그런데 `DataAccessException`은 `RuntimeException`을 상속받았다.  
+그래서 데이터 접근 관련 예외들은 모두 언체크 예외인 것을 알 수 있다.
+
+`DataAccessException`을 보면 크게 `NonTransient`과 `Transient` 2가지 갈래로 나누어진다.  
+여기서 `Transient`는 쿼리 타임아웃이나 락같은 일시적인 오류를 의미한다.  
+그래서 DB의 상태가 좋아지거나 락이 풀렸을 때 다시 시도하면 성공할 수도 있다.  
+그에 반해 `NonTransient`는 일시적이지 않은 오류룰 의미한다.  
+SQL문법이나 DB의 제약조건 위배같은 조건들에 의해서 발생한다.
+
+참고로 스프링은 JDBC나 JPA를 사용할 때 발생하는 예외를 스프링이 제공하는 예외로 변환해주는 역할도 제공한다.
+
+#### 스프링이 제공하는 예외 변환기
+
+스프링은 데이터 접근 관련 예외가 발생했을 때 스프링이 제공하는 예외로 변환해준다.
+
+실제로 `SQLException`이 발생한다면 스프링은 아래와 같은 동작을 자동으로 실행한다.
+{% highlight java %}
+//DataSource dataSource
+//String sql = "뭔가 잘못된 쿼리";
+//SQLException e
+SQLExceptionTranslator exTranslator = new SQLErrorCodeSQLExceptionTranslator(dataSource);
+DataAccessException resultEx = exTranslator.translate("select", sql, e);
+{% endhighlight %}
+
+이 때 `DataAccessException`이 반환한 클래스를 확인하면 `BadSqlGrammarException`인 것을 알 수 있다.  
+그런데 신기한 것은 DB의 종류의 상관없이 동일하게 `BadSqlGrammarException`를 반환한다는 것이다.  
+어떻게 그런게 가능한 것일까?
+
+사실 생각보다 원리는 간단하다.  
+`sql-error-codes.xml`라는 파일이 있는데 여기에는 각 DB가 반환하는 각 오류별 예외 코드가 명시되어있다.  
+해당 xml에 보면 `org.springframework.jdbc.support.SQLErrorCodes`라는 클래스가  
+id가 `H2`나 `MySQL`처럼 각 DB의 이름에 해당하게 빈으로 등록되어있다.  
+그리고 각 문제 상황에 맞는 코드가 `property`로 미리 명시되어 있다.  
+예를 들면 기본키가 중복되는 경우에는 `duplicateKeyCodes`라는 이름으로 `property`가 명시되어 있다.  
+그러면 `H2`의 경우에는 그 값으로 `23001`와 `23505`가 작성되어 있다.
+
+### 스프링 예외 추상화 적용
+
+#### 리포지토리
+
+이제 리포지토리에서 구분 가능한 예외를 던지게 해보자.  
+매우 간단하다 아래와 같이 `SQLExceptionTranslator`를 실행하게 하면 된다.
+{% highlight java %}
+//SQLExceptionTranslator exTranslator
+//DataSource dataSource
+//String sql = "뭔가 잘못된 쿼리";
+//SQLException e
+catch (SQLException e) {
+    throw exTranslator.translate("save", sql, e);
+}
+{% endhighlight %}
+
+`SQLExceptionTranslator`와 `DataSource`는 의존성을 주입하게 하는 것을 까먹지 말자.  
+그리고 `translate()`의 첫번째 파라미터는 작업명을 의미한다.  
+적절한 네이밍으로 현재 실행하는 작업명을 넣으면 된다.  
+저장일 경우에는 "save", 삭제일 경우에는 "delete"같이 작성하면 된다.
+
+### JDBC 반복 문제 해결 - JdbcTemplate
+
+드디어 서비스 계층에 순수하게 유지할 수 있게 되었다.  
+하지만 지금은 JDBC를 사용하기 때문에 반복되는 코드가 많은 현상이 남아있다.
+
+우선 JDBC 관련 반복되는 유형은 아래와 같다.
+- 커넥션 조회
+- 커넥션 동기화
+- PreparedStatement 생성
+- 파라미터 바인딩
+- 쿼리 실행
+- 결과 바인딩
+- 예외 발생시 스프링 예외 변환기 실행
+- 리소스 종료
+
+스프링은 이렇게 다양한 JDBC 반복 문제를 해결하기 위해 `JdbcTemplate`라는 템플릿을 제공한다.  
+`JdbcTemplate`을 통해 `템플릿 콜백 패턴`을 사용하면 이런 반복을 효과적으로 처리할 수 있다.
+
+사용법 자체는 간단하다.  
+`JdbcTemplate`에 `DataSource`를 파라미터로 넘겨서 생성하고 사용하면 된다.  
+즉, `template = new JdbcTemplate(dataSource);`처럼 생성하면 된다.
+그런데 `JdbcTemplate`을 사용할 때는 `RowMapper`라는 것을 사용해야 한다.
+
+`RowMapper`의 사용법은 아래와 같다.
+{% highlight java %}
+private RowMapper<Member> memberRowMapper() {
+    return (rs, rowNum) -> {
+        Member member = new Member();
+        member.setMemberId(rs.getString("member_id"));
+        member.setMoney(rs.getInt("money"));
+        return member;
+    };
+}
+{% endhighlight %}
+이 때 rs는 `ResultSet`을 의미하고, rowNum은 현재 행 번호를 의미한다.
+
+이제 `JdbcTemplate`을 실제로 사용하는 방법을 알아보자.  
+제공하는 메소드가 매우 많지만 대표적으로는 `queryForObject()`와 `update()`가 있다.  
+`queryForObject()`는 조회할 때 사용하고, `update()`는 등록, 수정, 삭제에서 모두 사용한다.  
+메소드를 호출할 때는 `메소드명(쿼리, 매퍼, 인자 목록)`처럼 호출하면 된다.
+
+`JdbcTemplate`은 JDBC로 개발할 때 발생하는 반복을 대부분 해결해준다.  
+추가로 트랜잭션을 위한 커넥션 동기화도 해주고, 예외 발생시 스프링 예외 변환기도 자동으로 실행해준다.
+
+### 출처
+
+- [스프링 DB 1편 - 데이터 접근 핵심 원리](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-db-1)

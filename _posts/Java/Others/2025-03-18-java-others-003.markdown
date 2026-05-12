@@ -1,0 +1,85 @@
+---
+layout: post
+title:  "카테고리 구하기 (Flattened)"
+date:   2025-03-18 16:16:00 +0900
+categories: Code&nbsp;Snippet&nbsp;(Java)
+tags: [트리, 카테고리, 평탄, Flattened]
+---
+
+### 객체 생성하기
+
+{% highlight java %}
+@Getter
+@Setter
+public class DeptVO {
+    private Long id;
+    private String name = ""; //항목명
+    private Float align = 0.0F; //순번
+    private Long parentId; //상위 행 PK
+    private int level = 0; //계층 레벨
+
+    List<DeptVO> children = new ArrayList<>(); //데이터 가공용
+}
+{% endhighlight %}
+
+### 사전 데이터 가공하기
+
+{% highlight java %}
+//상위 노드가 존재하지 않는 루트 노드
+List<DeptVO> root = rows.stream().filter(ele -> Objects.equals(ele.getId(), ele.getParentId())).toList();
+
+//루트 노드를 제외한 자식 노드 목록
+//removeIf 때문에 ArrayList로 사용
+ArrayList<DeptVO> leaf = 
+    rows.stream().filter(ele -> !Objects.equals(ele.getId(), ele.getParentId()))
+    .collect(Collectors.toCollection(ArrayList::new));
+
+//평탄화된 데이터 목록을 저장할 리스트
+List<DeptVO> result = new ArrayList<>();
+{% endhighlight %}
+
+
+
+### 중첩 데이터 생성하기
+
+{% highlight java %}
+/**
+*  평탄 데이터 생성
+* @param root 루트 데이터
+* @param leaf 전체 데이터
+* @param res 최종 결과를 저장할 목록
+*/
+public void getFlattenedRows(List<DeptVO> root, ArrayList<DeptVO> leaf, List<DeptVO> res) {
+    for (DeptVO row : root) {
+        res.add(row); //상위 행 저장
+
+        if(leaf.isEmpty()){
+            continue;
+        }
+        leaf.removeIf(ele -> Objects.equals(row.getId(), ele.getId())); //처리 완료한 데이터 삭제
+
+        List<DeptVO> children =
+                leaf.stream()
+                    .filter(ele -> Objects.equals(row.getId(), ele.getParentId()))
+                    .sorted(Comparator.comparing(DeptVO::getAlign).thenComparing(DeptVO::getId))
+                    .toList();
+
+        if(children.isEmpty()){
+            continue;
+        }
+        children.forEach(child -> {
+            child.setLevel(row.getLevel() + 1);
+        });
+        getFlattenedRows(children, leaf, res); //재귀 호출
+    }
+}
+{% endhighlight %}
+
+### 실제 사용
+
+{% highlight java %}
+List<DeptVO> root = rows.stream().filter(ele -> Objects.equals(ele.getId(), ele.getParentId())).toList();
+ArrayList<DeptVO> leaf = rows.stream().filter(ele -> !Objects.equals(ele.getId(), ele.getParentId())).collect(Collectors.toCollection(ArrayList::new));
+List<DeptVO> result = new ArrayList<>();
+this.getFlattenedRows(root, leaf, result); //평탄화 진행
+{% endhighlight %}

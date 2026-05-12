@@ -1,0 +1,196 @@
+---
+layout: post
+title:  "예외와 예외 처리"
+date:   2025-04-28 23:27:00 +0900
+categories: Python
+---
+
+### 예외 (Exception)
+
+#### 예외란?
+
+- 프로그램 실행 중 발생할 수 있는 에러 상황
+- 정상적인 코드 실행을 방해한다.
+- 이를 처리하지 않으면 프로그램이 강제 종료될 수 있다.
+
+#### 예외 종류
+
+파이썬에는 다양한 내장 예외 클래스가 존재한다.  
+아래는 자주 사용되는 예외 클래스들이다.
+- `ZeroDivisionError`
+    - 0으로 나누려 할 때 발생한다.
+- `ValueError`
+    - 부적절한 값 사용 시 발생한다.
+    - 예시 : int('hello')
+- `TypeError`
+    - 잘못된 타입 사용 시 발생한다.
+    - 예시 : '1' + 2
+- `IndexError`
+    - 리스트, 튜플 등에서 잘못된 인덱스 접근 시 발생한다.
+- `KeyError`
+    - 딕셔너리에서 존재하지 않는 키를 접근할 때 발생한다.
+- `FileNotFoundError`
+    - 존재하지 않는 파일을 열려고 할 때 발생한다.
+- `AttributeError`
+    - 존재하지 않는 객체의 속성/메서드 접근 시 발생한다.
+- `ImportError`
+    - 모듈을 찾을 수 없거나 가져올 수 없을 때 발생한다.
+
+### 예외 처리
+
+예외를 처리하려면 어떻게 해야할까?
+
+#### 기본 사용법
+
+`try-except` 문법을 통해 예외를 처리할 수 있다.
+
+{% highlight py %}
+try:
+    # 예외가 발생할 가능성이 있는 코드
+except 예외종류1:
+    # 예외종류1이 발생했을 때 실행할 코드
+except 예외종류2:
+    # 예외종류1이 발생했을 때 실행할 코드
+except 예외종류3:
+    # 예외종류1이 발생했을 때 실행할 코드
+except 예외종류n:
+    # 예외종류n이 발생했을 때 실행할 코드
+else:
+    # 예외가 발생하지 않았을 때 실행할 코드
+finally:
+    # 예외 발생 여부와 관계없이 항상 실행할 코드
+{% endhighlight %}
+
+{% highlight py %}
+try:
+    x = int(input("숫자 입력: "))
+except ValueError:
+    print("숫자가 아닙니다.")
+{% endhighlight %}
+
+`as` 키워드를 사용하면 발생한 예외에 대한 정보를 가져올 수 있다.
+{% highlight py %}
+try:
+    x = int(input("숫자 입력: "))
+except ValueError as e:
+    print(f"숫자가 아닙니다. : {e}")
+{% endhighlight %}
+
+#### else
+
+else를 사용하면 예외가 발생하지 않았을 때  
+실행할 코드를 작성할 수 있다.
+
+{% highlight py %}
+try:
+    # 예외가 발생할 가능성이 있는 코드
+except 예외종류:
+    # 예외가 발생했을 때 실행할 코드
+else:
+    # 예외가 발생하지 않았을 때 실행할 코드
+{% endhighlight %}
+
+{% highlight py %}
+try:
+    x = int(input("숫자 입력: "))
+except ValueError:
+    print("숫자가 아닙니다.")
+else:
+    print("정상 입력되었습니다.")
+{% endhighlight %}
+
+#### finally
+
+finally를 사용하면 예외 발생 여부와 관계없이  
+항상 실행할 코드를 작성할 수 있다.
+
+{% highlight py %}
+try:
+    # 예외가 발생할 가능성이 있는 코드
+except 예외종류:
+    # 예외가 발생했을 때 실행할 코드
+else:
+    # 예외가 발생하지 않았을 때 실행할 코드
+finally:
+    # 예외 발생 여부와 관계없이 항상 실행할 코드
+{% endhighlight %}
+
+{% highlight py %}
+try:
+    x = int(input("숫자 입력: "))
+except ValueError:
+    print("숫자가 아닙니다.")
+else:
+    print("정상 입력되었습니다.")
+finally:
+    print("프로그램 종료")
+{% endhighlight %}
+
+#### Exception
+
+만약에 모든 예외를 한꺼번에 처리하고 싶다면  
+`except Exception`를 사용하면 된다.
+
+{% highlight py %}
+try:
+    x = int(input("숫자 입력: "))
+except Exception as e:
+    print(f"오류가 발생했습니다. : {e}")
+else:
+    print("정상 입력되었습니다.")
+finally:
+    print("프로그램 종료")
+{% endhighlight %}
+
+#### 에러를 직접 발생시키기 (raise)
+
+`raise`를 사용하면 필요한 상황에 직접 예외를 발생시킬 수 있다.
+
+간단하게 인자로 0만 받아야 하는 함수가 있다고 가정해보자.  
+raise를 사용하면 특정한 예외를 직접 발생하게 할 수 있다.
+{% highlight py %}
+def onlyZero(x):
+    if x != 0:
+        raise Exception("0만 입력 가능합니다.")
+    else:
+        print("0을 입력하셨습니다.")
+{% endhighlight %}
+
+그러면 try-except쪽에 해당 예외에 대해서 처리하면 된다.
+{% highlight py %}
+try:
+    num = input("0을 입력해주세요. : ")
+    onlyZero(num)
+except Exception as e:
+    print(f"에러 발생 : {e}")
+{% endhighlight %}
+
+#### 사용자 정의 예외처리
+
+파이썬에서는 Exception 클래스를 상속받으면  
+사용자 정의 예외 클래스를 정의할 수 있다.
+
+예를 들어 음수를 입력하면 발생시킬 예외를 정의해보자.
+{% highlight py %}
+class NegativeNumberError(Exception):
+    def __init__(self, value):
+        self.value = value
+        super().__init__(f"음수는 허용되지 않습니다: {value}")
+{% endhighlight %}
+
+정의한 예외는 try-except에서 사용할 수 있다.
+{% highlight py %}
+def check_positive(x):
+    if x < 0:
+        raise NegativeNumberError(x)
+    return x
+
+try:
+    check_positive(-5)
+except NegativeNumberError as e:
+    print(f"예외 처리됨: {e}")
+{% endhighlight %}
+
+### 출처
+
+- [프로그래밍 시작하기 : 파이썬 입문 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9E%85%EB%AC%B8-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)

@@ -1,0 +1,264 @@
+---
+layout: post
+title:  "persist"
+date:   2025-06-01 23:50:00 +0900
+categories: Zustand
+---
+
+### 기존 저장소의 문제점
+
+만약 아래와 같은 저장소가 있다고 가정해보자.
+{% highlight js %}
+import { create } from 'zustand'
+
+const useCountStore = create(
+    (set, get) => ({
+        count: 0,   
+        increment: () => set((state) => ({ count: state.count + 1 })),
+        decrement: () => set((state) => ({ count: state.count -1 })),
+    })
+);
+
+export default useCountStore;
+{% endhighlight %}
+
+그리고 아래와 같은 컴포넌트가 있다고 가정해보자.
+{% highlight react %}
+function Counter() {
+  const { count, increment, decrement } = useCountStore();
+
+  return (
+    <>
+      <div className="card">
+        <button onClick={increment}>
+          count is {count}
+        </button>
+      </div>
+    </>
+  )
+}
+{% endhighlight %}
+
+위와 같이 구현했다면 버튼을 눌렀을 때 화면 상에서 카운터의 값은 잘 증가할 것이다.  
+다만 새로고침을 하게 되면 count의 값은 초기화되버린다.  
+지금은 예시로 카운터를 들었지만 상태 값을 지속적으로 가지고 있어야 하는 경우에는  
+현 상황에서는 많은 문제가 발생할 것이다.
+
+이러한 상황을 위해 만들어진 것이 `persist` 미들웨어다.
+
+### persist
+
+#### 정의
+
+- zustand에서 관리하는 상태를 영구 저장소에 저장할 수 있게 해준다.
+- 페이지를 새로고침하거나 브라우저를 닫아도 상태가 유지되게 해준다.
+- 상태는 로컬 스토리지나 세션 스토리지 등의 영구 저장소에 저장할 수 있다.
+- zustnad의 미들웨어 중 하나다.
+
+#### 특징
+
+- 상태 영속성
+    - 페이지를 새로고침하거나 브라우저를 닫고 재접속해도 상태를 유지한다.
+- 간편한 설정
+    - create를 persist로 감싸기만 해도 바로 사용할 수 있다.
+- 다양한 스토리지 지원
+    - 설정에 따라 다양한 스토리지를 사용할 수 있다.
+        - storage 옵션 활용
+    - 기본 옵션 : localStorage
+    - storage 설정 시 : sessionStorage 또는 사용자 정의 스토리지 (IndexedDB 등)
+- 부분 영속성
+    - 스토어의 특정 부분만 저장하도록 설정할 수 있다.
+        - partialize 옵션 활용
+- 버전 관리
+    - 스토어 상태의 버전 관리 기능을 제공한다.
+        - version 옵션과 migrate 옵션 활용
+- 비동기 스토리지 지원
+    - storage 옵션을 통해 비동기 스토리지도 지원한다.
+    - React Native의 AsyncStorage 등이 해당한다.
+- 초기화 지연
+    - 스토리지에서 상태를 불러오는 동안 초기 상태를 보여주고,  
+    불러온 후에는 저장된 상태로 업데이트할 수 있다.
+    - onRehydrateStorage 옵션 활용
+
+#### 주의사항
+
+- 보안에 민감한 정보저장하지 않는 것이 안전하다.
+    - 로컬 스토리지나 세션 스토리지는 클라이언트 측에서 쉽게 접근할 수 있다.
+    - JWT, 비밀번호 등이 해당한다.
+- 저장소 용량 제한에 주의헤야 한다.
+    - 웹 스토리지의 용량은 보통 5MB 정도로 제한적이다.
+    - 너무 많은 데이터를 저장하면 성능 문제나 용량 초과 오류가 발생할 수 있다.
+- 직렬화 가능 데이터만 저장해야 한다.
+    - persist는 JSON.stringify()를 사용하여 데이터를 직렬화한다.
+    - 함수, Symbol, 클래스 인스턴스 등 직렬화할 수 없는 데이터는 저장되지 않거나 오류를 발생시킬 수 있다.
+- 데이터 일관성에 문제가 발생할 수 있다.
+    - 여러 탭에서 동일한 스토리지를 사용할 경우, 데이터 일관성 문제가 발생할 수 있다.
+    - 필요 시 BroadcastChannel API 등을 사용하여 동기화를 구현해야 한다.
+- persist 적용 이후 상태가 즉시 초기화되지 않을 수 있다.
+    - 초기 로딩 상태에 대한 처리기 필요하다.
+- 비동기 저장소을 사용하는 경우, 앱이 초기화될 때까지 기다려야 할 수 있다.
+    - AsyncStorage 등이 해당한다.
+
+#### 기본 사용 방법
+
+1. `zustand/middleware`에서 `persist`를 include한다.
+2. create를 persist로 감싼다.
+    - create를 persist의 첫번째 파라미터로 만든다.
+3. persist의 두번째 파라미터로 객체를 넘긴다.
+4. 두번째 파라미터로 넘긴 객체에는 `name` 속성으로 해당 상태의 이름을 명시한다.
+
+{% highlight js %}
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+const useCountStore = create(
+    persist(
+        (set, get) => ({
+            count: 0,   
+            increment: () => set((state) => ({ count: state.count + 1 })),
+            decrement: () => set((state) => ({ count: state.count -1 })),
+        }),{
+            name: "countState"
+        }
+    )
+);
+
+export default useCountStore;
+{% endhighlight %}
+
+이제 버튼을 누르고 새로고침을 해도 counter의 값이 유지되는 것을 볼 수 있다.  
+브라우저의 개발자 도구에서 로컬 스토리지쪽을 확인해보면  
+내가 정의한 이름으로 상태가 저장되있는 것을 볼 수 있다.
+
+#### 활용 방법 예시
+
+- 사용자 설정
+    - 테마 (다크/라이트 모드)
+    - 언어 설정
+    - 알림 설정
+- 장바구니/위시리스트
+- 최근 본 상품/페이지
+- 폼 데이터 임시 저장
+- 간단한 인증 정보
+- 오프라인 모드 지원
+    - PWA와 함께 사용
+
+### 다양한 스토리지 활용
+
+#### 로컬 스토리지
+
+{% highlight js %}
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
+
+const useCountStore = create(
+    persist(
+        (set, get) => ({
+            count: 0,   
+            increment: () => set((state) => ({ count: state.count + 1 })),
+            decrement: () => set((state) => ({ count: state.count -1 })),
+        }),{
+            name: "countState",
+            storage: createJSONStorage(() => localStorage), // 로컬 스토리지 사용, 생략 가능
+        }
+    )
+);
+
+export default useCountStore;
+{% endhighlight %}
+
+#### 세션 스토리지
+
+{% highlight js %}
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
+
+const useCountStore = create(
+    persist(
+        (set, get) => ({
+            count: 0,   
+            increment: () => set((state) => ({ count: state.count + 1 })),
+            decrement: () => set((state) => ({ count: state.count -1 })),
+        }),{
+            name: "countState",
+            storage: createJSONStorage(() => sessionStorage), // 세션 스토리지 사용
+        }
+    )
+);
+
+export default useCountStore;
+{% endhighlight %}
+
+### 지정된 상태만 영속화하기
+
+`partialize` 옵션을 활용하면 일부 상태만 영속화시킬 수 있다.  
+새로고침같은 이벤트가 발생했을 때 유지 되어야 하는 상태와  
+그렇지 않은 상태를 분리해서 저장할 수 있다.
+
+{% highlight js %}
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
+
+const useCountStore = create(
+    persist(
+        (set, get) => ({
+            count: 0,   
+            prop1: 0,
+            prop2: 0,
+            prop3: 0,
+            increment: () => set((state) => ({ count: state.count + 1 })),
+            decrement: () => set((state) => ({ count: state.count -1 })),
+        }),{
+            name: "countState",
+            storage: createJSONStorage(() => sessionStorage), // 세션 스토리지 사용
+            partialize: (state) => ({
+                count: state.count,
+                prop1: state.prop1,
+            })
+        }
+    )
+);
+
+export default useCountStore;
+{% endhighlight %}
+
+### 데이터 마이그레이션
+
+애플리케이션의 구조가 변경된다면  
+저장소에 쌓이는 데이터도 변경될 수 있다.  
+그럴 때 마이그레이션을 진행하면 된다.
+
+참고로 마이그레이션을 위해서는 version 옵션과 migrate 옵션이 필요한데,  
+version 옵션을 따로 지정하지 않는다면 기본값인 0으로 설정되어 있다.
+
+우선 기존 애플리케이션 구조에서 아래와 같은 저장소가 있다고 가정해보자.
+
+{% highlight js %}
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
+
+const useCountStore = create(
+    persist(
+        (set, get) => ({
+            count: 0,   
+            prop1: 0,
+            prop2: 0,
+            prop3: 0,
+            increment: () => set((state) => ({ count: state.count + 1 })),
+            decrement: () => set((state) => ({ count: state.count -1 })),
+        }),{
+            name: "countState",
+            storage: createJSONStorage(() => sessionStorage), // 세션 스토리지 사용
+        }
+    )
+);
+
+export default useCountStore;
+{% endhighlight %}
+
+이제 여기서 애플리케이션의 구조가 변경되어서 prop4가 추가되어야 한다면  
+아래와 같이 변경하면 된다.
+
+### 참고
+
+[Zustand 공식 문서](https://zustand.docs.pmnd.rs/integrations/persisting-store-data)

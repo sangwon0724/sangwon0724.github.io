@@ -1,0 +1,74 @@
+---
+layout: post
+title:  "카테고리 구하기 (Nested)"
+date:   2025-03-18 14:37:00 +0900
+categories: Code&nbsp;Snippet&nbsp;(Java)
+tags: [트리, 카테고리, 중첩, Nested]
+---
+
+### 객체 생성하기
+
+{% highlight java %}
+@Getter
+@Setter
+public class DeptVO {
+    private Long id;
+    private String name = ""; //항목명
+    private Float align = 0.0F; //순번
+    private Long parentId; //상위 행 PK
+    private int level = 0; //계층 레벨
+
+    List<DeptVO> children = new ArrayList<>(); //데이터 가공용
+}
+{% endhighlight %}
+
+### 사전 데이터 가공하기
+
+{% highlight java %}
+//상위 노드가 존재하지 않는 루트 노드
+List<DeptVO> root = rows.stream().filter(ele -> Objects.equals(ele.getId(), ele.getParentId())).toList();
+
+//루트 노드를 제외한 자식 노드 목록
+//removeIf 때문에 ArrayList로 사용
+ArrayList<DeptVO> leaf = 
+    rows.stream().filter(ele -> !Objects.equals(ele.getId(), ele.getParentId()))
+    .collect(Collectors.toCollection(ArrayList::new));
+{% endhighlight %}
+
+### 중첩 데이터 생성하기
+
+{% highlight java %}
+/**
+* 중첩 데이터 생성
+* @param root 루트 데이터
+* @param leaf 전체 데이터
+*/
+public void getNestedRows(List<DeptVO> root, ArrayList<DeptVO> leaf) {
+    for (DeptVO row : root) {
+        if(leaf.isEmpty()){
+            break;
+        }
+        List<DeptVO> children =
+                leaf.stream()
+            .filter(ele -> Objects.equals(row.getId(), ele.getParentId()))
+            .toList();
+        if(children.isEmpty()){
+            continue;
+        }
+        children.forEach(child -> {
+            child.setLevel(row.getLevel() + 1);
+        });
+        row.setChildren(children);
+        leaf.removeIf(ele -> Objects.equals(row.getId(), ele.getParentId())); //처리 완료한 데이터 삭제
+        getNestedRows(row.getChildren(), leaf); //재귀 호출
+    }
+}
+{% endhighlight %}
+
+### 사용 예시
+
+{% highlight java %}
+List<DeptVO> root = rows.stream().filter(ele -> Objects.equals(ele.getId(), ele.getParentId())).toList();
+ArrayList<DeptVO> leaf = rows.stream().filter(ele -> !Objects.equals(ele.getId(), ele.getParentId())).collect(Collectors.toCollection(ArrayList::new));
+this.getNestedRows(root, leaf, result); //중첩화 진행
+{% endhighlight %}

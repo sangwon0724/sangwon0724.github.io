@@ -1,0 +1,363 @@
+---
+layout: post
+title:  "마이크로서비스 간 통신"
+date:   2025-04-15 16:41:00 +0900
+categories: Spring&nbsp;Cloud
+tags: [MSA, 마이크로서비스]
+---
+
+### Communication types
+
+마이크로서비스 간 통신을 하는 방법에는 2가지가 있다.
+- 동기식 HTTP 통신 (Synchronous HTTP communication)
+- AMQP를 통한 비동기 통신 (Asynchronous Communication over AMQP)
+
+#### 동기식 HTTP 통신 (Synchronous HTTP communication)
+
+- 정의
+    - 한 마이크로서비스가 다른 마이크로서비스에 HTTP 프로토콜을 통해 요청을 보내고, 응답을 기다리는 방식
+    - 일반적으로 REST API를 사용한다.
+    - 요청을 보낸 서비스는 응답을 받을 때까지 블로킹된다.
+- 특징
+    - 실시간 요청-응답 구조
+    - REST, gRPC 등을 사용
+    - 클라이언트가 서버의 상태를 직접 알 수 있다.
+    - 호출 순서가 명확하다.
+- 장점
+    - 단순함
+        - 개발과 디버깅이 쉽다.
+        - 익숙한 HTTP를 사용한다.
+    - 직접 응답
+        - 클라이언트가 즉시 결과를 받을 수 있다.
+    - 명확한 흐름
+        - 호출 관계가 명확하여 트래킹이 쉽다.
+- 단점
+    - 높은 결합도
+        - 호출자와 응답자가 동시에 살아있어야 한다.
+    - 취약한 장애 전파
+        - 응답 서비스가 다운되면 전체 요청이 실패한다.
+    - 확장성 제한
+        - 부하가 커질수록 지연 시간이 증가한다.
+
+#### AMQP를 통한 비동기 통신 (Asynchronous Communication over AMQP)
+
+- 정의
+    - AMQP를 사용하여 마이크로서비스 간 메시지를 큐를 통해 주고받는 방식
+    - 일반적으로 RabbitMQ나 Kafka같은 메시지 브로커를 사용한다.
+    - AMQP : Advanced Message Queuing Protocol
+- 특징
+    - 메시지를 큐에 비동기적으로 전송한다.
+    - 메시지를 수신한 서비스는 나중에 처리한다.
+    - 발신자는 응답을 기다리지 않는다.
+- 장점
+    - 낮은 결합도
+        - 발신자와 수신자가 동시에 동작할 필요 없다.
+    - 높은 확장성
+        - 큐를 통해 처리량을 제어할 수 있다.
+    - 장애 내성
+        - 수신자가 잠시 다운되어도 메시지가 유실되지 않는다.
+    - 비동기 처리
+        - 대기 시간 없이 요청을 처리하고 응답은 나중에 받는다.
+- 단점
+    - 복잡성 증가
+        - 메시지 브로커 관리, 메시지 순서, 재처리 등 고려해야할 사항이 많다.
+    - 디버깅 어려움
+        - 흐름 추적이 어려울 수 있다.
+    - 실시간성 부족
+        - 결과를 즉시 받아야 하는 경우 부적합하다.
+
+### RestTemplate
+
+#### 정의
+
+- Spring에서 제공하는 동기식 HTTP 클라이언트
+- 코드 기반으로 REST API 요청을 수행한다.
+
+#### 특징
+
+- 객체를 직접 생성하고 HTTP 요청/응답을 처리하는 명령형 방식이다.
+- 요청과 응답에 대해 직접적인 제어할 수 있다.
+- 상대적으로 로우레벨에 가깝다.
+
+#### 장점
+
+- 단순하고 직관적이다.
+- HTTP 요청을 세밀하게 제어할 수 있다.
+- 오래된 프로젝트에서 많이 사용하기 때문에 호환성이 좋다.
+
+#### 단점
+
+- 보일러플레이트 코드가 많다.
+    - 보일러플레이트 코드 : 반복적으로 사용되는 코드
+- 서비스 간 호출이 많아질수록 코드가 복잡해진다.
+- 자동화, 선언형 방식이 아니다.
+
+#### 참고사항
+
+- Spring 5부터는 RestTemplate이 점차 deprecated되는 방향으로 가고 있다.
+- 새로운 프로젝트에는 WebClient나 FeignClient를 사용하는 것이 권장된다.
+
+#### 사용 방법
+
+우선 RestTemplate은 아래와 같이 빈으로 미리 등록해둔 다음에  
+의존성 주입을 통해 인스턴스를 얻는 방식과  
+new 연산자를 통해 인스턴스를 직접 얻는 2가지 방식을 통해  
+인스턴스를 가져올 수 있다.
+
+{% highlight java %}
+// 방법 1 : Bean 등록 후 의존성 주입
+@Bean
+public RestTemplate restTemplate() {
+    return new RestTemplate();
+}
+
+// 방법 2 : new 연산자를 통한 인스턴스 생성
+RestTemplate restTemplate = new RestTemplate();
+{% endhighlight %}
+
+또한 아래와 같이 RestTemplateBuilder를 통해  
+세밀한 조정을 할 수도 있다.
+{% highlight java %}
+@Bean
+public RestTemplate restTemplate() {
+    int TIMEOUT = 5000;
+    return new RestTemplateBuilder()
+        .connectTimeout(Duration.ofMillis(TIMEOUT))
+        .readTimeout(Duration.ofMillis(TIMEOUT))
+        .build();
+}
+{% endhighlight %}
+
+그 다음에 응답 유형, API 주소, 요청 메소드 등을 지정한 뒤 exchange 메소드를 호출하게 되면,  
+해당 API 주소를 통해 결과를 동기적으로 가져오게 된다.
+{% highlight java %}
+ResponseEntity<List<ResponseOrder>> orderResponse =
+    restTemplate.exchange(
+            "API 주소",
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<>() {}
+    );
+List<ResponseOrder> orders = orderResponse.getBody();
+{% endhighlight %}
+
+#### @LoadBalanced
+
+일반적인 외부 서비스를 호출하는 경우라면  
+`https://도메인/order-service/orders`처럼 호출해도 상관없을 것이다.  
+다만 마이크로서비스를 호출하려면 인스턴스 확장을 위해  
+포트 번호를 0으로 설정해서 랜덤으로 배정되게 해뒀을 것이다.
+
+이러한 상황을 대비해서 `@LoadBalanced` 애노테이션이 있다.  
+해당 애노테이션을 사용하게 되면 특정 서비스를 직접 호출하게 할 수 있다.  
+만약 `my-service`라는 마이크로서비스가 있다면  
+`http://my-service/API_경로`를 호출하면 서비스 레지스트리를 조회해서  
+해당 서비스 이름과 매칭되는 인스턴스를 선택해서 호출하게 된다.
+
+{% highlight java %}
+@LoadBalanced
+@Bean
+public RestTemplate restTemplate() {
+    return new RestTemplate();
+}
+{% endhighlight %}
+
+다만 `@LoadBalanced` 애노테이션은 의존성 주입을 통해서 RestTemplate을 사용할 때만 동작한다.  
+new 연산자를 통해 인스턴스를 생성하는 경우에는 동작하지 않는다.
+
+### FeignClient
+
+#### 정의
+
+- Netflix에서 개발한 HTTP 클라이언트 라이브러리
+- 선언형 방식으로 REST API를 호출할 수 있다.
+- Spring Cloud에서 통합되어 널리 사용된다.
+- 보통 클라이언트라고 부른다.
+
+#### 특징
+
+- 인터페이스 기반의 선언형 HTTP 호출
+- 서비스 이름으로 직접 호출할 수 있다.
+    - 서비스 디스커버리 + 로드 밸런싱과 통합할 수 있다.
+
+#### 장점
+
+- 코드 간결성
+    - 인터페이스 선언만으로 HTTP 호출이 가능하다.
+- 서비스 디스커버리와 통합할 수 있다.
+    - 예시 : Eureka
+- 로드밸런서가 내장되어 있다.
+- 재시도, 타임아웃, 장애 처리 등에 대한 설정이 가능하다.
+
+#### 단점
+
+- 디버깅이 다소 어려울 수 있다.
+- 내부적으로는 여전히 HTTP 통신이라 네트워크 장애에 민감하다.
+- 복잡한 요청 제어는 약간 불편할 수 있다.
+    - 복잡한 요청 제어는 요청 헤더나 요청 바디를 세밀하게 제어하는 것을 의미한다.
+
+#### build.gradle
+
+FeignClient를 사용하려면 우선 build.gradle에 아래와 같이 의존성을 추가해야 한다.
+{% highlight gradle %}
+implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+{% endhighlight %}
+
+#### 사용 방법
+
+FeignClient는 일종의 컨트롤러처럼 사용하면 된다.  
+인터페이스를 생성한 뒤 `@FeignClient` 애노테이션과 `name` 속성을 통해  
+어느 마이크로서비스와 연동될지 정의한다.
+
+그 다음에 인터페이스 내부에는 일반적인 컨트롤러 메소드 작성하듯이  
+해당 마이크로서비스 내부에 있는 API 목록을 연동해주면 된다.
+
+참고로 `name` 속성에 들어갈 값은 연동될 마이크로서비스의  
+`spring.application.name`이다.
+
+{% highlight java %}
+@FeignClient(name = "order-service")
+public interface OrderServiceClient {
+    @GetMapping("/order-serivce/{userId}/orders")
+    ResponseEntity<List<ResponseOrder>> getOrders(@PathVariable String userId);
+}
+{% endhighlight %}
+
+그런 다음에는 일반적인 메소드 호출하듯이 사용하면 된다.
+{% highlight java %}
+// 선언부
+private final OrderServiceClient orderServiceClient;
+
+// 비즈니스 로직
+List<ResponseOrder> orders = null;
+try {
+    orders = orderServiceClient.getOrders(userId);
+} catch (FeignException ex){
+    log.error(ex.getMessage());
+}
+{% endhighlight %}
+
+#### 주의사항
+
+RestTemplate은 별도의 설정없이 바로 사용할 수 있지만,  
+FeignClient는 별도의 설정이 있어야 한다.
+
+`@SpringBootApplication` 애노테이션이 있는 메인 클래스로 이동해서,  
+`@EnableFeignClients` 애노테이션을 추가해주자.
+
+#### FeignClient 로그 확인
+
+FeignClient에 대한 로그를 확인하려면 별도의 처리를 해줘야 한다.  
+우선 Logger.Level을 빈으로 등록해주자.
+
+{% highlight java %}
+@Bean
+public Logger.Level feignLoggerLevel() {
+    return Logger.Level.FULL;
+}
+{% endhighlight %}
+
+그런 다음에 환경설정 파일에 가서  
+FeignClient가 포함되어 있는 패키지의 로그 레벨을 수정해주자.
+{% highlight yaml %}
+logging:
+  level:
+    sample.userservice.client: DEBUG
+{% endhighlight %}
+
+#### ErrorDecoder를 이용한 예외 처리
+
+FeignClient를 사용하면 편리하게 외부의 API에 요청을 보내고, 응답을 받을 수 있다.  
+하지만 내부에서 컨트롤할 수 없는 외부 환경으로의 요청이기 때문에  
+항상 오류가 발생할 가능성을 염두해두고, 오류 처리를 필수로 해야 한다.
+
+FeignClient 자체적으로 400번대와 500번대로 세세하게 오류가 관리되고 있긴 하지만,  
+특정한 상황에 대해서 별도로 관리하고 싶다면 ErrorDecoder를 사용하면 된다.
+
+대략적인 정의 방식은 아래와 같다.
+{% highlight java %}
+@Component
+public class FeignErrorDecoder implements ErrorDecoder {
+    @Override
+    public Exception decode(String methodKey, Response response) {
+        switch(response.status()) {
+            case 400:
+                break;
+            case 404:
+                if (methodKey.contains("getOrders")) {
+                    return new ResponseStatusException(HttpStatus.valueOf(response.status()), "에러 메시지");
+                }
+                break;
+            default:
+                return new Exception(response.reason());
+        }
+        return null;
+    }
+}
+{% endhighlight %}
+
+ErrorDecoder를 구현한 FeignErrorDecoder에서 decode() 메소드를 작성하면 된다.  
+각 HTTP 상태 코드에 맞춰서 `methodKey`라는 메소드명이 들어오는 필드에 맞춰서  
+각 상황에 맞는 예외 처리 코드를 작성해주면 된다.
+
+이제 클라이언트 쪽으로 가서 `configuration` 속성에 작성한 ErrorDecoder를 연동시켜주면 끝이다.
+{% highlight java %}
+@FeignClient(name = "order-service", configuration = FeignErrorDecoder.class)
+public interface OrderServiceClient {
+    // ...
+}
+{% endhighlight %}
+
+### 데이터 동기화 문제
+
+먄약에 사용자 서비스와 주문 서비스가 있다고 가정해보자.  
+이 때 주문 서비스의 인스턴스가 2개라고 가정하고,  
+사용자 서비스에서 주문 서비스에서 주문 정보를 등록하는 API를 3번 호출하면 어떻게 될까?
+
+주문 서비스의 각 인스턴스를 A와 B라고 명명한다면,  
+실제 호출되는 것은 A→A→B일 수도 잇고, A→B→A일 수도 있고, B→B→A일 수도 있다.  
+왜냐하면 로드 밸런서가 상황에 맞는 적합한 인스턴스로 연결시켜주기 때문이다.
+
+그래서 만약 A와 B가 서로 다른 DB를 사용하게 된다면,  
+같은 사용자에 대해서 3개의 데이터를 저장할 때  
+하나의 인스턴스에는 2개, 다른 인스턴스에는 1개를 저장하게 될 수도 있다.
+
+이러한 상황을 방지하려면 인스턴스가 달라도 동일한 서비스는 1개의 DB만 사용하도록 해야 한다.
+
+#### 1개의 DB
+
+이 때 하나의 DB만 사용해도 구현 자체는 가능은 하다.
+하지만 그렇게 되면 MSA보다는 모놀리스를 잘게 나눈 구조에 가깝다.  
+심지어 이런 방식으로 구현할 경우 유연하지 않은 구조가 되어버린다.
+
+#### 유연하지 않은 이유
+
+- 서비스 간 직접 연결 필요
+    - DB를 중심으로 서비스가 직접 참조하거나 연결되면 각 서비스가 DB 변경사항에 의존하게 된다.
+    - 신규 기능 추가할 때마다 다른 서비스와 조율이 필요하게 된다.
+- 확장성 문제
+    - DB I/O가 집중되면 성능 병목이 발생하기 쉬워진다.
+    - 수평 확장은 되겠지만, DB가 병목 되기 더욱 쉬워진다.
+- 실시간 반응 어려움
+    - 이벤트가 발생했을 때 다른 처리를 하려면 직접 서비스를 호출해야 한다.
+        - 비효율적인 부분이 발생한다.
+    - 예시
+        - 자동으로 알림 보내기
+        - 로그 쌓기
+- 데이터 변경 흐름 추적 어려움
+    - DB에서 뭐가 바뀌었는지 다른 서비스에서 감지하기 어렵다.
+
+#### Message Queuing Server
+
+이럴 때 사용하는 것이 `메시지 큐잉 서버(Message Queuing Server)`다.  
+일반적으로 Apache Kafka나 RabbitMQ를 통해 구현한다.
+
+우선 각 인스턴스가 DB에 어떠한 행동을 요청하고 싶다면  
+이러한 내용을 메시지에 담아서 메시지 큐잉 서버로 보낸다.
+
+메시지 큐잉 서버는 이를 순차적으로 정리한 뒤  
+메시지가 쌓인 순서대로 DB에 요청하게 된다.
+
+### 출처
+
+- [Spring Cloud로 개발하는 마이크로서비스 애플리케이션(MSA)](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4)

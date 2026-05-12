@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "함수 지향 - arguments"
+date:   2023-04-28 10:07:33 +0900
+categories: JavaScript
+---
+
+### arguments란?
+
+- 함수에서 사용된 인자들이 저장되는 유사 배열
+
+{% highlight javascript %}
+function sumTest(){
+    var i, sum = 0;    
+    for(i = 0; i < arguments.length; i++){
+        console.log(i+' : '+arguments[i]);
+        sum += arguments[i];
+    }   
+    return sum;
+}
+console.log('result : ' + sumTest(1,2,3,4));    //출력 : 10
+{% endhighlight %}
+
+### 매개 변수의 개수
+
+- functionName.length
+    - 함수명.length는 함수에서 선언되 있는 매개 변수의 개수
+- arguments.length
+    - 함수를 실행할 때 실제로 들어온 매개 변수의 개수
+
+{% highlight javascript %}
+function twoArg(arg1, arg2){
+    console.log(
+        'twoArg.length', twoArg.length,
+        'arguments', arguments.length
+    );
+}
+twoArg('val1');  //twoArg.length 2 arguments 1
+twoArg('val1', 'val2'); //출력 : twoArg.length 2 arguments 2
+twoArg(); //출력 : twoArg.length 2 arguments 0
+{% endhighlight %}

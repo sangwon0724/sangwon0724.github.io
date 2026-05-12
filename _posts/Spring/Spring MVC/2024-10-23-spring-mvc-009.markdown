@@ -1,0 +1,521 @@
+---
+layout: post
+title:  "[스프링 MVC 2편] 타임리프 - 스프링 통합과 폼"
+date:   2024-10-23 22:57:00 +0900
+categories: Spring&nbsp;MVC
+tags: []
+---
+
+### 프로젝트 생성
+
+- [스프링 이니셜라이저](https://start.spring.io/)를 통해 프로젝트를 생성하자.
+    - 프로젝트 선택
+      - Project
+        - Gradle - Groovy Project
+      - Language
+        - Java
+      - Spring Boot
+        - 3.x.x
+    - Project Metadata
+        - Group
+          - hello
+        - Artifact
+          - form
+        - Name
+          - form
+        - Package name
+          - hello.form
+        - Packaging
+          - Jar (주의!)
+        - Java
+          - 17 또는 21
+    - Dependencies
+        - Spring Web
+        - Thymeleaf
+        - Lombok
+
+#### 추가 설정
+
+- 이전 프로젝트인 `item-service`에서 일부 소스를 가져오자.
+    - .java 파일의 패키지는 itemservice 부분을 form으로 변경하자.
+    - [참고](https://sangwon0724.github.io/posts/spring-mvc-007/)
+- 가져올 목록
+    - src/main
+        - java/hello/itemservice
+            - domain/item
+                - Item.java
+                - ItemRepository.java
+        - web/item/basic
+            - BasicItemController.java
+    - resources
+        - static
+            - css
+                - bootstrap.min.css
+            - index.html
+    - templates/basic
+        - addForm.html
+        - editForm.html
+        - item.html
+        - items.html
+
+### 타임리프 스프링 통합
+
+- 타임리프는 크게 2가지 메뉴얼을 제공한다.
+    - 기본 메뉴얼
+        - [링크](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
+    - 스프링 통합 메뉴얼
+        - [링크](https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html)
+- 타임리프는 스프링 없이도 동작하지만, 스프링과 통합을 위한 다양한 기능을 편리하게 제공한다.
+    - 이런 부분은 스프링으로 백엔드를 개발하는 개발자 입장에서 타임리프를 선택하는 하나의 이유가 된다.
+
+#### 스프링 통합으로 추가되는 기능들
+
+- 스프링의 SpringEL 문법 통합
+- `${@myBean.doSomething()}`처럼 스프링 호출 지원
+- 편리한 폼 관리를 위한 추가 속성
+    - `th:object`
+        - 기능 강화
+        - 폼 커맨드 객체 선택
+    - `th:field`
+    - `th:errors`
+    - `th:errorclass`
+- 폼 컴포넌트 기능
+    - checkbox, radio button, List 등을 편리하게 사용할 수 있는 기능 지원
+- 스프링의 메시지, 국제화 기능의 편리한 통합
+- 스프링의 검증, 오류 처리 통합
+- 스프링의 변환 서비스 통합 (ConversionService)
+
+#### 설정 방법
+
+- build.gradle에 `implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'`를 추가한다.
+- 그러면 Gradle이 타임리프와 관련된 라이브러리를 다운로드 받고, 스프링 부트는 앞서 설명한 타임리프와 관련된 설정용 스프링 빈을 자동으로 등록해준다.
+
+### 입력 폼 처리
+
+- `th:object`
+    - 커맨드 객체를 지정한다.
+    - `th:object="${item}"`처럼 사용한다.
+- `*{...}`
+    - 선택 변수식이라고 한다. 
+    - `th:object`에서 선택한 객체에 접근한다
+- `th:field`
+    - HTML 태그의 `id`, `name`, `value` 속성을 자동으로 처리해준다.
+    - `th:field="*{itemName}"`처럼 사용한다.
+        - 이는 `${item.itemName}`와 같다.
+    - `th:object`로 `item`을 선택했기 때문에 선택 변수식을 사용할 수 있다.
+    - `th:field`는 id, name, value를 자동으로 만들어준다.
+
+#### 컨트롤러
+
+- 기존의 `addForm()`을 아래와 같이 변경한다.
+
+{% highlight java %}
+//상품 등록
+@GetMapping("/add")
+public String addForm(Model model) {
+    model.addAttribute("item", new Item());
+    return "basic/addForm";
+}
+{% endhighlight %}
+
+#### HTML
+
+- `src/main/resources/static/html/addForm.html`에서 form 영역을 아래와 같이 수정한다.
+
+{% highlight html %}
+<form action="item.html" th:action th:object="${item}" method="post">
+    <div>
+        <label for="itemName">상품명</label>
+        <input type="text" id="itemName" th:field="*{itemName}" class="form-control" placeholder="이름을 입력하세요">
+    </div>
+    <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" th:field="*{price}" class="form-control" placeholder="가격을 입력하세요">
+    </div>
+    <div>
+        <label for="quantity">수량</label>
+        <input type="text" id="quantity" th:field="*{quantity}" class="form-control" placeholder="수량을 입력하세요">
+    </div>
+</form>
+{% endhighlight %}
+
+- `src/main/resources/static/html/editForm.html`에서 form 태그를 아래와 같이 수정한다.
+    - `<form action="item.html" th:action th:object="${item}" method="post">`
+- 그런 다음에 상품 정보 입력 영역을 아래와 같이 수정한다.
+{% highlight html %}
+<div>
+    <label for="id">상품 ID</label>
+    <input type="text" id="id" th:field="*{id}" class="form-control"
+            readonly>
+</div>
+<div>
+    <label for="itemName">상품명</label>
+    <input type="text" id="itemName" th:field="*{itemName}" class="form-control">
+</div>
+<div>
+    <label for="price">가격</label>
+    <input type="text" id="price" th:field="*{price}" class="form-control">
+</div>
+<div>
+    <label for="quantity">수량</label>
+    <input type="text" id="quantity" th:field="*{quantity}" class="form-control">
+</div>
+{% endhighlight %}
+
+### 요구사항 추가
+
+- 타임리프를 사용해서 폼에서 체크박스, 라디오 버튼, 셀렉트 박스를 편리하게 사용하는 방법을 학습해보자.
+- 기존 상품 서비스에 다음 요구사항이 추가되었다.
+    - 판매 여부
+        - 판매 오픈 여부
+        - 체크 박스로 선택할 수 있다.
+    - 등록 지역
+        - 서울, 부산, 제주
+        - 체크 박스로 다중 선택할 수 있다.
+    - 상품 종류
+        - 도서, 식품, 기타
+        - 라디오 버튼으로 하나만 선택할 수 있다.
+    - 배송 방식
+        - 빠른 배송
+        - 일반 배송
+        - 느린 배송
+        - 셀렉트 박스로 하나만 선택할 수 있다.
+
+#### 상품 종류
+
+{% highlight java %}
+package hello.form.domain.item;
+
+public enum ItemType {
+    BOOK("도서"), FOOD("식품"), ETC("기타");
+    
+    private final String description;
+    
+    ItemType(String description) {
+        this.description = description;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+}
+{% endhighlight %}
+
+#### 배송 방식 
+
+{% highlight java %}
+package hello.form.domain.item;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+/**
+ * FAST: 빠른 배송
+ * NORMAL: 일반 배송
+ * SLOW: 느린 배송
+ */
+@Data
+@AllArgsConstructor
+public class DeliveryCode {
+    private String code;
+    private String displayName;
+}
+{% endhighlight %}
+
+#### 상품
+
+{% highlight java %}
+package hello.form.domain.item;
+
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class Item {
+    private Long id;
+    private String itemName;
+    private Integer price;
+    private Integer quantity;
+    private Boolean open; //판매 여부
+    private List<String> regions; //등록 지역
+    private ItemType itemType; //상품 종류
+    private String deliveryCode; //배송 방식
+
+    public Item() {}
+    public Item(String itemName, Integer price, Integer quantity) {
+        this.itemName = itemName;
+        this.price = price;
+        this.quantity = quantity;
+    }
+}
+{% endhighlight %}
+
+### 체크 박스 - 단일1
+
+#### HTML
+
+- `src/main/resources/static/html/addForm.html`의 form 영역에 아래 코드를 추가하자.
+- `src/main/resources/static/html/editForm.html`에도 적용하자.
+{% highlight html %}
+<hr class="my-4">
+
+<!-- single checkbox -->
+<div>판매 여부</div>
+<div>
+    <div class="form-check">
+    <input type="checkbox" id="open" name="open" class="form-check-input">
+    <label for="open" class="form-check-label">판매 오픈</label>
+    </div>
+</div>
+{% endhighlight %}
+
+#### 컨트롤러
+
+- 클래스 레벨에 `@Slf4j` 애노테이션을 추가하자.
+- addItemV6의 첫 줄에 `log.info("item.open={}", item.getOpen());`를 추가하자.
+    - 값이 잘 넘어오는지 확인하는 용도
+
+#### 결과
+
+- 체크 박스를 체크하면 HTML Form에서 `open=on`이라는 값이 넘어간다.
+- 스프링의 스프링 타입 컨버터가 `on`이라는 문자를 `true`로 변환해준다. 
+- 체크 박스를 선택하지 않고 폼을 전송하면 `open`이라는 필드 자체가 서버로 전송되지 않는다.
+-  HTML checkbox는 선택이 안되면 클라이언트에서 서버로 값 자체를 보내지 않는다.
+    - 수정의 경우에는 상황에 따라서 이 방식이 문제가 될 수 있다.
+- 이런 문제를 해결하기 위해서 스프링 MVC는 약간의 트릭을 사용한다.
+    - `_open`처럼 기존 체크 박스 이름 앞에 언더스코어를 붙여서 전송하여 체크를 해제했다고 인식하게 한다.
+        - 히든 필드는 항상 전송된다.
+    - `<input type="hidden" name="_open" value="on"/> <!-- 히든 필드 추가 -->`처럼 사용한다.
+        - `src/main/resources/static/html/addForm.html`에 추가하면 된다.
+        - `src/main/resources/static/html/editForm.html`에도 적용하자.
+    - 즉, `open`은 전송되지 않고, `_open`만 전송된 경우에는 스프링 MVC가 체크를 해체했다고 판단한다.
+
+#### HTTP 요청 메시지 로깅
+
+-  HTTP 요청 메시지를 서버에서 보고 싶으면 application.properties에 아래 설정을 추가한다.
+    - `logging.level.org.apache.coyote.http11=trace`
+
+### 체크 박스 - 단일2
+
+- 개발할 때 마다 이렇게 히든 필드를 추가하는 것은 상당히 번거롭다.
+    - 타임리프가 제공하는 폼 기능을 사용하면 이런 부분을 자동으로 처리할 수 있다.
+- `name` 속성 대신에 `th:field="*{open}"`처럼 명시하면 된다.
+    - 자동으로 각 필드에 맞는 히든 필드가 랜더링된다.
+    - `src/main/resources/static/html/addForm.html`에 적용하자.
+    - `src/main/resources/static/html/editForm.html`에도 적용하자.
+
+#### HTML
+
+- 상품 상세 화면에서 적용 여부를 확인해보자.
+- `src/main/resources/static/html/item.html`에 아래 코드를 추가하자.
+
+{% highlight html %}
+<hr class="my-4">
+    <!-- single checkbox -->
+    <div>판매 여부</div>
+    <div>
+    <div class="form-check">
+        <input type="checkbox" id="open" th:field="${item.open}" class="form-check-input" disabled>
+        <label for="open" class="form-check-label">판매 오픈</label>
+    </div>
+    </div>
+{% endhighlight %}
+
+#### 상품 저장소
+
+- 실제 테스트를 위해 update 메서도에 아래 코드를 추가하자.
+
+{% highlight java %}
+findItem.setOpen(updateParam.getOpen());
+findItem.setRegions(updateParam.getRegions());
+findItem.setItemType(updateParam.getItemType());
+findItem.setDeliveryCode(updateParam.getDeliveryCode());
+{% endhighlight %}
+
+#### 타임리프의 체크 확인
+
+- 체크 박스에서 판매 여부를 선택해서 저장하면, 조회 시에 `checked` 속성이 추가된 것을 확인할 수 있다.
+- 이런 부분을 개발자가 직접 처리하려면 상당히 번거롭다.
+    - `th:field`를 사용하면, 값이 `true`인 경우 체크를 자동으로 처리해준다.
+
+### 체크 박스 - 멀티
+
+- 체크 박스를 멀티로 사용해서, 하나 이상을 체크할 수 있도록 해보자.
+
+#### 컨트롤러
+
+{% highlight java %}
+@ModelAttribute("regions")
+public Map<String, String> regions() {
+    Map<String, String> regions = new LinkedHashMap<>();
+    regions.put("SEOUL", "서울");
+    regions.put("BUSAN", "부산");
+    regions.put("JEJU", "제주");
+    return regions;
+}
+{% endhighlight %}
+
+#### @ModelAttribute의 특별한 사용법
+
+- 등록 폼, 상세화면, 수정 폼에서 모두 서울, 부산, 제주라는 체크 박스를 반복해서 보여주어야 한다.
+    - 이렇게 하려면 각각의 컨트롤러에서 `model.addAttribute(...)`을 사용해서 체크 박스를 구성하는 데이터를 반복해서 넣어주어야 한다.
+- `@ModelAttribute`는 이렇게 컨트롤러에 있는 별도의 메서드에 적용할 수 있다.
+    - 이렇게하면 해당 컨트롤러를 요청할 때 `regions`에서 반환한 값이 자동으로 모델에 담기게 된다.
+    - 물론 이렇게 사용하지 않고, 각각의 컨트롤러 메서드에서 모델에 직접 데이터를 담아서 처리해도 된다.
+
+#### HTML (폼)
+
+- `src/main/resources/static/html/addForm.html`의 form 영역에 아래 코드를 추가하자.
+- `src/main/resources/static/html/editForm.html`에도 적용하자.
+
+{% highlight html %}
+<!-- multi checkbox -->
+<div>
+    <div>등록 지역</div>
+    <div th:each="region : ${regions}" class="form-check form-check-inline">
+    <input type="checkbox" th:field="*{regions}" th:value="${region.key}" class="form-check-input">
+    <label th:for="${#ids.prev('regions')}" th:text="${region.value}" class="form-check-label">서울</label>
+    </div>
+</div>
+{% endhighlight %}
+
+####  th:for와 #ids
+
+- ` th:for="${#ids.prev('regions')}"`를 사용하여 반복분으로 체크박스를 만들 수 있다.
+- `#ids`는 반복문을 돌 때 1, 2, 3처럼 자동으로 임의의 숫자를 뒤에 붙여준다.
+    - `@ModelAttribute`에 명시한 이름 + 임의의 숫자로 id가 랜더링된다.
+
+#### HTML (상세)
+
+- 상품 상세 화면에서 적용 여부를 확인해보자.
+- `src/main/resources/static/html/item.html`에 아래 코드를 추가하자.
+    - `item.html`에는 ` th:object`를 사용하지 않았기 때문에 `th:field` 부분에 `${item.regions}`으로 적어주어야 한다.
+
+{% highlight html %}
+<!-- multi checkbox -->
+<div>
+    <div>등록 지역</div>
+    <div th:each="region : ${regions}" class="form-check form-check-inline">
+        <input type="checkbox" th:field="${item.regions}" th:value="${region.key}" class="form-check-input" disabled>
+        <label th:for="${#ids.prev('regions')}" th:text="${region.value}" class="form-check-label">서울</label>
+    </div>
+</div>
+{% endhighlight %}
+
+### 라디오 버튼
+
+- 라디오 버튼은 여러 선택지 중에 하나를 선택할 때 사용할 수 있다.
+- Enum이나 컬렉션을 통해 구현한다.
+
+#### 컨트롤러
+
+- `ItemType.values()`를 사용하면 해당 ENUM의 모든 정보를 배열로 반환한다.
+
+{% highlight java %}
+@ModelAttribute("itemTypes")
+    public ItemType[] itemTypes() {
+    return ItemType.values();
+}
+{% endhighlight %}
+
+#### HTML (폼)
+
+- `src/main/resources/static/html/addForm.html`의 form 영역에 아래 코드를 추가하자.
+- `src/main/resources/static/html/editForm.html`에도 적용하자.
+
+{% highlight html %}
+<!-- radio button -->
+<div>
+    <div>상품 종류</div>
+    <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
+    <input type="radio" th:field="*{itemType}" th:value="${type.name()}" class="form-check-input">
+    <label th:for="${#ids.prev('itemType')}" th:text="${type.description}" class="form-check-label">
+        BOOK
+    </label>
+    </div>
+</div>
+{% endhighlight %}
+
+#### HTML (상세)
+
+- 상품 상세 화면에서 적용 여부를 확인해보자.
+- `src/main/resources/static/html/item.html`에 아래 코드를 추가하자.
+    - `item.html`에는 ` th:object`를 사용하지 않았기 때문에 `th:field` 부분에 `${item.itemType}`으로 적어주어야 한다.
+
+{% highlight html %}
+<!-- radio button -->
+<div>
+    <div>상품 종류</div>
+    <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
+        <input type="radio" th:field="${item.itemType}" th:value="${type.name()}" class="form-check-input" disabled>
+        <label th:for="${#ids.prev('itemType')}" th:text="${type.description}" class="form-check-label">
+        BOOK
+        </label>
+    </div>
+</div>
+{% endhighlight %}
+
+#### 체크 박스와의 차이점
+
+- 체크 박스는 수정시 체크를 해제하면 아무 값도 넘어가지 않기 때문에, 별도의 히든 필드로 이런 문제를 해결했다.
+- 라디오 버튼은 이미 선택이 되어 있다면, 수정시에도 항상 하나를 선택하도록 되어 있으므로 체크 박스와 달리 별도의 히든 필드를 사용할 필요가 없다.
+
+#### 타임리프에서 ENUM 직접 사용하기
+
+- ` @ModelAttribute`로 모델에 Enum을 담아서 전달하는 대신에 타임리프는 스프링EL 문법을 통해 자바 객체에 직접 접근할 수 있다.
+- `th:each="type : ${T(hello.itemservice.domain.item.ItemType).values()}"`
+    - 그런데 이렇게 사용하면 ENUM의 패키지 위치가 변경되거나 할때 자바 컴파일러가 타임리프까지 컴파일 오류를 잡을수 없으므로 추천하지는 않는다.
+
+### 셀렉트 박스
+
+- 셀렉트 박스는 여러 선택지 중에 하나를 선택할 때 사용할 수 있다.
+
+#### 컨트롤러
+
+{% highlight java %}
+@ModelAttribute("deliveryCodes")
+public List<DeliveryCode> deliveryCodes() {
+    List<DeliveryCode> deliveryCodes = new ArrayList<>();
+    deliveryCodes.add(new DeliveryCode("FAST", "빠른 배송"));
+    deliveryCodes.add(new DeliveryCode("NORMAL", "일반 배송"));
+    deliveryCodes.add(new DeliveryCode("SLOW", "느린 배송"));
+    return deliveryCodes;
+}
+{% endhighlight %}
+
+#### HTML (폼)
+
+- `src/main/resources/static/html/addForm.html`의 form 영역에 아래 코드를 추가하자.
+- `src/main/resources/static/html/editForm.html`에도 적용하자.
+
+{% highlight html %}
+<!-- SELECT -->
+<div>
+    <div>배송 방식</div>
+    <select th:field="*{deliveryCode}" class="form-select">
+    <option value="">==배송 방식 선택==</option>
+    <option th:each="deliveryCode : ${deliveryCodes}" th:value="${deliveryCode.code}" th:text="${deliveryCode.displayName}">FAST</option>
+    </select>
+</div>
+{% endhighlight %}
+
+- 상품 상세 화면에서 적용 여부를 확인해보자.
+- `src/main/resources/static/html/item.html`에 아래 코드를 추가하자.
+    - `item.html`에는 ` th:object`를 사용하지 않았기 때문에 `th:field` 부분에 `${item.deliveryCode}`으로 적어주어야 한다.
+
+{% highlight html %}
+<!-- SELECT -->
+<div>
+    <div>배송 방식</div>
+    <select th:field="${item.deliveryCode}" class="form-select" disabled>
+        <option value="">==배송 방식 선택==</option>
+        <option th:each="deliveryCode : ${deliveryCodes}" th:value="${deliveryCode.code}"
+                th:text="${deliveryCode.displayName}">FAST</option>
+    </select>
+</div>
+{% endhighlight %}
+
+### 출처
+
+- [스프링 MVC 2편 - 백엔드 웹 개발 활용 기술](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-mvc-2)

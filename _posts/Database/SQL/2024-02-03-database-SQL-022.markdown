@@ -1,0 +1,191 @@
+---
+layout: post
+title:  "날짜 관련 함수"
+date:   2024-02-03 16:36:00 +0900
+categories:  SQL
+---
+
+### 날짜
+
+### YEAR(date)
+
+- 해당 날짜의 년도를 반환한다.
+- 범위 : 1000 ~ 9999
+ 
+#### QUARTER(date)
+
+- 해당 날짜의 분기를 반환한다.
+- 범위 : 1 ~ 4
+
+#### MONTH(date)
+
+- 해당 날짜가 몇 월인지 알려준다. 
+- 범위 : 1 ~ 12
+ 
+#### WEEK(date, first)
+
+- 해당 날짜가 몇 번째 주일인지를 반환한다.
+- 범위 : 0 ~ 52
+- first에 지정한 값에 따라서 한 주의 시작이 어떤 요일인지를 지정할 수 있다.
+    - 0으로 지정하면 일요일을 한 주의 시작일로 지정한다.
+    - 1로 지정하면 월요일을 한 주의 시작일로 지정한다.
+    - first는 생략할 수 있으며, 생략 시 일요일을 한 주의 시작일로 인식한다.
+
+#### HOUR(time)
+
+- 해당 날짜가 몇 시인지를 알려준다. (24시 기준)
+- 범위 : 0 ~ 23
+ 
+#### MINUTE(time)
+
+- 해당 날짜가 몇 분인지를 알려준다.
+- 범위 : 0 ~ 59
+
+#### SECOND(time)
+
+- 해당 날짜가 몇 초인지를 알려준다.
+- 범위 : 0 ~ 59
+
+#### WEEKDAY(date)
+
+- 요일을 반환한다.
+- 월요일에서 일요일까지를 0부터 6까지의 숫자로 매칭해서 반환한다.
+
+### N번쨰 날
+
+#### DAYOFYEAR(date)
+
+- 그 해의 몇 번째 날인지를 알려준다.
+- 범위 : 1 ~ 366
+
+#### DAYOFMONTH(date)
+
+- 그 달의 몇 번째 날인지를 알려준다.
+- 범위 : 1 ~ 31
+
+#### DAYOFWEEK(date)
+
+- 요일을 반환한다.
+- 일요일에서 토요일까지를 1부터 7까지의 숫자로 매칭해서 반환한다.
+ 
+### 날짜 계산하기
+
+#### PERIOD_ADD(p, n)
+
+- yymm 또는 yyyymm 형식으로 주어진 달에 n개월을 더한다.
+- 반환 형식 : yyyymm
+- 예시 : `SELECT PERIOD_ADD(9707, 3);`
+
+#### PERIOD_DIFF(p1, p2)
+
+- yymm 또는 yyyymm 형식으로 주어진 두 기간 사이의 개월 수를 구한다.
+- 예시 : `SELECT PERIOD_DIFF(9707, 199705);`
+ 
+#### 날짜 연산
+
+- 종류
+    - DATE_ADD(date, interval expr type)
+    - DATE_SUB(date, interval expr type)
+    - ADDDATE(date, interval expr type)
+    - SUBDATE(date, interval expr type)
+- date는 계산할 대상이 되는 날짜를 의미한다.
+- expr에는 증감할 값을 명시한다.
+- type에는 증감할 유형을 명시한다.
+- 예시
+    - `SELECT DATE_ADD("1997-12-31 23:59:59", INTERVAL "1:1" MINUTE_SECOND);`
+    - `SELECT DATE_SUB("1998-01-01 00:00:00", INTERVAL "1 1:1:1" DAY_SECOND);`
+
+- type 유형
+
+| type | 설명 |
+|-------|--------|
+| second | 초 |
+| minute | 분 |
+| hour | 시 |
+| day | 일 |
+| month | 월 |
+| year | 년 |
+| minute_second | 분:초 |
+| hour_minute | 시:분 |
+| day_hour | 일 시 |
+| year_month | 년 월 |
+| hour_second | 시 분 |
+| day_minute | 일, 시, 분 |
+| day_second | 일, 시, 분, 초 |
+
+### 형변환
+
+#### DATE_FORMAT(date, format)
+
+- format 의 정의에 따라 날짜 혹은 시간을 출력한다.
+
+- format 유형
+
+| format | 설명 |
+|-------|--------|
+| %Y | 년 (4자리) |
+| %y | 년 (2자리) |
+| %c | 월 (0 ~ 12) |
+| %m | 월 (00 ~ 12) |
+| %d | 일 (01 ~ 31) |
+| %e | 일 (0 ~ 31) |
+| %p | AM / PM |
+| %H | 시 (00 ~ 23) |
+| %h | 시 (00 ~ 12) |
+| %I | 시 (00 ~ 12) |
+| %k | 시 (0 ~ 23) |
+| %l | 시 (1 ~ 12) |
+| %i | 분 (00 ~ 59) |
+| %S | 초 (00 ~ 59) |
+| %s | 초 (00 ~ 59) |
+| %w | 한 주의 몇 번째 요일인가 (일요일에서 토요일까지를 0 ~ 6에 해당하는 숫자로 반환 |
+| %M | 긴 월 이름 (January ~ December) |
+| %b | 짧은 월 이름 (Jan ~ Dec) |
+| %W | 긴 요일명 (Sunday ~ Saturday) |
+| %a | 짧은 요일명 (Sun ~ Sat) |
+| %j | 1년 중 n번째 날인가 (001 ~ 366) |
+| %r | hh:mm:ss AM/PM |
+| %T | hh:mm:ss |
+| %U | 일요일이 한 주의 시작일 때 n번째 주인가 (00 ~ 53) |
+| %u | 월요일이 한 주의 시작일 때 n번째 주인가 (00 ~ 53) |
+ 
+#### TIME_FORMAT(time, format)
+
+- format 의 정의에 따라 시간을 출력한다.
+ 
+### 현재 날짜
+
+- 현재 날짜를 반환한다.
+- 종류
+    - CURDATE()
+    - CURRENT_DATE()
+- 반환 형식
+    - 문자열로 쓰이는 경우
+        - 'yyyy-mm-dd'
+    - 숫자로 쓰이는 경우
+        - yyyymmdd
+ 
+### 현재 시간
+
+- 현재 시간을 반환한다.
+- 종류
+    - curtime()
+    - current_time()
+- 반환 형식
+    - 문자열로 쓰이는 경우
+        - 'hh:mm:ss'
+    - 숫자로 쓰이는 경우
+        - hhmmss
+
+### 현재 날짜 + 시간
+
+- 현재 날짜와 시간을 반환한다.
+- 종류
+    - NOW()
+    - SYSDATE()
+    - CURRENT_TIMESTAMP()
+- 반환 형식
+    - 문자열로 쓰이는 경우
+        - 'yyyy-mm-dd hh:mm:ss'
+    - 숫자로 쓰이는 경우
+        - yyyymmddhhmmss

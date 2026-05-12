@@ -1,0 +1,47 @@
+---
+layout: post
+title:  "일급함수"
+date:   2025-04-21 07:00:00 +0900
+categories: Python
+published: false
+---
+
+■ 파이썬 일급 함수 (객체)
+
+• 파이썬 함수 특징
+
+• 익명함수(Lambda)
+
+• Callable 설명
+
+• Partial 사용법
+
+■ 클로저 기초(Closure)
+
+• 파이썬 변수 범위(Scope)
+
+• Global 선언
+
+• 클로저 사용 이유
+
+· Class -> Closure 구현
+
+■ 클로저 심화(Closure)
+
+• 클로저 사용 예제
+
+• 잘못된 클로저 사용
+
+• 클로저 정리
+
+■ 데코레이터(Decorator)
+
+• 클로저 -> 데코레이터 관계
+
+• 데코레이터 실습(1)
+
+• 데코레이터 실습(2)
+
+### 출처
+
+- [우리를 위한 프로그래밍 : 파이썬 중급 (Inflearn Original)](https://www.inflearn.com/course/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%A4%91%EA%B8%89-%EC%9D%B8%ED%94%84%EB%9F%B0-%EC%98%A4%EB%A6%AC%EC%A7%80%EB%84%90)
